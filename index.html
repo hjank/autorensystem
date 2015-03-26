@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Authorensystem</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- general style sheets -->
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/statemaschine.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+
+        <!-- general javascript scripts -->
+        <script src="//code.jquery.com/jquery-2.0.3.js"></script>
+        <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+        <!--<script src="js/vendor/jquery-1.10.2-min.js"></script>-->
+        <!--<script src="js/vendor/jquery-ui-1.9.2.min.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>-->
+        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.4-min.js"></script>
+
+        <!-- general functionalities -->
+        <script type="text/javascript" src="js/functionalities.js"></script>
+
+        <!-- jsplumb statemaschine functionalities -->
+        <script type="text/javascript" src="js/statemaschine.js"></script>
+
+        <!-- Menu bar -->
+        <link rel="stylesheet" href="css/menu.css">
+        <script src="js/menu.js"></script>
+
+        <!-- modal window -->
+        <link rel="stylesheet" href="css/pgwmodal.css">
+        <script type="text/javascript" src="js/pgwmodal.js"></script>
+        <script type="text/javascript" src="js/modalWindows.js"></script>
+
+        <!-- slider design -->
+        <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
+
+        <!-- flat ui -->
+        <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
+        <link rel="stylesheet" href="css/flat-ui.css">
+        <script type="text/javascript" src="js/flat-ui.js"></script>
+        <script type="text/javascript" src="js/vendor/flatui/html5shiv.js"></script>
+        <script type="text/javascript" src="js/vendor/flatui/respond.min.js"></script>
+        <script type="text/javascript" src="js/vendor/flatui/video.js"></script>
+
+
+        <!-- slider with pips -->
+        <!--<link rel="stylesheet" href="css/jquery-ui-slider-pips.css">-->
+        <script type="text/javascript" src="js/vendor/jquery-ui-slider-pips.js"></script>
+
+        <link rel="stylesheet" href="css/tabs.css">
+
+
+
+        <!-- functions -->
+        <script>
+
+            // add jQuery UI Sliders with flat design
+            $(function() {
+                var $verticalSlider = $('.slider');
+                if ($verticalSlider.length) {
+                    $verticalSlider.slider({
+                        min: 0,
+                        max: 8,
+                        value: 4,
+                        orientation: 'vertical',
+                        step: 1,
+                        range: 'min'
+                    });//.addSliderSegments($verticalSlider.slider('option').max, 'vertical');
+                }
+            });
+
+            $(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                //$("a.my-tool-tip").tooltip();
+                $('[data-toggle="checkbox"]').radiocheck();
+                //$(":checkbox").radiocheck();
+                $("select").select2({dropdownCssClass: "dropdown-inverse"});
+                //$("select").select2({tags: true});
+                //$("select").select2();
+
+                setScenarios();
+                setLabelBtnScenarioDeletion();
+            });
+
+
+            $(function() {
+                $("body").on("hidden.bs.modal", ".modal", function(e) {
+                    $(this).removeData("bs.modal");
+                    //$(this).data("bs.modal", null);
+                });
+
+            });
+
+        </script>
+
+
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container" style="margin-left: 0px;">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand" href="#">Authorensystem</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <!--<li class="active"><a href="#">Home</a></li>-->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-credit-card"></b> Szenario <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li onclick="showNewSzenario()"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li onclick="showDeleteSzenario()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#about"><b class="fui-exit"></b> Testen</a></li>
+                        <li><a href="#contact"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png" style="width: 15px; height: 15px"> Statistiken</a></li>
+                        <li onclick="showContact()"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-user"></b> Julius<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li onclick="showProfil()"><a>Profil <b class="fui-gear" style="float: right"></b></a></li>
+                                <li onclick="showLogin()"><a href="#">Logout <b class="fui-lock" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <li class="active" onclick="showHelp()" style="cursor: pointer"><a><b class="fui-question-circle"></b> Hilfe</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+            <!-- <div class="sidebar">Sidebar -->
+                <div id='cssmenu' class="menu">
+                    <ul id="menuScenarios">
+                        <li class='active has-sub'>
+                            <a href='#'> <span>Szenario 1</span></a>
+                            <ul>
+                                <li class='has-sub'><a href='#'><span>Lerneinheit 1</span></a>
+                                    <ul>
+                                        <li class='last'><a href='#'><span>Alternative 1</span></a></li>
+                                        <li class='last'><a href='#'><span>Alternative 2</span></a></li>
+                                        <li class='last'><a href='#'><span>Alternative 3</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class='has-sub'><a href='#'><span>Lerneinheit 2</span></a>
+                                    <ul>
+                                        <li class='last'><a href='#'><span>Alternative 1</span></a></li>
+                                        <li class='last'><a href='#'><span>Alternative 2</span></a></li>
+                                        <li class='last'><a href='#'><span>Alternative 3</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
+                            </ul>
+                        </li>
+                        <li class='active has-sub'>
+                            <a href='#'> <span>Szenario 2</span></a>
+                            <ul>
+                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
+                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
+                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
+                            </ul>
+                        </li>
+                        <li class='active has-sub'>
+                            <a href='#'> <span>Szenario 3</span></a>
+                            <ul>
+                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
+                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
+                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            <!--</div> -->
+            <div class="main">
+                <div class="page-hdr">
+
+                    <ul class="navbar" id="navbar-left-little">
+                        <li id="navmenu" title="Show/Hide Menu" style="cursor: pointer">
+                            <span style="margin:auto">&#9776</span>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar" id="navbar-right-little">
+                        <li id="navadd" title="Add Item" style="cursor: pointer">
+                            <!--<span style="margin:auto">&#43</span>-->
+                            <span class="fui-plus"></span>
+                        </li>
+                        <li id="navtab"><a href="#" class="fui-arrow-right" style="padding: 0 9px; "></a></li>
+                    </ul>
+
+                    <span style="text-align: center">
+                        <label id="lname">
+                            <script type="text/javascript">document.write(ssname)</script>
+                        </label>
+                    </span>
+
+                </div>
+                <div id="container" class="content">
+                    <ul id="navbar-middle-little">
+                        <li class="slider" style="height: 200px;">
+                        </li>
+                    </ul>
+
+                    <!--
+                    <div id="state1" class="item">
+                        My Object <br>
+                        Test
+                    </div>
+                    <div id="state2" class="item"></div>
+                    <div id="state3" class="item"></div>
+                    -->
+
+                    <!--<div class="statemaschine" id="statemaschine">
+                        <div class="w" id="opened">BEGIN
+                            <div class="ep"></div>
+                            <div class="info" id="i1"></div>
+                        </div>
+
+                        <div class="w" id="phone1">PHONE INTERVIEW 1
+                            <div class="ep"></div>
+                        </div>
+
+                        <div class="w" id="phone2">PHONE INTERVIEW 2
+                            <div class="ep"></div>
+                        </div>
+
+                        <div class="w" id="infers">IN PERSON
+                            <div class="ep"></div>
+                        </div>
+
+                        <div class="w" id="rejected">REJECTED
+                            <div class="ep"></div>
+                        </div>
+                    </div>-->
+
+                    <div class="content" id="stm">
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Property area -->
+            <div class="properties">
+
+                <!-- tabs header-->
+                <div class="tab-Container">
+                    <ul>
+                        <!--<li class="previous"><a href="#" class="fui-arrow-left"></a></li>-->
+                        <!--<li id="navtab"><a href="#" class="fui-arrow-right" style="padding: 0 9px"></a></li>-->
+                        <li><a id="firstTab" href="#tab1"><img src="img/Icons/location-context-building.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab2"><img src="img/Icons/location-context-speed.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab3"><img src="img/Icons/personal-context-mood.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab4"><img src="img/Icons/personal-context-share.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab5"><img src="img/Icons/physical-context-noise.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab6"><img src="img/Icons/physical-context-water.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab7"><img src="img/Icons/scenario-context-input-big.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab5"><img src="img/Icons/situational-context-collaboration-big.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab6"><img src="img/Icons/situational-context-communication-big.png" width="20" height="20"></a> </li>
+                        <li><a href="#tab7"><img src="img/Icons/technical-context-device-big.png" width="20" height="20"></a></li>
+                        <li><a href="#tab7"><img src="img/Icons/technical-context-printer-big.png" width="20" height="20"></a></li>
+                        <li><a href="#" class="fui-question-circle" style="padding: 0 9px"></a></li>
+                    </ul>
+                </div>
+
+                <!-- content of the tabs -->
+                <div class="tabDetails">
+                    <div id="tab1" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab2" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab3" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab4" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab5" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab6" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab7" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab8" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab9" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                    <div id="tab10" class="tabContents">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+        <!-- OLD login -->
+        <!--<div class="modal-login" style="display: none;">
+            <p style="text-align: center;">Bitte loggen Sie sich ein!</p>
+            <form action="index.html">
+                <p><input class="form-control" name="username" placeholder="Username" type="text" size="40" maxlength="30" style="line-height: 22px"></p>
+                <p><input class="form-control" name="passwort" placeholder="Passwort" type="password" size="40" maxlength="30" style="line-height: 22px"></p>
+            </form>
+            <p style="text-align: center;"><a href="test" style="margin-right: 10px">Registrieren</a>
+                <a href="test">Passwort vergessen</a>
+            </p>
+            <p style="text-align: center">
+                <button class="btn btn-primary" style="margin-right: 10px;">Login</button>
+                <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+            </p>
+        </div>
+        -->
+        <div id="modal-login" class="modal fade" tabindex="-1">
+            <div class="modal-dialog" style="width: 400px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Login
+                    </div>
+                    <div class="modal-body">
+                        <p style="text-align: center;">Bitte loggen Sie sich ein!</p>
+                        <form action="index.html">
+                            <p><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px"></p>
+                            <p><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px"></p>
+                        </form>
+                        <div>
+                            <label id="hrefRegist" onclick="showRegistration()" style="cursor:pointer; color: #16a085; margin-right: 10px">Registrieren</label>
+                            <label id="hrefPWForgot" onclick="showPWForgot()" style="cursor:pointer; color: #16a085">Passwort vergessen</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="margin-right: 10px">Login</button>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD new scenario -->
+        <!--<div class="modal-new-szenario" style="display: none">
+            <br>
+            <form action="index.html" name="formSzenarioName">
+                <p><input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30" style="line-height: 22px"></p>
+            </form>
+
+            <br>
+
+            <select class="form-control select select-primary mbl" data-toggle="select">
+                <optgroup label="Profile">
+                    <option value="0">Constraints</option>
+                    <option value="1">Kontextinformationen</option>
+                </optgroup>
+                <optgroup label="System">
+                    <option value="2">Messages</option>
+                    <option value="3">My Settings</option>
+                    <option value="4">Logout</option>
+                </optgroup>
+            </select>
+
+            <br>
+
+            <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                <option value="0">1</option>
+                <option value="1" selected>2</option>
+                <option value="2" selected>3</option>
+                <option value="3" selected>4</option>
+                <option value="4">5</option>
+            </select>
+
+            <br>
+
+            <button id="btnSE" class="btn btn-primary" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
+            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+        </div>
+        -->
+        <div id="modal-new-szenario" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Neues Szenario erstellen
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="index.html" name="formSzenarioName">
+                            <label style="margin-bottom: 0px"><b>Name</b></label>
+                            <input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30" style="line-height: 22px">
+                        </form>
+
+                        <br>
+
+                        <select class="form-control select select-primary mbl" data-toggle="select">
+                            <option value="0">Constraints</option>
+                            <option value="1">Kontextinformationen</option>
+                        </select>
+
+                        <br>
+
+                        <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                            <option value="0" selected>1</option>
+                            <option value="1" selected>2</option>
+                            <option value="2" selected>3</option>
+                            <option value="3" selected>4</option>
+                            <option value="4" selected>5</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD -->
+        <!--<div class="modal-delete-szenario" style="display: none">
+            <p>
+                <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
+            </p>
+
+            <label><b>Szenarienübersicht</b></label>
+            <br>
+            <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+            </select>
+
+            <br>
+
+            <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                <option value="0">Hallo</option>
+                <option value="1" selected>Bello</option>
+                <option value="2" selected>Cello</option>
+                <option value="3" selected>Zoo</option>
+                <option value="4">Blatt</option>
+            </select>
+
+            <br>
+
+            <button id="btnDeleteSzenario" class="btn btn-primary" style="margin-right: 10px"></button>
+            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+
+        </div>
+        -->
+        <div id="modal-delete-szenario" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Szenarien löschen
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
+                        </p>
+
+                        <label><b>Szenarienübersicht</b></label>
+                        <br>
+                        <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                        </select>
+
+                        <br>
+
+                        <p id="choiceDeletionScenarios">
+                            <label>Zu löschende Szenarios</label><br>
+                            <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                            </select>
+                        </p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteSzenario" class="btn btn-primary" onclick="deleteScenarios()" data-dismiss="modal" style="margin-right: 10px"></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD -->
+        <div class="modal-delete-units" style="display: none">
+            <p>
+                <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
+            </p>
+
+            <label><b>Auswahl des Szenarios</b></label>
+            <br>
+            <select class="form-control select select-primary mbl" data-toggle="select">
+                <option value="0">Szenario 1</option>
+                <option value="1">Szenario 2</option>
+                <option value="1">Szenario 3</option>
+            </select>
+            <br>
+
+            <label><b>Entfernen der zu löschenden Lerneinheiten</b></label><br>
+            <select id="selectUnitDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                <option value="0" selected>Lerneinheit 1</option>
+            </select>
+            <br>
+
+            <button id="btnDeleteUnits" class="btn btn-primary" style="margin-right: 10px">Löschen</button>
+            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+
+        </div>
+
+        <!-- OLD user profile -->
+        <!--<div class="modal-user" style="display: none">
+            <form action="index.html">
+                <p>
+                    <label><b>Name</b></label><br>
+                    <input name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
+                </p>
+            </form>
+            <p>
+                <label><b>Beschreibung</b></label><br>
+                <textarea class="form-control" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
+            </p>
+
+            <p>
+                <label><b>Aktuelles Passwort</b></label><br>
+                <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort"  type="password" size="40" maxlength="30">
+            </p>
+            <p onclick="showPW()">
+                <label id="hrefPW" style="cursor:pointer; color: #16a085">Passwort ändern</label>
+            </p>
+            <p class="invis" id="pwNewProfil">
+                <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
+            </p>
+            <p class="invis" id="pwNewRepProfil">
+                <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
+            </p>
+
+            <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
+            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+        </div>
+        -->
+        <div id="modal-user" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Profil
+                    </div>
+                    <div class="modal-body">
+                        <form action="index.html">
+                            <p>
+                                <label><b>Name</b></label><br>
+                                <input name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
+                            </p>
+                        </form>
+                        <p>
+                            <label><b>Beschreibung</b></label><br>
+                            <textarea class="form-control" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
+                        </p>
+
+                        <p>
+                            <label><b>Aktuelles Passwort</b></label><br>
+                            <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort"  type="password" size="40" maxlength="30">
+                        </p>
+                        <p onclick="showPW()">
+                            <label id="hrefPW" style="cursor:pointer; color: #16a085">Passwort ändern</label>
+                        </p>
+                        <p class="invis" id="pwNewProfil">
+                            <!--<label class="modalLabel"><b>Neues Passwort</b></label><br>-->
+                            <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
+                        </p>
+                        <p class="invis" id="pwNewRepProfil">
+                            <!--<label class="modalLabel"><b>Neues Passwort bestätigen</b></label><br>-->
+                            <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD contact -->
+        <!--<div class="modal-contact" style="display: none">
+            <form>
+                <div>
+                    <label style="margin-bottom: 0px"><b>Name</b></label>
+                    <div class="form-group has-feedback">
+                        <input class="form-control" name="userName" placeholder="Gib deinen Namen ein" type="text">
+                             <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
+                                 <span class="form-control-feedback fui-question-circle"></span>
+                             </a>
+                    </div>
+                </div>
+                <div>
+                    <label style="margin-bottom: 0px"><b>E-Mail Adresse *</b></label>
+                    <div class="form-group has-feedback">
+                        <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="text">
+                        <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
+                            <span class="form-control-feedback fui-question-circle"></span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <label><b>Anmerkung *</b></label>
+                    <div class="form-group has-feedback">
+                        <textarea class="form-control" name="userText" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
+                        <span class="form-control-feedback fui-question-circle"></span>
+                    </div>
+                    <div>
+                        <label>* notwendig</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="getContentContact(this.form)" style="margin-right: 10px">Senden</button>
+                <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
+            </form>
+        </div>
+        -->
+        <div id="modal-contact" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Kontakt
+                    </div>
+                    <div class="modal-body">
+                        <form action="index.html">
+                            <div>
+                                <label style="margin-bottom: 0px"><b>Name</b></label>
+                                <div class="form-group has-feedback">
+                                    <input class="form-control" name="userName" placeholder="Gib deinen Namen ein" type="text">
+                                    <!--<span class="input-group-addon">-->
+                                    <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
+                                        <span class="form-control-feedback fui-question-circle"></span>
+                                    </a>
+                                    <!--</span>-->
+                                </div>
+                            </div>
+                            <div>
+                                <label style="margin-bottom: 0px"><b>E-Mail Adresse *</b></label>
+                                <div class="form-group has-feedback">
+                                    <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="text">
+                                    <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
+                                        <span class="form-control-feedback fui-question-circle"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <label><b>Anmerkung *</b></label>
+                                <div class="form-group has-feedback">
+                                    <textarea class="form-control" name="userText" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
+                                    <span class="form-control-feedback fui-question-circle"></span>
+                                </div>
+                                <div>
+                                    <label>* notwendig</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="reset" onclick="getContentContact(this.form)" data-dismiss="modal" style="margin-right: 10px">Senden</button>
+                            <!--<button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>-->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <!--<button class="btn btn-primary" style="margin-right: 10px">Senden</button>-->
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD help -->
+        <!--<div class="modal-help" style="display: none;">
+            <p>Hier finden Sie Hilfe!</p>
+                <form role="form">
+                    <div class="form-group">
+                        <label class="checkbox" for="checkbox1">
+                            <input type="checkbox" data-toggle="checkbox" value="" id="checkbox1" required>
+                            Unchecked
+                        </label>
+                        <label class="checkbox" for="checkbox2">
+                            <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox2" checked="">
+                            Checked
+                        </label>
+                        <label class="checkbox" for="checkbox3">
+                            <input type="checkbox" data-toggle="checkbox" value="" id="checkbox3" disabled="">
+                            Disabled unchecked
+                        </label>
+                        <label class="checkbox" for="checkbox4">
+                            <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox4" disabled="" checked="">
+                            Disabled checked
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                </form>
+        </div>
+        -->
+        <div id="modal-help" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Hilfe
+                    </div>
+                    <div class="modal-body">
+                        <p>Hier finden Sie Hilfe!</p>
+
+                        <!--<div class="cbox">-->
+                        <form role="form">
+                            <div class="form-group">
+                                <label class="checkbox" for="checkbox1">
+                                    <input type="checkbox" data-toggle="checkbox" value="" id="checkbox1" required>
+                                    Unchecked
+                                </label>
+                                <label class="checkbox" for="checkbox2">
+                                    <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox2" checked="">
+                                    Checked
+                                </label>
+                                <label class="checkbox" for="checkbox3">
+                                    <input type="checkbox" data-toggle="checkbox" value="" id="checkbox3" disabled="">
+                                    Disabled unchecked
+                                </label>
+                                <label class="checkbox" for="checkbox4">
+                                    <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox4" disabled="" checked="">
+                                    Disabled checked
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                        </form>
+                        <!--</div>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+
+</html>
