@@ -118,7 +118,7 @@ jsPlumb.ready(function () {
 
         window.jsp = inst;
 
-        var windows = jsPlumb.getSelector(".stm .w");
+        var windows = jsPlumb.getSelector("#stm .w");
 
         newState.append(title);
         //newState.append(connect);
@@ -146,7 +146,7 @@ jsPlumb.ready(function () {
 
 
         newState.dblclick(function(e) {
-            jsPlumb.detachAllConnections($(this));
+            inst.detachAllConnections($(this));
             $(this).remove();
             e.stopPropagation();
         });
@@ -157,6 +157,8 @@ jsPlumb.ready(function () {
                 //state.children('.title').text(this.value);
                 $(this).parent().text(this.value);
 
+                activateFunctionalities(newState);
+                global_currentInputUnitName = this.value;
 
                 /* NEW */
                 // add learning unit in menu bar

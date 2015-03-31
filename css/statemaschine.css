@@ -2,18 +2,19 @@
     padding: 25px;
     position: absolute;
     z-index: 4;
-    border: 1px solid #2e6f9a;
-    box-shadow: 2px 2px 19px #e0e0e0;
-    -o-box-shadow: 2px 2px 19px #e0e0e0;
-    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+    /*border: 1px solid #2e6f9a;*/
+    border: 1px solid #34495e;
+    /*box-shadow: 2px 2px 19px #e0e0e0;*/
+    /*-o-box-shadow: 2px 2px 19px #e0e0e0;*/
+    /*-webkit-box-shadow: 2px 2px 19px #e0e0e0;*/
+    /*-moz-box-shadow: 2px 2px 19px #e0e0e0;*/
+    /*-moz-border-radius: 8px;*/
+    /*border-radius: 8px;*/
     opacity: 0.8;
     filter: alpha(opacity=80);
     cursor: move;
     background-color: white;
-    font-size: 11px;
+    font-size: 14px;
     -webkit-transition: background-color 0.25s ease-in;
     -moz-transition: background-color 0.25s ease-in;
     transition: background-color 0.25s ease-in;
@@ -21,7 +22,8 @@
 }
 
 .w:hover {
-    background-color: #5c96bc;
+    /*background-color: #5c96bc;*/
+    background: #48c9b0;
     color: white;
 
 }
@@ -49,20 +51,22 @@
 
 .ep {
     position: absolute;
-    bottom: 37%;
+    /*bottom: 37%;*/
+    bottom: 40%;
     right: 5px;
     width: 1em;
     height: 1em;
     background-color: orange;
     cursor: pointer;
-    box-shadow: 0 0 2px black;
+    /*box-shadow: 0 0 2px black;
     -webkit-transition: -webkit-box-shadow 0.25s ease-in;
     -moz-transition: -moz-box-shadow 0.25s ease-in;
-    transition: box-shadow 0.25s ease-in;
+    transition: box-shadow 0.25s ease-in;*/
 }
 
 .ep:hover {
-    box-shadow: 0px 0px 6px black;
+    /*box-shadow: 0px 0px 6px black;*/
+    background: darkorange;
 }
 
 .statemaschine ._jsPlumb_endpoint {
@@ -72,38 +76,34 @@
 .statemaschine {
     position: absolute;
 }
-
+/*
 #opened {
     position: absolute;
     left: 120px;
     top: 70px;
 }
-
 #phone1 {
     position: absolute;
     left: 240px;
     top: 250px;
-    /*width: 7em;*/
+    width: 7em;
 }
-
 #infers {
     position: absolute;
     left: 350px;
     top: 70px;
 }
-
 #phone2 {
     position: absolute;
     left: 525px;
     top: 60px;
 }
-
 #rejected {
     position: absolute;
     left: 500px;
     top: 250px;
 }
-
+*/
 .dragHover {
     border: 2px solid orange;
 }
@@ -129,14 +129,14 @@ body {
     height: 1em;
     background-color: blue;
     cursor: pointer;
-    box-shadow: 0 0 2px black;
+    /*box-shadow: 0 0 2px black;
     -webkit-transition: -webkit-box-shadow 0.25s ease-in;
     -moz-transition: -moz-box-shadow 0.25s ease-in;
     transition: box-shadow 0.25s ease-in;
-    //icon: auto;
+    //icon: auto;*/
 }
 .info:hover {
-    box-shadow: 0px 0px 6px black;
+    /*box-shadow: 0px 0px 6px black;*/
 }
 
 /* new try

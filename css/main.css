@@ -221,8 +221,12 @@ ul#navbar-right {
     padding-right: 20px;
 }
 
-#navtab > a{
-    color: #000000;
+#navtab > a {
+    color: #666;
+    line-height: 1.9;
+}
+#navmenu > a {
+    color: #666;
     line-height: 1.9;
 }
 
@@ -263,7 +267,7 @@ ul#navbar-right {
 }
 #navbar-left-little > li{
     /*color: #000000;*/
-    padding: 0px 10px;
+    padding: 0px 9px;
     display: block;
     height: 30px;
 }
@@ -280,13 +284,15 @@ ul#navbar-right {
     display: block;
     height: 30px;
 }
-#navmenu {
-    /*font-size: 20px;*/
+/*#navmenu {
+    /*font-size: 20px;
     background: #ddd;
-}
+}*/
 #navadd {
     /*font-size: 15px;*/
     background: #ddd;
+    cursor: pointer;
+    color: #666;
 }
 #navbar-middle-little {
     width: 30px;
@@ -304,7 +310,7 @@ ul#navbar-right {
 }
 
 .properties {
-    background: #ddd;
+    background: #eee;
     /*padding: 4px 20px;*/
     /*color: #fff;*/
 }
@@ -401,14 +407,10 @@ ul#navbar-right {
     color: whitesmoke;
 }
 
-/* have to changed in bootstrap.css*/
-.modal-body {
-    padding: 10px 30px;
+/* set color of the deletion select bar in "delete scenarios" */
+#s2id_selectSzenarioDeletion2 {
+    border-color: #e74c3c;
 }
-.modal-dialog {
-    width: 400px;
-}
-/* END modal window*/
 
 
 /* ==========================================================================

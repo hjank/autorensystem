@@ -49,16 +49,18 @@ $(function() {
     // menu hover
     $("#navmenu").mouseover(function() {
         $(this).css("background", "#48c9b0");
-        $(this).css("color", "#ffffff");
+        $(this).css("cursor", "pointer");
+        $("#navmenu a").css("color", "#ffffff");
     });
     $("#navmenu").mouseout(function() {
         $(this).css("background", "#ddd");
-        $(this).css("color", "#000000");
+        $("#navmenu a").css("color", "#666");
     });
 
-    // toggel menu bar
+    // toggle menu bar
     $("#navmenu").on("click",function() {
         $( "#cssmenu" ).toggle("slide");
+        $("#navmenu a").toggleClass("fui-arrow-left fui-arrow-right");
     });
 
     // tooltip for menu icon
@@ -75,7 +77,7 @@ $(function() {
     });
     $("#navadd").mouseout(function() {
         $(this).css("background", "#ddd");
-        $(this).css("color", "#000000");
+        $(this).css("color", "#666");
     });
 
     // tooltip for add learning unit
@@ -88,16 +90,17 @@ $(function() {
     // tab bar hover
     $("#navtab").mouseover(function() {
         $(this).css("background", "#48c9b0");
-        $(this).css("color", "#ffffff");
+        $(this).css("cursor", "pointer");
+        $("#navtab a").css("color", "#ffffff");
     });
     $("#navtab").mouseout(function() {
         $(this).css("background", "#ddd");
-        $(this).css("color", "#000000");
+        $("#navtab a").css("color", "#666");
     });
     // toggle tab bar
     $("#navtab").on("click",function() {
         $( ".properties" ).toggle("slide");
-        $("#navtab a").toggleClass("fui-arrow-right fui-arrow-left")
+        $("#navtab a").toggleClass("fui-arrow-right fui-arrow-left");
     });
 });
 

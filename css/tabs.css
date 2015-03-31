@@ -4,23 +4,27 @@
     margin:100px auto;
     padding:20px;*/
     position:relative;
-    width:500px;
+    width: inherit;
+    height: 30px;
 }
 .tab-Container ul{
     overflow:hidden;
     /*border-right:1px solid #fff;*/
     /*height:35px;*/
-    /*height: 30px;*/
-    height: 60px;
+    height: 30px;
+    /*height: 60px;*/
     position:absolute;
     z-index:100;
     margin:0;
     padding:0;
     position: fixed;
+    width: inherit;
+    text-align: center;
 }
 .tab-Container li{
     float:left;
     list-style:none;
+    width: 25%;
 }
 .tab-Container li a{
     /*background:#ddd;*/
@@ -30,7 +34,6 @@
     color:#666;
     cursor:pointer;
     display:block;
-    /*height:35px;*/
     /*height: 35px;*/
     /*line-height:35px;*/
     line-height:30px;
@@ -56,8 +59,6 @@
     /*background:#fbfbfb;*/
     background:#eee;
     /*border:1px solid #fff;*/
-    /*margin:35px 0 0;*/
-    margin: 60px 0 0;
 }
 .tabContents{
     padding:20px;
@@ -65,4 +66,8 @@
 .tabContents p{
     padding:0 0 10px;
     font-size: 14px;
+}
+
+.label-tabs {
+    color: #666;
 }

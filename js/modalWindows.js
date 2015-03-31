@@ -7,19 +7,6 @@ var global_dataArrayScenarios = [];
 var global_arrayShowSzenarioDeletion = [];
 var global_ScenarioLiNumber = 0;
 
-/* OLD
-// modal windows
-$(function() {
-    $("#i1").click(function() {
-        $.pgwModal({
-            title: "Einstellungen",
-            content: 'My content',
-            close: true,
-            maxWidth: 500
-        });
-    });
-});
-*/
 
 // get scenario name from input field
 /*$(function() {
@@ -67,13 +54,6 @@ function showPW() {
 
 // trigger profile modal window
 function showProfil() {
-    /*$.pgwModal({
-        title: "Profil",
-        target: ".modal-user",
-        close: true,
-        closeOnEscape: true,
-        closeOnBackgroundClick: true
-    });*/
 
     $("#modal-user").on("hidden", function() {
         $("#modal-user").remove();
@@ -88,10 +68,6 @@ function showProfil() {
 
 // trigger contact modal window
 function showContact() {
-    /*$.pgwModal({
-        title: "Kontakt",
-        target: ".modal-contact"
-    });*/
 
     $("#modal-contact").on("hidden", function() {
         $("#modal-contact").remove();
@@ -124,13 +100,6 @@ function getContentContact(f) {
 
 // trigger login modal window
 function showLogin() {
-    /*$.pgwModal({
-        title: "Login",
-        target: ".modal-login",
-        close: true,
-        closeOnEscape: true,
-        closeOnBackgroundClick: true
-    });*/
 
     $("#modal-login").on("hidden", function() {
         $("#modal-login").remove();
@@ -145,11 +114,6 @@ function showLogin() {
 
 // trigger new scenario modal window
 function showNewSzenario() {
-    /*$.pgwModal({
-     title: "Neues Szenario erstellen",
-     target: ".modal-new-szenario",
-     close: true
-     });*/
 
     $("#modal-new-szenario").on("shown.bs.modal", function () {
         $("#sname").focus();
@@ -165,17 +129,31 @@ function showNewSzenario() {
 
 // trigger delete scenarios modal window
 function showDeleteSzenario() {
-    /*$.pgwModal({
-        title: "Szenarien löschen",
-        target: ".modal-delete-szenario",
-        close: true
-    });*/
 
     $("#modal-delete-szenario").modal({
         keyboard: true,
         backdrop: true,
         show: true
     });
+}
+
+// trigger load scenarios modal window
+function showLoadSzenario() {
+
+    $("#modal-load-szenario").modal({
+        keyboard: true,
+        backdrop: true,
+        show: true
+    });
+
+    $("#listLoadScenarios > option").each(function() {
+        $(this).remove();
+    });
+    for (var i = 0; i < global_dataArrayScenarios.length; i++) {
+        var option = $("<option>").attr("value", global_dataArrayScenarios[i]["id"]);
+        option.html(global_dataArrayScenarios[i]["text"]);
+        $("#listLoadScenarios").append(option);
+    }
 }
 
 // trigger delete scenarios modal window
@@ -189,11 +167,6 @@ function showDeleteUnits() {
 
 // trigger help modal window
 function showHelp() {
-    /*$.pgwModal({
-        title: "Hilfe",
-        target: ".modal-help",
-        close: true
-    });*/
 
     $("#modal-help").on("hidden", function() {
         $("#modal-help").remove();
@@ -211,7 +184,7 @@ function setScenarios() {
     var countScenarios = $("#menuScenarios").children("li").length;
     var scenarios = $("#menuScenarios").children("li");
 
-    // iterate over all scenarios in the menu bar ans add them in the selection bar
+    // iterate over all scenarios in the menu bar and add them in the selection bar
     for (var i = 0; i < countScenarios; i++) {
         var optionClass = $('<option>').attr('value', i.toString());
         optionClass.html(scenarios[i].innerText);
@@ -237,7 +210,8 @@ function updateScenario(name) {
 
 // label delete button for modal window "Delete Scenarios"
 function setLabelBtnScenarioDeletion() {
-    var countSelectedDelete = $("#selectSzenarioDeletion2 option:selected").length;
+    //var countSelectedDelete = $("#selectSzenarioDeletion2 option:selected").length;
+    var countSelectedDelete = global_arrayShowSzenarioDeletion.length;
     $("#btnDeleteSzenario").text("Löschen (" + countSelectedDelete.toString() + ")");
 }
 
@@ -293,22 +267,15 @@ $(function() {
         setLabelBtnScenarioDeletion();
     });
 
-    /*
-    // add element in deletion list and immediately delete it in scenario list
-    $("#selectSzenarioDeletion2").select2().on("select2-selecting", function(e) {
+});
 
-        for (var i = global_dataArrayScenarios.length - 1; i >= 0; i--) {
-            if (global_dataArrayScenarios[i]["id"] == e.val) {
-                global_dataArrayScenarios.splice(i,1);
-                var remove = $("#selectSzenarioDeletion>option[value='"+ e.val +"']");
-                remove.remove();
-            }
-        }
+// opens new modal window to confirm scenario deletion
+function deleteScenariosConfirm() {
 
-        $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
-        setLabelBtnScenarioDeletion();
-    });*/
-})
+    $("#modal-delete-szenario-confirm").modal({
+        show: true
+    });
+}
 
 // delete scenarios from menu bar
 function deleteScenarios() {
@@ -321,4 +288,49 @@ function deleteScenarios() {
         liScenario = liScenario.parent("a").parent("li");
         liScenario.remove();
     }
+}
+
+// get back to deletion overview after canceling deletion
+function deleteScenariosNot() {
+
+    $("#modal-delete-szenario").modal({
+        keyboard: true,
+        backdrop: true,
+        show: true
+    });
+}
+
+// load scenario with learning units on the main window
+function loadScenario() {
+
+    var sname = $("#lname")[0].innerText;
+    var selectedScenario = $("#select2-chosen-10")[0].innerText;
+
+    $("#menuScenarios > li").each(function() {
+        var menuName = $(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,"");
+
+        if ( menuName == sname ) {
+            var divSTM = $("#stm")[0].cloneNode(true);
+            divSTM.removeAttribute("id");
+            $(this).append(divSTM);
+
+            $("#stm").empty();
+        }
+
+        // find div in selected scenario with state maschine
+        if ( menuName == selectedScenario ) {
+            alert($(this).children("div").length);
+            if ( $(this).children("div").length ) {
+                alert("hat div");
+                var divLi = $(this).children("div").children().cloneNode(true);
+                $("#stm").append(divLi);
+
+            } else {
+                alert("hat nix");
+            }
+        }
+    });
+
+    $("#lname").html(selectedScenario);
+
 }
