@@ -119,3 +119,14 @@ $(function() {
         return false;
     });
 });
+
+// big navigation bar
+$(function() {
+    // fadeout hinzufuegen
+    $("#navHeadStatistic").mouseover(function() {
+        $("#navHeadStatistic>a>img").attr("src", "img/Icons/iconmonstr-bar-chart-icon-32_green.png").fadeIn();
+    });
+    $("#navHeadStatistic").mouseout(function() {
+        $("#navHeadStatistic>a>img").attr("src", "img/Icons/iconmonstr-bar-chart-icon-32.png").fadeIn();
+    });
+});

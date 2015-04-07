@@ -104,7 +104,7 @@ jsPlumb.ready(function () {
     $('#navadd,#createLearnUnit').click(function(e) {
 
         var newState = $('<div>').attr('id', 'state' + j).addClass('w');
-        var title = $('<div>').addClass('title');
+        var title = $('<div>').addClass('title').css("padding", "7px");
         var stateName = $('<input>').attr('type', 'text');
         title.append(stateName);
 

@@ -55,8 +55,8 @@ function showPW() {
 // trigger profile modal window
 function showProfil() {
 
-    $("#modal-user").on("hidden", function() {
-        $("#modal-user").remove();
+    $("#modal-user").on("shown.bs.modal", function () {
+        $("#inputUsername").focus();
     });
 
     $("#modal-user").modal({
@@ -69,10 +69,6 @@ function showProfil() {
 // trigger contact modal window
 function showContact() {
 
-    $("#modal-contact").on("hidden", function() {
-        $("#modal-contact").remove();
-    });
-
     $("#modal-contact").modal({
         keyboard: true,
         backdrop: true,
@@ -80,7 +76,7 @@ function showContact() {
     });
 }
 
-// get all content of the input fields ans send a mail
+// get all content of the input fields and send a mail
 function getContentContact(f) {
     var name = f.userName.value;
     var mail = f.userMail.value;
@@ -94,15 +90,13 @@ function getContentContact(f) {
         + "subject=" + encodeURIComponent(subject)
         + "&body=" + encodeURIComponent(text)
     );*/
-
-    $.pgwModal("close");
 }
 
 // trigger login modal window
 function showLogin() {
 
-    $("#modal-login").on("hidden", function() {
-        $("#modal-login").remove();
+    $("#modal-login").on("shown.bs.modal", function () {
+        //$("#").focus();
     });
 
     $("#modal-login").modal({
@@ -135,6 +129,7 @@ function showDeleteSzenario() {
         backdrop: true,
         show: true
     });
+
 }
 
 // trigger load scenarios modal window
@@ -146,6 +141,7 @@ function showLoadSzenario() {
         show: true
     });
 
+    // delete scenarios and put them and new scenarios in selection bar again
     $("#listLoadScenarios > option").each(function() {
         $(this).remove();
     });
@@ -288,6 +284,11 @@ function deleteScenarios() {
         liScenario = liScenario.parent("a").parent("li");
         liScenario.remove();
     }
+
+    // needed to clear the selection with the deleted scenarios in it
+    global_arrayShowSzenarioDeletion = [];
+    $("#choiceDeletionScenarios > select").empty();
+    $("#choiceDeletionScenarios > select").select2("val", "");
 }
 
 // get back to deletion overview after canceling deletion

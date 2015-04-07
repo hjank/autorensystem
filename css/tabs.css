@@ -71,3 +71,90 @@
 .label-tabs {
     color: #666;
 }
+
+#select2-drop {
+    min-width: 180px;
+}
+
+#inputUnitName {
+    margin-bottom: 20px;
+}
+
+/*optgroup[label="Umwelt"] {
+    background-color: #FADC3C;
+}*/
+/*
+#select2-result-label-22 {
+    background-color: #FADC3C;
+}
+#select2-result-label-23 {
+    background-color: #FADC3C;
+}
+#select2-result-label-24 {
+    background-color: #FADC3C;
+}
+#select2-result-label-25 {
+    background-color: #F03C32;
+}
+#select2-result-label-26 {
+    background-color: #F03C32;
+}
+#select2-result-label-27 {
+    background-color: #F03C32;
+}
+#select2-result-label-28 {
+    background-color: #AF46C8;
+}
+#select2-result-label-29 {
+    background-color: #AF46C8;
+}
+#select2-result-label-30 {
+    background-color: #AF46C8;
+}
+#select2-result-label-31 {
+    background-color: #969696;
+}
+#select2-result-label-32 {
+    background-color: #969696;
+}
+#select2-result-label-33 {
+    background-color: #969696;
+}
+#select2-result-label-34 {
+    background-color: #91F52D;
+}
+#select2-result-label-35 {
+    background-color: #91F52D;
+}
+#select2-result-label-36 {
+    background-color: #91F52D;
+}
+#select2-result-label-37 {
+    background-color: #3287C8;
+}
+#select2-result-label-38 {
+    background-color: #3287C8;
+}*/
+
+.parameter-add {
+    float: right;
+    color: #666;
+}
+
+.parameter-close {
+    line-height: 2.3;
+    margin-left: 3px;
+    color: #666;
+}
+
+.unit-icons {
+    position: absolute;
+    top: 3%;
+    left: 40%;
+}
+
+.unit-meta-icons {
+    position: absolute;
+    bottom: 3%;
+    left: 42%;
+}

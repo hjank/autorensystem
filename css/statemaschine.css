@@ -10,6 +10,7 @@
     /*-moz-box-shadow: 2px 2px 19px #e0e0e0;*/
     /*-moz-border-radius: 8px;*/
     /*border-radius: 8px;*/
+    border-radius: 4px;
     opacity: 0.8;
     filter: alpha(opacity=80);
     cursor: move;
@@ -52,7 +53,7 @@
 .ep {
     position: absolute;
     /*bottom: 37%;*/
-    bottom: 40%;
+    bottom: 42%;
     right: 5px;
     width: 1em;
     height: 1em;
@@ -62,6 +63,7 @@
     -webkit-transition: -webkit-box-shadow 0.25s ease-in;
     -moz-transition: -moz-box-shadow 0.25s ease-in;
     transition: box-shadow 0.25s ease-in;*/
+    border-radius: 4px;
 }
 
 .ep:hover {

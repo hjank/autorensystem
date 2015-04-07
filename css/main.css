@@ -399,6 +399,20 @@ ul#navbar-right {
     font-size: 15px;
 }
 
+
+
+/* scale statistic icon in big navigation bar */
+#navHeadStatistic>a>img{
+    width: 15px;
+    height: 15px;
+}
+
+/* modal window */
+/* set label color */
+.label-modal {
+    color: #000000!important;
+}
+
 /* additional bootstrap modal window header design */
 .modal-header {
     background: #1abc9c;
@@ -411,6 +425,15 @@ ul#navbar-right {
 #s2id_selectSzenarioDeletion2 {
     border-color: #e74c3c;
 }
+
+/* set label color */
+#hrefPW {
+    cursor:pointer;
+    color: #16a085;
+    margin-top: 10px;
+}
+/* END modal window*/
+
 
 
 /* ==========================================================================

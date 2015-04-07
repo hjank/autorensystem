@@ -26,6 +26,7 @@
 
         <!-- general functionalities -->
         <script type="text/javascript" src="js/functionalities.js"></script>
+        <script type="text/javascript" src="js/xmlParser.js"></script>
 
         <!-- jsplumb statemaschine functionalities -->
         <script type="text/javascript" src="js/statemaschine.js"></script>
@@ -59,6 +60,7 @@
         <script type="text/javascript" src="js/vendor/jquery-ui-slider-pips.js"></script>
 
         <link rel="stylesheet" href="css/tabs.css">
+        <link rel="stylesheet" href="css/navigation.css">
 
 
 
@@ -95,6 +97,11 @@
                 $("body").on("hidden.bs.modal", ".modal", function(e) {
                     $(this).removeData("bs.modal");
                     //$(this).data("bs.modal", null);
+                });
+
+                $("body").on("hidden.bs.modal", ".modal", function() {
+                    //alert("ja");
+                    $(this).find("form")[0].reset();
                 });
 
             });
@@ -135,8 +142,8 @@
                                 <li onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
                             </ul>
                         </li>
-                        <li><a href="#about"><b class="fui-exit"></b> Testen</a></li>
-                        <li><a href="#contact"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png" style="width: 15px; height: 15px"> Statistiken</a></li>
+                        <li><a href="#test"><b class="fui-exit"></b> Testen</a></li>
+                        <li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>
                         <li onclick="showContact()"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -205,7 +212,6 @@
                             <a href="#" class="fui-arrow-left" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
-
                     <ul class="navbar" id="navbar-right-little">
                         <li id="navadd" title="Add Item">
                             <!--<span style="margin:auto">&#43</span>-->
@@ -215,7 +221,6 @@
                             <a href="#" class="fui-arrow-right" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
-
                     <span style="text-align: center">
                         <label id="lname">
                             <script type="text/javascript">document.write(ssname)</script>
@@ -254,7 +259,6 @@
                     </div>-->
 
                     <div class="content" id="stm">
-
                     </div>
 
                 </div>
@@ -278,8 +282,8 @@
                         <li><a href="#tab7"><img src="img/Icons/technical-context-device-big.png" width="20" height="20"></a></li>
                         <li><a href="#tab7"><img src="img/Icons/technical-context-printer-big.png" width="20" height="20"></a></li>-->
                         <li><a id="firstTab" href="#tab1" title="Eigenschaften" class="fui-gear"></a> </li>
-                        <li><a href="#tab2" title="Metadaten">M</a></li>
-                        <li><a href="#tab3" title="Kontextinformationen">K</a></li>
+                        <li><a href="#tab2" title="Kontextinformationen">K</a></li>
+                        <li><a href="#tab3" title="Metadaten">M</a></li>
                         <li><a href="#help" class="fui-question-circle" title="Hilfe" style="padding: 0 9px"></a></li>
                     </ul>
                 </div>
@@ -290,44 +294,93 @@
                         <form id="formProperties">
                             <div>
                                 <label for="inputUnitName" class="label-tabs label">Name</label>
-                            </div>
-                            <div>
                                 <input id="inputUnitName" class="form-control" name="unitName" value="" type="text">
                             </div>
                             <div>
-                                <label for="inputUnitName" class="label-tabs label">Beschreibung</label>
-                            </div>
-                            <div>
-                                <textarea class="form-control" rows="5"></textarea>
+                                <label for="inputUnitDescription" class="label-tabs label">Beschreibung</label>
+                                <textarea id="inputUnitDescription" class="form-control" rows="5"></textarea>
                             </div>
                         </form>
                     </div>
                     <div id="tab2" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                        <form>
+                            <div id="contextSelection">
+                                <label class="label-tabs label">Kontextinformation</label>
+                                <a href="#" class="parameter-add" title="Parameter hinzufügen"><span class="fui-tag"></span></a>
+                                <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <optgroup label="Umwelt">
+                                        <option value="ph" disabled selected></option>
+                                        <option value="Laerm">Lärm</option>
+                                        <option value="Wasser">Wasser</option>
+                                    </optgroup>
+                                    <optgroup label="Ortung">
+                                        <option value="Gebaeude">Gebäude</option>
+                                        <option value="Geschwindigkeit">Geschwindigkeit</option>
+                                    </optgroup>
+                                    <optgroup label="Lernender">
+                                        <option value="Stimmung">Stimmung</option>
+                                        <option value="Teilen">Teilen</option>
+                                    </optgroup>
+                                    <optgroup label="Infrastruktur">
+                                        <option value="Geraet">Gerät</option>
+                                        <option value="Drucker">Drucker</option>
+                                    </optgroup>
+                                    <optgroup label="Situation">
+                                        <option value="Zusammenarbeit">Zusammenarbeit</option>
+                                        <option value="Kommunikation">Kommunikation</option>
+                                    </optgroup>
+                                    <optgroup label="Lernszenario">
+                                        <option value="Eingabe">Eingabe</option>
+                                    </optgroup>
+                                </select>
+                                <!--<div style="margin: -15px 0 0 15px">
+                                    <label class="label-tabs label">Parameter</label>
+                                    <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
+                                        <option value="0">Parameter 1</option>
+                                        <option value="1">Parameter 2</option>
+                                        <option value="2">Parameter 3</option>
+                                        <option value="3">Parameter 4</option>
+                                    </select>
+                                    <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
+                                    <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
+                                        <option value="0">Parameter 1</option>
+                                        <option value="1">Parameter 2</option>
+                                        <option value="2">Parameter 3</option>
+                                        <option value="3">Parameter 4</option>
+                                    </select>
+                                    <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
+                                </div>-->
+                            </div>
+                            <div>
+                                <label class="label-tabs label">Operator</label>
+                                <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <option value="0">Ist</option>
+                                    <option value="1">Ist nicht</option>
+                                    <option value="2">Enthält</option>
+                                    <option value="3">Enthält nicht</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-tabs label">Wert</label>
+                                <input class="form-control" name="inputContextValue">
+                            </div>
+                        </form>
                     </div>
                     <div id="tab3" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab4" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab5" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab6" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab7" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab8" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab9" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    </div>
-                    <div id="tab10" class="tabContents">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                        <form>
+                            <div>
+                                <label class="label-tabs label">Auswahl Metadaten</label>
+                                <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <option disabled selected>METADATEN</option>
+                                    <option value="0">Bild</option>
+                                    <option value="1">Film</option>
+                                    <option value="2">Text</option>
+                                    <option value="3">Navigation</option>
+                                    <option value="4">Test</option>
+                                    <option value="5">Audio</option>
+                                </select>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -338,22 +391,7 @@
 
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 
-        <!-- OLD login -->
-        <!--<div class="modal-login" style="display: none;">
-            <p style="text-align: center;">Bitte loggen Sie sich ein!</p>
-            <form action="index.html">
-                <p><input class="form-control" name="username" placeholder="Username" type="text" size="40" maxlength="30" style="line-height: 22px"></p>
-                <p><input class="form-control" name="passwort" placeholder="Passwort" type="password" size="40" maxlength="30" style="line-height: 22px"></p>
-            </form>
-            <p style="text-align: center;"><a href="test" style="margin-right: 10px">Registrieren</a>
-                <a href="test">Passwort vergessen</a>
-            </p>
-            <p style="text-align: center">
-                <button class="btn btn-primary" style="margin-right: 10px;">Login</button>
-                <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-            </p>
-        </div>
-        -->
+        <!-- login -->
         <div id="modal-login" class="modal fade" tabindex="-1">
             <div class="modal-dialog" style="width: 400px">
                 <div class="modal-content">
@@ -362,7 +400,9 @@
                         Login
                     </div>
                     <div class="modal-body">
-                        <p style="text-align: center;">Bitte loggen Sie sich ein!</p>
+                        <div style="text-align: center;">
+                            <label>Bitte loggen Sie sich ein!</label>
+                        </div>
                         <form action="index.html">
                             <p><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px"></p>
                             <p><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px"></p>
@@ -380,43 +420,7 @@
             </div>
         </div>
 
-        <!-- OLD new scenario -->
-        <!--<div class="modal-new-szenario" style="display: none">
-            <br>
-            <form action="index.html" name="formSzenarioName">
-                <p><input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30" style="line-height: 22px"></p>
-            </form>
-
-            <br>
-
-            <select class="form-control select select-primary mbl" data-toggle="select">
-                <optgroup label="Profile">
-                    <option value="0">Constraints</option>
-                    <option value="1">Kontextinformationen</option>
-                </optgroup>
-                <optgroup label="System">
-                    <option value="2">Messages</option>
-                    <option value="3">My Settings</option>
-                    <option value="4">Logout</option>
-                </optgroup>
-            </select>
-
-            <br>
-
-            <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                <option value="0">1</option>
-                <option value="1" selected>2</option>
-                <option value="2" selected>3</option>
-                <option value="3" selected>4</option>
-                <option value="4">5</option>
-            </select>
-
-            <br>
-
-            <button id="btnSE" class="btn btn-primary" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
-            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-        </div>
-        -->
+        <!-- new scenario -->
         <div id="modal-new-szenario" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -426,27 +430,28 @@
                     </div>
 
                     <div class="modal-body">
-                        <form action="index.html" name="formSzenarioName">
-                            <label style="margin-bottom: 0px"><b>Name</b></label>
-                            <input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30" style="line-height: 22px">
+                        <form name="formSzenarioName">
+                            <div>
+                                <label class="label-tabs label">Name</label>
+                                <input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30">
+                            </div>
+                            <br>
+                            <div>
+                                <select class="form-control select select-primary mbl" data-toggle="select">
+                                    <option value="0">Constraints</option>
+                                    <option value="1">Kontextinformationen</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                                    <option value="0" selected>1</option>
+                                    <option value="1" selected>2</option>
+                                    <option value="2" selected>3</option>
+                                    <option value="3" selected>4</option>
+                                    <option value="4" selected>5</option>
+                                </select>
+                            </div>
                         </form>
-
-                        <br>
-
-                        <select class="form-control select select-primary mbl" data-toggle="select">
-                            <option value="0">Constraints</option>
-                            <option value="1">Kontextinformationen</option>
-                        </select>
-
-                        <br>
-
-                        <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                            <option value="0" selected>1</option>
-                            <option value="1" selected>2</option>
-                            <option value="2" selected>3</option>
-                            <option value="3" selected>4</option>
-                            <option value="4" selected>5</option>
-                        </select>
                     </div>
 
                     <div class="modal-footer">
@@ -457,34 +462,7 @@
             </div>
         </div>
 
-        <!-- OLD delete scenario -->
-        <!--<div class="modal-delete-szenario" style="display: none">
-            <p>
-                <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
-            </p>
-
-            <label><b>Szenarienübersicht</b></label>
-            <br>
-            <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-            </select>
-
-            <br>
-
-            <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                <option value="0">Hallo</option>
-                <option value="1" selected>Bello</option>
-                <option value="2" selected>Cello</option>
-                <option value="3" selected>Zoo</option>
-                <option value="4">Blatt</option>
-            </select>
-
-            <br>
-
-            <button id="btnDeleteSzenario" class="btn btn-primary" style="margin-right: 10px"></button>
-            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-
-        </div>
-        -->
+        <!-- delete scenario -->
         <div id="modal-delete-szenario" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -493,23 +471,22 @@
                         Szenarien löschen
                     </div>
                     <div class="modal-body">
-                        <p>
-                            <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
-                        </p>
-
-                        <label><b>Szenarienübersicht</b></label>
-                        <br>
-                        <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                        </select>
-
-                        <br>
-
-                        <p id="choiceDeletionScenarios">
-                            <label>Zu löschende Szenarios</label><br>
-                            <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                            </select>
-                        </p>
-
+                        <form>
+                            <div>
+                                <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
+                            </div>
+                            <div>
+                                <label class="label label-modal">Szenarienübersicht</label>
+                                <br>
+                                <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                                </select>
+                            </div>
+                            <div id="choiceDeletionScenarios">
+                                <label class="label label-modal">Zu löschende Szenarios</label><br>
+                                <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                                </select>
+                            </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button id="btnDeleteSzenario" class="btn btn-danger" onclick="deleteScenariosConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
@@ -563,7 +540,7 @@
             </div>
         </div>
 
-        <!-- OLD -->
+        <!-- delete units -->
         <div class="modal-delete-units" style="display: none">
             <p>
                 <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
@@ -589,37 +566,7 @@
 
         </div>
 
-        <!-- OLD user profile -->
-        <!--<div class="modal-user" style="display: none">
-            <form action="index.html">
-                <p>
-                    <label><b>Name</b></label><br>
-                    <input name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
-                </p>
-            </form>
-            <p>
-                <label><b>Beschreibung</b></label><br>
-                <textarea class="form-control" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
-            </p>
-
-            <p>
-                <label><b>Aktuelles Passwort</b></label><br>
-                <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort"  type="password" size="40" maxlength="30">
-            </p>
-            <p onclick="showPW()">
-                <label id="hrefPW" style="cursor:pointer; color: #16a085">Passwort ändern</label>
-            </p>
-            <p class="invis" id="pwNewProfil">
-                <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
-            </p>
-            <p class="invis" id="pwNewRepProfil">
-                <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
-            </p>
-
-            <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
-            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-        </div>
-        -->
+        <!-- user profile -->
         <div id="modal-user" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -628,32 +575,35 @@
                         Profil
                     </div>
                     <div class="modal-body">
-                        <form action="index.html">
-                            <p>
-                                <label><b>Name</b></label><br>
-                                <input name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
-                            </p>
+                        <form>
+                            <div>
+                                <label class="label-modal label">Name</label>
+                                <input autofocus id="inputUsername" name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
+                            </div>
+                            <div>
+                                <label class="label-modal label">Beschreibung</label>
+                                <textarea class="form-control" rows="4"></textarea>
+                            </div>
+                            <div>
+                                <label class="label-modal label">Aktuelles Passwort</label><br>
+                                <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort" type="password" maxlength="30">
+                            </div>
+                            <div>
+                                <a onclick="showPW()">
+                                    <label id="hrefPW">Passwort ändern</label>
+                                </a>
+                            </div>
+                            <div>
+                                <p class="invis" id="pwNewProfil">
+                                    <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
+                                </p>
+                            </div>
+                            <div>
+                                <p class="invis" id="pwNewRepProfil">
+                                    <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
+                                </p>
+                            </div>
                         </form>
-                        <p>
-                            <label><b>Beschreibung</b></label><br>
-                            <textarea class="form-control" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
-                        </p>
-
-                        <p>
-                            <label><b>Aktuelles Passwort</b></label><br>
-                            <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort"  type="password" size="40" maxlength="30">
-                        </p>
-                        <p onclick="showPW()">
-                            <label id="hrefPW" style="cursor:pointer; color: #16a085">Passwort ändern</label>
-                        </p>
-                        <p class="invis" id="pwNewProfil">
-                            <!--<label class="modalLabel"><b>Neues Passwort</b></label><br>-->
-                            <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
-                        </p>
-                        <p class="invis" id="pwNewRepProfil">
-                            <!--<label class="modalLabel"><b>Neues Passwort bestätigen</b></label><br>-->
-                            <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
-                        </p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
@@ -663,42 +613,7 @@
             </div>
         </div>
 
-        <!-- OLD contact -->
-        <!--<div class="modal-contact" style="display: none">
-            <form>
-                <div>
-                    <label style="margin-bottom: 0px"><b>Name</b></label>
-                    <div class="form-group has-feedback">
-                        <input class="form-control" name="userName" placeholder="Gib deinen Namen ein" type="text">
-                             <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
-                                 <span class="form-control-feedback fui-question-circle"></span>
-                             </a>
-                    </div>
-                </div>
-                <div>
-                    <label style="margin-bottom: 0px"><b>E-Mail Adresse *</b></label>
-                    <div class="form-group has-feedback">
-                        <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="text">
-                        <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
-                            <span class="form-control-feedback fui-question-circle"></span>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <label><b>Anmerkung *</b></label>
-                    <div class="form-group has-feedback">
-                        <textarea class="form-control" name="userText" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
-                        <span class="form-control-feedback fui-question-circle"></span>
-                    </div>
-                    <div>
-                        <label>* notwendig</label>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="getContentContact(this.form)" style="margin-right: 10px">Senden</button>
-                <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-            </form>
-        </div>
-        -->
+        <!-- contact -->
         <div id="modal-contact" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -707,7 +622,7 @@
                         Kontakt
                     </div>
                     <div class="modal-body">
-                        <form action="index.html">
+                        <form>
                             <div>
                                 <label style="margin-bottom: 0px"><b>Name</b></label>
                                 <div class="input-group">
@@ -750,32 +665,7 @@
             </div>
         </div>
 
-        <!-- OLD help -->
-        <!--<div class="modal-help" style="display: none;">
-            <p>Hier finden Sie Hilfe!</p>
-                <form role="form">
-                    <div class="form-group">
-                        <label class="checkbox" for="checkbox1">
-                            <input type="checkbox" data-toggle="checkbox" value="" id="checkbox1" required>
-                            Unchecked
-                        </label>
-                        <label class="checkbox" for="checkbox2">
-                            <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox2" checked="">
-                            Checked
-                        </label>
-                        <label class="checkbox" for="checkbox3">
-                            <input type="checkbox" data-toggle="checkbox" value="" id="checkbox3" disabled="">
-                            Disabled unchecked
-                        </label>
-                        <label class="checkbox" for="checkbox4">
-                            <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox4" disabled="" checked="">
-                            Disabled checked
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                </form>
-        </div>
-        -->
+        <!-- help -->
         <div id="modal-help" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
