@@ -20,9 +20,17 @@ var array_ContextInformations = [];
 
 $(function() {
 
+    // http://localhost:9998/xml/get-context-information
+    var domain = "localhost";
+    var port = "9998";
+    var uri = "/xml/get-context-information"
+    var url = "http://" + domain + ":" + port + uri;
+    //header('Access-Control-Allow-Origin: *');
+
     $.ajax({
         type: "GET",
         url: "measurable-context-information.xml",
+        //url: url,
         dataType: "xml",
         success: function(xml) {
 
@@ -161,9 +169,9 @@ $(function() {
 
                 array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter);
                 array_ContextInformations.push(array_ContextInformation);
-                console.log(array_ContextInformation);
+                //console.log(array_ContextInformation);
             });
-
+            parsingFinished();
         }
     });
 });
@@ -313,22 +321,22 @@ function translate_contextClass(cc) {
 
     switch (cc) {
         case "CC_SCENARIO":
-            cc = "Szenario";
+            cc = "Lernszenario";    // color: #3287C8
             break;
         case "CC_PERSONAL":
-            cc = "Persönlich";
+            cc = "Persönlich";      // color: #AF46C8
             break;
         case "CC_SITUATIONAL":
-            cc = "Situationsbezogen";
+            cc = "Situationsbezogen";   // color: #91F52D
             break;
         case "CC_TECHNICAL":
-            cc = "Technisch";
+            cc = "Infrastruktur";   // color: #969696
             break;
         case "CC_PHYSICAL":
-            cc = "Physisch";
+            cc = "Umwelt";        // color: #FADC3C
             break;
         case "CC_LOCATION":
-            cc = "Ortsbezogen";
+            cc = "Ortung";      // color: #F03C32
             break;
     }
     return cc;

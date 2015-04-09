@@ -17,10 +17,10 @@
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
         <!-- general javascript scripts -->
-        <script src="//code.jquery.com/jquery-2.0.3.js"></script>
-        <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
-        <!--<script src="js/vendor/jquery-1.10.2-min.js"></script>-->
-        <!--<script src="js/vendor/jquery-ui-1.9.2.min.js"></script>-->
+        <!--<script src="//code.jquery.com/jquery-2.0.3.js"></script>-->
+        <!--<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>-->
+        <script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.4-min.js"></script>
 
@@ -33,7 +33,7 @@
 
         <!-- Menu bar -->
         <link rel="stylesheet" href="css/menu.css">
-        <script src="js/menu.js"></script>
+        <script type="text/javascript" src="js/menu.js"></script>
 
         <!-- tab bar -->
         <script type="text/javascript" src="js/tabs.js"></script>
@@ -303,66 +303,96 @@
                         </form>
                     </div>
                     <div id="tab2" class="tabContents">
-                        <form>
-                            <div id="contextSelection">
-                                <label class="label-tabs label">Kontextinformation</label>
-                                <a href="#" class="parameter-add" title="Parameter hinzufügen"><span class="fui-tag"></span></a>
-                                <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                    <optgroup label="Umwelt">
-                                        <option value="ph" disabled selected></option>
-                                        <option value="Laerm">Lärm</option>
-                                        <option value="Wasser">Wasser</option>
-                                    </optgroup>
-                                    <optgroup label="Ortung">
-                                        <option value="Gebaeude">Gebäude</option>
-                                        <option value="Geschwindigkeit">Geschwindigkeit</option>
-                                    </optgroup>
-                                    <optgroup label="Lernender">
-                                        <option value="Stimmung">Stimmung</option>
-                                        <option value="Teilen">Teilen</option>
-                                    </optgroup>
-                                    <optgroup label="Infrastruktur">
-                                        <option value="Geraet">Gerät</option>
-                                        <option value="Drucker">Drucker</option>
-                                    </optgroup>
-                                    <optgroup label="Situation">
-                                        <option value="Zusammenarbeit">Zusammenarbeit</option>
-                                        <option value="Kommunikation">Kommunikation</option>
-                                    </optgroup>
-                                    <optgroup label="Lernszenario">
-                                        <option value="Eingabe">Eingabe</option>
-                                    </optgroup>
-                                </select>
-                                <!--<div style="margin: -15px 0 0 15px">
+                        <form id="formContextInformation">
+                            <div>
+                                <div>
+                                    <label class="label-tabs label">Auswahl</label><br>
+                                    <select id="selectNumberContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 90px;">
+                                        <option value="0">Alle</option>
+                                        <option value="1">Eine</option>
+                                    </select>
+                                    <a href="#" class="contextInfo-add" title="Kontextinformation hinzufügen"><span class="fui-plus-circle"></span></a>
+                                </div>
+                                <div>
+                                    <label class="label-tabs label">Gewählt</label>
+                                    <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 180px">
+                                        <!--<option value="0" selected>Test</option>
+                                        <option value="1" selected>Hallo</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="detailContextInfo" style="display: none">
+                                <hr class="hr-tabs">
+                                <div id="contextSelection">
+                                    <label class="label-tabs label">Kontextinformation</label>
+                                    <!--<a href="#" class="parameter-add" title="Parameter hinzufügen"><span class="fui-tag"></span></a>-->
+                                    <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        <!--<optgroup label="Umwelt">
+                                            <option value="ph" disabled selected></option>
+                                            <option value="Laerm">Lärm</option>
+                                            <option value="Wasser">Wasser</option>
+                                        </optgroup>
+                                        <optgroup label="Ortung">
+                                            <option value="Gebaeude">Gebäude</option>
+                                            <option value="Geschwindigkeit">Geschwindigkeit</option>
+                                        </optgroup>
+                                        <optgroup label="Lernender">
+                                            <option value="Stimmung">Stimmung</option>
+                                            <option value="Teilen">Teilen</option>
+                                        </optgroup>
+                                        <optgroup label="Infrastruktur">
+                                            <option value="Geraet">Gerät</option>
+                                            <option value="Drucker">Drucker</option>
+                                        </optgroup>
+                                        <optgroup label="Situation">
+                                            <option value="Zusammenarbeit">Zusammenarbeit</option>
+                                            <option value="Kommunikation">Kommunikation</option>
+                                        </optgroup>
+                                        <optgroup label="Lernszenario">
+                                            <option value="Eingabe">Eingabe</option>
+                                        </optgroup>-->
+                                    </select>
+                                    <!--<div style="margin: -15px 0 0 15px">
+                                        <label class="label-tabs label">Parameter</label>
+                                        <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
+                                            <option value="0">Parameter 1</option>
+                                            <option value="1">Parameter 2</option>
+                                            <option value="2">Parameter 3</option>
+                                            <option value="3">Parameter 4</option>
+                                        </select>
+                                        <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
+                                        <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
+                                            <option value="0">Parameter 1</option>
+                                            <option value="1">Parameter 2</option>
+                                            <option value="2">Parameter 3</option>
+                                            <option value="3">Parameter 4</option>
+                                        </select>
+                                        <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
+                                    </div>-->
+                                </div>
+                                <div>
+                                    <label class="label-tabs label">Operator</label>
+                                    <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        <!--<option value="0">Ist</option>
+                                        <option value="1">Ist nicht</option>
+                                        <option value="2">Enthält</option>
+                                        <option value="3">Enthält nicht</option>-->
+                                    </select>
+                                </div>
+                                <div id="divContextValue">
+                                    <label class="label-tabs label">Wert</label>
+                                    <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue(this)">
+                                    <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 180px; display: none">
+                                    </select>
+                                </div>
+                                <div>
                                     <label class="label-tabs label">Parameter</label>
-                                    <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
-                                        <option value="0">Parameter 1</option>
-                                        <option value="1">Parameter 2</option>
-                                        <option value="2">Parameter 3</option>
-                                        <option value="3">Parameter 4</option>
+                                    <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
                                     </select>
-                                    <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
-                                    <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
-                                        <option value="0">Parameter 1</option>
-                                        <option value="1">Parameter 2</option>
-                                        <option value="2">Parameter 3</option>
-                                        <option value="3">Parameter 4</option>
-                                    </select>
-                                    <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
-                                </div>-->
-                            </div>
-                            <div>
-                                <label class="label-tabs label">Operator</label>
-                                <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                    <option value="0">Ist</option>
-                                    <option value="1">Ist nicht</option>
-                                    <option value="2">Enthält</option>
-                                    <option value="3">Enthält nicht</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="label-tabs label">Wert</label>
-                                <input class="form-control" name="inputContextValue">
+                                </div>
+                                <div>
+                                    <div class="btn btn-info" onclick="confirmContextInformation()">Bestätigen</div>
+                                </div>
                             </div>
                         </form>
                     </div>

@@ -3,13 +3,15 @@
  */
 
 var global_currentInputUnitName = "";
-var counter_parameter = 0;
-var counter_parElem = 0;
+//var counter_parameter = 0;
+//var counter_parElem = 0;
+var counter_multiSelectionContextInfos = 0;
+var array_multiSelectionContextInfos = [];
 
 $(function() {
 
     /* create parameter dropdown selection */
-    var divParameter = $("<div>").attr("style", "margin: -15px 0 0 15px");
+    /*var divParameter = $("<div>").attr("style", "margin: -15px 0 0 15px");
     divParameter.attr("id", "divPar");
     var labelParameter = $("<label>").addClass("label-tabs label");
     labelParameter.attr("id", "labelPar");
@@ -73,7 +75,7 @@ $(function() {
             alert("Es können keine weiteren Parameter hinzugefüht werden!");
         }
 
-    });
+    });*/
     /* END parameter dropdown selection */
 
 
@@ -227,7 +229,7 @@ function contextInfoFormat2 (element) {
 
 
 // needed to get event handling on parameter deletion button
-function activateDeleteParameter(paraElem) {
+/*function activateDeleteParameter(paraElem) {
 
     // triggered if deletion button is clicked
     $("#aPar" + paraElem).on("click", function() {
@@ -256,5 +258,329 @@ function activateDeleteParameter(paraElem) {
     $("#selPar" + paraElem).select2().on("select2-selecting", function(e) {
         alert("Text:" + e.choice.text + " Value:" + e.val);
     });
+
+}*/
+
+// fill selection bars in tab "Kontextinformation"
+function parsingFinished() {
+
+    // triggered if one option was selected ("Eine" or "Alle")
+    $("#selectNumberContextInfos").select2().on("select2-selecting", function(e) {
+
+        // show the detailed information for the context information (1 == "Eine")
+        if (e.val == 1) {
+            $("#detailContextInfo").slideDown();
+
+            // clear multi-selection
+            $("#selectMultiContextInfos").empty();
+            $("#selectMultiContextInfos").select2("data", null);
+            array_multiSelectionContextInfos = [];
+
+            /* add context information in selction bar */
+            // clean selection
+            $("#selectContextInfos").empty();
+            $("#selectContextInfos").select2("data", {id:"\r",text:"\r"});
+            $("#selectOperator").empty();
+            $("#selectOperator").select2("data", {id:"\r",text:"\r"});
+
+            // fill selection "Kontextinformation"
+            for (var i=0; i<array_ContextInformations.length; i++) {
+                var option = $("<option>").attr("value", i.toString());
+                option.html(array_ContextInformations[i][0]);
+                $("#selectContextInfos").append(option);
+            }
+            /* end */
+
+        }
+        // hide the detailed information for the context information (0 == "Alle")
+        if (e.val == 0) {
+            $("#detailContextInfo").slideUp();
+
+            // clear multi-selection
+            $("#selectMultiContextInfos").empty();
+            $("#selectMultiContextInfos").select2("data", null);
+
+            // put all given context informations into the multi-selection
+            var array_multiContextInfos = [];
+            for (var i=0; i<array_ContextInformations.length; i++) {
+                var option = $("<option>").attr("value", i.toString()).attr("selected", "selected");
+                option.html(array_ContextInformations[i][0]);
+                $("#selectMultiContextInfos").append(option);
+                array_multiContextInfos.push({id:i, text:array_ContextInformations[i][0]})
+            }
+            $("#selectMultiContextInfos").select2("data", array_multiContextInfos);
+        }
+    });
+
+    // re-change the colors of the multi selection in contex information
+    $('#selectMultiContextInfos').select2().on("change", function(e) {
+        $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").each(function() {
+            changeColorMultiContextInfos(this);
+        });
+    });
+
+    // change the colors of the multi selection in contex information to custom colors
+    $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").each(function() {
+        changeColorMultiContextInfos(this);
+    });
+
+
+    // triggered if context information was selected
+    $("#selectContextInfos").select2().on("select2-selecting", function(e) {
+        var j = e.val;
+        var operators = array_ContextInformations[j][2][1];
+
+        // clear selection bar
+        $("#selectOperator").empty();
+
+        // set empty field in selected start field
+        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
+
+        // fill selection bar "Operator"
+        for (var i=0; i<operators.length; i++) {
+            var option = $("<option>").attr("value", i.toString());
+            option.html(operators[i]);
+            $("#selectOperator").append(option);
+        }
+
+        // fill input field
+        fillInputField(array_ContextInformations[j][2]);
+
+        // fill parameter selection bar
+        fillParameterSelection(array_ContextInformations[j][3]);
+
+    });
+}
+
+// fill input field (value in tab Kontexinformation)
+function fillInputField(ci) {
+
+    // clear input field caused by removing input field and re-building
+    $("#inputContextValue").remove();
+    var inputField = $("<input>").addClass("form-control").attr("id", "inputContextValue")
+        .attr("onkeyup", "getInputContextValue(this)");
+    $("#divContextValue").append(inputField);
+
+    var type = ci[0][0]["type"];   // float, integer, string, enum, boolean
+
+    switch (type) {
+
+        case "FLOAT":
+            configueInputContextValueForFloatInt(ci[0]);
+            break;
+
+        case "INTEGER":
+            configueInputContextValueForFloatInt(ci[0]);
+            break;
+
+        case "STRING":
+            $("#inputContextValue").attr("disabled", false);
+            $("#inputContextValue").attr("type", "text");
+            $("#inputContextValue").css("display", "block");
+            $("#selectPossibleValues").css("display", "none");
+            $("#s2id_selectPossibleValues").css("display", "none");
+            $("#inputContextValue").attr("maxlength", 40);
+            break;
+
+        case "ENUM":
+            $("#inputContextValue").css("display", "none");
+            $("#selectPossibleValues").css("display", "block");
+            $("#s2id_selectPossibleValues").css("display", "block");
+
+            for (var i=0; i<ci[2].length; i++) {
+                var option = $("<option>").attr("value", i.toString());
+                option.html(ci[2][i]);
+                $("#selectPossibleValues").append(option);
+            }
+            break;
+
+        case "BOOLEAN":
+            $("#inputContextValue").attr("disabled", true);
+            $("#inputContextValue").css("display", "block");
+            $("#selectPossibleValues").css("display", "none");
+            $("#s2id_selectPossibleValues").css("display", "none");
+            break;
+
+    }
+
+}
+
+// set the need functionalities into the input field for float and integer values
+function configueInputContextValueForFloatInt(ci) {
+
+    var min, max, def = null;
+    $("#inputContextValue").attr("disabled", false);
+    $("#inputContextValue").attr("type", "number");
+    $("#inputContextValue").css("display", "block");
+    $("#selectPossibleValues").css("display", "none");
+    $("#s2id_selectPossibleValues").css("display", "none");
+
+    for (var i=1; i<ci.length; i++) {
+
+        // find minimum if given
+        if (ci[i]["min"]) {
+            min = ci[i]["min"];
+        }
+        // find maximum if given
+        if (ci[i]["max"]) {
+            max = ci[i]["max"];
+        }
+        // find default value if given
+        if (ci[i]["default"]) {
+            def = ci[i]["default"];
+
+            // set default value in input field
+            $("#inputContextValue").attr("value", def);
+        }
+    }
+
+    // set minimum and maximum in input field
+    if (min && max) {
+        //$("#inputContextValue").attr("pattern", ".{" + min + "," + max + "}");
+        $("#inputContextValue").attr("min", min).attr("max", max);
+    }
+    if (min &&  !max) {
+        $("#inputContextValue").attr("min", min);
+    }
+    if (!min && max) {
+        $("#inputContextValue").attr("max", max);
+    }
+}
+
+// get current value from input field
+function getInputContextValue(val) {
+
+    // reduce to big values to maximum
+    if ( $("#inputContextValue")[0].hasAttribute("max") ) {
+        var max = $("#inputContextValue")[0].getAttribute("max");
+        max = parseInt(max);
+        if (val.value > max) {
+            val.value = max;
+        }
+    }
+
+    // increase to little values to minimum
+    if ( $("#inputContextValue")[0].hasAttribute("min") ) {
+        var min = $("#inputContextValue")[0].getAttribute("min");
+        min = parseInt(min);
+        if (val.value < min) {
+            val.value = min;
+        }
+    }
+
+    // do not allow no numbers
+    /*if (val.value.length == 0) {
+        var regex = /[0-9]/;
+        if( !regex.test(val.value) ) {
+            val.value = 0;
+        }
+    }*/
+
+}
+
+// get the current needed input fields and selection bars (tab Kontextinformation)
+function fillParameterSelection(cp) {
+
+    // clear selection bar
+    $("#selectParameter").empty();
+
+    // set empty field in selected start field
+    $("#selectParameter").select2("data", {id:"\r",text:"\r"});
+
+    console.log(cp);
+    // cp[i][0] = parameter name
+    // cp[i][1] = type (enum, string, float, integer)
+    // cp[i][2] = possible values
+
+    // iterate through all parameters
+    for (var i=0; i<cp.length; i++) {
+
+        var type = cp[i][1];
+
+        switch (type) {
+
+            // type enum needs a dropdown selection for only possible values
+            case "ENUM":
+
+                for (var j=0; j<cp[i][2].length; j++) {
+                    var option = $("<option>").attr("value", j.toString());
+                    option.html(cp[i][2][j]);
+                    $("#selectParameter").append(option);
+                }
+                break;
+
+            // type float needs an input field and a label
+            case "FLOAT":
+                break;
+
+            // type integer needs an input field and a label
+            case "INTEGER":
+                break;
+
+            // type string needs an input field and a label
+            case "STRING":
+                break;
+
+        }
+
+    }
+
+}
+
+// change colors
+function changeColorMultiContextInfos(obj) {
+    if (obj.innerHTML == "Test") {
+        $(obj).parent().css("background-color", "red");
+    }
+    if (obj.innerHTML == "Hallo") {
+        $(obj).parent().css("background-color", "green");
+    }
+}
+
+// triggered if button "Bestätigen" was clicked
+// Job: - evaluate the seletions and inputs
+//      - put context information in multi selection bar
+function confirmContextInformation() {
+
+    console.log($("#selectParameter").select2("data"));
+
+    /* check if all needed fields were filled with informaions */
+    var missing_content = "";
+
+    // check selection bar "Kontextinformationen"
+    if ( $("#selectContextInfos").select2("data") == null ) {
+        missing_content += " - Kontextinformation\n";
+    }
+    // check selection bar "Operator"
+    if ( $("#selectOperator").select2("data")["text"].length <= 1 ) {
+        missing_content += " - Operator\n";
+    }
+    // check selection bar "Parameter"
+    if ( $("#selectParameter").select2("data")["text"].length <= 1 &&  $("#selectParameter")[0].length != 0) {
+        missing_content += " - Parameter\n";
+    }
+
+    // if something needed is missing
+    if (missing_content != "") {
+        alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
+        return false;
+    }
+
+
+    /* get selected context information name into multi selection bar */
+    var k = counter_multiSelectionContextInfos;
+
+    // get name
+    var contextInfoName = $("#selectContextInfos").select2("data").text;
+    var option = $("<option>").attr("value", k.toString()).attr("selected", "selected");
+    option.html(contextInfoName);
+
+    // get name into multi selection
+    $("#selectMultiContextInfos").append(option);
+    array_multiSelectionContextInfos.push({id:k, text:contextInfoName});
+    $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+    // increase counter --> needed for continuous ids
+    counter_multiSelectionContextInfos ++;
 
 }

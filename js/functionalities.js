@@ -4,11 +4,11 @@
 
 
 // drag specific elements
-$(function() {
+/*$(function() {
     $("#state1").draggable();
     $("#state2").draggable();
     $("#state3").draggable();
-});
+});*/
 
 
 // slider
@@ -109,6 +109,7 @@ $(function() {
     $(".tabContents").hide();
     $(".tabContents:first").show();
     $("#firstTab").addClass("active");
+
     $(".tab-Container ul li a").click(function() {
         var activeTab = $(this).attr("href");
         $(".tab-Container ul li a").removeClass("active");
@@ -122,7 +123,6 @@ $(function() {
 
 // big navigation bar
 $(function() {
-    // fadeout hinzufuegen
     $("#navHeadStatistic").mouseover(function() {
         $("#navHeadStatistic>a>img").attr("src", "img/Icons/iconmonstr-bar-chart-icon-32_green.png").fadeIn();
     });

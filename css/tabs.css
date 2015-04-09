@@ -136,16 +136,36 @@
     background-color: #3287C8;
 }*/
 
-.parameter-add {
+.contextInfo-add {
     float: right;
     color: #666;
+    line-height: 2.3;
 }
 
-.parameter-close {
+.hr-tabs {
+    border-top: 1px solid #ccc;
+}
+
+.select2-container-multi.multiselect-custom {
+    border-color: #48c9b0;
+}
+.select2-container-multi.multiselect-custom .select2-search-choice {
+    background-color: red;
+}
+.select2-container-multi.multiselect-custom .select2-search-choice:hover {
+    background-color: lightcoral;
+}
+
+/*.parameter-add {
+    float: right;
+    color: #666;
+}*/
+
+/*.parameter-close {
     line-height: 2.3;
     margin-left: 3px;
     color: #666;
-}
+}*/
 
 .unit-icons {
     position: absolute;
