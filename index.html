@@ -94,13 +94,12 @@
 
 
             $(function() {
-                $("body").on("hidden.bs.modal", ".modal", function(e) {
+                /*$("body").on("hidden.bs.modal", ".modal", function(e) {
                     $(this).removeData("bs.modal");
                     //$(this).data("bs.modal", null);
-                });
+                });*/
 
                 $("body").on("hidden.bs.modal", ".modal", function() {
-                    //alert("ja");
                     $(this).find("form")[0].reset();
                 });
 
@@ -142,8 +141,8 @@
                                 <li onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
                             </ul>
                         </li>
-                        <li><a href="#test"><b class="fui-exit"></b> Testen</a></li>
-                        <li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>
+                        <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
+                        <!--<li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>-->
                         <li onclick="showContact()"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

@@ -402,10 +402,10 @@ ul#navbar-right {
 
 
 /* scale statistic icon in big navigation bar */
-#navHeadStatistic>a>img{
+/*#navHeadStatistic>a>img{
     width: 15px;
     height: 15px;
-}
+}*/
 
 /* modal window */
 /* set label color */

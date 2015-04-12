@@ -85,6 +85,21 @@ $(function() {
         //initSelection: function(element, callback){}
     });
 
+    // get new selected element to change the color to the defined context class color
+    /*$("#selectMultiContextInfos").select2().on("select2-selecting", function(e) {
+
+        var contextClass = array_ContextInformations[e.val][1][0];
+        var color = getColor(contextClass);
+
+        // change color
+        if ( $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").innerHTML == e.choice.text ) {
+            $(this).parent().css("background-color", color);
+        }
+
+
+    });*/
+
+
 });
 
 // get name into tab properties
@@ -312,17 +327,17 @@ function parsingFinished() {
         }
     });
 
-    // re-change the colors of the multi selection in contex information
-    $('#selectMultiContextInfos').select2().on("change", function(e) {
+    // re-change the colors of the multi selection in context information
+    /*$('#selectMultiContextInfos').select2().on("change", function(e) {
         $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").each(function() {
             changeColorMultiContextInfos(this);
         });
-    });
+    });*/
 
-    // change the colors of the multi selection in contex information to custom colors
-    $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").each(function() {
+    // change the colors of the multi selection in context information to custom colors
+    /*$("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").each(function() {
         changeColorMultiContextInfos(this);
-    });
+    });*/
 
 
     // triggered if context information was selected
@@ -366,27 +381,32 @@ function fillInputField(ci) {
     switch (type) {
 
         case "FLOAT":
-            configueInputContextValueForFloatInt(ci[0]);
+            configureInputContextValueForFloatInt(ci[0]);
             break;
 
         case "INTEGER":
-            configueInputContextValueForFloatInt(ci[0]);
+            configureInputContextValueForFloatInt(ci[0]);
             break;
 
         case "STRING":
-            $("#inputContextValue").attr("disabled", false);
-            $("#inputContextValue").attr("type", "text");
-            $("#inputContextValue").css("display", "block");
-            $("#selectPossibleValues").css("display", "none");
+            $("#inputContextValue").attr("disabled", false);        // activate input field
+            $("#inputContextValue").attr("type", "text");           // set type to text
+            $("#inputContextValue").css("display", "block");        // make input field visible
+            $("#selectPossibleValues").css("display", "none");      // and selection bar invisible
             $("#s2id_selectPossibleValues").css("display", "none");
-            $("#inputContextValue").attr("maxlength", 40);
+            $("#inputContextValue").attr("maxlength", 40);          // set max length to 40
             break;
 
         case "ENUM":
-            $("#inputContextValue").css("display", "none");
-            $("#selectPossibleValues").css("display", "block");
+            $("#inputContextValue").css("display", "none");         // make input field invisible
+            $("#selectPossibleValues").css("display", "block");     // and selection bar visible
             $("#s2id_selectPossibleValues").css("display", "block");
 
+            // clear selection
+            $("#selectPossibleValues").empty();
+            $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
+
+            // fill selection bar
             for (var i=0; i<ci[2].length; i++) {
                 var option = $("<option>").attr("value", i.toString());
                 option.html(ci[2][i]);
@@ -395,9 +415,9 @@ function fillInputField(ci) {
             break;
 
         case "BOOLEAN":
-            $("#inputContextValue").attr("disabled", true);
-            $("#inputContextValue").css("display", "block");
-            $("#selectPossibleValues").css("display", "none");
+            $("#inputContextValue").attr("disabled", true);         // disable input field
+            $("#inputContextValue").css("display", "block");        // make input field visible
+            $("#selectPossibleValues").css("display", "none");      // and selection bar invisible
             $("#s2id_selectPossibleValues").css("display", "none");
             break;
 
@@ -406,7 +426,7 @@ function fillInputField(ci) {
 }
 
 // set the need functionalities into the input field for float and integer values
-function configueInputContextValueForFloatInt(ci) {
+function configureInputContextValueForFloatInt(ci) {
 
     var min, max, def = null;
     $("#inputContextValue").attr("disabled", false);
@@ -487,7 +507,7 @@ function fillParameterSelection(cp) {
     // set empty field in selected start field
     $("#selectParameter").select2("data", {id:"\r",text:"\r"});
 
-    console.log(cp);
+    //console.log(cp);
     // cp[i][0] = parameter name
     // cp[i][1] = type (enum, string, float, integer)
     // cp[i][2] = possible values
@@ -527,22 +547,10 @@ function fillParameterSelection(cp) {
 
 }
 
-// change colors
-function changeColorMultiContextInfos(obj) {
-    if (obj.innerHTML == "Test") {
-        $(obj).parent().css("background-color", "red");
-    }
-    if (obj.innerHTML == "Hallo") {
-        $(obj).parent().css("background-color", "green");
-    }
-}
-
 // triggered if button "Bestätigen" was clicked
 // Job: - evaluate the seletions and inputs
 //      - put context information in multi selection bar
 function confirmContextInformation() {
-
-    console.log($("#selectParameter").select2("data"));
 
     /* check if all needed fields were filled with informaions */
     var missing_content = "";
@@ -552,35 +560,116 @@ function confirmContextInformation() {
         missing_content += " - Kontextinformation\n";
     }
     // check selection bar "Operator"
-    if ( $("#selectOperator").select2("data")["text"].length <= 1 ) {
+    if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
         missing_content += " - Operator\n";
     }
+    // check input "Wert" is visible AND filled with information
+    if ( $("#inputContextValue")[0].style.display == "block" && $("#inputContextValue")[0].disabled == false ) {
+        if ( $("#inputContextValue")[0].value == "" ) {
+            missing_content += " - Wert\n";
+        }
+
+    // check if selection bar "Wert" is visible AND filled with information
+    } else if ( $("#selectPossibleValues")[0].style.display == "block" ) {
+        if ( $("#selectPossibleValues").select2("data")["text"] == "\r" ) {
+            missing_content += " - Wert\n";
+        }
+    }
+
     // check selection bar "Parameter"
-    if ( $("#selectParameter").select2("data")["text"].length <= 1 &&  $("#selectParameter")[0].length != 0) {
+    if ( $("#selectParameter").select2("data")["text"] == "\r" &&  $("#selectParameter")[0].length != 0) {
         missing_content += " - Parameter\n";
     }
 
     // if something needed is missing
-    if (missing_content != "") {
+    if ( !!missing_content ) {
         alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
         return false;
     }
 
 
     /* get selected context information name into multi selection bar */
-    var k = counter_multiSelectionContextInfos;
+    var id = $("#selectContextInfos").select2("data").id;
 
     // get name
     var contextInfoName = $("#selectContextInfos").select2("data").text;
-    var option = $("<option>").attr("value", k.toString()).attr("selected", "selected");
+    var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
     option.html(contextInfoName);
 
     // get name into multi selection
     $("#selectMultiContextInfos").append(option);
-    array_multiSelectionContextInfos.push({id:k, text:contextInfoName});
+    array_multiSelectionContextInfos.push({id:id, text:contextInfoName});
     $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+
+    // change color per option
+    var name = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div");
+    $(name).each(function() {
+
+            // iterate over all multi selections
+            for (var i=0; i<array_multiSelectionContextInfos.length; i++) {
+
+                // get id
+                var thisID = array_multiSelectionContextInfos[i]["id"];
+
+                // find right one
+                if (array_multiSelectionContextInfos[i]["text"] == this.innerHTML) {
+
+                    // get first context class
+                    var contextClass = array_ContextInformations[thisID][1][0];
+
+                    // get specific context class color
+                    var color = getColor(contextClass);
+                    $(this).parent().css("background-color", color);
+                    break;
+                }
+            }
+
+    });
 
     // increase counter --> needed for continuous ids
     counter_multiSelectionContextInfos ++;
+}
 
+// change colors
+/*function changeColorMultiContextInfos(obj) {
+
+    console.log(obj);
+
+    if (obj.innerHTML == "Test") {
+        $(obj).parent().css("background-color", "red");
+    }
+    if (obj.innerHTML == "Hallo") {
+        $(obj).parent().css("background-color", "green");
+    }
+    if (obj.innerHTML == "Ton verfügbar") {
+        $(obj).parent().css("background-color", "red");
+    }
+}*/
+
+// get the specific color for each context class
+function getColor(cc) {
+    var color;
+
+    switch (cc) {
+        case "Lernszenario":
+            color = "#3287C8";    // color: #3287C8
+            break;
+        case "Persönlich":
+            color = "#AF46C8";      // color: #AF46C8
+            break;
+        case "Situationsbezogen":
+            color = "#91F52D";   // color: #91F52D
+            break;
+        case "Infrastruktur":
+            color = "#969696";   // color: #969696
+            break;
+        case "Umwelt":
+            color = "#FADC3C";        // color: #FADC3C
+            break;
+        case "Ortung":
+            color = "#F03C32";      // color: #F03C32
+            break;
+    }
+    return color;
 }
