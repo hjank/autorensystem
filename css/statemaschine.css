@@ -1,5 +1,5 @@
 .w {
-    padding: 25px;
+    padding: 20px;
     position: absolute;
     z-index: 4;
     /*border: 1px solid #2e6f9a;*/
@@ -26,7 +26,6 @@
     /*background-color: #5c96bc;*/
     background: #48c9b0;
     color: white;
-
 }
 
 .aLabel {
@@ -53,7 +52,7 @@
 .ep {
     position: absolute;
     /*bottom: 37%;*/
-    bottom: 42%;
+    bottom: 38%;
     right: 5px;
     width: 1em;
     height: 1em;

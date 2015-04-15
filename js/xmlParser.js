@@ -3,6 +3,7 @@
  */
 
 var array_ContextInformations = [];
+var array_ContextClasses = [];
 
 /** Structure context informations
 
@@ -23,15 +24,22 @@ $(function() {
     // http://localhost:9998/xml/get-context-information
     var domain = "localhost";
     var port = "9998";
-    var uri = "/xml/get-context-information"
+    var uri = "/xml/get-context-information";
     var url = "http://" + domain + ":" + port + uri;
     //header('Access-Control-Allow-Origin: *');
+
+    /*$.ajaxSetup({
+        beforeSend: function(xhr) {xhr.setRequestHeader('Access-Control-Allow-Origin', '*');}
+    });*/
 
     $.ajax({
         type: "GET",
         url: "measurable-context-information.xml",
         //url: url,
         dataType: "xml",
+        //headers: {"Access-Control-Allow-Origin": "*"},
+        //crossDomain: true,
+        //beforeSend: function(xhr) {xhr.setRequestHeader('Access-Control-Allow-Origin', '*');},
         success: function(xml) {
 
             // parse all needed information from the xml file
@@ -148,7 +156,7 @@ $(function() {
                                     // floats have always a minimum and maximum value
                                     var min = this.getAttribute("min");
                                     var max = this.getAttribute("max");
-                                    array_values.push(min, max);
+                                    array_values.push({"min":min, "max":max});
                                     array_values.name = "Minimum and Maximum Values";
                                     break;
 
@@ -174,6 +182,10 @@ $(function() {
             parsingFinished();
         }
     });
+
+    // fill context classes array (needed for visualization)
+    array_ContextClasses.push("Lernszenario", "Persönlich", "Situationsbezogen",
+        "Infrastruktur", "Umwelt", "Ortung");
 });
 
 // translate context information into german
@@ -462,19 +474,19 @@ function translate_parameter(p) {
             p = "Zeitstelle";
             break;
         case "CP_RESOLUTION_COMPONENT":
-            p = "Auslösungsmaß";
+            p = "Auflösungsmaß";
             break;
         case "CP_RESOLUTION_UNIT":
-            p = "Auslösungseinheit";
+            p = "Auflösungseinheit";
             break;
         case "CP_LEARNING_UNIT_ID":
             p = "Lerneinheits-ID";
             break;
         case "CP_TARGET_LATITUDE":
-            p = "Zielbreitengrad";
+            p = "Breitengrad";
             break;
         case "CP_TARGET_LONGITUDE":
-            p = "Ziellängengrad";
+            p = "Längengrad";
             break;
         case "CP_LATITUDE":
             p = "Breitengrad";

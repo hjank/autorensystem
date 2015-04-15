@@ -104,9 +104,12 @@ jsPlumb.ready(function () {
     $('#navadd,#createLearnUnit').click(function(e) {
 
         var newState = $('<div>').attr('id', 'state' + j).addClass('w');
-        var title = $('<div>').addClass('title').css("padding", "7px");
+        var title = $('<div>').addClass('title').css("padding", "0px 7px");
         var stateName = $('<input>').attr('type', 'text');
         title.append(stateName);
+
+        // add div for context information icons
+        var divContextIcons = $("<div>").addClass("unit-icons");
 
         //var connect = $('<div>').addClass('connection');
         var ep = $('<div>').addClass('ep');
@@ -120,6 +123,7 @@ jsPlumb.ready(function () {
 
         var windows = jsPlumb.getSelector("#stm .w");
 
+        newState.append(divContextIcons);
         newState.append(title);
         //newState.append(connect);
         newState.append(ep);
@@ -167,7 +171,7 @@ jsPlumb.ready(function () {
                 var ulCurrentScenario;
                 var liNewUnit = $("<li>").addClass("last");
                 var aNewUnit = $("<a>").attr("href", "#");
-                var spanNewUnit = $("<span>")
+                var spanNewUnit = $("<span>");
                 liCurrentScenario = liCurrentScenario.parent("a").parent("li");
 
                 // necessary if the running scenario has a unit already

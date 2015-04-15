@@ -13,7 +13,7 @@
     /*height:35px;*/
     height: 30px;
     /*height: 60px;*/
-    position:absolute;
+    /*position:absolute;*/
     z-index:100;
     margin:0;
     padding:0;
@@ -73,68 +73,12 @@
 }
 
 #select2-drop {
-    min-width: 180px;
+    min-width: 90px;
 }
 
 #inputUnitName {
     margin-bottom: 20px;
 }
-
-/*optgroup[label="Umwelt"] {
-    background-color: #FADC3C;
-}*/
-/*
-#select2-result-label-22 {
-    background-color: #FADC3C;
-}
-#select2-result-label-23 {
-    background-color: #FADC3C;
-}
-#select2-result-label-24 {
-    background-color: #FADC3C;
-}
-#select2-result-label-25 {
-    background-color: #F03C32;
-}
-#select2-result-label-26 {
-    background-color: #F03C32;
-}
-#select2-result-label-27 {
-    background-color: #F03C32;
-}
-#select2-result-label-28 {
-    background-color: #AF46C8;
-}
-#select2-result-label-29 {
-    background-color: #AF46C8;
-}
-#select2-result-label-30 {
-    background-color: #AF46C8;
-}
-#select2-result-label-31 {
-    background-color: #969696;
-}
-#select2-result-label-32 {
-    background-color: #969696;
-}
-#select2-result-label-33 {
-    background-color: #969696;
-}
-#select2-result-label-34 {
-    background-color: #91F52D;
-}
-#select2-result-label-35 {
-    background-color: #91F52D;
-}
-#select2-result-label-36 {
-    background-color: #91F52D;
-}
-#select2-result-label-37 {
-    background-color: #3287C8;
-}
-#select2-result-label-38 {
-    background-color: #3287C8;
-}*/
 
 .contextInfo-add {
     float: right;
@@ -144,16 +88,6 @@
 
 .hr-tabs {
     border-top: 1px solid #ccc;
-}
-
-.select2-container-multi.multiselect-custom {
-    border-color: #48c9b0;
-}
-.select2-container-multi.multiselect-custom .select2-search-choice {
-    background-color: red;
-}
-.select2-container-multi.multiselect-custom .select2-search-choice:hover {
-    background-color: lightcoral;
 }
 
 /*.parameter-add {
@@ -168,13 +102,34 @@
 }*/
 
 .unit-icons {
-    position: absolute;
+}
+.unit-icon {
+    /*position: absolute;
     top: 3%;
-    left: 40%;
+    left: 40%;*/
+    padding: 0 1px;
+    display: inline-flex;
 }
 
 .unit-meta-icons {
-    position: absolute;
+    /*position: absolute;
     bottom: 3%;
-    left: 42%;
+    left: 42%;*/
+    /*float: left;*/
+    padding: 0 5px;
+    display: inline-flex;
 }
+
+#divContextParameter > div {
+    display: none;
+}
+
+
+.divParameterInputs {
+    display: table-cell;
+    padding-right: 10px;
+}
+.divParameterInputs > input{
+    width: 80px;
+}
+

@@ -5,8 +5,11 @@
 var global_currentInputUnitName = "";
 //var counter_parameter = 0;
 //var counter_parElem = 0;
+var list_units = [];
 var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
+var array_multiSelectionMetaData = [];
+var counter_multiSelectionMetaData = 0;
 
 $(function() {
 
@@ -79,27 +82,8 @@ $(function() {
     /* END parameter dropdown selection */
 
 
-    // TEST: initialize selection bar
-    $("#selectMetaData").select2({
-        placeholder: "Metadaten"
-        //initSelection: function(element, callback){}
-    });
-
-    // get new selected element to change the color to the defined context class color
-    /*$("#selectMultiContextInfos").select2().on("select2-selecting", function(e) {
-
-        var contextClass = array_ContextInformations[e.val][1][0];
-        var color = getColor(contextClass);
-
-        // change color
-        if ( $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div").innerHTML == e.choice.text ) {
-            $(this).parent().css("background-color", color);
-        }
-
-
-    });*/
-
-
+    /*$("#selectMetaData").empty();
+    $("#selectMetaData").select2("data", {id:"\r",text:"\r"});*/
 });
 
 // get name into tab properties
@@ -109,9 +93,23 @@ function activateFunctionalities(newState) {
     var unit = document.getElementById(id);
     var name = "";
 
-    // triggered if learning unit is clicked
-    $(unit).click(function() {
+    // get newState id in unit list
+    list_units.push(unit);
 
+    // triggered if learning unit is clicked
+    $(unit).click(function(event) {
+
+        // clear marking
+        for (var l=0; l<list_units.length; l++) {
+            $(list_units[l]).css("background", "");
+            $(list_units[l]).css("color", "");
+        }
+
+        // unit is marked --> change color
+        $(unit).css("background", "#16a085");
+        $(unit).css("color", "white");
+
+        /* input field in tab "Eigenschaften"*/
         // get name of the unit
         if ($(unit).children("div").hasClass("title")) {
             name = (this).innerText.replace(/(\r\n|\n|\r)/gm,"");
@@ -122,8 +120,23 @@ function activateFunctionalities(newState) {
         formObject.elements["unitName"].value = name;
         global_currentInputUnitName = name;
 
-        //$("#selectContextInfos").select2("val", " ");
-        $("#selectContextInfos option[value='ph']").remove();
+        /* tab "Kontextinformation" */
+
+        /* multi selection bar in tab "Metadaten" */
+        // clear multi selection in meta data tab
+        $("#selectMultiMetaData").empty();
+        $("#selectMultiMetaData").select2("data", null);
+        array_multiSelectionMetaData = [];
+
+        // get data back in multi selection bar from a past edited learning unit
+        var array_icons = $(unit).find(".unit-meta-icons");
+        for (var j=0; j<array_icons.length; j++) {
+            array_multiSelectionMetaData.push({"id":j, "text":$(array_icons[j])[0].title});
+        }
+        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+
+        // prevents that underlying container is also clicked (needed for unit marking)
+        event.stopPropagation();
     });
 
     // triggered if string is changed in input field
@@ -141,107 +154,162 @@ function activateFunctionalities(newState) {
     // triggered if an option in selection "Kontextinformation" was selected
     $("#selectContextInfos").select2().on("select2-selecting", function(e) {
 
+        var selElem = e.object.element[0];
+        var optgroup = $(selElem).parent()[0].label;
+
         if (name == global_currentInputUnitName) {
-            var divContextIcon = $("<div>").addClass("unit-icons").attr("id", id + "icon");
-            var icon = $("<img>").attr("src", "img/test/" + e.val + ".png");
-            icon.attr("width", "17").attr("height", "17");
+            var divContextIcon = $("<div>").addClass("unit-icon").attr("id", id + "icon");
+            var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
+            icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text);
 
             // check whether the unit has an icon already
-            if ($(unit).find("div.unit-icons").length) {
+            /*if ($(unit).find("div.unit-icons").length) {
                 $(unit).find("div.unit-icons").remove();
                 divContextIcon.append(icon);
                 $(unit).append(divContextIcon);
 
                 // no icon exists
-            } else {
-                divContextIcon.append(icon);
-                $(unit).append(divContextIcon);
-            }
+            } else {*/
+
+            // add icon und div to unit
+            divContextIcon.append(icon);
+            $(unit).children("div.unit-icons").append(divContextIcon);
+
+            // design reasons
+            $(unit).css("padding-top", "10px");
+            $(unit).children("div.unit-icons").css("height", "21px");
+            $(unit).children("div.unit-icons").css("border", "1px solid #34495e");
+            $(unit).children("div.unit-icons").css("border-radius", "4px");
+            $(unit).children("div.unit-icons").css("display", "inline-block");
+            //}
         }
     });
 
     // triggered if an option in selection "Operator" was selected
     $("#selectOperator").select2().on("select2-selecting", function(e) {
-        alert("Text:" + e.choice.text + " Value:" + e.val);
+        //alert("Text:" + e.choice.text + " Value:" + e.val);
     });
 
     // triggered if an option in selection "Metadaten" was seleceted
     $("#selectMetaData").select2().on("select2-selecting", function(e) {
 
         if (name == global_currentInputUnitName) {
-            var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", id + "metaIcon");
 
+            // no two same meta data symbols allowed
+            for (var i = 0; i < array_multiSelectionMetaData.length; i++) {
+                if (array_multiSelectionMetaData[i]["text"] == e.choice.text) {
+                    return true;
+                }
+            }
+
+            var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
+
+            // choose icon symbol
             var metaIcon;
             switch (e.choice.text) {
                 case "Bild":
                     metaIcon = "fui-photo";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
                 case "Film":
                     metaIcon = "fui-video";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
                 case "Text":
                     metaIcon = "fui-document";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
                 case "Navigation":
                     metaIcon = "fui-location";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
                 case "Test":
                     metaIcon = "fui-radio-unchecked";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
                 case "Audio":
                     metaIcon = "fui-volume";
+                    divMetaIcon.attr("title", e.choice.text);
                     break;
             }
 
             var bMetaIcon = $("<b>").addClass(metaIcon);
 
-            // check whether the unit has an meta icon already
-            if ($(unit).find("div.unit-meta-icons").length) {
-                $(unit).find("div.unit-meta-icons").remove();
-            }
-
+            // get icon in learning unit
             divMetaIcon.append(bMetaIcon);
             $(unit).append(divMetaIcon);
+
+            // change size of learning unit
+            //if (counter_multiSelectionMetaData == 0) {
+            $(unit).css("padding-bottom", "5px");
+            //}
+
+            // clear multi selection bar
+            $("#selectMultiMetaData").empty();
+            $("#selectMultiMetaData").select2("data", null);
+
+            // get meta data in multi selection bar
+            array_multiSelectionMetaData.push({"id": counter_multiSelectionMetaData, "text": e.choice.text});
+            $("#selectMultiMetaData").select2({
+                formatSelection: formatMultiMetaData,
+                escapeMarkup: function(m) {return m;}
+            });
+            $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+
+            counter_multiSelectionMetaData ++;
         }
     });
-}
-/* Begin */
-// get images into selection from "Kontextinformation"
-/*
-$(function() {
-    $("#selectContextInfos").select2({
-        formatResult: contextInfoFormat,
-        formatSelection: contextInfoFormat2,
+
+    // remove option from multi selection bar
+    //$("#selectMultiMetaData").select2().on("select2-removed", function(e) {
+
+    //});
+
+    // resets the glyphs in selection bar
+    $("#selectMetaData").select2({
+        formatSelection: formatMetaData,
+        formatResult: formatMetaData,
         escapeMarkup: function(m) {return m;}
     });
-});
-
-// get images into selection from "Kontextinformation"
-function contextInfoFormat(element) {
-
-    // for optmenus
-    if (!element.id) {
-        return element.text;
-    }
-
-    var e = '<img src="img/test/' + element.id + '.png"/> ' + element.text;
-
-    console.log("2");
-    console.log(e);
-    return e;
 }
 
-// get images into selection from "Kontextinformation"
-function contextInfoFormat2 (element) {
+// change shown format in multi selection bar in "Metadaten"
+function formatMultiMetaData(item) {
 
-    var e = '<img src="img/test/' + element.id + '.png"/> ' + element.text;
+    switch (item.text) {
+        case "Bild":
+            return '<b class="fui-photo"></b>';
+        case "Film":
+            return '<b class="fui-video"></b>';
+        case "Text":
+            return '<b class="fui-document"></b>';
+        case "Navigation":
+            return '<b class="fui-location"></b>';
+        case "Test":
+            return '<b class="fui-radio-unchecked"></b>';
+        case "Audio":
+            return '<b class="fui-volume"></b>';
+    }
+}
 
-    console.log("1");
-    console.log(e);
-    return e;
-}*/
-/* END */
+// change shown format in selection bar in "Metadaten"
+function formatMetaData(item) {
 
+    switch (item.text) {
+        case "Bild":
+            return '<b class="fui-photo"> </b>' + item.text;
+        case "Film":
+            return '<b class="fui-video"> </b> ' + item.text;
+        case "Text":
+            return '<b class="fui-document"> </b>' + item.text;
+        case "Navigation":
+            return '<b class="fui-location"> </b> ' + item.text;
+        case "Test":
+            return '<b class="fui-radio-unchecked"> </b> ' + item.text;
+        case "Audio":
+            return '<b class="fui-volume"> </b>' + item.text;
+    }
+}
 
 // needed to get event handling on parameter deletion button
 /*function activateDeleteParameter(paraElem) {
@@ -292,19 +360,14 @@ function parsingFinished() {
             array_multiSelectionContextInfos = [];
 
             /* add context information in selction bar */
-            // clean selection
+            // clean selections
             $("#selectContextInfos").empty();
             $("#selectContextInfos").select2("data", {id:"\r",text:"\r"});
             $("#selectOperator").empty();
             $("#selectOperator").select2("data", {id:"\r",text:"\r"});
 
-            // fill selection "Kontextinformation"
-            for (var i=0; i<array_ContextInformations.length; i++) {
-                var option = $("<option>").attr("value", i.toString());
-                option.html(array_ContextInformations[i][0]);
-                $("#selectContextInfos").append(option);
-            }
-            /* end */
+            /* fill selection "Kontextinformation" */
+            fillSelectionContextInformation();
 
         }
         // hide the detailed information for the context information (0 == "Alle")
@@ -363,8 +426,55 @@ function parsingFinished() {
 
         // fill parameter selection bar
         fillParameterSelection(array_ContextInformations[j][3]);
-
     });
+
+    /* 3.tab "Metadaten" */
+    var array_SelectionMetaData = ["Bild", "Film", "Text", "Navigation", "Test", "Audio"];
+
+    for (var i=0; i<array_SelectionMetaData.length; i++) {
+        var option = $("<option>").attr("value", i.toString());
+        option.html(array_SelectionMetaData[i]);
+        $("#selectMetaData").append(option);
+    }
+    $("#selectMetaData").select2({
+        formatSelection: formatMetaData,
+        formatResult: formatMetaData,
+        escapeMarkup: function(m) {return m;}
+    });
+}
+
+// fill selection bar "Kontextinformation"
+function fillSelectionContextInformation() {
+
+    var array_optgroups = [];
+
+    // iterate through all context classes
+    for (var j=0; j<array_ContextClasses.length; j++) {
+        var classname = array_ContextClasses[j];
+        var optgroup = $("<optgroup>").attr("label", classname);
+        array_optgroups.push(optgroup);
+    }
+
+    // iterate through all context informations
+    for (var i=0; i<array_ContextInformations.length; i++) {
+        var option = $("<option>").attr("value", i.toString());
+        option.html(array_ContextInformations[i][0]);
+
+        // find right context class and put it in this optgroup
+        for (var k=0; k<array_ContextClasses.length; k++) {
+            if (array_ContextInformations[i][1][0] == array_ContextClasses[k]) {
+                array_optgroups[k].append(option);
+                break;
+            }
+        }
+
+        //$("#selectContextInfos").append(option);
+    }
+
+    // append optgroups and included options in selection bar "Kontextinformation"
+    for (var l=0; l<array_optgroups.length; l++) {
+        $("#selectContextInfos").append(array_optgroups[l]);
+    }
 }
 
 // fill input field (value in tab Kontexinformation)
@@ -503,9 +613,27 @@ function fillParameterSelection(cp) {
 
     // clear selection bar
     $("#selectParameter").empty();
+    $("#selectParameter2").empty();
 
     // set empty field in selected start field
     $("#selectParameter").select2("data", {id:"\r",text:"\r"});
+    $("#selectParameter2").select2("data", {id:"\r",text:"\r"});
+
+    // clear input fields caused by removing input fields and re-building
+    $("#inputContextParameter1").remove();
+    $("#inputContextParameter2").remove();
+    $("#inputParameterString").remove();
+    var inputField = $("<input>").addClass("form-control").attr("id", "inputContextParameter1")
+        .attr("type", "number").attr("onkeyup", "getParameterInput(this,1)");
+    var inputField2 = $("<input>").addClass("form-control").attr("id", "inputContextParameter2")
+        .attr("type", "number").attr("onkeyup", "getParameterInput(this,2)");
+    var inputField3 = $("<input>").addClass("form-control").attr("id", "inputParameterString");
+    $("#divParameterInput1").append(inputField);
+    $("#divParameterInput2").append(inputField2);
+    $("#divParameterString").append(inputField3);
+
+    // set all parameter fields invisible
+    $("#divContextParameter > div").css("display", "none");
 
     //console.log(cp);
     // cp[i][0] = parameter name
@@ -515,6 +643,7 @@ function fillParameterSelection(cp) {
     // iterate through all parameters
     for (var i=0; i<cp.length; i++) {
 
+        // get the current type
         var type = cp[i][1];
 
         switch (type) {
@@ -522,29 +651,118 @@ function fillParameterSelection(cp) {
             // type enum needs a dropdown selection for only possible values
             case "ENUM":
 
+                // get all possible values
                 for (var j=0; j<cp[i][2].length; j++) {
                     var option = $("<option>").attr("value", j.toString());
                     option.html(cp[i][2][j]);
-                    $("#selectParameter").append(option);
+
+                    // needed if first seletion is already existing
+                    if ( $("#divParameterSelection1").css("display") == "block" ) {
+                        // append possible values
+                        $("#selectParameter2").append(option);
+
+                        // add specific label to selection
+                        $("#divParameterSelection2").children("label").html(cp[i][0]);
+
+                        // make selection visible
+                        $("#divParameterSelection2").css("display", "block");
+
+                    } else {
+                        // append possible values
+                        $("#selectParameter").append(option);
+
+                        // add specific label to selection
+                        $("#divParameterSelection1").children("label").html(cp[i][0]);
+                    }
+                }
+                // make selection visible
+                $("#divParameterSelection1").css("display", "block");
+                break;
+
+            // type float needs one/two input fields and a label
+            case "FLOAT":
+                if ( $("#divParameterInput1").css("display") == "table-cell" ) {
+                    $("#divParameterInput2").css("display", "table-cell");
+                    $("#divParameterInput2").children("label").html(cp[i][0]);
+                    setMinMax(cp[i][2], $("#inputContextParameter2"));
+                } else {
+                    $("#divParameterInput1").css("display", "table-cell");
+                    $("#divParameterInput1").children("label").html(cp[i][0]);
+                    setMinMax(cp[i][2], $("#inputContextParameter1"));
                 }
                 break;
 
-            // type float needs an input field and a label
-            case "FLOAT":
-                break;
-
-            // type integer needs an input field and a label
+            // type integer needs one/two input fields and a label
             case "INTEGER":
+                if ( $("#divParameterInput1").css("display") == "table-cell" ) {
+                    $("#divParameterInput2").css("display", "table-cell");
+                    $("#divParameterInput2").children("label").html(cp[i][0]);
+                    //setMinMax(cp[i][2], $("#inputContextParameter2"));
+                } else {
+                    $("#divParameterInput1").css("display", "table-cell");
+                    $("#divParameterInput1").children("label").html(cp[i][0]);
+                    //setMinMax(cp[i][2], $("#inputContextParameter1"));
+                }
                 break;
 
             // type string needs an input field and a label
             case "STRING":
+                $("#divParameterString").css("display", "block");
+                $("#divParameterString").children("label").html(cp[i][0]);
                 break;
 
         }
+    }
+}
 
+// set minima and maxima if needed in input fields in tab "Kontextinformation"
+function setMinMax(values, inputField) {
+
+    var min, max = null;
+    for (var i=0; i<values.length; i++) {
+
+        // find minimum if given
+        if (values[i]["min"]) {
+            min = values[i]["min"];
+        }
+        // find maximum if given
+        if (values[i]["max"]) {
+            max = values[i]["max"];
+        }
     }
 
+    // set minimum and maximum in input field
+    if (min && max) {
+        inputField.attr("min", min).attr("max", max);
+    }
+    if (min &&  !max) {
+        inputField.attr("min", min);
+    }
+    if (!min && max) {
+        inputField.attr("max", max);
+    }
+}
+
+// get current value from input field
+function getParameterInput(val, num) {
+
+    // reduce to big values to maximum
+    if ( $("#inputContextParameter" + num)[0].hasAttribute("max") ) {
+        var max = $("#inputContextParameter" + num)[0].getAttribute("max");
+        max = parseInt(max);
+        if (val.value > max) {
+            val.value = max;
+        }
+    }
+
+    // increase to little values to minimum
+    if ( $("#inputContextParameter" + num)[0].hasAttribute("min") ) {
+        var min = $("#inputContextParameter" + num)[0].getAttribute("min");
+        min = parseInt(min);
+        if (val.value < min) {
+            val.value = min;
+        }
+    }
 }
 
 // triggered if button "Bestätigen" was clicked
@@ -624,28 +842,11 @@ function confirmContextInformation() {
                     break;
                 }
             }
-
     });
 
     // increase counter --> needed for continuous ids
     counter_multiSelectionContextInfos ++;
 }
-
-// change colors
-/*function changeColorMultiContextInfos(obj) {
-
-    console.log(obj);
-
-    if (obj.innerHTML == "Test") {
-        $(obj).parent().css("background-color", "red");
-    }
-    if (obj.innerHTML == "Hallo") {
-        $(obj).parent().css("background-color", "green");
-    }
-    if (obj.innerHTML == "Ton verfügbar") {
-        $(obj).parent().css("background-color", "red");
-    }
-}*/
 
 // get the specific color for each context class
 function getColor(cc) {

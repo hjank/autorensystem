@@ -102,7 +102,6 @@
                 $("body").on("hidden.bs.modal", ".modal", function() {
                     $(this).find("form")[0].reset();
                 });
-
             });
 
         </script>
@@ -116,7 +115,7 @@
         <![endif]-->
 
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container" style="margin-left: 0px;">
+            <div class="container" style="margin-left: 0;">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -269,21 +268,10 @@
                 <!-- tabs header-->
                 <div class="tab-Container">
                     <ul>
-                        <!--<li><a id="firstTab" href="#tab1"><img src="img/Icons/location-context-building.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab2"><img src="img/Icons/location-context-speed.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab3"><img src="img/Icons/personal-context-mood.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab4"><img src="img/Icons/personal-context-share.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab5"><img src="img/Icons/physical-context-noise.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab6"><img src="img/Icons/physical-context-water.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab7"><img src="img/Icons/scenario-context-input-big.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab5"><img src="img/Icons/situational-context-collaboration-big.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab6"><img src="img/Icons/situational-context-communication-big.png" width="20" height="20"></a> </li>
-                        <li><a href="#tab7"><img src="img/Icons/technical-context-device-big.png" width="20" height="20"></a></li>
-                        <li><a href="#tab7"><img src="img/Icons/technical-context-printer-big.png" width="20" height="20"></a></li>-->
                         <li><a id="firstTab" href="#tab1" title="Eigenschaften" class="fui-gear"></a> </li>
                         <li><a href="#tab2" title="Kontextinformationen">K</a></li>
                         <li><a href="#tab3" title="Metadaten">M</a></li>
-                        <li><a href="#help" class="fui-question-circle" title="Hilfe" style="padding: 0 9px"></a></li>
+                        <li><a href="#help" class="fui-question-circle" title="Hilfe"></a></li>
                     </ul>
                 </div>
 
@@ -372,10 +360,6 @@
                                 <div>
                                     <label class="label-tabs label">Operator</label>
                                     <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                        <!--<option value="0">Ist</option>
-                                        <option value="1">Ist nicht</option>
-                                        <option value="2">Enthält</option>
-                                        <option value="3">Enthält nicht</option>-->
                                     </select>
                                 </div>
                                 <div id="divContextValue">
@@ -384,13 +368,34 @@
                                     <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 180px; display: none">
                                     </select>
                                 </div>
-                                <div>
-                                    <label class="label-tabs label">Parameter</label>
-                                    <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                    </select>
+                                <div id="divContextParameter">
+                                    <div id="divParameterSelection1">
+                                        <label class="label-tabs label">Parameter</label>
+                                        <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        </select>
+                                    </div>
+                                    <!--<div id="divParameterInputs">-->
+                                        <div id="divParameterInput1" class="divParameterInputs">
+                                            <label class="label-tabs label"></label>
+                                            <input id="inputContextParameter1" class="form-control" type="number" onkeyup="getParameterInput(this)">
+                                        </div>
+                                        <div id="divParameterInput2" class="divParameterInputs">
+                                            <label class="label-tabs label"></label>
+                                            <input id="inputContextParameter2" class="form-control" type="number" onkeyup="getParameterInput(this, 2)">
+                                        </div>
+                                    <!--</div>-->
+                                    <div id="divParameterString">
+                                        <label class="label-tabs label"></label>
+                                        <input id="inputParameterString" class="form-control" type="text">
+                                    </div>
+                                    <div id="divParameterSelection2">
+                                        <label class="label-tabs label">Parameter2</label>
+                                        <select id="selectParameter2" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        </select>
+                                    </div>
                                 </div>
                                 <div>
-                                    <div class="btn btn-info" onclick="confirmContextInformation()">Bestätigen</div>
+                                    <div class="btn btn-info" onclick="confirmContextInformation()" style="margin-top: 20px;">Bestätigen</div>
                                 </div>
                             </div>
                         </form>
@@ -398,17 +403,25 @@
                     <div id="tab3" class="tabContents">
                         <form>
                             <div>
-                                <label class="label-tabs label">Auswahl Metadaten</label>
-                                <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                    <option disabled selected>METADATEN</option>
-                                    <option value="0">Bild</option>
-                                    <option value="1">Film</option>
-                                    <option value="2">Text</option>
-                                    <option value="3">Navigation</option>
-                                    <option value="4">Test</option>
-                                    <option value="5">Audio</option>
-                                </select>
+                                <div style="padding-bottom: 20px">
+                                    <label class="label-tabs label">Gewählt</label>
+                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 180px">
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label-tabs label">Auswahl Metadaten</label>
+                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        <option disabled selected>METADATEN</option>
+                                        <!--<option value="0">Bild</option>
+                                        <option value="1">Film</option>
+                                        <option value="2">Text</option>
+                                        <option value="3">Navigation</option>
+                                        <option value="4">Test</option>
+                                        <option value="5">Audio</option>-->
+                                    </select>
+                                </div>
                             </div>
+
                         </form>
                     </div>
                 </div>

@@ -121,6 +121,24 @@ $(function() {
     });
 });
 
+// container
+$(function() {
+    $("#container").on("click", function() {
+
+        // clear marking from existing learning units
+        for (var l=0; l<list_units.length; l++) {
+            $(list_units[l]).css("background", "");
+            $(list_units[l]).css("color", "");
+        }
+
+        // clear multi selection bar "Metadaten"
+        $("#selectMultiMetaData").empty();
+        array_multiSelectionMetaData = [];
+        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+
+    });
+});
+
 // big navigation bar
 /*$(function() {
     $("#navHeadStatistic").mouseover(function() {
