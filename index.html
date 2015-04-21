@@ -62,7 +62,8 @@
         <link rel="stylesheet" href="css/tabs.css">
         <link rel="stylesheet" href="css/navigation.css">
 
-
+        <!-- google maps api -->
+        <script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
         <!-- functions -->
         <script>
@@ -99,6 +100,7 @@
                     //$(this).data("bs.modal", null);
                 });*/
 
+                /** change to specific reset **/
                 $("body").on("hidden.bs.modal", ".modal", function() {
                     $(this).find("form")[0].reset();
                 });
@@ -165,20 +167,20 @@
                         <li class='active has-sub'>
                             <a href='#'> <span>Szenario 1</span></a>
                             <ul>
-                                <li class='has-sub'><a href='#'><span>Lerneinheit 1</span></a>
-                                    <ul>
+                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
+                                    <!--<ul>
                                         <li class='last'><a href='#'><span>Alternative 1</span></a></li>
                                         <li class='last'><a href='#'><span>Alternative 2</span></a></li>
                                         <li class='last'><a href='#'><span>Alternative 3</span></a></li>
-                                    </ul>
-                                </li>
-                                <li class='has-sub'><a href='#'><span>Lerneinheit 2</span></a>
-                                    <ul>
+                                    </ul>-->
+
+                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
+                                    <!--<ul>
                                         <li class='last'><a href='#'><span>Alternative 1</span></a></li>
                                         <li class='last'><a href='#'><span>Alternative 2</span></a></li>
                                         <li class='last'><a href='#'><span>Alternative 3</span></a></li>
-                                    </ul>
-                                </li>
+                                    </ul>-->
+
                                 <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
                             </ul>
                         </li>
@@ -208,6 +210,9 @@
                         <!--<li id="navmenu" title="Show/Hide Menu" style="cursor: pointer"><span style="margin:auto">&#9776</span></li>-->
                         <li id="navmenu">
                             <a href="#" class="fui-arrow-left" style="padding: 0 9px; "></a>
+                        </li>
+                        <li id="navmaps">
+                            <a href="#" class="fui-location" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
                     <ul class="navbar" id="navbar-right-little">
@@ -291,111 +296,79 @@
                     </div>
                     <div id="tab2" class="tabContents">
                         <form id="formContextInformation">
-                            <div>
+                            <div id="mainContextInfo">
                                 <div>
-                                    <label class="label-tabs label">Auswahl</label><br>
+                                    <label class="label-tabs label" for="selectNumberContextInfos">Erfüllt</label><br>
                                     <select id="selectNumberContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 90px;">
                                         <option value="0">Alle</option>
                                         <option value="1">Eine</option>
                                     </select>
-                                    <a href="#" class="contextInfo-add" title="Kontextinformation hinzufügen"><span class="fui-plus-circle"></span></a>
+                                    <!--<a href="#" class="contextInfo-add" title="Kontextinformation hinzufügen"><span class="fui-plus-circle"></span></a>-->
                                 </div>
                                 <div>
-                                    <label class="label-tabs label">Gewählt</label>
+                                    <label class="label-tabs label" for="selectMultiContextInfos">dieser Kontextinformationen</label>
                                     <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 180px">
                                         <!--<option value="0" selected>Test</option>
                                         <option value="1" selected>Hallo</option>-->
                                     </select>
+                                    <hr class="hr-tabs">
+                                </div>
+                                <div>
+                                    <div id="btnAddContextInfos" class="btn btn-info" onclick="showDetailContextInfo()"><b class="fui-plus-circle"> </b>Hinzufügen</div>
                                 </div>
                             </div>
                             <div id="detailContextInfo" style="display: none">
-                                <hr class="hr-tabs">
+                                <!--<hr class="hr-tabs">-->
+                                <div>
+                                    <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Zurück zur Übersicht">
+                                        <b class="fui-arrow-left"> </b><b class="fui-home"></b>
+                                    </div>
+                                </div>
                                 <div id="contextSelection">
-                                    <label class="label-tabs label">Kontextinformation</label>
-                                    <!--<a href="#" class="parameter-add" title="Parameter hinzufügen"><span class="fui-tag"></span></a>-->
+                                    <label class="label-tabs label" for="selectContextInfos">Kontextinformation</label>
                                     <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
-                                        <!--<optgroup label="Umwelt">
-                                            <option value="ph" disabled selected></option>
-                                            <option value="Laerm">Lärm</option>
-                                            <option value="Wasser">Wasser</option>
-                                        </optgroup>
-                                        <optgroup label="Ortung">
-                                            <option value="Gebaeude">Gebäude</option>
-                                            <option value="Geschwindigkeit">Geschwindigkeit</option>
-                                        </optgroup>
-                                        <optgroup label="Lernender">
-                                            <option value="Stimmung">Stimmung</option>
-                                            <option value="Teilen">Teilen</option>
-                                        </optgroup>
-                                        <optgroup label="Infrastruktur">
-                                            <option value="Geraet">Gerät</option>
-                                            <option value="Drucker">Drucker</option>
-                                        </optgroup>
-                                        <optgroup label="Situation">
-                                            <option value="Zusammenarbeit">Zusammenarbeit</option>
-                                            <option value="Kommunikation">Kommunikation</option>
-                                        </optgroup>
-                                        <optgroup label="Lernszenario">
-                                            <option value="Eingabe">Eingabe</option>
-                                        </optgroup>-->
                                     </select>
-                                    <!--<div style="margin: -15px 0 0 15px">
-                                        <label class="label-tabs label">Parameter</label>
-                                        <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
-                                            <option value="0">Parameter 1</option>
-                                            <option value="1">Parameter 2</option>
-                                            <option value="2">Parameter 3</option>
-                                            <option value="3">Parameter 4</option>
-                                        </select>
-                                        <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
-                                        <select class="form-control select select-primary select-block mbl" style="min-width: 120px;">
-                                            <option value="0">Parameter 1</option>
-                                            <option value="1">Parameter 2</option>
-                                            <option value="2">Parameter 3</option>
-                                            <option value="3">Parameter 4</option>
-                                        </select>
-                                        <a href="#" class="parameter-close"><span class="fui-cross-circle"></span> </a>
-                                    </div>-->
                                 </div>
                                 <div>
-                                    <label class="label-tabs label">Operator</label>
+                                    <label class="label-tabs label" for="selectOperator">Operator</label>
                                     <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
                                     </select>
                                 </div>
                                 <div id="divContextValue">
-                                    <label class="label-tabs label">Wert</label>
+                                    <label class="label-tabs label" for="inputContextValue">Wert</label>
                                     <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue(this)">
                                     <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 180px; display: none">
                                     </select>
                                 </div>
                                 <div id="divContextParameter">
                                     <div id="divParameterSelection1">
-                                        <label class="label-tabs label">Parameter</label>
+                                        <label class="label-tabs label" for="selectParameter">Parameter</label>
                                         <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
                                         </select>
                                     </div>
-                                    <!--<div id="divParameterInputs">-->
-                                        <div id="divParameterInput1" class="divParameterInputs">
-                                            <label class="label-tabs label"></label>
-                                            <input id="inputContextParameter1" class="form-control" type="number" onkeyup="getParameterInput(this)">
-                                        </div>
-                                        <div id="divParameterInput2" class="divParameterInputs">
-                                            <label class="label-tabs label"></label>
-                                            <input id="inputContextParameter2" class="form-control" type="number" onkeyup="getParameterInput(this, 2)">
-                                        </div>
-                                    <!--</div>-->
+                                    <div id="divParameterInput1" class="divParameterInputs">
+                                        <label class="label-tabs label" for="inputContextParameter1"></label>
+                                        <input id="inputContextParameter1" class="form-control" type="number" onkeyup="getParameterInput(this)">
+                                    </div>
+                                    <!--<div><a href="#" class="fui-location"></a></div>-->
+                                    <div id="divParameterInput2" class="divParameterInputs">
+                                        <label class="label-tabs label" for="inputContextParameter2"></label>
+                                        <input id="inputContextParameter2" class="form-control" type="number" onkeyup="getParameterInput(this, 2)">
+                                    </div>
                                     <div id="divParameterString">
-                                        <label class="label-tabs label"></label>
+                                        <label class="label-tabs label" for="inputParameterString"></label>
                                         <input id="inputParameterString" class="form-control" type="text">
                                     </div>
                                     <div id="divParameterSelection2">
-                                        <label class="label-tabs label">Parameter2</label>
+                                        <label class="label-tabs label" for="selectParameter2">Parameter2</label>
                                         <select id="selectParameter2" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
                                         </select>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="btn btn-info" onclick="confirmContextInformation()" style="margin-top: 20px;">Bestätigen</div>
+                                    <div id="btnConfirmContextInfo" class="btn btn-info">
+                                        <b class="fui-check-circle"> </b>Bestätigen
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -518,13 +491,13 @@
                                 <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
                             </div>
                             <div>
-                                <label class="label label-modal">Szenarienübersicht</label>
+                                <label class="label label-modal" for="selectSzenarioDeletion">Szenarienübersicht</label>
                                 <br>
                                 <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
                                 </select>
                             </div>
                             <div id="choiceDeletionScenarios">
-                                <label class="label label-modal">Zu löschende Szenarios</label><br>
+                                <label class="label label-modal" for="selectSzenarioDeletion2">Zu löschende Szenarios</label><br>
                                 <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
                                 </select>
                             </div>
@@ -583,7 +556,7 @@
         </div>
 
         <!-- delete units -->
-        <div class="modal-delete-units" style="display: none">
+        <!--<div class="modal-delete-units" style="display: none">
             <p>
                 <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
             </p>
@@ -606,6 +579,55 @@
             <button id="btnDeleteUnits" class="btn btn-primary" style="margin-right: 10px">Löschen</button>
             <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
 
+        </div>-->
+        <div id="modal-delete-units" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Lerneinheiten löschen
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div>
+                                <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
+                            </div>
+                            <div>
+                                <label class="label-modal label" for="selectScenarioDeleteUnit">Auswahl des Szenarios</label><br>
+                                <select id="selectScenarioDeleteUnit" class="form-control select select-primary mbl" data-toggle="select">
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-modal label" for="selectMultiDeleteUnits">Lösche Lerneinheiten</label><br>
+                                <select id="selectMultiDeleteUnits" class="form-control multiselect multiselect-info" multiple="multiple">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" onclick="showDeleteUnitsConfirm()" data-dismiss="modal" style="margin-right: 10px">Löschen</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-delete-units-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p>Wollen Sie die Lerneinheiten wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-primary" onclick="deleteUnitsNot()" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- user profile -->
@@ -679,7 +701,7 @@
                             <div>
                                 <label style="margin-bottom: 0px"><b>E-Mail Adresse *</b></label>
                                 <div class="form-group has-feedback">
-                                    <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="text">
+                                    <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="email">
                                     <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
                                         <span class="form-control-feedback fui-question-circle"></span>
                                     </a>
@@ -744,6 +766,29 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- maps -->
+        <div id="modal-maps" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Karte
+                    </div>
+                    <div class="modal-body">
+                        <div id="divMaps">
+                            <div class="maps-row">
+                                <div id="maps" style="height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnConfirmMapCoordinates" data-dismiss="modal" style="margin-right: 10px">Bestätigen</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>

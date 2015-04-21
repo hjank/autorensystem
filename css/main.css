@@ -434,6 +434,17 @@ ul#navbar-right {
 }
 /* END modal window*/
 
+/* flat ui */
+/* don't see dropdown in multi selections*/
+.select2-drop-multi .select2-results {
+    /*display: none!important;*/
+}
+/* deactivate inputs in multi selections*/
+.select2-search-field {
+    /*display: none!important;*/
+}
+/* end flat ui */
+
 
 
 /* ==========================================================================

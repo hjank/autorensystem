@@ -226,6 +226,13 @@ jsPlumb.ready(function () {
                     });
                 }
 
+                // get new unit in its scenario
+                for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
+                    if (gloabl_unitsPerScenario[j]["id"] == nameCurrentScenario) {
+                        gloabl_unitsPerScenario[j]["text"].push(this.value);
+                    }
+                }
+
                 /* END NEW*/
             }
 

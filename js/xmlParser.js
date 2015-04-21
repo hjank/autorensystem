@@ -223,7 +223,7 @@ function translate_contextInformation(ci) {
             ci = "Regnerisch";
             break;
         case "CI_CURRENTLY_SUNNY":
-            ci = "Sonning";
+            ci = "Sonnig";
             break;
         case "CI_CURRENT_TEMPERATURE":
             ci = "Aktuelle Temperatur";

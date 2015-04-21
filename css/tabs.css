@@ -80,10 +80,22 @@
     margin-bottom: 20px;
 }
 
-.contextInfo-add {
+/*.contextInfo-add {
     float: right;
     color: #666;
     line-height: 2.3;
+}*/
+
+#btnAddContextInfos {
+    margin-top: 10px;
+    width: 100%;
+}
+#btnBackToMainContextInfo {
+    margin-bottom: 10px;
+}
+#btnConfirmContextInfo {
+    margin-top: 30px;
+    width: 100%;
 }
 
 .hr-tabs {
