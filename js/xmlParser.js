@@ -368,13 +368,13 @@ function translate_operator(op) {
             op = "Ist nicht";
             break;
         case "NO_VALUE":
-            op = "Kein Wert";
+            op = "Hat keinen Wert";
             break;
         case "GREATER_THEN":
-            op = "Größer als";
+            op = "Ist größer als";
             break;
         case "LESS_THEN":
-            op = "Kleiner als";
+            op = "Ist kleiner als";
             break;
     }
     return op;
@@ -483,6 +483,9 @@ function translate_parameter(p) {
             p = "Lerneinheits-ID";
             break;
         case "CP_TARGET_LATITUDE":
+            p = "Breitengrad";
+            break;
+        case "CP_TAGET_LATITUDE":
             p = "Breitengrad";
             break;
         case "CP_TARGET_LONGITUDE":

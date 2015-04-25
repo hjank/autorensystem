@@ -122,6 +122,7 @@ jsPlumb.ready(function () {
         window.jsp = inst;
 
         var windows = jsPlumb.getSelector("#stm .w");
+        console.log(windows);
 
         newState.append(divContextIcons);
         newState.append(title);
@@ -227,13 +228,30 @@ jsPlumb.ready(function () {
                 }
 
                 // get new unit in its scenario
-                for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
+                /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
                     if (gloabl_unitsPerScenario[j]["id"] == nameCurrentScenario) {
                         gloabl_unitsPerScenario[j]["text"].push(this.value);
                     }
+                }*/
+
+                // update JSON structure
+                // get new unit in its scenario
+                for (var k=0; k<myAuthorSystem.length; k++) {
+                    if (myAuthorSystem[k]["name"] == nameCurrentScenario) {
+                        myAuthorSystem[k]["units"].push(
+                            {   name:this.value,
+                                description:"",
+                                sat:"all",
+                                contextInformations:[],
+                                metaData:[],
+                                connections:[]
+                            }
+                        );
+                    }
                 }
 
-                /* END NEW*/
+                // hide tabs because all units will be unmarked
+                $(".tabContents").hide();
             }
 
         });

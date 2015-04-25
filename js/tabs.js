@@ -10,6 +10,7 @@ var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
 var array_multiSelectionMetaData = [];
 var counter_multiSelectionMetaData = 0;
+var bool_unitClicked = false;
 
 $(function() {
 
@@ -37,8 +38,10 @@ function showDetailContextInfo() {
     $("#formContextInformation")[0].reset();
 
     // make objects invisible --> keine Oberkategorien
-    //$("#divContextValue").css("display", "none");
-    //$("#divContextParameter").css("display", "none");
+    $("#inputContextValue").css("display", "none");
+    $("#selectPossibleValues").css("display", "none");
+    $("#s2id_selectPossibleValues").css("display", "none");
+    $("#divContextParameter").css("display", "none");
 
     /* fill selection "Kontextinformation" */
     fillSelectionContextInformation();
@@ -66,6 +69,8 @@ function activateFunctionalities(newState) {
     // get newState id in unit list
     list_units.push(unit);
 
+    var current_unit;
+
     // triggered if learning unit is clicked
     $(unit).click(function(event) {
 
@@ -78,6 +83,11 @@ function activateFunctionalities(newState) {
         // unit is marked --> change color
         $(unit).css("background", "#16a085");
         $(unit).css("color", "white");
+        bool_unitClicked = true;
+
+        // show tab content of the current active tab
+        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
+        $(activeTab).fadeIn();
 
         /* input field in tab "Eigenschaften"*/
         // get name of the unit
@@ -89,6 +99,20 @@ function activateFunctionalities(newState) {
         var formObject = document.forms["formProperties"];
         formObject.elements["unitName"].value = name;
         global_currentInputUnitName = name;
+
+        // get current unit dictionary
+        for (var p=0; p<myAuthorSystem.length; p++) {
+            if (myAuthorSystem[p]["name"] == $("#lname")[0].innerText) {
+                for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
+                    if (myAuthorSystem[p]["units"][q]["name"] == name) {
+                        current_unit = myAuthorSystem[p]["units"][q];
+                    }
+                }
+            }
+        }
+
+        // set description field
+        formObject.elements["unitDescription"].value = current_unit["description"];
 
         /* tab "Kontextinformation" */
         // check how much context information are needed to reach SAT
@@ -154,7 +178,7 @@ function activateFunctionalities(newState) {
                 if (unitSatisfiesAllContextInfos) {
                     // check if icons exist
                     if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
-                        $(unit).children("div.unit-icons").css("border", "1px dotted #34495e");
+                        $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
 
                         // check if ci attribute exists
                         if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
@@ -164,6 +188,7 @@ function activateFunctionalities(newState) {
                 }
                 // false == one has to be satisfied
                 unitSatisfiesAllContextInfos = false;
+                current_unit["sat"] = "one";
             }
             // decides that all of the group of context information has to be satisfied (0 == "Alle")
             if (e.val == 0) {
@@ -171,7 +196,7 @@ function activateFunctionalities(newState) {
                 // if a border exists before and is unequal to 0 --> change
                 if (!unitSatisfiesAllContextInfos) {
                     if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
-                        $(unit).children("div.unit-icons").css("border", "1px solid #34495e");
+                        $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
 
                         // check if ci attribute exists
                         if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
@@ -181,6 +206,7 @@ function activateFunctionalities(newState) {
                 }
                 // true == all have to be satisfied
                 unitSatisfiesAllContextInfos = true;
+                current_unit["sat"] = "all";
             }
         }
     });
@@ -190,11 +216,59 @@ function activateFunctionalities(newState) {
 
         var val = $(this).val();
 
-        // change unit name if his corresponding input field is changing
         if (name == global_currentInputUnitName) {
+
+            var old_name = name;
+
+            // change unit name if his corresponding input field is changing
             $(unit).children("div.title")[0].innerText = val;
             name = $(unit).children("div.title")[0].innerText;
             global_currentInputUnitName = val;
+
+            // change name in menu bar
+            var scenarioName = $("#lname")[0].innerText;
+            var findScenario = $("span.title").filter(":contains('" + scenarioName + "')");
+            findScenario = findScenario.parent("a").parent("li");
+
+            if (findScenario.length != 0) {
+                var findUnit = findScenario.children("ul").children("li").children("a")
+                    .children("span").filter(":contains('" + old_name + "')");
+                findUnit[0].innerHTML = val;
+            }
+
+            // update JSON structure
+            current_unit["name"] = name;
+            /*for (var p=0; p<myAuthorSystem.length; p++) {
+                if (myAuthorSystem[p]["name"] == scenarioName) {
+                    for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
+                        if (myAuthorSystem[p]["units"][q]["name"] == old_name) {
+                            myAuthorSystem[p]["units"][q]["name"] = name;
+                        }
+                    }
+                }
+            }*/
+        }
+    });
+
+    // triggered if string is changed in description field in tab "Eigenschaften"
+    $("#inputUnitDescription").bind("input", function() {
+
+        var val = $(this).val();
+
+        if (name == global_currentInputUnitName) {
+
+            // update JSON structure
+            current_unit["description"] = val;
+            /*var scenarioName = $("#lname")[0].innerText;
+            for (var p=0; p<myAuthorSystem.length; p++) {
+                if (myAuthorSystem[p]["name"] == scenarioName) {
+                    for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
+                        if (myAuthorSystem[p]["units"][q]["name"] == name) {
+                            myAuthorSystem[p]["units"][q]["description"] = val;
+                        }
+                    }
+                }
+            }*/
         }
     });
 
@@ -242,6 +316,25 @@ function activateFunctionalities(newState) {
         }
     });*/
 
+    $("#selectOperator").select2().on("select2-selecting", function(e) {
+        if (e.choice.text == "Hat keinen Wert") {
+            if ($("#inputContextValue").css("display") == "block") {
+                $("#inputContextValue").attr("disabled", true);
+            }
+            if ($("#selectPossibleValues").css("display") == "block") {
+                $("#selectPossibleValues").attr("disabled", true);
+            }
+
+        } else {
+            if ($("#inputContextValue").css("display") == "block") {
+                $("#inputContextValue").attr("disabled", false);
+            }
+            if ($("#selectPossibleValues").css("display") == "block") {
+                $("#selectPossibleValues").attr("disabled", false);
+            }
+        }
+    });
+
     // triggered if an option in multi selection in tab "Kontextinformation" was selected
     //$("#selectMultiContextInfos").select2().on("select2-selecting", function(e) {
         /*
@@ -263,6 +356,7 @@ function activateFunctionalities(newState) {
             for (var m=0; m<array_multiSelectionContextInfos.length; m++) {
                 if (array_multiSelectionContextInfos[m]["text"] == e.choice.text) {
                     array_multiSelectionContextInfos.splice(m, 1);
+                    break;
                 }
             }
 
@@ -282,6 +376,14 @@ function activateFunctionalities(newState) {
                 $(unit).css("padding-top", "");
             }
 
+            // update JSON structure
+            for (var i=0; i<current_unit["contextInformations"].length; i++) {
+                if (current_unit["contextInformations"][i].name == e.choice.text) {
+                    current_unit["contextInformations"].splice(i, 1);
+                    break;
+                }
+            }
+
         }
     });
 
@@ -291,21 +393,21 @@ function activateFunctionalities(newState) {
     //       - add icons in current unit
     $("#btnConfirmContextInfo").on("click", function() {
 
-        // check if all needed fields were filled with information
-        var missing_content = "";
-        missing_content = checkInformation(missing_content);
-
-        // if something needed is missing
-        if ( !!missing_content ) {
-            alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-            return false;
-        }
-
-        var contentContextInfo = $("#selectContextInfos").select2("data");
-        var selecElem = contentContextInfo.element[0];
-        var optgroup = $(selecElem).parent()[0].label;
-
         if (name == global_currentInputUnitName) {
+
+            // check if all needed fields were filled with information
+            var missing_content = "";
+            missing_content = checkInformation(missing_content, current_unit);
+
+            // if something needed is missing
+            if ( !!missing_content ) {
+                alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
+                return false;
+            }
+
+            var contentContextInfo = $("#selectContextInfos").select2("data");
+            var selecElem = contentContextInfo.element[0];
+            var optgroup = $(selecElem).parent()[0].label;
 
             // only addable if icon doesn't exist already
             for (var h=0; h<array_multiSelectionContextInfos.length; h++) {
@@ -322,6 +424,13 @@ function activateFunctionalities(newState) {
 
             var icon = formatUnitIcons(contentContextInfo, optgroup, ccID);
 
+            // get icon information in JSON structure
+            for (var j=0; j<current_unit["contextInformations"].length; j++) {
+                if (current_unit["contextInformations"][j].name == $("#selectContextInfos").select2("data")["text"]) {
+                    current_unit["contextInformations"][j].icon = icon;
+                }
+            }
+
             // add icon und div to unit
             divContextIcon.append(icon);
             $(unit).children("div.unit-icons").append(divContextIcon);
@@ -329,16 +438,16 @@ function activateFunctionalities(newState) {
             /* design reasons */
             // all SAT needs solid border
             if (unitSatisfiesAllContextInfos) {
-                $(unit).children("div.unit-icons").css("border", "1px solid #34495e");
+                $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
                 $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
                 // one SAT needs dotted border
             } else {
-                $(unit).children("div.unit-icons").css("border", "1px dotted #34495e");
+                $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
                 $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
             }
             $(unit).children("div.unit-icons").css("border-radius", "4px");
             $(unit).css("padding-top", "10px");
-            $(unit).children("div.unit-icons").css("height", "21px");
+            $(unit).children("div.unit-icons").css("height", "23px");
             $(unit).children("div.unit-icons").css("display", "inline-block");
 
 
@@ -358,9 +467,15 @@ function activateFunctionalities(newState) {
             });
 
             // get name into multi selection
-            $("#selectMultiContextInfos").append(option);
+            //$("#selectMultiContextInfos").append(option);
             array_multiSelectionContextInfos.push({id:id, text:contextInfoName});
             $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+            // update JSON structure
+            /*current_unit["contextInformations"].push({
+                name:contentContextInfo.text,
+                operator:$("#selectOperator").select2("data")["text"]
+            });*/
 
 
             // change color per option
@@ -372,6 +487,8 @@ function activateFunctionalities(newState) {
             // show main, hide detail
             $("#mainContextInfo").slideDown();
             $("#detailContextInfo").slideUp();
+            console.log(myAuthorSystem);
+            console.log(JSON.stringify(myAuthorSystem));
         }
     });
 
@@ -442,6 +559,12 @@ function activateFunctionalities(newState) {
             $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
 
             counter_multiSelectionMetaData ++;
+
+            // update JSON structure
+            var currentMetaData = {};
+            currentMetaData.name = e.choice.text;
+            currentMetaData.icon = metaIcon;
+            current_unit["metaData"].push(currentMetaData);
         }
     });
 
@@ -472,6 +595,13 @@ function activateFunctionalities(newState) {
                     }
                 }
             });
+
+            // updata JSON structure
+            for (var j=0; j<current_unit["metaData"].length; j++) {
+                if (current_unit["metaData"][j].name == e.choice.text) {
+                    current_unit["metaData"].splice(j, 1);
+                }
+            }
         }
     });
 
@@ -853,7 +983,7 @@ function fillParameterSelection(cp) {
                     var option = $("<option>").attr("value", j.toString());
                     option.html(cp[i][2][j]);
 
-                    // needed if first seletion is already existing
+                    // needed if first selection is already existing
                     if ( $("#divParameterSelection1").css("display") == "block" ) {
                         // append possible values
                         $("#selectParameter2").append(option);
@@ -882,6 +1012,11 @@ function fillParameterSelection(cp) {
                     $("#divParameterInput2").css("display", "table-cell");
                     $("#divParameterInput2").children("label").html(cp[i][0]);
                     setMinMax(cp[i][2], $("#inputContextParameter2"));
+
+                    // display google maps
+                    $("#divMaps").css("display", "block");
+                    resizeMap();
+
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(cp[i][0]);
@@ -909,6 +1044,7 @@ function fillParameterSelection(cp) {
                 break;
 
         }
+        $("#divContextParameter").css("display", "block");
     }
 }
 
@@ -960,133 +1096,113 @@ function getParameterInput(val, num) {
             val.value = min;
         }
     }
+
+    /* get values from inputs and set the marker on this point in google maps */
+    var lat, long;
+    // check if latitude is not empty
+    if ($("#inputContextParameter1").val()) {
+        lat = $("#inputContextParameter1").val();
+    }
+    // check if longitude is not empty
+    if ($("#inputContextParameter2").val()) {
+        long = $("#inputContextParameter2").val();
+    }
+    // only if both inputs have a value set marker
+    if ($("#inputContextParameter1").val() && $("#inputContextParameter2").val()) {
+        var new_LatLong = new google.maps.LatLng(lat, long);
+        replaceMarker2(new_LatLong);
+        map.setCenter(new_LatLong);
+        map.setOptions({zoom: 15});
+    }
 }
 
-// triggered if button "Bestätigen" was clicked
-// Job: - evaluate the seletions and inputs
-//      - put context information in multi selection bar
-/*function confirmContextInformation() {
-
-    /* check if all needed fields were filled with informaions */
-    /*var missing_content = "";
-
-    // check selection bar "Kontextinformationen"
-    if ( $("#selectContextInfos").select2("data") == null ) {
-        missing_content += " - Kontextinformation\n";
-    }
-    // check selection bar "Operator"
-    if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
-        missing_content += " - Operator\n";
-    }
-    // check input "Wert" is visible AND filled with information
-    if ( $("#inputContextValue")[0].style.display == "block" && $("#inputContextValue")[0].disabled == false ) {
-        if ( $("#inputContextValue")[0].value == "" ) {
-            missing_content += " - Wert\n";
-        }
-    // check if selection bar "Wert" is visible AND filled with information
-    } else if ( $("#selectPossibleValues")[0].style.display == "block" ) {
-        if ( $("#selectPossibleValues").select2("data")["text"] == "\r" ) {
-            missing_content += " - Wert\n";
-        }
-    }
-
-    // check selection bar "Parameter"
-    if ( $("#divParameterSelection1")[0].style.display == "block" && $("#selectParameter").select2("data")["text"] == "\r") {
-        console.log($("#selectParameter")[0].labels[0].innerHTML);
-        missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
-    }
-
-    // if something needed is missing
-    if ( !!missing_content ) {
-        alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-        return false;
-    }*/
-
-
-    /* get selected context information name into multi selection bar */
-    /*var id = $("#selectContextInfos").select2("data").id;
-
-    // get name
-    var contextInfoName = $("#selectContextInfos").select2("data").text;
-    var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
-    option.html(contextInfoName);
-
-    // change format: add icons to text
-    $("#selectMultiContextInfos").select2({
-        formatSelection: formatMultiContextInfos,
-        formatResult: formatMultiContextInfos,
-        escapeMarkup: function(m) {return m;}
-    });
-
-    // get name into multi selection
-    $("#selectMultiContextInfos").append(option);
-    array_multiSelectionContextInfos.push({id:id, text:contextInfoName});
-    $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-
-
-    // change color per option
-    changeColorMultiContextInfos();
-
-    // increase counter --> needed for continuous ids
-    counter_multiSelectionContextInfos ++;
-
-    // show main, hide detail
-    $("#mainContextInfo").slideDown();
-    $("#detailContextInfo").slideUp();*/
-//}
-
 // check if all needed fields were filled with information
-function checkInformation(missing_content) {
+function checkInformation(missing_content, current_unit) {
 
+    var selectedInfos = {};
     // check selection bar "Kontextinformationen"
     if ( $("#selectContextInfos").select2("data") == null ) {
         missing_content += " - Kontextinformation\n";
+    } else {
+        // update JSON structure
+        selectedInfos.name = $("#selectContextInfos").select2("data")["text"];
     }
+
     // check selection bar "Operator"
     if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
         missing_content += " - Operator\n";
+    } else {
+        // update JSON structure
+        selectedInfos.operator = $("#selectOperator").select2("data")["text"];
     }
+
     // check input "Wert" is visible AND filled with information
     if ( $("#inputContextValue")[0].style.display == "block" &&
         $("#inputContextValue")[0].disabled == false ) {
         if ( $("#inputContextValue")[0].value == "" ) {
             missing_content += " - Wert\n";
         }
-        // check if selection bar "Wert" is visible AND filled with information
-    } else if ( $("#selectPossibleValues")[0].style.display == "block" ) {
+
+        // update JSON structure
+        selectedInfos.value = $("#inputContextValue")[0].value;
+
+    // check if selection bar "Wert" is visible AND filled with information
+    } else if ( $("#selectPossibleValues")[0].style.display == "block" &&
+        $("#selectPossibleValues")[0].disabled != true ) {
         if ( $("#selectPossibleValues").select2("data")["text"] == "\r" ) {
             missing_content += " - Wert\n";
         }
+
+        // update JSON structure
+        selectedInfos.value = $("#selectPossibleValues").select2("data")["text"];
     }
     // check selection bar "Parameter"
-    if ( $("#divParameterSelection1")[0].style.display == "block" &&
-        $("#selectParameter").select2("data")["text"] == "\r") {
-        missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
+    if ( $("#divParameterSelection1")[0].style.display == "block") {
+        if ($("#selectParameter").select2("data")["text"] == "\r") {
+            missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
+        }
+
+        // update JSON structure
+        selectedInfos.parameter1 = $("#selectParameter").select2("data")["text"];
     }
     // check selection bar "Parameter"
-    if ( $("#divParameterSelection2")[0].style.display == "block" &&
-        $("#selectParameter2").select2("data")["text"] == "\r") {
-        missing_content += " - " + $("#selectParameter2")[0].labels[0].innerHTML + "\n";
+    if ( $("#divParameterSelection2")[0].style.display == "block") {
+        if ($("#selectParameter2").select2("data")["text"] == "\r") {
+            missing_content += " - " + $("#selectParameter2")[0].labels[0].innerHTML + "\n";
+        }
+
+        // update JSON structure
+        selectedInfos.parameter2 = $("#selectParameter2").select2("data")["text"];
     }
     // check input context parameter 1
     if ( $("#divParameterInput1")[0].style.display == "table-cell" ) {
         if ($("#inputContextParameter1")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter1")[0].labels[0].innerHTML + "\n";
         }
+
+        // update JSON structure
+        selectedInfos.input1 = $("#inputContextParameter1")[0].value;
     }
     // check input context parameter 2
     if ( $("#divParameterInput2")[0].style.display == "table-cell" ) {
         if ($("#inputContextParameter2")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter2")[0].labels[0].innerHTML + "\n";
         }
+
+        // update JSON structure
+        selectedInfos.input2 = $("#inputContextParameter2")[0].value;
     }
     // check input context parameter 2
     if ( $("#divParameterString")[0].style.display == "block" ) {
         if ($("#inputParameterString")[0].value == "") {
             missing_content += " - " + $("#inputParameterString")[0].labels[0].innerHTML + "\n";
         }
+
+        // update JSON structure
+        selectedInfos.inputString = $("#inputParameterString")[0].value;
     }
 
+    current_unit["contextInformations"].push(selectedInfos);
     return missing_content;
 }
 
@@ -1118,6 +1234,9 @@ function changeColorMultiContextInfos() {
                 // get specific context class color
                 var color = getColor(contextClass);
                 $(this).parent().css("background-color", color);
+
+                // set title --> tooltip if the mouse is on the icon
+                $(this).parent().attr("title", title);
 
                 break;
             }
@@ -1155,4 +1274,338 @@ function getColor(cc) {
 function cleanSection(s) {
     $(s).empty();
     $(s).select2("data", {id:"\r",text:"\r"});
+}
+
+// google maps
+var map;
+var image;
+var shadow;
+var marker;
+var markers = [];
+$(function(){
+
+    var currentLat, currentLng;
+
+    // central point of the map
+    var latlng = new google.maps.LatLng('52.3877833', '13.0831297');
+
+    // resize map if modal window is opening
+    /*$("#modal-maps").on("shown.bs.modal", function() {
+        resizeMap();
+    });*/
+
+    // show modal map window
+    /*$("#navmaps").on("click", function() {
+        $("#modal-maps").modal({
+            keyboard: true,
+            backdrop: true,
+            show: true
+        });
+    });*/
+
+    // create the map
+    function showMap() {
+
+        markers = [];
+
+        var myOptions = {
+            zoom: 15,
+            center: latlng,
+            //mapTypeId: 'terrain'
+            mapTypeId: 'roadmap'
+        };
+
+        // flat ui style
+        var style = [/*{
+         "stylers": [{
+         "visibility": "off"
+         }]
+         },*/ {
+            "featureType": "road",      // streets are white
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "road.arterial",     // main streets are yellow
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#fee379"
+            }]
+        }, {
+            "featureType": "road.highway",      // highways are light orange
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#fee379"
+            }]
+        }, {
+            "featureType": "landscape",         // landscape is grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#f3f4f4"
+            }]
+        }, {
+            "featureType": "water",             // water is blue
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#7fc8ed"
+            }]
+        }, {
+            "featureType": "road",              // road labels are grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "weight": 1
+            }, {
+                "color": "#7A7A7A"
+            }]
+        }, {
+            "featureType": "road.arterial",    // road labels are light grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#545454"
+            }]
+        }, {
+            "featureType": "road.highway",     // road labels are grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#545454"
+            }]
+        }, {
+            "featureType": "poi.park",          // parks are light green
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#83cead"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "labels.text",   // water labels are white
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#eeeeee"
+            }, {
+                "weight": 1
+            }]
+        }, {
+            "featureType": "transit",
+            "elementType": "labels.text",   // transit labels are grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#B8B8B8"
+            }, {
+                "weight": 1
+            }]
+        }, {
+            "featureType": "poi",
+            "elementType": "labels.text",   // poi labels are grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#B8B8B8"
+            }, {
+                "weight": 1
+            }]
+        }, {
+            "featureType": "landscape",
+            "elementType": "labels.text",   // poi labels are grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#B8B8B8"
+            }, {
+                "weight": 1
+            }]
+        }, {
+            "featureType": "administrative",
+            "elementType": "labels.text",    // administrative labels are grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#333333"
+            }, {
+                "weight": 1
+            }]
+        }, {
+            "featureType": "landscape.man_made",
+            "elementType": "geometry",
+            "stylers": [{
+                "weight": 0.9
+            }, {
+                "visibility": "off"
+            }]
+        }]
+
+        // create new map object
+        map = new google.maps.Map($('#maps')[0], myOptions);
+        map.setOptions({
+            styles: style,
+            linksControl: false,
+            panControl: false,
+            mapTypeControl: true,
+            streetViewControl: false
+        });
+
+        // get flat marker image
+        image = {
+            url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/marker.png',
+            scaledSize: new google.maps.Size(20, 40),
+            origin: new google.maps.Point(0, 0),
+            //anchor: new google.maps.Point(12, 59)
+            anchor: new google.maps.Point(10, 45)
+        };
+        // get flat marker shadow image
+        shadow = {
+            url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/shadow.png',
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(-2, 36)
+        };
+        // create marker
+        marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: image,
+            shadow: shadow
+        });
+        marker.setMap(null);
+        //marker.setMap(map);
+
+        // set new marker if user clicked into the map
+        google.maps.event.addListener(map, "click", function(e) {
+            replaceMarker(e.latLng);
+            currentLat = e.latLng.lat();
+            $("#inputContextParameter1")[0].value = currentLat;
+            currentLng = e.latLng.lng();
+            $("#inputContextParameter2")[0].value = currentLng;
+        });
+
+        // delete old and set new marker
+        function replaceMarker(location) {
+            // deletion
+            marker.setMap(null);
+            for (var i = 0, mark; mark = markers[i]; i++) {
+                mark.setMap(null);
+            }
+            markers = [];
+
+            // set new marker
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                icon: image,
+                shadow: shadow
+            });
+        }
+
+        /* new search box */
+        // Create the search box and link it to the UI element.
+        var input = /** @type {HTMLInputElement} */(
+            document.getElementById('pac-input')
+        );
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        var searchBox = new google.maps.places.SearchBox(
+            /** @type {HTMLInputElement} */(input)
+        );
+        //var autocomplete = new google.maps.places.Autocomplete(input);
+
+        // [START region_getplaces]
+        // Listen for the event fired when the user selects an item from the
+        // pick list. Retrieve the matching places for that item.
+        google.maps.event.addListener(searchBox, 'places_changed', function() {
+            var places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+            for (var i = 0, mark; mark = markers[i]; i++) {
+                mark.setMap(null);
+            }
+
+            // For each place, get the icon, place name, and location.
+            markers = [];
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0, place; place = places[i]; i++) {
+                /*var image = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };*/
+
+                // Create a marker for each place.
+                var marker = new google.maps.Marker({
+                    map: map,
+                    icon: image,
+                    title: place.name,
+                    position: place.geometry.location
+                });
+
+                markers.push(marker);
+
+                bounds.extend(place.geometry.location);
+            }
+
+            map.fitBounds(bounds);
+            map.setOptions({zoom: 15});
+        });
+        // [END region_getplaces]
+
+        // Bias the SearchBox results towards places that are within the bounds of the
+        // current map's viewport.
+        google.maps.event.addListener(map, 'bounds_changed', function() {
+            var bounds = map.getBounds();
+            searchBox.setBounds(bounds);
+        });
+        /* end search box */
+    }
+
+    // resize map due to map opening
+    /*function resizeMap() {
+        if (typeof map == "undefined") return;
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center);
+    }*/
+
+    google.maps.event.addDomListener(window, 'load', showMap);
+    google.maps.event.addDomListener(window, "resize", resizeMap());
+});
+
+// resize map due to map opening
+function resizeMap() {
+    if (typeof map == "undefined") return;
+    var center = map.getCenter();
+    google.maps.event.trigger(map, "resize");
+    map.setCenter(center);
+    map.setOptions({mapTypeControl: true});
+}
+
+// delete old and set new marker
+function replaceMarker2(location) {
+    marker.setMap(null);
+    for (var i = 0, mark; mark = markers[i]; i++) {
+        mark.setMap(null);
+    }
+    markers = [];
+    marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        icon: image,
+        shadow: shadow
+    });
 }

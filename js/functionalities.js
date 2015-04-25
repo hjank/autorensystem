@@ -2,6 +2,25 @@
  * Created by juliushofler on 13.03.15.
  */
 
+/** -- JSON Structure for the personal author system data --
+ *  myAuthorSystem = [scenario1, scenario2, ..., scenarioN, options]
+ *      scenario = {name:name, units:[unit1, unit2, ...]}
+ *          unit = {name:name, description:text,
+ *            contextInformations:[contextInformation1, contextInformation2, ...],
+ *            sat:choice,
+ *            metaData:[metaData1, metaData2, ...],
+ *            connections:[connect1, connect2, ...]
+ *          }
+ *              contextInformation = {name:name, operator:name, value:value,
+ *                input1:value, input2:value, inputString:value,
+ *                parameter1:value, parameter2:value,
+ *                icon:path
+ *              }
+ *              metaData = {name:name, icon:path}
+ *      options = {option1:text, option2:text, ...}
+ *  **/
+
+var myAuthorSystem = [];
 
 // drag specific elements
 /*$(function() {
@@ -64,11 +83,11 @@ $(function() {
     });
 
     // tooltip for menu icon
-    $("#navmenu").tooltip({
+    /*$("#navmenu").tooltip({
         content: "Show/Hide Menu",
         show: {delay: 1000},
         position: {my: "left", at: "right center"}
-    });
+    });*/
 
     // add learning unit hover
     $("#navadd").mouseover(function() {
@@ -81,11 +100,11 @@ $(function() {
     });
 
     // tooltip for add learning unit
-    $("#navadd").tooltip({
+    /*$("#navadd").tooltip({
         content: "Add Item",
         show: {delay: 1000},
         position: {my: "right", at: "left center"}
-    });
+    });*/
 
     // tab bar hover
     $("#navtab").mouseover(function() {
@@ -107,15 +126,21 @@ $(function() {
 // tabs
 $(function() {
     $(".tabContents").hide();
-    $(".tabContents:first").show();
+    //$(".tabContents:first").show();
     $("#firstTab").addClass("active");
 
     $(".tab-Container ul li a").click(function() {
+
         var activeTab = $(this).attr("href");
         $(".tab-Container ul li a").removeClass("active");
         $(this).addClass("active");
         $(".tabContents").hide();
-        $(activeTab).fadeIn();
+
+        // only show tab content if a unit is clicked
+        if (bool_unitClicked) {
+            $(activeTab).fadeIn();
+        }
+
 
         return false;
     });
@@ -130,11 +155,15 @@ $(function() {
             $(list_units[l]).css("background", "");
             $(list_units[l]).css("color", "");
         }
+        bool_unitClicked = false;
 
         // clear multi selection bar "Metadaten"
         $("#selectMultiMetaData").empty();
         array_multiSelectionMetaData = [];
         $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+
+        // all tab content invisible
+        $(".tabContents").hide();
 
     });
 });

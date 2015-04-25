@@ -40,7 +40,7 @@
 
         <!-- modal window -->
         <link rel="stylesheet" href="css/pgwmodal.css">
-        <script type="text/javascript" src="js/pgwmodal.js"></script>
+        <!--<script type="text/javascript" src="js/pgwmodal.js"></script>-->
         <script type="text/javascript" src="js/modalWindows.js"></script>
 
         <!-- slider design -->
@@ -63,7 +63,8 @@
         <link rel="stylesheet" href="css/navigation.css">
 
         <!-- google maps api -->
-        <script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+        <!--<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>-->
+        <script src="//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
 
         <!-- functions -->
         <script>
@@ -85,25 +86,12 @@
 
             $(function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                //$("a.my-tool-tip").tooltip();
                 $('[data-toggle="checkbox"]').radiocheck();
+                $('[data-toggle="switch"]').bootstrapSwitch();
                 $("select").select2({dropdownCssClass: "dropdown-inverse"});
 
-                setScenarios();
+                setScenarios();     // only needed if scenarios already exist at program start
                 setLabelBtnScenarioDeletion();
-            });
-
-
-            $(function() {
-                /*$("body").on("hidden.bs.modal", ".modal", function(e) {
-                    $(this).removeData("bs.modal");
-                    //$(this).data("bs.modal", null);
-                });*/
-
-                /** change to specific reset **/
-                $("body").on("hidden.bs.modal", ".modal", function() {
-                    $(this).find("form")[0].reset();
-                });
             });
 
         </script>
@@ -122,7 +110,7 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                     </button>
-                    <a class="navbar-brand" href="#">Authorensystem</a>
+                    <a class="navbar-brand" href="#">Autorensystem</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -164,23 +152,11 @@
             <!-- <div class="sidebar">Sidebar -->
                 <div id='cssmenu' class="menu">
                     <ul id="menuScenarios">
-                        <li class='active has-sub'>
+                        <!--<li class='active has-sub'>
                             <a href='#'> <span>Szenario 1</span></a>
                             <ul>
                                 <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
-                                    <!--<ul>
-                                        <li class='last'><a href='#'><span>Alternative 1</span></a></li>
-                                        <li class='last'><a href='#'><span>Alternative 2</span></a></li>
-                                        <li class='last'><a href='#'><span>Alternative 3</span></a></li>
-                                    </ul>-->
-
                                 <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
-                                    <!--<ul>
-                                        <li class='last'><a href='#'><span>Alternative 1</span></a></li>
-                                        <li class='last'><a href='#'><span>Alternative 2</span></a></li>
-                                        <li class='last'><a href='#'><span>Alternative 3</span></a></li>
-                                    </ul>-->
-
                                 <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
                             </ul>
                         </li>
@@ -199,7 +175,7 @@
                                 <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
                                 <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
                             </ul>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             <!--</div> -->
@@ -208,19 +184,15 @@
 
                     <ul class="navbar" id="navbar-left-little">
                         <!--<li id="navmenu" title="Show/Hide Menu" style="cursor: pointer"><span style="margin:auto">&#9776</span></li>-->
-                        <li id="navmenu">
+                        <li id="navmenu" title="Zeige/Verstecke Struktur">
                             <a href="#" class="fui-arrow-left" style="padding: 0 9px; "></a>
-                        </li>
-                        <li id="navmaps">
-                            <a href="#" class="fui-location" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
                     <ul class="navbar" id="navbar-right-little">
-                        <li id="navadd" title="Add Item">
-                            <!--<span style="margin:auto">&#43</span>-->
+                        <li id="navadd" title="Lerneinheit hinzufügen">
                             <span class="fui-plus"></span>
                         </li>
-                        <li id="navtab">
+                        <li id="navtab" title="Zeige/Verstecke Eigenschaften">
                             <a href="#" class="fui-arrow-right" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
@@ -290,7 +262,7 @@
                             </div>
                             <div>
                                 <label for="inputUnitDescription" class="label-tabs label">Beschreibung</label>
-                                <textarea id="inputUnitDescription" class="form-control" rows="5"></textarea>
+                                <textarea id="inputUnitDescription" class="form-control" name="unitDescription" rows="5"></textarea>
                             </div>
                         </form>
                     </div>
@@ -307,7 +279,7 @@
                                 </div>
                                 <div>
                                     <label class="label-tabs label" for="selectMultiContextInfos">dieser Kontextinformationen</label>
-                                    <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 180px">
+                                    <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
                                         <!--<option value="0" selected>Test</option>
                                         <option value="1" selected>Hallo</option>-->
                                     </select>
@@ -325,35 +297,40 @@
                                     </div>
                                 </div>
                                 <div id="contextSelection">
-                                    <label class="label-tabs label" for="selectContextInfos">Kontextinformation</label>
-                                    <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <label class="label-tabs label" for="selectContextInfos">Die Kontextinformation</label>
+                                    <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="label-tabs label" for="selectOperator">Operator</label>
-                                    <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <!--<label class="label-tabs label" for="selectOperator">Operator</label>-->
+                                    <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                     </select>
                                 </div>
                                 <div id="divContextValue">
-                                    <label class="label-tabs label" for="inputContextValue">Wert</label>
+                                    <!--<label class="label-tabs label" for="inputContextValue">Wert</label>-->
                                     <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue(this)">
-                                    <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 180px; display: none">
+                                    <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 235px; display: none">
                                     </select>
                                 </div>
                                 <div id="divContextParameter">
                                     <div id="divParameterSelection1">
                                         <label class="label-tabs label" for="selectParameter">Parameter</label>
-                                        <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        <select id="selectParameter" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                         </select>
                                     </div>
                                     <div id="divParameterInput1" class="divParameterInputs">
                                         <label class="label-tabs label" for="inputContextParameter1"></label>
-                                        <input id="inputContextParameter1" class="form-control" type="number" onkeyup="getParameterInput(this)">
+                                        <input id="inputContextParameter1" class="form-control" type="number" onkeyup="getParameterInput(this, 1)">
                                     </div>
-                                    <!--<div><a href="#" class="fui-location"></a></div>-->
                                     <div id="divParameterInput2" class="divParameterInputs">
                                         <label class="label-tabs label" for="inputContextParameter2"></label>
                                         <input id="inputContextParameter2" class="form-control" type="number" onkeyup="getParameterInput(this, 2)">
+                                    </div>
+                                    <div id="divMaps">
+                                        <div class="maps-row">
+                                            <input id="pac-input" class="controls" type="text" placeholder="Suchen">
+                                            <div id="maps" style="height: 250px;"></div>
+                                        </div>
                                     </div>
                                     <div id="divParameterString">
                                         <label class="label-tabs label" for="inputParameterString"></label>
@@ -361,9 +338,13 @@
                                     </div>
                                     <div id="divParameterSelection2">
                                         <label class="label-tabs label" for="selectParameter2">Parameter2</label>
-                                        <select id="selectParameter2" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                        <select id="selectParameter2" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                         </select>
                                     </div>
+                                    <!--<div id="divSwitchParameter" class="bootstrap-switch-square">
+                                        <input id="switchParameter" type="checkbox" checked data-toggle="switch" name="custom-square-switch-icons"
+                                               data-on-text="Gilt" data-off-text="Gilt nicht"/>
+                                    </div>-->
                                 </div>
                                 <div>
                                     <div id="btnConfirmContextInfo" class="btn btn-info">
@@ -378,12 +359,12 @@
                             <div>
                                 <div style="padding-bottom: 20px">
                                     <label class="label-tabs label">Gewählt</label>
-                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 180px">
+                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
                                     </select>
                                 </div>
                                 <div>
                                     <label class="label-tabs label">Auswahl Metadaten</label>
-                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 180px;">
+                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                         <option disabled selected>METADATEN</option>
                                         <!--<option value="0">Bild</option>
                                         <option value="1">Film</option>
@@ -443,7 +424,6 @@
                         <button type="button" class="close" data-dismiss="modal">x</button>
                         Neues Szenario erstellen
                     </div>
-
                     <div class="modal-body">
                         <form name="formSzenarioName">
                             <div>
@@ -468,7 +448,6 @@
                             </div>
                         </form>
                     </div>
-
                     <div class="modal-footer">
                         <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
@@ -605,13 +584,14 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" onclick="showDeleteUnitsConfirm()" data-dismiss="modal" style="margin-right: 10px">Löschen</button>
+                        <button id="btnDeleteUnits" class="btn btn-danger" onclick="showDeleteUnitsConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- confirm delete units -->
         <div id="modal-delete-units-confirm" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -762,6 +742,10 @@
                             </div>
                             <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                         </form>
+                        <!--<div id="divSwitchParameter" class="bootstrap-switch-square">
+                            <input id="switchParameter" type="checkbox" checked data-toggle="switch" name="custom-square-switch-icons"
+                                   data-on-text="Gilt" data-off-text="Nicht" />
+                        </div>-->
                         <!--</div>-->
                     </div>
                     <div class="modal-footer">
@@ -772,7 +756,7 @@
         </div>
 
         <!-- maps -->
-        <div id="modal-maps" class="modal fade" tabindex="-1">
+        <!--<div id="modal-maps" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -781,7 +765,8 @@
                     </div>
                     <div class="modal-body">
                         <div id="divMaps">
-                            <div class="maps-row">
+                           <div class="maps-row">
+                                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                                 <div id="maps" style="height: 500px;"></div>
                             </div>
                         </div>
@@ -792,7 +777,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
     </body>

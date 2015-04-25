@@ -6,7 +6,7 @@ var global_ScenarioCounter = 0;
 var global_dataArrayScenarios = [];
 var global_arrayShowSzenarioDeletion = [];
 var global_ScenarioLiNumber = 0;
-var gloabl_unitsPerScenario = [];
+//var gloabl_unitsPerScenario = [];
 
 // get scenario name from input field
 /*$(function() {
@@ -38,6 +38,9 @@ function saveCloseSzenario() {
     // update scenario list and panel
     updateScenario(ssname);
     setLabelBtnScenarioDeletion();
+
+    // save scenario in JSON structure
+    //myAuthorSystem.push({name:ssname, units:[]});
 
 }
 
@@ -161,6 +164,10 @@ function showDeleteUnits() {
         show: true
     });
 
+    // set deletion button label
+    var list_units = [];
+    $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+
     // delete scenarios and put them and new scenarios in selection bar again
     $("#selectScenarioDeleteUnit").empty();
     $("#selectScenarioDeleteUnit").select2("data", {id:"\r",text:"\r"});
@@ -176,7 +183,7 @@ function showDeleteUnits() {
 
         $("#selectMultiDeleteUnits").empty();
 
-        for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
+        /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
             if (gloabl_unitsPerScenario[j]["id"] == e.choice.text) {
 
                 for (var k=0; k<gloabl_unitsPerScenario[j]["text"].length; k++) {
@@ -187,8 +194,50 @@ function showDeleteUnits() {
                     $("#selectMultiDeleteUnits").append(option);
                 }
             }
+        }*/
+
+        // get units into multi selection bar
+        for (var j=0; j<myAuthorSystem.length; j++) {
+            if (myAuthorSystem[j]["name"] == e.choice.text) {
+
+                var units = $("#stm").children("div.w").children("div.title");
+
+                for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
+                    var option = $("<option>");
+
+                    // get unit id and set value = id
+                    for (var l=0; l<units.length; l++) {
+                        if (myAuthorSystem[j]["units"][k]["name"] == units[l].innerText) {
+                            option.attr('value', $(units[l]).parent()[0].id);
+                        }
+                    }
+
+                    // set option name and append in multi selection bar
+                    option.html(myAuthorSystem[j]["units"][k]["name"]);
+                    $("#selectMultiDeleteUnits").append(option);
+                }
+            }
         }
-        //$("#selectMultiDeleteUnits").select2("data", list_units);
+
+        // select unit which should be deleted
+        $("#selectMultiDeleteUnits").select2().on("select2-selecting", function(e) {
+            // add unit to list
+            list_units.push({id: e.val, text:e.choice.text});
+
+            // set label
+            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+        });
+
+        $("#selectMultiDeleteUnits").select2().on("select2-removed", function(e) {
+            // remove unit from list
+            for (var j=0; j<list_units.length; j++) {
+                if (list_units[j].text == e.choice.text) {
+                    list_units.splice(j, 1);
+                }
+            }
+            // set label
+            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+        });
     });
 }
 
@@ -198,6 +247,61 @@ function showDeleteUnitsConfirm() {
     $("#modal-delete-units-confirm").modal({
         show: true
     });
+}
+
+// triggered if conformation button of delete units was clicked
+function deleteUnits(){
+
+    var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
+    console.log(list_deleteableUnits);
+    var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
+
+    // needed to find scenario and units in menu bar
+    var liCurrentScenario = $("span.title").filter(":contains('" + currentScenario + "')");
+    liCurrentScenario = liCurrentScenario.parent("a").parent("li");
+
+    // update JSON structure
+    for (var j=0; j<myAuthorSystem.length; j++) {
+        if (myAuthorSystem[j]["name"] == currentScenario) {
+            for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
+
+                for (var i=0; i<list_deleteableUnits.length; i++) {
+
+                    // delete unit in statemaschine
+                    var unit = list_deleteableUnits[i].id;
+                    $("#" + unit).remove();
+
+                    // delete unit in JSON structure
+                    if (myAuthorSystem[j]["units"][k]["name"] == list_deleteableUnits[i].text) {
+                        myAuthorSystem[j]["units"].splice(k, 1);
+                    }
+
+                    // delete unit in menu bar
+                    liCurrentScenario.children("ul").children("li").each(function() {
+                        if ($(this).children("a").children("span")[0].innerHTML == list_deleteableUnits[i].text) {
+                            $(this).remove();
+                        }
+                    });
+                }
+
+            }
+        }
+    }
+    // delete holder in scenario in menu bar
+    /*if (liCurrentScenario.children("ul").children("li").length == 0 &&
+            liCurrentScenario.hasClass("has-sub")) {
+        liCurrentScenario.removeClass("has-sub");
+        liCurrentScenario.children("a").children("span.holder").remove();
+        liCurrentScenario.children("ul").remove();
+
+        liCurrentScenario.addClass("last");
+    }*/
+
+
+    /** TODO **/
+    // delete connection as well
+
+
 }
 
 // get back to deletion overview after canceling deletion
@@ -238,9 +342,11 @@ function setScenarios() {
         var units = [];
         if ($(scenarios[i]).children("ul").children("li").length != 0) {
             $(scenarios[i]).children("ul").children("li").each(function() {
-                units.push($(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,""));
+                //units.push($(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,""));
+                units.push({name:$(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,"")});
             });
-            gloabl_unitsPerScenario.push({id:scenarios[i].innerText.replace(/(\r\n|\n|\r)/gm,""), text:units});
+            //gloabl_unitsPerScenario.push({id:scenarios[i].innerText.replace(/(\r\n|\n|\r)/gm,""), text:units});
+            myAuthorSystem.push({name:scenarios[i].innerText.replace(/(\r\n|\n|\r)/gm,""), units:units});
         }
 
     }
@@ -259,7 +365,8 @@ function updateScenario(name) {
     global_ScenarioCounter = global_ScenarioCounter + 1;
 
     // update list with units per scenario
-    gloabl_unitsPerScenario.push({id: name, text:[]});
+    //gloabl_unitsPerScenario.push({id: name, text:[]});
+    myAuthorSystem.push({name: name, units:[]});
 }
 
 // label delete button for modal window "Delete Scenarios"
@@ -343,10 +450,21 @@ function deleteScenarios() {
         liScenario.remove();
 
         // update unit per scenario list
-        for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
+        /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
             if (gloabl_unitsPerScenario[j]["id"] == nameScenario) {
                 gloabl_unitsPerScenario.splice(j, 1);
             }
+        }*/
+        // update unit per scenario list
+        for (var j=0; j<myAuthorSystem.length; j++) {
+            if (myAuthorSystem[j]["name"] == nameScenario) {
+                myAuthorSystem.splice(j, 1);
+            }
+        }
+
+        // deletes label with currently open scenario if this one was deleted
+        if ( $("#lname")[0].innerText == nameScenario ) {
+            $("#lname").html("");
         }
     }
 
@@ -398,241 +516,21 @@ function loadScenario() {
     });
 
     $("#lname").html(selectedScenario);
-
 }
 
-// modal window maps
-$(function(){
+// reset modal windows after closing
+$(function() {
 
-    var map;
-    var currentLat, currentLng;
-
-    // central point of the map
-    var latlng = new google.maps.LatLng('52.3877833', '13.0831297');
-
-    // resize map if modal window is opening
-    $("#modal-maps").on("shown.bs.modal", function() {
-        resizeMap();
-    });
-
-    // show modal map window
-    $("#navmaps").on("click", function() {
-        $("#modal-maps").modal({
-            keyboard: true,
-            backdrop: true,
-            show: true
-        });
-    });
-
-    // create the map
-    function showMap() {
-
-        var myOptions = {
-            zoom: 16,
-            center: latlng,
-            //mapTypeId: 'terrain'
-            mapTypeId: 'roadmap'
-        };
-
-        // flat ui style
-        var style = [/*{
-            "stylers": [{
-                "visibility": "off"
-            }]
-        },*/ {
-            "featureType": "road",      // streets are white
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#ffffff"
-            }]
-        }, {
-            "featureType": "road.arterial",     // main streets are yellow
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#fee379"
-            }]
-        }, {
-            "featureType": "road.highway",      // highways are light orange
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#fee379"
-            }]
-        }, {
-            "featureType": "landscape",         // landscape is grey
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#f3f4f4"
-            }]
-        }, {
-            "featureType": "water",             // water is blue
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#7fc8ed"
-            }]
-        }, {
-            "featureType": "road",              // road labels are grey
-            "elementType": "labels.text",
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "weight": 1
-            }, {
-                "color": "#7A7A7A"
-            }]
-        }, {
-            "featureType": "road.arterial",    // road labels are light grey
-            "elementType": "labels.text",
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#545454"
-            }]
-        }, {
-            "featureType": "road.highway",     // road labels are grey
-            "elementType": "labels.text",
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#545454"
-            }]
-        }, {
-            "featureType": "poi.park",          // parks are light green
-            "elementType": "geometry.fill",
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#83cead"
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "labels.text",   // water labels are white
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#eeeeee"
-            }, {
-                "weight": 1
-            }]
-        }, {
-            "featureType": "transit",
-            "elementType": "labels.text",   // transit labels are grey
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#B8B8B8"
-            }, {
-                "weight": 1
-            }]
-        }, {
-            "featureType": "poi",
-            "elementType": "labels.text",   // poi labels are grey
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#B8B8B8"
-            }, {
-                "weight": 1
-            }]
-        }, {
-            "featureType": "landscape",
-            "elementType": "labels.text",   // poi labels are grey
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#B8B8B8"
-            }, {
-                "weight": 1
-            }]
-        }, {
-            "featureType": "administrative",
-            "elementType": "labels.text",    // administrative labels are grey
-            "stylers": [{
-                "visibility": "on"
-            }, {
-                "color": "#333333"
-            }, {
-                "weight": 1
-            }]
-        }, {
-            "featureType": "landscape.man_made",
-            "elementType": "geometry",
-            "stylers": [{
-                "weight": 0.9
-            }, {
-                "visibility": "off"
-            }]
-        }]
-
-        // create new map object
-        map = new google.maps.Map($('#maps')[0], myOptions);
-        map.setOptions({styles: style});
-
-        // get flat marker image
-        var image = {
-            url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/marker.png',
-            scaledSize: new google.maps.Size(20, 40),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(12, 59)
-        };
-        // get flat marker shadow image
-        var shadow = {
-            url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/shadow.png',
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(-2, 36)
-        };
-        // create marker
-        var marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            icon: image,
-            shadow: shadow
-        });
-
-        //marker.setMap(map);
-
-        // set new marker if user clicked into the map
-        google.maps.event.addListener(map, "click", function(e) {
-            replaceMarker(e.latLng);
-            currentLat = e.latLng.lat();
-            currentLng = e.latLng.lng();
-        });
-
-        $("#btnConfirmMapCoordinates").on("click", function() {
-            if (currentLat) {
-                $("#inputContextParameter1")[0].value = currentLat;
-            }
-            if (currentLng) {
-                $("#inputContextParameter2")[0].value = currentLng;
-            }
-
-        });
-
-        // delete old and set new marker
-        function replaceMarker(location) {
-            marker.setMap(null);
-            marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                icon: image,
-                shadow: shadow
-            });
+    $("body").on("hidden.bs.modal", ".modal", function() {
+        if ( $(this)[0].id == "modal-login"
+            || $(this)[0].id == "modal-new-szenario"
+            || $(this)[0].id == "modal-delete-szenario"
+            || $(this)[0].id == "modal-user"
+            || $(this)[0].id == "modal-contact"
+        ) {
+            $(this).find("form")[0].reset();
         }
-    }
+    });
 
-    // resize map due to map opening
-    function resizeMap() {
-        if (typeof map == "undefined") return;
-        var center = map.getCenter();
-        google.maps.event.trigger(map, "resize");
-        map.setCenter(center);
-    }
+})
 
-    google.maps.event.addDomListener(window, 'load', showMap);
-    google.maps.event.addDomListener(window, "resize", resizeMap());
-
-});
