@@ -70,6 +70,7 @@ function activateFunctionalities(newState) {
     list_units.push(unit);
 
     var current_unit;
+    //$(unit).draggable({scroll:true, containment:".content"});
 
     // triggered if learning unit is clicked
     $(unit).click(function(event) {
@@ -88,6 +89,7 @@ function activateFunctionalities(newState) {
         // show tab content of the current active tab
         var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
         $(activeTab).fadeIn();
+        $(".tab-Container").show();
 
         /* input field in tab "Eigenschaften"*/
         // get name of the unit
@@ -164,6 +166,8 @@ function activateFunctionalities(newState) {
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
+
+        //console.log(myAuthorSystem);
     });
 
     // triggered if one option was selected ("Eine" or "Alle")
@@ -418,7 +422,7 @@ function activateFunctionalities(newState) {
             }
 
             var ccID = contentContextInfo.element[0].value;
-            var divContextIcon = $("<div>").addClass("unit-icon").attr("id", id + "icon");
+            var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
             //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
             //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
 
@@ -612,6 +616,19 @@ function activateFunctionalities(newState) {
         escapeMarkup: function(m) {return m;}
     });
 
+    // triggered if unit was dragged
+    $(unit).on("dragstop", function() {
+        // get new positions (absolute)
+        var top = $(unit)[0].offsetTop;
+        var left = $(unit)[0].offsetLeft;
+
+        // set only if current unit object exists
+        if (current_unit) {
+            current_unit.posX = left;
+            current_unit.posY = top;
+        }
+    });
+
     // clear marking from existing learning units
     for (var l=0; l<list_units.length; l++) {
         $(list_units[l]).css("background", "");
@@ -726,6 +743,7 @@ function fillSelectionContextInformation() {
     // iterate through all context informations
     for (var i=0; i<array_ContextInformations.length; i++) {
         var option = $("<option>").attr("value", i.toString());
+        option.attr("origin", array_ContextInformations[i][4]);     // save origin name
         option.html(array_ContextInformations[i][0]);
 
         // find right context class and put it in this optgroup
@@ -1126,6 +1144,7 @@ function checkInformation(missing_content, current_unit) {
     } else {
         // update JSON structure
         selectedInfos.name = $("#selectContextInfos").select2("data")["text"];
+        selectedInfos.id = $("#selectContextInfos").select2("data").element[0].getAttribute("origin");
     }
 
     // check selection bar "Operator"
@@ -1312,7 +1331,12 @@ $(function(){
             zoom: 15,
             center: latlng,
             //mapTypeId: 'terrain'
-            mapTypeId: 'roadmap'
+            mapTypeId: 'roadmap',
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                position: google.maps.ControlPosition.LEFT_BOTTOM
+            }
         };
 
         // flat ui style
@@ -1335,7 +1359,7 @@ $(function(){
                 "color": "#fee379"
             }]
         }, {
-            "featureType": "road.highway",      // highways are light orange
+            "featureType": "road.highway",      // highways are yellow
             "stylers": [{
                 "visibility": "on"
             }, {
@@ -1374,7 +1398,7 @@ $(function(){
                 "color": "#545454"
             }]
         }, {
-            "featureType": "road.highway",     // road labels are grey
+            "featureType": "road.highway",     // road labels are light grey
             "elementType": "labels.text",
             "stylers": [{
                 "visibility": "on"
@@ -1399,7 +1423,7 @@ $(function(){
             }, {
                 "weight": 1
             }]
-        }, {
+        }, /*{
             "featureType": "transit",
             "elementType": "labels.text",   // transit labels are grey
             "stylers": [{
@@ -1409,7 +1433,7 @@ $(function(){
             }, {
                 "weight": 1
             }]
-        }, {
+        },*/ /*{
             "featureType": "poi",
             "elementType": "labels.text",   // poi labels are grey
             "stylers": [{
@@ -1419,9 +1443,9 @@ $(function(){
             }, {
                 "weight": 1
             }]
-        }, {
+        },*/ /*{
             "featureType": "landscape",
-            "elementType": "labels.text",   // poi labels are grey
+            "elementType": "labels.text",   // landscape labels are grey
             "stylers": [{
                 "visibility": "on"
             }, {
@@ -1429,7 +1453,7 @@ $(function(){
             }, {
                 "weight": 1
             }]
-        }, {
+        },*/ /*{
             "featureType": "administrative",
             "elementType": "labels.text",    // administrative labels are grey
             "stylers": [{
@@ -1439,7 +1463,7 @@ $(function(){
             }, {
                 "weight": 1
             }]
-        }, {
+        },*/ {
             "featureType": "landscape.man_made",
             "elementType": "geometry",
             "stylers": [{
@@ -1558,6 +1582,10 @@ $(function(){
                 markers.push(marker);
 
                 bounds.extend(place.geometry.location);
+
+                // set input fields with coordinates
+                $("#inputContextParameter1")[0].value = place.geometry.location["k"];
+                $("#inputContextParameter2")[0].value = place.geometry.location["D"];
             }
 
             map.fitBounds(bounds);

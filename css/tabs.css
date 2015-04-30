@@ -24,7 +24,7 @@
 .tab-Container li{
     float:left;
     list-style:none;
-    width: 25%;
+    width: 33.33%;
 }
 .tab-Container li a{
     /*background:#ddd;*/
@@ -85,6 +85,11 @@
     color: #666;
     line-height: 2.3;
 }*/
+
+#tabBtnDeleteUnit {
+    margin-top: 50px;
+    width: 100%;
+}
 
 #btnAddContextInfos {
     margin-top: 10px;
@@ -151,7 +156,7 @@
  }
 /* google search box */
 .controls {
-    margin-top: 16px;
+    margin-top: 8px;
     border: 1px solid lightgrey;
     border-radius: 2px;
     box-sizing: border-box;
@@ -165,10 +170,11 @@
     /*font-family: Roboto;*/
     font-size: 15px;
     font-weight: 300;
-    margin-left: 12px;
+    /*margin-left: 12px;*/
     padding: 0 11px 0 13px;
     text-overflow: ellipsis;
     /*width: 400px;*/
+    width: 84%;
 }
 #pac-input:focus {
     border-color: #4d90fe;

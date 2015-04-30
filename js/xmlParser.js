@@ -49,6 +49,7 @@ $(function() {
 
                 /* get the name of the information */
                 var name = this.getAttribute("id");
+                var originalName = name;
                 name = translate_contextInformation(name);
 
                 /* get the context classes from the current information */
@@ -175,7 +176,7 @@ $(function() {
                 }
                 array_parameter.name = "Parameters (id, type, values)";
 
-                array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter);
+                array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter, originalName);
                 array_ContextInformations.push(array_ContextInformation);
                 //console.log(array_ContextInformation);
             });

@@ -297,7 +297,7 @@ ul#navbar-right {
 #navbar-middle-little {
     width: 30px;
     height: 200px;
-    float: right;
+    float: left;
     padding: 10px 10px;
     padding-left: 13px;
     list-style: none;

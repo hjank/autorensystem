@@ -8,18 +8,28 @@ var global_arrayShowSzenarioDeletion = [];
 var global_ScenarioLiNumber = 0;
 //var gloabl_unitsPerScenario = [];
 
-// get scenario name from input field
-/*$(function() {
-    $("#sname").keyup(function() {
-        ssname = $("#sname").val();
+
+$(function() {
+
+    // make sure that after clicking enter in modal window "Neues Szenario erstellen"
+    // the same steps were gone like clicking on the create button
+    $("#modal-new-szenario").keypress(function(e) {
+        if (e.keyCode == 13) {
+            saveCloseSzenario();
+            $('#modal-new-szenario').modal('hide');
+            return true;
+        }
     });
-});*/
+});
 
 // triggered after clicking save button in scenario creation
 function saveCloseSzenario() {
 
+    // get name from input field
+    var scenarioName = $("#sname").val();
+
     // write scenario name on the little navigation bar
-    $("#lname").html(ssname);
+    $("#lname").html(scenarioName);
 
     global_ScenarioLiNumber = global_ScenarioLiNumber + 1;
 
@@ -30,25 +40,25 @@ function saveCloseSzenario() {
     var spanClass = $('<span>').addClass('title');
 
     // append container in html file
-    spanClass.append(ssname);
+    spanClass.append(scenarioName);
     aClass.append(spanClass);
     liClass.append(aClass);
     $("#cssmenu > ul").append(liClass);
 
     // update scenario list and panel
-    updateScenario(ssname);
+    updateScenario(scenarioName);
     setLabelBtnScenarioDeletion();
 
-    // save scenario in JSON structure
-    //myAuthorSystem.push({name:ssname, units:[]});
+    // remove all units from state machine container
+    $("#stm").empty();
 
 }
 
 // write any typed character in ssname
-var ssname = "";
+/*var ssname = "";
 function logKey(k) {
     ssname = k.value;
-}
+}*/
 
 // triggered after clicking "Passwort ändern"
 function showPW() {
@@ -253,14 +263,13 @@ function showDeleteUnitsConfirm() {
 function deleteUnits(){
 
     var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
-    console.log(list_deleteableUnits);
     var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
 
     // needed to find scenario and units in menu bar
     var liCurrentScenario = $("span.title").filter(":contains('" + currentScenario + "')");
     liCurrentScenario = liCurrentScenario.parent("a").parent("li");
 
-    // update JSON structure
+    // update gui
     for (var j=0; j<myAuthorSystem.length; j++) {
         if (myAuthorSystem[j]["name"] == currentScenario) {
             for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
@@ -268,8 +277,8 @@ function deleteUnits(){
                 for (var i=0; i<list_deleteableUnits.length; i++) {
 
                     // delete unit in statemaschine
-                    var unit = list_deleteableUnits[i].id;
-                    $("#" + unit).remove();
+                    //var unit = list_deleteableUnits[i].id;
+                    //$("#" + unit).remove();
 
                     // delete unit in JSON structure
                     if (myAuthorSystem[j]["units"][k]["name"] == list_deleteableUnits[i].text) {
@@ -487,10 +496,10 @@ function deleteScenariosNot() {
 // load scenario with learning units on the main window
 function loadScenario() {
 
-    var sname = $("#lname")[0].innerText;
-    var selectedScenario = $("#select2-chosen-10")[0].innerText;
+    //var sname = $("#lname")[0].innerText;
+    //var selectedScenario = $("#select2-chosen-10")[0].innerText;
 
-    $("#menuScenarios > li").each(function() {
+    /*$("#menuScenarios > li").each(function() {
         var menuName = $(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,"");
 
         if ( menuName == sname ) {
@@ -513,9 +522,166 @@ function loadScenario() {
                 alert("hat nix");
             }
         }
+    });*/
+
+    // remove all units from the container
+    $("#stm").empty();
+
+    // change name to new scenario
+    var selectedScenario = $("#listLoadScenarios").select2("data")["text"];
+    $("#lname").html(selectedScenario);
+
+    // find scenario in JSON structure
+    for (var i=0; i<myAuthorSystem.length; i++) {
+
+        if (myAuthorSystem[i].name == selectedScenario) {
+
+            // load units from new scenario
+            for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
+                var unit = loadUnit(myAuthorSystem[i]["units"][j], j);
+
+                // place unit in state machine
+                $(unit).css("top", myAuthorSystem[i]["units"][j].posY + "px");
+                $(unit).css("left", myAuthorSystem[i]["units"][j].posX + "px");
+
+                console.log(myAuthorSystem[i]["units"][j]);
+            }
+        }
+    }
+
+    // hide tabs
+    $(".tabContents").hide();
+
+}
+
+function loadUnit(unit, j) {
+
+    jsPlumb.setContainer($("#stm"));
+
+    var i = 1;
+    var inst = jsPlumb.getInstance({
+        Endpoint: ["Dot", {radius: 2}],
+        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
+        ConnectionOverlays: [
+            [ "Arrow", {
+                location: 1,
+                id: "arrow",
+                length: 14,
+                foldback: 0.8
+            } ],
+            [ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
+        ],
+        Container: "stm"
     });
 
-    $("#lname").html(selectedScenario);
+    inst.bind("connection", function (info) {
+        info.connection.getOverlay("label").setLabel(i.toString());
+        i = i + 1;
+    });
+
+    inst.bind("click", function (c) {
+        inst.detach(c);
+    });
+
+    window.jsp = inst;
+
+    var newState = $('<div>').attr('id', 'state' + j).addClass('w');
+    var title = $('<div>').addClass('title').css("padding", "0px 7px");
+    title.html(unit.name);
+    var ep = $('<div>').addClass('ep');
+
+    // add div for context information icons
+    var divContextIcons = $("<div>").addClass("unit-icons");
+
+    newState.append(divContextIcons);
+    newState.append(title);
+    newState.append(ep);
+    $('#stm').append(newState);
+
+    inst.draggable(newState, {
+        containment: 'parent'
+    });
+
+    inst.makeTarget(newState, {
+        anchor: "Continuous",
+        dropOptions: { hoverClass: "dragHover" },
+        allowLoopback: true
+    });
+
+    inst.makeSource(ep, {
+        parent: newState,
+        anchor: "Continuous",
+        connector: [ "StateMachine", { curviness: 20 } ],
+        connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 }
+    });
+
+    activateFunctionalities(newState);
+
+    // get all context information
+    //for (var k= 0; k<unit["contextInformations"].length; k++) {
+
+    //}
+
+    // get all meta data
+
+
+    return newState;
+
+}
+
+// triggered if delete button in tab "Eigenschaften" was clicked
+function showDeleteUnitConfirm() {
+
+    $("#modal-delete-unit-confirm").modal({
+        keyboard: true,
+        backdrop: true,
+        show: true
+    });
+
+    var unitName = $("#inputUnitName")[0].value;
+    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich löschen?');
+}
+
+// delete unit after confirming deletion in tab "Eigenschaften"
+function deleteUnit() {
+
+    var currentScenario = $("#lname")[0].innerHTML;
+
+    // needed to find scenario and units in menu bar
+    var liCurrentScenario = $("span.title").filter(":contains('" + currentScenario + "')");
+    liCurrentScenario = liCurrentScenario.parent("a").parent("li");
+
+    // update gui
+    for (var j=0; j<myAuthorSystem.length; j++) {
+        if (myAuthorSystem[j]["name"] == currentScenario) {
+            for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
+
+                // delete unit in state machine
+                var unit = $("#inputUnitName")[0].value;
+                /*$("#stm").children("div.w").children("div.title").each(function() {
+                    if (this.innerHTML == unit) {
+                        $(this).parent().remove();
+                    }
+                });*/
+
+                // delete unit in JSON structure
+                if (myAuthorSystem[j]["units"][k]["name"] == unit) {
+                    myAuthorSystem[j]["units"].splice(k, 1);
+                }
+
+                // delete unit in menu bar
+                liCurrentScenario.children("ul").children("li").each(function() {
+                    if ($(this).children("a").children("span")[0].innerHTML == unit) {
+                        $(this).remove();
+                    }
+                });
+            }
+        }
+    }
+
+    // all tab content invisible
+    $(".tabContents").hide();
+    $(".tab-Container").hide();
 }
 
 // reset modal windows after closing

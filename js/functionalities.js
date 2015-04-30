@@ -9,7 +9,9 @@
  *            contextInformations:[contextInformation1, contextInformation2, ...],
  *            sat:choice,
  *            metaData:[metaData1, metaData2, ...],
- *            connections:[connect1, connect2, ...]
+ *            connections:[connect1, connect2, ...],
+ *            posX:number,
+ *            posY:number
  *          }
  *              contextInformation = {name:name, operator:name, value:value,
  *                input1:value, input2:value, inputString:value,
@@ -125,10 +127,13 @@ $(function() {
 
 // tabs
 $(function() {
+    // default hide tabs
+    $(".tab-Container").hide();
     $(".tabContents").hide();
     //$(".tabContents:first").show();
     $("#firstTab").addClass("active");
 
+    // if one tab is clicked show it
     $(".tab-Container ul li a").click(function() {
 
         var activeTab = $(this).attr("href");
@@ -141,13 +146,13 @@ $(function() {
             $(activeTab).fadeIn();
         }
 
-
         return false;
     });
 });
 
 // container
 $(function() {
+    // triggered if unit container is clicked
     $("#container").on("click", function() {
 
         // clear marking from existing learning units
@@ -164,6 +169,7 @@ $(function() {
 
         // all tab content invisible
         $(".tabContents").hide();
+        $(".tab-Container").hide();
 
     });
 });

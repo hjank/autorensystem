@@ -22,7 +22,11 @@
         <script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.4-min.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"></script>
+
+        <!-- bad one -->
+        <!--<script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.4-min.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.5.js"></script>-->
 
         <!-- general functionalities -->
         <script type="text/javascript" src="js/functionalities.js"></script>
@@ -50,9 +54,9 @@
         <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="css/flat-ui.css">
         <script type="text/javascript" src="js/flat-ui.js"></script>
-        <script type="text/javascript" src="js/vendor/flatui/html5shiv.js"></script>
+        <!--<script type="text/javascript" src="js/vendor/flatui/html5shiv.js"></script>
         <script type="text/javascript" src="js/vendor/flatui/respond.min.js"></script>
-        <script type="text/javascript" src="js/vendor/flatui/video.js"></script>
+        <script type="text/javascript" src="js/vendor/flatui/video.js"></script>-->
 
 
         <!-- slider with pips -->
@@ -64,7 +68,7 @@
 
         <!-- google maps api -->
         <!--<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>-->
-        <script src="//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+        <script src="//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
 
         <!-- functions -->
         <script>
@@ -149,10 +153,10 @@
         </div>
 
         <div class="body">
-            <!-- <div class="sidebar">Sidebar -->
-                <div id='cssmenu' class="menu">
-                    <ul id="menuScenarios">
-                        <!--<li class='active has-sub'>
+
+            <div id='cssmenu' class="menu">
+                <ul id="menuScenarios">
+                    <!--<li class='active has-sub'>
                             <a href='#'> <span>Szenario 1</span></a>
                             <ul>
                                 <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
@@ -176,12 +180,11 @@
                                 <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
                             </ul>
                         </li>-->
-                    </ul>
-                </div>
-            <!--</div> -->
+                </ul>
+            </div>
+
             <div class="main">
                 <div class="page-hdr">
-
                     <ul class="navbar" id="navbar-left-little">
                         <!--<li id="navmenu" title="Show/Hide Menu" style="cursor: pointer"><span style="margin:auto">&#9776</span></li>-->
                         <li id="navmenu" title="Zeige/Verstecke Struktur">
@@ -197,11 +200,8 @@
                         </li>
                     </ul>
                     <span style="text-align: center">
-                        <label id="lname">
-                            <script type="text/javascript">document.write(ssname)</script>
-                        </label>
+                        <label id="lname"></label>
                     </span>
-
                 </div>
                 <div id="container" class="content">
                     <ul id="navbar-middle-little">
@@ -233,7 +233,8 @@
                         </div>
                     </div>-->
 
-                    <div class="content" id="stm">
+                    <!--<div class="content" id="stm">-->
+                    <div id="stm">
                     </div>
 
                 </div>
@@ -248,7 +249,6 @@
                         <li><a id="firstTab" href="#tab1" title="Eigenschaften" class="fui-gear"></a> </li>
                         <li><a href="#tab2" title="Kontextinformationen">K</a></li>
                         <li><a href="#tab3" title="Metadaten">M</a></li>
-                        <li><a href="#help" class="fui-question-circle" title="Hilfe"></a></li>
                     </ul>
                 </div>
 
@@ -263,6 +263,11 @@
                             <div>
                                 <label for="inputUnitDescription" class="label-tabs label">Beschreibung</label>
                                 <textarea id="inputUnitDescription" class="form-control" name="unitDescription" rows="5"></textarea>
+                            </div>
+                            <div>
+                                <div id="tabBtnDeleteUnit" class="btn btn-danger" onclick="showDeleteUnitConfirm()">
+                                    <b class="fui-trash"> </b>Lerneinheit löschen
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -385,7 +390,7 @@
 
 
 
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>-->
 
         <!-- login -->
         <div id="modal-login" class="modal fade" tabindex="-1">
@@ -400,8 +405,12 @@
                             <label>Bitte loggen Sie sich ein!</label>
                         </div>
                         <form action="index.html">
-                            <p><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px"></p>
-                            <p><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px"></p>
+                            <div class="form-group has-feedback"><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px">
+                                <span class="form-control-feedback fui-user"></span>
+                            </div>
+                            <div class="form-group has-feedback"><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px">
+                                <span class="form-control-feedback fui-lock"></span>
+                            </div>
                         </form>
                         <div>
                             <label id="hrefRegist" onclick="showRegistration()" style="cursor:pointer; color: #16a085; margin-right: 10px">Registrieren</label>
@@ -410,7 +419,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" style="margin-right: 10px">Login</button>
-                        <button class="btn btn-primary" type="button" data-dismiss="modal">Abbrechen</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -428,29 +437,13 @@
                         <form name="formSzenarioName">
                             <div>
                                 <label class="label-tabs label">Name</label>
-                                <input autofocus class="form-control" id="sname" name="szenarioName" onkeyup="logKey(this)" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30">
-                            </div>
-                            <br>
-                            <div>
-                                <select class="form-control select select-primary mbl" data-toggle="select">
-                                    <option value="0">Constraints</option>
-                                    <option value="1">Kontextinformationen</option>
-                                </select>
-                            </div>
-                            <div>
-                                <select multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                                    <option value="0" selected>1</option>
-                                    <option value="1" selected>2</option>
-                                    <option value="2" selected>3</option>
-                                    <option value="3" selected>4</option>
-                                    <option value="4" selected>5</option>
-                                </select>
+                                <input autofocus class="form-control" id="sname" name="szenarioName" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -484,7 +477,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="btnDeleteSzenario" class="btn btn-danger" onclick="deleteScenariosConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -503,7 +496,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" onclick="deleteScenarios()" data-dismiss="modal" style="margin-right: 10px">JA</button>
-                        <button type="button" class="btn btn-primary" onclick="deleteScenariosNot()" data-dismiss="modal">NEIN</button>
+                        <button type="button" class="btn btn-default" onclick="deleteScenariosNot()" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>
             </div>
@@ -522,43 +515,19 @@
                             <label>Wähle ein Szanrio aus, welches geladen werden soll!</label>
                         </div>
                         <div>
-                            <select id="listLoadScenarios" class="form-control select select-inverse mbl" data-toggle="select">
+                            <select id="listLoadScenarios" class="form-control select select-primary mbl" data-toggle="select">
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" onclick="loadScenario()" data-dismiss="modal" style="margin-right: 10px">Laden</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- delete units -->
-        <!--<div class="modal-delete-units" style="display: none">
-            <p>
-                <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
-            </p>
-
-            <label><b>Auswahl des Szenarios</b></label>
-            <br>
-            <select class="form-control select select-primary mbl" data-toggle="select">
-                <option value="0">Szenario 1</option>
-                <option value="1">Szenario 2</option>
-                <option value="1">Szenario 3</option>
-            </select>
-            <br>
-
-            <label><b>Entfernen der zu löschenden Lerneinheiten</b></label><br>
-            <select id="selectUnitDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
-                <option value="0" selected>Lerneinheit 1</option>
-            </select>
-            <br>
-
-            <button id="btnDeleteUnits" class="btn btn-primary" style="margin-right: 10px">Löschen</button>
-            <button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>
-
-        </div>-->
         <div id="modal-delete-units" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -585,7 +554,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="btnDeleteUnits" class="btn btn-danger" onclick="showDeleteUnitsConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -603,8 +572,8 @@
                         <p>Wollen Sie die Lerneinheiten wirklich löschen?</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
-                        <button type="button" class="btn btn-primary" onclick="deleteUnitsNot()" data-dismiss="modal">NEIN</button>
+                        <button id="btnDeleteUnits" class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-default" onclick="deleteUnitsNot()" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>
             </div>
@@ -621,15 +590,15 @@
                     <div class="modal-body">
                         <form>
                             <div>
-                                <label class="label-modal label">Name</label>
-                                <input autofocus id="inputUsername" name="username" value="Julius" class="form-control" type="text" size="40" maxlength="30">
+                                <label class="label-modal label" for="inputUsername">Name</label>
+                                <input autofocus id="inputUsername" name="username" placeholder="Benutzername" value="Julius" class="form-control" type="text" size="40" maxlength="30">
                             </div>
                             <div>
                                 <label class="label-modal label">Beschreibung</label>
                                 <textarea class="form-control" rows="4"></textarea>
                             </div>
                             <div>
-                                <label class="label-modal label">Aktuelles Passwort</label><br>
+                                <label class="label-modal label" for="pwOld">Aktuelles Passwort</label><br>
                                 <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort" type="password" maxlength="30">
                             </div>
                             <div>
@@ -651,7 +620,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -703,7 +672,7 @@
                     </div>
                     <div class="modal-footer">
                         <!--<button class="btn btn-primary" style="margin-right: 10px">Senden</button>-->
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
             </div>
@@ -719,37 +688,9 @@
                     </div>
                     <div class="modal-body">
                         <p>Hier finden Sie Hilfe!</p>
-
-                        <!--<div class="cbox">-->
-                        <form role="form">
-                            <div class="form-group">
-                                <label class="checkbox" for="checkbox1">
-                                    <input type="checkbox" data-toggle="checkbox" value="" id="checkbox1" required>
-                                    Unchecked
-                                </label>
-                                <label class="checkbox" for="checkbox2">
-                                    <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox2" checked="">
-                                    Checked
-                                </label>
-                                <label class="checkbox" for="checkbox3">
-                                    <input type="checkbox" data-toggle="checkbox" value="" id="checkbox3" disabled="">
-                                    Disabled unchecked
-                                </label>
-                                <label class="checkbox" for="checkbox4">
-                                    <input type="checkbox" data-toggle="checkbox" checked="checked" value="" id="checkbox4" disabled="" checked="">
-                                    Disabled checked
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                        </form>
-                        <!--<div id="divSwitchParameter" class="bootstrap-switch-square">
-                            <input id="switchParameter" type="checkbox" checked data-toggle="switch" name="custom-square-switch-icons"
-                                   data-on-text="Gilt" data-off-text="Nicht" />
-                        </div>-->
-                        <!--</div>-->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                     </div>
                 </div>
             </div>
@@ -778,6 +719,25 @@
                 </div>
             </div>
         </div>-->
+
+        <!-- confirm delete unit in tab -->
+        <div id="modal-delete-unit-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p id="tabTextUnitDeletion">Wollen Sie die Lerneinheit wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteUnit" class="btn btn-danger" onclick="deleteUnit()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     </body>

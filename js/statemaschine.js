@@ -76,6 +76,8 @@ jsPlumb.ready(function () {
 
 
     /* create new instances */
+    jsPlumb.setContainer($("#stm"));
+
     var j = 0;
     var inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
@@ -105,6 +107,7 @@ jsPlumb.ready(function () {
 
         var newState = $('<div>').attr('id', 'state' + j).addClass('w');
         var title = $('<div>').addClass('title').css("padding", "0px 7px");
+        //var title = $('<div>').addClass('title').text('State ' + j);
         var stateName = $('<input>').attr('type', 'text');
         title.append(stateName);
 
@@ -122,7 +125,6 @@ jsPlumb.ready(function () {
         window.jsp = inst;
 
         var windows = jsPlumb.getSelector("#stm .w");
-        console.log(windows);
 
         newState.append(divContextIcons);
         newState.append(title);
@@ -131,10 +133,9 @@ jsPlumb.ready(function () {
 
         $('#stm').append(newState);
 
-        inst.draggable(newState, {
+        /*inst.draggable(newState, {
             containment: 'parent'
         });
-
 
         inst.makeTarget(newState, {
             anchor: "Continuous",
@@ -144,18 +145,52 @@ jsPlumb.ready(function () {
 
         inst.makeSource(ep, {
             //filter: ".ep",
+            parent: newState,
             anchor: "Continuous",
             connector: [ "StateMachine", { curviness: 20 } ],
             connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 }
-        });
+        });*/
 
 
-        newState.dblclick(function(e) {
+        // unit + connections also deletable with a double click
+        /*newState.dblclick(function(e) {
             inst.detachAllConnections($(this));
             $(this).remove();
             e.stopPropagation();
+        });*/
+
+        // delete current unit + connections in tab "Eigenschaften"
+        $("#btnDeleteUnit").on("click", function() {
+
+            var unitName = $("#inputUnitName")[0].value;
+            $("#stm").children("div.w").children("div.title").each(function() {
+                if (this.innerHTML == unitName) {
+                    var unitID = $(this).parent()[0].getAttribute("id");
+
+                    // delete all connections
+                    inst.detachAllConnections($("#" + unitID));
+                    // delete unit
+                    $(this).parent().remove();
+                }
+            });
         });
 
+        // delete one or more units + connections in modal window "Lernszenarien löschen"
+        $("#btnDeleteUnits").on("click", function() {
+
+            var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
+
+            for (var i=0; i<list_deleteableUnits.length; i++) {
+                var unitID = list_deleteableUnits[i].id;
+
+                // delete all connections
+                inst.detachAllConnections($("#" + unitID));
+                // delete unit in statemaschine
+                $("#" + unitID).remove();
+            }
+        });
+
+        var nameSet = false;
         stateName.keyup(function(e) {
             if (e.keyCode === 13) {
                 //var state = $(this).closest('.item');
@@ -165,7 +200,7 @@ jsPlumb.ready(function () {
                 activateFunctionalities(newState);
                 global_currentInputUnitName = this.value;
 
-                /* NEW */
+
                 // add learning unit in menu bar
                 var nameCurrentScenario = $("#lname")[0].innerText;
                 var liCurrentScenario = $("span.title").filter(":contains('" + nameCurrentScenario + "')");
@@ -239,12 +274,14 @@ jsPlumb.ready(function () {
                 for (var k=0; k<myAuthorSystem.length; k++) {
                     if (myAuthorSystem[k]["name"] == nameCurrentScenario) {
                         myAuthorSystem[k]["units"].push(
-                            {   name:this.value,
-                                description:"",
-                                sat:"all",
-                                contextInformations:[],
-                                metaData:[],
-                                connections:[]
+                            {   name:this.value,            // displayed name
+                                description:"",             // description of the unit
+                                sat:"all",                  // how much context information have to be satisfied
+                                contextInformations:[],     // list of containing context information
+                                metaData:[],                // list of containing meta data
+                                connections:[],             // list of connections with other units
+                                posX:0,                     // absolute X position in the displayed container
+                                posY:0                      // absolute Y position in the displayed container
                             }
                         );
                     }
@@ -252,6 +289,33 @@ jsPlumb.ready(function () {
 
                 // hide tabs because all units will be unmarked
                 $(".tabContents").hide();
+
+                nameSet = true;
+            }
+
+            // to set the source and target points, it is necessary to wait until the name was entered
+            // --> prevent the wrong placement of the dots
+            if (nameSet) {
+
+                inst.draggable(newState, {
+                    //containment: 'parent'
+                    containment: '.body'
+                });
+                //inst.draggable(newState);
+
+                inst.makeTarget(newState, {
+                    anchor: "Continuous",
+                    dropOptions: { hoverClass: "dragHover" },
+                    allowLoopback: true
+                });
+
+                inst.makeSource(ep, {
+                    //filter: ".ep",
+                    parent: newState,
+                    anchor: "Continuous",
+                    connector: [ "StateMachine", { curviness: 20 } ],
+                    connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 }
+                });
             }
 
         });
@@ -259,8 +323,10 @@ jsPlumb.ready(function () {
         stateName.focus();
 
         j++;
-        jsPlumb.setContainer("stm");
 
+        $("#stm").on("scroll", function() {
+            inst.repaintEverything();
+        });
 
 
     });
