@@ -40,6 +40,7 @@
         <script type="text/javascript" src="js/menu.js"></script>
 
         <!-- tab bar -->
+        <script type="text/javascript" src="js/formatSelections.js"></script>
         <script type="text/javascript" src="js/tabs.js"></script>
 
         <!-- modal window -->
@@ -94,7 +95,7 @@
                 $('[data-toggle="switch"]').bootstrapSwitch();
                 $("select").select2({dropdownCssClass: "dropdown-inverse"});
 
-                setScenarios();     // only needed if scenarios already exist at program start
+                //setScenarios();     // only needed if scenarios already exist at program start
                 setLabelBtnScenarioDeletion();
             });
 
@@ -125,6 +126,7 @@
                                 <li onclick="showNewSzenario()"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
                                 <li onclick="showDeleteSzenario()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
                                 <li onclick="showLoadSzenario()"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
+                                <li id="saveScenario" onclick="showSaveScenario()"><a download="szenario.json">Speichern <b class="fui-exit" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -140,7 +142,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-user"></b> Julius<b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-user"></b> Benutzer<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li onclick="showProfil()"><a>Profil <b class="fui-gear" style="float: right"></b></a></li>
                                 <li onclick="showLogin()"><a href="#">Logout <b class="fui-lock" style="float: right"></b></a></li>
@@ -385,6 +387,27 @@
                     </div>
                 </div>
 
+                <!-- content of label relations -->
+                <div id="tabUnitLabel" class="tabRelation">
+                    <div id="divSelectRelations">
+                        <div id="tabRelationHead">
+                            <a title="Relation der Lerneinheiten">Relation</a>
+                        </div>
+                        <div id="tabRelationBody">
+                            <label class="label-tabs label" for="selectRelations">Auswahl der Relation</label>
+                            <select id="selectRelations" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                                <option value="pre">Voraussetzung (PRE)</option>
+                                <option value="alt">Alternative (ALT)</option>
+                                <option value="bas">Grundlage (BAS)</option>
+                                <option value="ver">Version (VER)</option>
+                                <option value="ref">Referenz (REF)</option>
+                                <option value="ext">Erweiterung (EXT)</option>
+                                <option value="hlp">Hilfe (HLP)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -521,6 +544,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" onclick="loadScenario()" data-dismiss="modal" style="margin-right: 10px">Laden</button>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-right: 10px">Laden2</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
@@ -591,7 +615,7 @@
                         <form>
                             <div>
                                 <label class="label-modal label" for="inputUsername">Name</label>
-                                <input autofocus id="inputUsername" name="username" placeholder="Benutzername" value="Julius" class="form-control" type="text" size="40" maxlength="30">
+                                <input autofocus id="inputUsername" name="username" placeholder="Benutzername" value="Benutzer" class="form-control" type="text" size="40" maxlength="30">
                             </div>
                             <div>
                                 <label class="label-modal label">Beschreibung</label>

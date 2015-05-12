@@ -2,84 +2,11 @@ var i = 1;
 
 jsPlumb.ready(function () {
 
-    // setup some defaults for jsPlumb.
-    /*var instance = jsPlumb.getInstance({
-        Endpoint: ["Dot", {radius: 2}],
-        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
-        ConnectionOverlays: [
-            [ "Arrow", {
-                location: 1,
-                id: "arrow",
-                length: 14,
-                foldback: 0.8
-            } ],
-            [ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
-        ],
-        Container: "statemaschine"
-    });
-
-    window.jsp = instance;
-
-    var windows = jsPlumb.getSelector(".statemaschine .w");
-
-    // initialise draggable elements.
-    instance.draggable(windows);
-
-    // bind a click listener to each connection; the connection is deleted. you could of course
-    // just do this: jsPlumb.bind("click", jsPlumb.detach), but I wanted to make it clear what was
-    // happening.
-    instance.bind("click", function (c) {
-        instance.detach(c);
-        alert("2");
-    });
-
-    // bind a connection listener. note that the parameter passed to this function contains more than
-    // just the new connection - see the documentation for a full list of what is included in 'info'.
-    // this listener sets the connection's internal
-    // id as the label overlay's text.
-    instance.bind("connection", function (info) {
-        //info.connection.getOverlay("label").setLabel(info.connection.id);
-        info.connection.getOverlay("label").setLabel(i.toString());
-        i = i + 1;
-        //alert("3");
-    });
-
-    // suspend drawing and initialise.
-    instance.batch(function () {
-        instance.makeSource(windows, {
-            filter: ".ep",
-            anchor: "Continuous",
-            connector: [ "StateMachine", { curviness: 20 } ],
-            connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 },
-            maxConnections: 5,
-            onMaxConnections: function (info, e) {
-                alert("Maximum connections (" + info.maxConnections + ") reached");
-            }
-        });
-
-        // initialise all '.w' elements as connection targets.
-        instance.makeTarget(windows, {
-            dropOptions: { hoverClass: "dragHover" },
-            anchor: "Continuous",
-            allowLoopback: true
-        });
-
-        // and finally, make a couple of connections
-        instance.connect({ source: "opened", target: "phone1" });
-        //instance.connect({ source: "phone1", target: "phone1" });
-        instance.connect({ source: "phone1", target: "infers" });
-    });
-
-    jsPlumb.setContainer("statemaschine");
-
-    jsPlumb.fire("jsPlumbLoaded", instance);*/
-
-
     /* create new instances */
     jsPlumb.setContainer($("#stm"));
 
     var j = 0;
-    var inst = jsPlumb.getInstance({
+    /*var inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
         HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
         ConnectionOverlays: [
@@ -88,24 +15,132 @@ jsPlumb.ready(function () {
                 id: "arrow",
                 length: 14,
                 foldback: 0.8
-            } ],
-            [ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
+            } ]
+            //[ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
         ],
         Container: "stm"
+    });*/
+
+    inst.bind("connection", function (con) {
+        //console.log("state");
+        //console.log(con);
+        //con.connection.getOverlay("label").setLabel(i.toString());
+        //i = i + 1;
+
+        // only use if scenario name is set (don't access at loading scenario)
+        if ( $("#lname")[0].innerHTML.length != 0 ) {
+            var currentScenario = $("#lname")[0].innerHTML;
+
+            // add connection in JSON structure
+            for (var n=0; n<myAuthorSystem.length; n++) {
+                if (myAuthorSystem[n].name == currentScenario) {
+                    myAuthorSystem[n]["connections"].push({
+                        sourceId:con.sourceId,
+                        targetId:con.targetId,
+                        connId:con.connection.id,
+                        connLabel: "PRE"
+                    });
+                    break;
+                }
+            }
+        }
+
+        // add label to connection
+        con.connection.addOverlay([ "Label", { label: "PRE", id: "label", cssClass: "aLabel" }]);
     });
 
-    inst.bind("connection", function (info) {
-        info.connection.getOverlay("label").setLabel(i.toString());
-        i = i + 1;
+    var current_labelConnection;
+    // triggered if connection or label is clicked
+    inst.bind("click", function (c, e) {
+
+        // if label was clicked show tab information
+        if (c.id == "label") {
+            //console.log(c);
+            current_labelConnection = c.canvas.id;
+
+            // set label connection mark
+            $("#" + c.canvas.id).css("background-color", "#1e8151");
+            $("#" + c.canvas.id).css("color", "white");
+
+            // clear unit marking and hide unit properties
+            $(".w").css("background", "");
+            $(".w").css("color", "");
+            $(".tabContents").hide();
+            $(".tab-Container").hide();
+
+            // set property visible
+            $("#tabUnitLabel").css("display", "block");
+            $("#selectRelations").children("option").each(function() {
+                if ( $(this)[0].value.toUpperCase() == c.canvas.innerText ) {
+                    $("#selectRelations").select2("data", {id:$(this)[0].value, text:$(this)[0].innerHTML});
+                }
+            });
+
+            e.stopPropagation();
+
+        // if connection was clicked, delete it
+        } else {
+            // detach all connections
+            inst.detach(c);
+
+            // get id and current scenario name
+            var connID = c.id;
+            var currentScenario = $("#lname")[0].innerHTML;
+
+            // delete connection in JSON structure
+            for (var n=0; n<myAuthorSystem.length; n++) {
+                if (myAuthorSystem[n].name == currentScenario) {
+                    for (var l=0; l<myAuthorSystem[n]["connections"].length; l++) {
+                        if (myAuthorSystem[n]["connections"][l].connId == connID) {
+                            myAuthorSystem[n]["connections"].splice(l, 1);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            console.log(myAuthorSystem[0]["connections"]);
+        }
     });
 
-    inst.bind("click", function (c) {
-        inst.detach(c);
+    // triggered if an option for a label connection was selected
+    $("#selectRelations").select2().on("select2-selecting", function(e) {
+        $("#" + current_labelConnection).html(e.val.toUpperCase());
+        $("#" + current_labelConnection).css("background-color", "");
+        $("#" + current_labelConnection).css("color", "");
+
+        // get connection id and scenario name
+        var connID = $("#" + current_labelConnection)[0]._jsPlumb.component.id;
+        var currentScenario = $("#lname")[0].innerHTML;
+
+        // put label text in JSON structure
+        for (var m=0; m<myAuthorSystem.length; m++) {
+            if (myAuthorSystem[m].name == currentScenario) {
+                for (var p=0; p<myAuthorSystem[m]["connections"].length; p++) {
+                    if (myAuthorSystem[m]["connections"][p].connId == connID) {
+                        myAuthorSystem[m]["connections"][p].labelText = e.val;
+                        break;
+                    }
+                }
+            }
+        }
     });
 
     $('#navadd,#createLearnUnit').click(function(e) {
 
-        var newState = $('<div>').attr('id', 'state' + j).addClass('w');
+        /* if loaded sceanrio */
+        // get last id number
+        var max = 0;
+        $("#stm").children("div.w").each(function() {
+            var id = parseInt($(this)[0].getAttribute("id").slice(-1));
+            if (id > max) {
+                max = id;
+            }
+        });
+        max = max + 1;
+
+        //var newState = $('<div>').attr('id', 'state' + j).addClass('w');
+        var newState = $('<div>').attr('id', 'state' + max).addClass('w');
         var title = $('<div>').addClass('title').css("padding", "0px 7px");
         //var title = $('<div>').addClass('title').text('State ' + j);
         var stateName = $('<input>').attr('type', 'text');
@@ -203,7 +238,15 @@ jsPlumb.ready(function () {
 
                 // add learning unit in menu bar
                 var nameCurrentScenario = $("#lname")[0].innerText;
-                var liCurrentScenario = $("span.title").filter(":contains('" + nameCurrentScenario + "')");
+                var liCurrentScenario;
+
+                // find correct scenario in menu
+                $("span.title").each(function() {
+                    if ($(this)[0].innerText == nameCurrentScenario) {
+                        liCurrentScenario = $(this);
+                    }
+                });
+                //var liCurrentScenario = $("span.title").filter(":contains('" + nameCurrentScenario + "')");
                 var ulCurrentScenario;
                 var liNewUnit = $("<li>").addClass("last");
                 var aNewUnit = $("<a>").attr("href", "#");
@@ -279,7 +322,7 @@ jsPlumb.ready(function () {
                                 sat:"all",                  // how much context information have to be satisfied
                                 contextInformations:[],     // list of containing context information
                                 metaData:[],                // list of containing meta data
-                                connections:[],             // list of connections with other units
+                                //connections:[],             // list of connections with other units
                                 posX:0,                     // absolute X position in the displayed container
                                 posY:0                      // absolute Y position in the displayed container
                             }
@@ -301,7 +344,6 @@ jsPlumb.ready(function () {
                     //containment: 'parent'
                     containment: '.body'
                 });
-                //inst.draggable(newState);
 
                 inst.makeTarget(newState, {
                     anchor: "Continuous",
@@ -316,6 +358,8 @@ jsPlumb.ready(function () {
                     connector: [ "StateMachine", { curviness: 20 } ],
                     connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 }
                 });
+
+                nameSet = false;
             }
 
         });

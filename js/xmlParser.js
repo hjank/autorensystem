@@ -190,140 +190,185 @@ $(function() {
 });
 
 // translate context information into german
+var dictionary_optionsContextInfos = {};
 function translate_contextInformation(ci) {
 
     switch (ci) {
         case "CI_CURRENT_LEARNING_UNIT":
             ci = "Momentane Lerneinheit";
+            dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT = ci;
             break;
         case "CI_FINISHED_LEARNING_UNIT":
             ci = "Lerneinheit abgeschlossen";
+            dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT = ci;
             break;
         case "CI_USER_DID_PERFORM_ACTION":
             ci = "Benutzer (Aktion)";
+            dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION = ci;
             break;
         case "CI_AUDIO_OUTPUT_AVAILABLE":
             ci = "Ton verfügbar";
+            dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE = ci;
             break;
         case "CI_CURRENT_AIR_PRESSURE":
             ci = "Aktueller Luftdruck";
+            dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE = ci;
             break;
         case "CI_CURRENT_AMBIENT_NOISE":
             ci = "Aktuelle Umgebungsgeräusche";
+            dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE = ci;
             break;
         case "CI_CURRENT_APPOINTMENT":
             ci = "Aktueller Termin";
+            dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT = ci;
             break;
         case "CI_CURRENT_HUMIDITY":
             ci = "Aktuelle Luftfeuchtigkeit";
+            dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY = ci;
             break;
         case "CI_CURRENT_LUMINOSITY":
             ci = "Aktuelle Lichtstärke";
+            dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY = ci;
             break;
         case "CI_CURRENTLY_RAINING":
             ci = "Regnerisch";
+            dictionary_optionsContextInfos.CI_CURRENTLY_RAINING = ci;
             break;
         case "CI_CURRENTLY_SUNNY":
             ci = "Sonnig";
+            dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY = ci;
             break;
         case "CI_CURRENT_TEMPERATURE":
             ci = "Aktuelle Temperatur";
+            dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE = ci;
             break;
         case "CI_CURRENT_TIME":
             ci = "Aktuelle Uhrzeit";
+            dictionary_optionsContextInfos.CI_CURRENT_TIME = ci;
             break;
         case "CI_DEVICE_TYPE":
             ci = "Gerätetyp";
+            dictionary_optionsContextInfos.CI_DEVICE_TYPE = ci;
             break;
         case "CI_DISPLAY_RESOLUTION":
             ci = "Displayauflösung";
+            dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION = ci;
             break;
         case "CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION":
             ci = "Erwartete benötigte Restzeit";
+            dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION = ci;
             break;
         case "CI_EXTERNAL_DISPLAY_AVAILABLE":
             ci = "Externer Bildschirm verfügbar";
+            dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE = ci;
             break;
         case "CI_HAS_SCREEN_READER_FUNCTIONALITY":
             ci = "Hat Screenreader Funktionalität";
+            dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY = ci;
             break;
         case "CI_MICROPHONE_AVAILABLE":
             ci = "Mikrofon verfügbar";
+            dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE = ci;
             break;
         case "CI_NEXT_APPOINTMENT":
             ci = "Nächster Termin";
+            dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT = ci;
             break;
         case "CI_PHOTO_CAMERA_AVAILABLE":
             ci = "Fotokamera verfügbar";
+            dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE = ci;
             break;
         case "CI_PRINTER_AVAILABLE":
             ci = "Drucker verfügbar";
+            dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE = ci;
             break;
         case "CI_TIME_UNTIL_TIMESTAMP":
             ci = "Zeit bis zum Zeitstempel";
+            dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP = ci;
             break;
         case "CI_USER_AGE":
             ci = "Alter des Benutzers";
+            dictionary_optionsContextInfos.CI_USER_AGE = ci;
             break;
         case "CI_USER_CURRENT_LEARNING_STYLE_INPUT":
             ci = "Momentaner Benutzerlernstil";
+            dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT = ci;
             break;
         case "CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION":
             ci = "Momentaner Benutzerstilempfindung";
+            dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION = ci;
             break;
         case "CI_USER_CURRENT_LEARNING_STYLE_PROCESSING":
             ci = "Momentaner Benutzerstilverarbeitung";
+            dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING = ci;
             break;
         case "CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING":
             ci = "Momentaner Benutzerstilverständnis";
+            dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING = ci;
             break;
         case "CI_USER_DESTINATION":
             ci = "Ziel des Benutzers";
+            dictionary_optionsContextInfos.CI_USER_DESTINATION = ci;
             break;
         case "CI_DID_ARRIVE_AT_LOCATION":
             ci = "An Standort angekommen";
+            dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION = ci;
             break;
         case "CI_DID_LEAVE_LOCATION":
             ci = "Standort verlassen";
+            dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION = ci;
             break;
         case "CI_IS_AT_LOCATION":
             ci = "Ist am Standort";
+            dictionary_optionsContextInfos.CI_IS_AT_LOCATION = ci;
             break;
         case "CI_USER_LOCATION_ADDRESS":
             ci = "Adresse am Standort";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS = ci;
             break;
         case "CI_USER_LOCATION_BUILDING":
             ci = "Gebäude am Standort";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING = ci;
             break;
         case "CI_USER_LOCATION_COUNTRY":
             ci = "Land am Standort";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY = ci;
             break;
         case "CI_USER_LOCATION_DISTANCE":
             ci = "Abstand zum Standort";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE = ci;
             break;
         case "CI_USER_LOCATION_LATITUDE":
             ci = "Standort Breitengrad";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE = ci;
             break;
         case "CI_USER_LOCATION_LONGITUDE":
             ci = "Standort Längengrad";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE = ci;
             break;
         case "CI_USER_LOCATION_REGION":
             ci = "Region am Standort";
+            dictionary_optionsContextInfos.CI_USER_LOCATION_REGION = ci;
             break;
         case "CI_USER_MEANS_OF_TRANSPORTATION":
             ci = "Transportmittel des Benutzers";
+            dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION = ci;
             break;
         case "CI_USER_MOVEMENT_SPEED":
-            ci = "Fortgebewegungsgeschwindigkeit des Benutzers";
+            ci = "Fortgebewegungsgeschw. des Benutzers";
+            dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED = ci;
             break;
         case "CI_USER_ROLE":
             ci = "Benutzerrolle";
+            dictionary_optionsContextInfos.CI_USER_ROLE = ci;
             break;
         case "CI_VIDEO_CAMERA_AVAILABLE":
             ci = "Videokamera verfügbar";
+            dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE = ci;
             break;
         case "CI_USER_STATE_OF_MIND":
             ci = "Gemütszustand des Benutzers";
+            dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND = ci;
             break;
     }
     return ci;

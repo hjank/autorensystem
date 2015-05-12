@@ -20,6 +20,16 @@ $(function() {
             return true;
         }
     });
+
+    // make sure that after clicking enter in input "Neues Szenario erstellen"
+    // the same steps were gone like clicking on the create button
+    $("#sname").keypress(function(e) {
+        if (e.keyCode == 13) {
+            saveCloseSzenario();
+            $('#modal-new-szenario').modal('hide');
+            return false;
+        }
+    });
 });
 
 // triggered after clicking save button in scenario creation
@@ -33,7 +43,7 @@ function saveCloseSzenario() {
 
     global_ScenarioLiNumber = global_ScenarioLiNumber + 1;
 
-    // create nur container to see new sceario in menu bar
+    // create nur container to see new scenario in menu bar
     var liClass = $('<li>').addClass('last');
     liClass.attr("id", "menu-scenario-" + global_ScenarioLiNumber);
     var aClass = $('<a>').attr('href', '#');
@@ -51,6 +61,8 @@ function saveCloseSzenario() {
 
     // remove all units from state machine container
     $("#stm").empty();
+
+    jsPlumb.setContainer($("#stm"));
 
 }
 
@@ -158,9 +170,15 @@ function showLoadSzenario() {
     $("#listLoadScenarios > option").each(function() {
         $(this).remove();
     });
-    for (var i = 0; i < global_dataArrayScenarios.length; i++) {
+    /*for (var i = 0; i < global_dataArrayScenarios.length; i++) {
         var option = $("<option>").attr("value", global_dataArrayScenarios[i]["id"]);
         option.html(global_dataArrayScenarios[i]["text"]);
+        $("#listLoadScenarios").append(option);
+    }*/
+
+    for (var i = 0; i < myAuthorSystem.length; i++) {
+        var option = $("<option>").attr("value", "val" + myAuthorSystem[i].name);
+        option.html(myAuthorSystem[i].name);
         $("#listLoadScenarios").append(option);
     }
 }
@@ -306,11 +324,6 @@ function deleteUnits(){
         liCurrentScenario.addClass("last");
     }*/
 
-
-    /** TODO **/
-    // delete connection as well
-
-
 }
 
 // get back to deletion overview after canceling deletion
@@ -375,7 +388,7 @@ function updateScenario(name) {
 
     // update list with units per scenario
     //gloabl_unitsPerScenario.push({id: name, text:[]});
-    myAuthorSystem.push({name: name, units:[]});
+    myAuthorSystem.push({name: name, units:[], connections:[]});
 }
 
 // label delete button for modal window "Delete Scenarios"
@@ -389,7 +402,6 @@ $(function() {
 
     // remove elements from scenario list, add elements in delete scenario list
     $("#selectSzenarioDeletion").select2().on("select2-removed", function(e) {
-        //alert("Removed: " + e.val + ", choice: " + e.choice.text);
         var optionSzenarioDeletion = $('<option>').attr('value', e.val);
         optionSzenarioDeletion.html(e.choice.text);
         optionSzenarioDeletion.attr("selected", "");
@@ -454,9 +466,16 @@ function deleteScenarios() {
         var nameScenario = global_arrayShowSzenarioDeletion[i]["text"];
         nameScenario = nameScenario.replace(/(\r\n|\n|\r)/gm,"");       // remove return character
 
-        var liScenario = $("span:contains('" + nameScenario + "')");
-        liScenario = liScenario.parent("a").parent("li");
-        liScenario.remove();
+        // find right scenario in menu bar
+        $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+            if ( $(this)[0].innerHTML == nameScenario ) {
+                var parent = $(this).parent("a").parent("li");
+                parent.remove();
+            }
+        });
+
+        // delete units in container
+        $("#stm").children().remove();
 
         // update unit per scenario list
         /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
@@ -494,35 +513,7 @@ function deleteScenariosNot() {
 }
 
 // load scenario with learning units on the main window
-function loadScenario() {
-
-    //var sname = $("#lname")[0].innerText;
-    //var selectedScenario = $("#select2-chosen-10")[0].innerText;
-
-    /*$("#menuScenarios > li").each(function() {
-        var menuName = $(this)[0].innerText.replace(/(\r\n|\n|\r)/gm,"");
-
-        if ( menuName == sname ) {
-            var divSTM = $("#stm")[0].cloneNode(true);
-            divSTM.removeAttribute("id");
-            $(this).append(divSTM);
-
-            $("#stm").empty();
-        }
-
-        // find div in selected scenario with state maschine
-        if ( menuName == selectedScenario ) {
-            alert($(this).children("div").length);
-            if ( $(this).children("div").length ) {
-                alert("hat div");
-                var divLi = $(this).children("div").children().cloneNode(true);
-                $("#stm").append(divLi);
-
-            } else {
-                alert("hat nix");
-            }
-        }
-    });*/
+/*function loadScenario_old() {
 
     // remove all units from the container
     $("#stm").empty();
@@ -544,44 +535,61 @@ function loadScenario() {
                 $(unit).css("top", myAuthorSystem[i]["units"][j].posY + "px");
                 $(unit).css("left", myAuthorSystem[i]["units"][j].posX + "px");
 
-                console.log(myAuthorSystem[i]["units"][j]);
+                activateFunctionalities(unit);
+
+                //console.log(myAuthorSystem[i]["units"][j]);
             }
         }
     }
 
     // hide tabs
     $(".tabContents").hide();
+}*/
 
+// triggered if save scenario was clicked
+/**
+ * dfsd
+ *
+ * @param {String} name description
+ * @return {Boolean} bar
+ */
+function showSaveScenario() {
+
+    var currentScenario = $("#lname")[0].innerHTML;
+    var json;
+    var jsonFile = null;
+
+    // find current scenario in all scenarios
+    for (var i=0; i<myAuthorSystem.length; i++) {
+        if (myAuthorSystem[i].name == currentScenario) {
+            json = JSON.stringify(myAuthorSystem[i]);
+            break;
+        }
+    }
+
+    // set blob with JSON data
+    var data = new Blob([json], {type: "text/json;charset=utf8"});
+
+    // if file will be replaced by another one --> avoid memory leak
+    if (jsonFile !== null) {
+        window.URL.revokeObjectURL(jsonFile);
+    }
+    // set JSON file
+    jsonFile = window.URL.createObjectURL(data);
+
+    // change file name to current scenario name
+    $("#saveScenario").children("a")[0].download = currentScenario + ".json";
+
+    // add link and open download view
+    $("#saveScenario").children("a")[0].href = jsonFile;
+
+    // show json in new window
+    /*var url = "data:text/json;charset=utf8," + encodeURIComponent(JSON.stringify(myAuthorSystem));
+     window.open(url, "_blank");
+     window.focus();*/
 }
 
-function loadUnit(unit, j) {
-
-    jsPlumb.setContainer($("#stm"));
-
-    var i = 1;
-    var inst = jsPlumb.getInstance({
-        Endpoint: ["Dot", {radius: 2}],
-        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
-        ConnectionOverlays: [
-            [ "Arrow", {
-                location: 1,
-                id: "arrow",
-                length: 14,
-                foldback: 0.8
-            } ],
-            [ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
-        ],
-        Container: "stm"
-    });
-
-    inst.bind("connection", function (info) {
-        info.connection.getOverlay("label").setLabel(i.toString());
-        i = i + 1;
-    });
-
-    inst.bind("click", function (c) {
-        inst.detach(c);
-    });
+function loadUnit(unit, j, inst) {
 
     window.jsp = inst;
 
@@ -598,32 +606,94 @@ function loadUnit(unit, j) {
     newState.append(ep);
     $('#stm').append(newState);
 
+    // get all context information
+    for (var k= 0; k<unit["contextInformations"].length; k++) {
+        var divContextIcon = $("<div>").addClass("unit-icon").attr("id", unit["contextInformations"][k]["name"] + k + "icon");
+        var icon = unit["contextInformations"][k]["icon"];
+
+        // add icon und div to unit
+        divContextIcon.append(icon);
+        divContextIcons.append(divContextIcon);
+
+        // get state of satisfiability
+        if (unit["sat"] == "all") {
+            divContextIcons.css("border", "2px solid #adadad");
+            divContextIcons.attr("ci", "all");
+        } else {
+            divContextIcons.css("border", "2px dotted #adadad");
+            divContextIcons.attr("ci", "one");
+        }
+
+        // design for icons
+        divContextIcons.css("border-radius", "4px");
+        newState.css("padding-top", "10px");
+        divContextIcons.css("height", "23px");
+        divContextIcons.css("display", "inline-block");
+    }
+
+    // get all meta data
+    for (var l= 0; l<unit["metaData"].length; l++) {
+        var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", unit["name"] + l + "metaIcon");
+
+        var metaIcon;
+        switch (unit["metaData"][l]["name"]) {
+            case "Bild":
+                metaIcon = "fui-photo";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+            case "Film":
+                metaIcon = "fui-video";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+            case "Text":
+                metaIcon = "fui-document";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+            case "Navigation":
+                metaIcon = "fui-location";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+            case "Test":
+                metaIcon = "fui-radio-unchecked";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+            case "Audio":
+                metaIcon = "fui-volume";
+                divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+                break;
+        }
+
+        var bMetaIcon = $("<b>").addClass(metaIcon);
+        divMetaIcon.append(bMetaIcon);
+        newState.append(divMetaIcon);
+
+        // change size of learning unit
+        newState.css("padding-bottom", "5px");
+    }
+
+    // place unit in state machine
+    $(newState).css("top", unit.posY + "px");
+    $(newState).css("left", unit.posX + "px");
+
+    // make unit draggable
     inst.draggable(newState, {
-        containment: 'parent'
+        containment: '.body'
     });
 
+    // set unit target point
     inst.makeTarget(newState, {
         anchor: "Continuous",
         dropOptions: { hoverClass: "dragHover" },
         allowLoopback: true
     });
 
+    // set unit source point
     inst.makeSource(ep, {
         parent: newState,
         anchor: "Continuous",
         connector: [ "StateMachine", { curviness: 20 } ],
         connectorStyle: { strokeStyle: "#5c96bc", lineWidth: 2, outlineColor: "transparent", outlineWidth: 4 }
     });
-
-    activateFunctionalities(newState);
-
-    // get all context information
-    //for (var k= 0; k<unit["contextInformations"].length; k++) {
-
-    //}
-
-    // get all meta data
-
 
     return newState;
 

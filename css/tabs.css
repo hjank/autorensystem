@@ -193,3 +193,23 @@
     font-weight: 300;
 }
 /* end google search box */
+
+.tabRelation {
+    display: none;
+}
+#tabRelationHead {
+    height: 30px;
+    text-align: center;
+    background: #48c9b0;
+}
+#tabRelationHead a {
+    /*background: #48c9b0;*/
+    color: #ffffff;
+}
+#tabRelationBody {
+    padding: 20px;
+}
+
+.formatIconText {
+    padding-left: 5px;
+}

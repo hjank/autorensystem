@@ -91,6 +91,12 @@ function activateFunctionalities(newState) {
         $(activeTab).fadeIn();
         $(".tab-Container").show();
 
+        // hide tab from unit label connection
+        $("#tabUnitLabel").hide();
+        // clear marking from label connections
+        $(".aLabel").css("background-color", "");
+        $(".aLabel").css("color", "");
+
         /* input field in tab "Eigenschaften"*/
         // get name of the unit
         if ($(unit).children("div").hasClass("title")) {
@@ -108,9 +114,21 @@ function activateFunctionalities(newState) {
                 for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
                     if (myAuthorSystem[p]["units"][q]["name"] == name) {
                         current_unit = myAuthorSystem[p]["units"][q];
+                        //console.log("current Unit:");
+                        //console.log(current_unit);
                     }
                 }
             }
+        }
+
+        /* Test */
+        if (loadedData) {
+            for (var q=0; q<loadedData["units"].length; q++) {
+                if (loadedData["units"][q]["name"] == name) {
+                    current_unit = loadedData["units"][q];
+                }
+            }
+            /* End Test*/
         }
 
         // set description field
@@ -162,12 +180,17 @@ function activateFunctionalities(newState) {
         for (var j=0; j<array_icons.length; j++) {
             array_multiSelectionMetaData.push({"id":j, "text":$(array_icons[j])[0].title});
         }
+        $("#selectMultiMetaData").select2({
+            formatSelection: formatMultiMetaData,
+            escapeMarkup: function(m) {return m;}
+        });
         $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
 
         //console.log(myAuthorSystem);
+        //console.log(JSON.stringify(myAuthorSystem));
     });
 
     // triggered if one option was selected ("Eine" or "Alle")
@@ -251,6 +274,9 @@ function activateFunctionalities(newState) {
                     }
                 }
             }*/
+
+            // necessary to redraw endpoints
+            inst.repaintEverything();
         }
     });
 
@@ -374,9 +400,9 @@ function activateFunctionalities(newState) {
 
             // remove border if unit has no icons anymore
             if ($(unit).children("div.unit-icons").children("div.unit-icon").length == 0) {
-                $(".unit-icons").css("border", "");
-                $(".unit-icons").css("height", "");
-                $(".unit-icons").css("display", "");
+                $(unit).children(".unit-icons").css("border", "");
+                $(unit).children(".unit-icons").css("height", "");
+                $(unit).children(".unit-icons").css("display", "");
                 $(unit).css("padding-top", "");
             }
 
@@ -388,6 +414,8 @@ function activateFunctionalities(newState) {
                 }
             }
 
+            // set endpoints on the right place
+            inst.repaintEverything();
         }
     });
 
@@ -401,98 +429,116 @@ function activateFunctionalities(newState) {
 
             // check if all needed fields were filled with information
             var missing_content = "";
-            missing_content = checkInformation(missing_content, current_unit);
+            var returnArray = [];
+            returnArray = checkInformation(missing_content, current_unit);
+            missing_content = returnArray[0];
+            var selectedInfos = returnArray[1];
 
-            // if something needed is missing
-            if ( !!missing_content ) {
-                alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
+            if (missing_content == "Error999") {
+                console.log("AE");
                 return false;
-            }
-
-            var contentContextInfo = $("#selectContextInfos").select2("data");
-            var selecElem = contentContextInfo.element[0];
-            var optgroup = $(selecElem).parent()[0].label;
-
-            // only addable if icon doesn't exist already
-            for (var h=0; h<array_multiSelectionContextInfos.length; h++) {
-                if (contentContextInfo.text == array_multiSelectionContextInfos[h]["text"]) {
-                    alert(contentContextInfo.text + " existiert bereits!");
-                    return true;
-                }
-            }
-
-            var ccID = contentContextInfo.element[0].value;
-            var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
-            //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
-            //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
-
-            var icon = formatUnitIcons(contentContextInfo, optgroup, ccID);
-
-            // get icon information in JSON structure
-            for (var j=0; j<current_unit["contextInformations"].length; j++) {
-                if (current_unit["contextInformations"][j].name == $("#selectContextInfos").select2("data")["text"]) {
-                    current_unit["contextInformations"][j].icon = icon;
-                }
-            }
-
-            // add icon und div to unit
-            divContextIcon.append(icon);
-            $(unit).children("div.unit-icons").append(divContextIcon);
-
-            /* design reasons */
-            // all SAT needs solid border
-            if (unitSatisfiesAllContextInfos) {
-                $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
-                $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-                // one SAT needs dotted border
             } else {
-                $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
-                $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
+
+                // if something needed is missing
+                if (!!missing_content) {
+                    alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
+                    return false;
+                } else {
+
+                    current_unit["contextInformations"].push(selectedInfos);
+
+                    var contentContextInfo = $("#selectContextInfos").select2("data");
+                    var selecElem = contentContextInfo.element[0];
+                    var optgroup = $(selecElem).parent()[0].label;
+
+                    // only addable if icon doesn't exist already
+                    /*for (var h=0; h<array_multiSelectionContextInfos.length; h++) {
+                     if (contentContextInfo.text == array_multiSelectionContextInfos[h]["text"]) {
+                     alert(contentContextInfo.text + " existiert bereits!");
+                     return true;
+                     }
+                     }*/
+
+                    var ccID = contentContextInfo.element[0].value;
+                    var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
+                    //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
+                    //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
+
+                    var icon = formatUnitIcons(contentContextInfo, optgroup, ccID);
+
+                    // get icon information in JSON structure
+                    for (var j = 0; j < current_unit["contextInformations"].length; j++) {
+                        if (current_unit["contextInformations"][j].name == $("#selectContextInfos").select2("data")["text"]) {
+                            current_unit["contextInformations"][j].icon = icon;
+                        }
+                    }
+
+                    // add icon und div to unit
+                    divContextIcon.append(icon);
+                    $(unit).children("div.unit-icons").append(divContextIcon);
+
+                    /* design reasons */
+                    // all SAT needs solid border
+                    if (unitSatisfiesAllContextInfos) {
+                        $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
+                        $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
+                        // one SAT needs dotted border
+                    } else {
+                        $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
+                        $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
+                    }
+                    $(unit).children("div.unit-icons").css("border-radius", "4px");
+                    $(unit).css("padding-top", "10px");
+                    $(unit).children("div.unit-icons").css("height", "23px");
+                    $(unit).children("div.unit-icons").css("display", "inline-block");
+
+                    // set endpoints on the right place
+                    inst.repaintEverything();
+
+                    /* get selected context information name into multi selection bar */
+                    var id = $("#selectContextInfos").select2("data").id;
+
+                    // get name
+                    var contextInfoName = $("#selectContextInfos").select2("data").text;
+                    var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
+                    option.html(contextInfoName);
+
+                    // change format: add icons to text
+                    $("#selectMultiContextInfos").select2({
+                        formatSelection: formatMultiContextInfos,
+                        formatResult: formatMultiContextInfos,
+                        escapeMarkup: function (m) {
+                            return m;
+                        }
+                    });
+
+                    // get name into multi selection
+                    //$("#selectMultiContextInfos").append(option);
+                    array_multiSelectionContextInfos.push({id: id, text: contextInfoName});
+                    $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+                    // update JSON structure
+                    /*current_unit["contextInformations"].push({
+                     name:contentContextInfo.text,
+                     operator:$("#selectOperator").select2("data")["text"]
+                     });*/
+
+
+                    // change color per option
+                    changeColorMultiContextInfos();
+
+                    // increase counter --> needed for continuous ids
+                    counter_multiSelectionContextInfos++;
+
+                    // show main, hide detail
+                    $("#mainContextInfo").slideDown();
+                    $("#detailContextInfo").slideUp();
+
+                    //console.log(myAuthorSystem);
+                    //console.log(JSON.stringify(myAuthorSystem));
+                }
             }
-            $(unit).children("div.unit-icons").css("border-radius", "4px");
-            $(unit).css("padding-top", "10px");
-            $(unit).children("div.unit-icons").css("height", "23px");
-            $(unit).children("div.unit-icons").css("display", "inline-block");
 
-
-            /* get selected context information name into multi selection bar */
-            var id = $("#selectContextInfos").select2("data").id;
-
-            // get name
-            var contextInfoName = $("#selectContextInfos").select2("data").text;
-            var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
-            option.html(contextInfoName);
-
-            // change format: add icons to text
-            $("#selectMultiContextInfos").select2({
-                formatSelection: formatMultiContextInfos,
-                formatResult: formatMultiContextInfos,
-                escapeMarkup: function(m) {return m;}
-            });
-
-            // get name into multi selection
-            //$("#selectMultiContextInfos").append(option);
-            array_multiSelectionContextInfos.push({id:id, text:contextInfoName});
-            $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-
-            // update JSON structure
-            /*current_unit["contextInformations"].push({
-                name:contentContextInfo.text,
-                operator:$("#selectOperator").select2("data")["text"]
-            });*/
-
-
-            // change color per option
-            changeColorMultiContextInfos();
-
-            // increase counter --> needed for continuous ids
-            counter_multiSelectionContextInfos ++;
-
-            // show main, hide detail
-            $("#mainContextInfo").slideDown();
-            $("#detailContextInfo").slideUp();
-            console.log(myAuthorSystem);
-            console.log(JSON.stringify(myAuthorSystem));
         }
     });
 
@@ -569,6 +615,9 @@ function activateFunctionalities(newState) {
             currentMetaData.name = e.choice.text;
             currentMetaData.icon = metaIcon;
             current_unit["metaData"].push(currentMetaData);
+
+            // set endpoints on the right place
+            inst.repaintEverything();
         }
     });
 
@@ -606,6 +655,9 @@ function activateFunctionalities(newState) {
                     current_unit["metaData"].splice(j, 1);
                 }
             }
+
+            // set endpoints on the right place
+            inst.repaintEverything();
         }
     });
 
@@ -757,6 +809,30 @@ function fillSelectionContextInformation() {
         //$("#selectContextInfos").append(option);
     }
 
+    $("#selectContextInfos").select2().on("select2-open", function() {
+        $(".select2-results").children("li").children("div.select2-result-label").each(function() {
+            if ( $(this)[0].textContent == "Lernszenario" ) {
+                $(this).css("background-color", "#3287C8");
+                $(this).css("color", "white");
+            } else if ( $(this)[0].textContent == "Persönlich" ) {
+                $(this).css("background-color", "#AF46C8");
+                $(this).css("color", "white");
+            } else if ( $(this)[0].textContent == "Situationsbezogen" ) {
+                $(this).css("background-color", "#91F52D");
+                $(this).css("color", "#555555");
+            } else if ( $(this)[0].textContent == "Infrastruktur" ) {
+                $(this).css("background-color", "#969696");
+                $(this).css("color", "white");
+            } else if ( $(this)[0].textContent == "Umwelt" ) {
+                $(this).css("background-color", "#FADC3C");
+                $(this).css("color", "#555555");
+            } else if ( $(this)[0].textContent == "Ortung" ) {
+                $(this).css("background-color", "#F03C32");
+                $(this).css("color", "white");
+            }
+        });
+    });
+
     // change format: add glyphs per option
     $("#selectContextInfos").select2({
         formatSelection: formatContextInfos,
@@ -770,20 +846,159 @@ function fillSelectionContextInformation() {
     }
 }
 
-// add specific icons to
-function formatContextInfos(item) {
+// format in selection context information
+/*function formatContextInfos(item) {
     switch (item.text) {
-        case "Regnerisch":
-            return '<img src="img/context-information/physical-context-water.png" width="17" height="17">' + ' ' + item.text;
-        case "Drucker verfügbar":
-            return '<img src="img/context-information/technical-context-printer-big.png" width="17" height="17">' + ' ' + item.text;
-        case "Gerätetyp":
-            return '<img src="img/context-information/technical-context-device-big.png" width="17" height="17">' + ' ' + item.text;
+
+        // scenario (Lernszenario)
+        case dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT:
+            return '<img src="img/icons-context-information/ci-scenario-current-learning-unit.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT:
+            return '<img src="img/icons-context-information/ci-scenario-learning-unit-completed.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION:
+            return '<img src="img/icons-context-information/ci-scenario-time-for-completion.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+
+        // personal (Persönlich)
+        case dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION:
+            return '<img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_AGE:
+            return '<img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT:
+            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION:
+            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING:
+            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING:
+            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_ROLE:
+            return '<img src="img/icons-context-information/ci-personal-role.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND:
+            return '<img src="img/icons-context-information/ci-personal-user-state-of-mind.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+
+        // situational (Situationsbezogen)
+        case dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT:
+            return '<img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT:
+            return '<img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP:
+            return '<img src="img/icons-context-information/ci-situational-timeduration.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+
+        // technical (Infrastruktur)
+        case dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-audio-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_DEVICE_TYPE:
+            return '<img src="img/icons-context-information/ci-technical-device-type.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION:
+            return '<img src="img/icons-context-information/ci-technical-display-resolution.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-display-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY:
+            return '<img src="img/icons-context-information/ci-technical-screenreader-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-micropone-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-photo-camera-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-printer-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
+            return '<img src="img/icons-context-information/ci-technical-video-camera-available.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+
+        // physical (Umwelt)
+        case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:
+            return '<img src="img/icons-context-information/ci-physical-air-pressure2.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE:
+            return '<img src="img/icons-context-information/ci-physical-ambient-noise.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY:
+            return '<img src="img/icons-context-information/ci-physical-humidity.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY:
+            return '<img src="img/icons-context-information/ci-physical-luminosity.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_RAINING:
+            return '<img src="img/icons-context-information/ci-physical-raining.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY:
+            return '<img src="img/icons-context-information/ci-physical-sunny.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE:
+            return '<img src="img/icons-context-information/ci-physical-temperature.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_TIME:
+            return '<img src="img/icons-context-information/ci-physical-time.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+
+        // location (Ortung)
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '<img src="img/icons-context-information/ci-location-goal.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '<img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION:
+            return '<img src="img/icons-context-information/ci-location-goal-mirrored.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_IS_AT_LOCATION:
+            return '<img src="img/icons-context-information/ci-location-location.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS:
+            return '<img src="img/icons-context-information/ci-location-address.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING:
+            return '<img src="img/icons-context-information/ci-location-building.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY:
+            return '<img src="img/icons-context-information/ci-location-country.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE:
+            return '<img src="img/icons-context-information/ci-location-distance.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE:
+            return '<img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE:
+            return '<img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_REGION:
+            return '<img src="img/icons-context-information/ci-location-region.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION:
+            return '<img src="img/icons-context-information/ci-location-transport.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
+        case dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED:
+            return '<img src="img/icons-context-information/ci-location-speed.png" width="17" height="17">' +
+                '<span class="formatIconText">' + item.text + '</span>';
     }
     return item.text;
-}
+}*/
 
-function formatMultiContextInfos(item) {
+// format for multi selection context information
+/*function formatMultiContextInfos(item) {
     switch (item.text) {
         case "Regnerisch":
             return '<img src="img/context-information/physical-context-water.png" width="17" height="17" title="' +
@@ -794,11 +1009,18 @@ function formatMultiContextInfos(item) {
         case "Gerätetyp":
             return '<img src="img/context-information/technical-context-device-big.png" width="17" height="17" title="' +
                 item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '<img src="img/icons-context-information/ci-location-goal.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '<img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17" title="' +
+                item.text + '">';
     }
     return item.text;
-}
+}*/
 
-function formatUnitIcons(item, optgroup, ccID) {
+// format icons in units
+/*function formatUnitIcons(item, optgroup, ccID) {
     switch (item.text) {
         case "Regnerisch":
             return '<img src="img/context-information/physical-context-water.png" width="15" height="15" title="' +
@@ -809,10 +1031,16 @@ function formatUnitIcons(item, optgroup, ccID) {
         case "Gerätetyp":
             return '<img src="img/context-information/technical-context-device-big.png" width="15" height="15" title="' +
                 item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '<img src="img/icons-context-information/ci-location-goal.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '<img src="img/icons-context-information/ci-location-arrived.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
     }
     return '<img src="img/context-classes/' + optgroup + '.png" width="15" height="15" title="' +
         item.text + '" ccID="' + ccID + '">';
-}
+}*/
 
 // fill input field (value in tab Kontexinformation)
 function fillInputField(ci) {
@@ -1147,6 +1375,14 @@ function checkInformation(missing_content, current_unit) {
         selectedInfos.id = $("#selectContextInfos").select2("data").element[0].getAttribute("origin");
     }
 
+    // only addable if context info doesn't exist already
+    for (var h=0; h<current_unit["contextInformations"].length; h++) {
+        if ($("#selectContextInfos").select2("data")["text"] == current_unit["contextInformations"][h]["name"]) {
+            alert($("#selectContextInfos").select2("data")["text"] + " existiert bereits!");
+            return ["Error999", {}];
+        }
+    }
+
     // check selection bar "Operator"
     if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
         missing_content += " - Operator\n";
@@ -1221,8 +1457,11 @@ function checkInformation(missing_content, current_unit) {
         selectedInfos.inputString = $("#inputParameterString")[0].value;
     }
 
-    current_unit["contextInformations"].push(selectedInfos);
-    return missing_content;
+    //current_unit["contextInformations"].push(selectedInfos);
+
+    var returnArray = [missing_content, selectedInfos];
+    return returnArray;
+    //return missing_content;
 }
 
 // change all colors in multi selection in tab "Kontextinformation"
