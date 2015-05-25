@@ -3,7 +3,13 @@
  */
 
 // format in selection context information
+/**
+ * Function sets format for the context information in the selection bar (icon + text).
+ * @param {Object} item Context information which was selected in selection bar
+ * @return {String} Concatenation of an img (icon) and span (text) DOM, if no icon available return text only
+ * */
 function formatContextInfos(item) {
+    // find the right context information
     switch (item.text) {
 
         // scenario (Lernszenario)
@@ -154,7 +160,13 @@ function formatContextInfos(item) {
 }
 
 // format for multi selection context information
+/**
+ * Function sets format for the context information in the multi selection bar (icon only).
+ * @param {Object} item Context information which was selected
+ * @return {String} img DOM if icon available, else text only
+ * */
 function formatMultiContextInfos(item) {
+    // find the right context information
     switch (item.text) {
 
         // scenario (Lernszenario)
@@ -305,7 +317,15 @@ function formatMultiContextInfos(item) {
 }
 
 // format icons in units
+/**
+ * Function sets format for the context information in the learning units (icon only).
+ * @param {Object} item Context information which was selected
+ * @param {String} optgroup Contains the context class of the selected context information
+ * @param {String} ccID Contains the id from the context information
+ * @return {String} specific img DOM if icon available, else context class icon
+ * */
 function formatUnitIcons(item, optgroup, ccID) {
+    // find the right context information
     switch (item.text) {
 
         // scenario (Lernszenario)
@@ -452,6 +472,7 @@ function formatUnitIcons(item, optgroup, ccID) {
             return '<img src="img/icons-context-information/ci-location-speed.png" width="15" height="15" title="' +
                 item.text + '" ccID="' + ccID + '">';
     }
+    // no icon was found --> return context class icon
     return '<img src="img/context-classes/' + optgroup + '.png" width="15" height="15" title="' +
         item.text + '" ccID="' + ccID + '">';
 }

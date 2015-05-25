@@ -24,10 +24,6 @@
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"></script>
 
-        <!-- bad one -->
-        <!--<script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.4-min.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.5.js"></script>-->
-
         <!-- general functionalities -->
         <script type="text/javascript" src="js/functionalities.js"></script>
         <script type="text/javascript" src="js/xmlParser.js"></script>
@@ -45,7 +41,6 @@
 
         <!-- modal window -->
         <link rel="stylesheet" href="css/pgwmodal.css">
-        <!--<script type="text/javascript" src="js/pgwmodal.js"></script>-->
         <script type="text/javascript" src="js/modalWindows.js"></script>
 
         <!-- slider design -->
@@ -55,9 +50,6 @@
         <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="css/flat-ui.css">
         <script type="text/javascript" src="js/flat-ui.js"></script>
-        <!--<script type="text/javascript" src="js/vendor/flatui/html5shiv.js"></script>
-        <script type="text/javascript" src="js/vendor/flatui/respond.min.js"></script>
-        <script type="text/javascript" src="js/vendor/flatui/video.js"></script>-->
 
 
         <!-- slider with pips -->
@@ -85,7 +77,7 @@
                         orientation: 'vertical',
                         step: 1,
                         range: 'min'
-                    });//.addSliderSegments($verticalSlider.slider('option').max, 'vertical');
+                    });
                 }
             });
 
@@ -158,30 +150,6 @@
 
             <div id='cssmenu' class="menu">
                 <ul id="menuScenarios">
-                    <!--<li class='active has-sub'>
-                            <a href='#'> <span>Szenario 1</span></a>
-                            <ul>
-                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
-                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
-                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
-                            </ul>
-                        </li>
-                        <li class='active has-sub'>
-                            <a href='#'> <span>Szenario 2</span></a>
-                            <ul>
-                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
-                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
-                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
-                            </ul>
-                        </li>
-                        <li class='active has-sub'>
-                            <a href='#'> <span>Szenario 3</span></a>
-                            <ul>
-                                <li class='last'><a href='#'><span>Lerneinheit 1</span></a></li>
-                                <li class='last'><a href='#'><span>Lerneinheit 2</span></a></li>
-                                <li class='last'><a href='#'><span>Lerninhalt 3</span></a></li>
-                            </ul>
-                        </li>-->
                 </ul>
             </div>
 
@@ -210,30 +178,6 @@
                         <li class="slider" style="height: 200px;">
                         </li>
                     </ul>
-
-                    <!--<div class="statemaschine" id="statemaschine">
-                        <div class="w" id="opened" style="top: 100px; left: 100px">
-                            <div class="title">BEGIN</div>
-                            <div class="ep"></div>
-                            <div class="info" id="i1"></div>
-                        </div>
-
-                        <div class="w" id="phone1">PHONE INTERVIEW 1
-                            <div class="ep"></div>
-                        </div>
-
-                        <div class="w" id="phone2">PHONE INTERVIEW 2
-                            <div class="ep"></div>
-                        </div>
-
-                        <div class="w" id="infers">IN PERSON
-                            <div class="ep"></div>
-                        </div>
-
-                        <div class="w" id="rejected">REJECTED
-                            <div class="ep"></div>
-                        </div>
-                    </div>-->
 
                     <!--<div class="content" id="stm">-->
                     <div id="stm">
@@ -348,10 +292,6 @@
                                         <select id="selectParameter2" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                         </select>
                                     </div>
-                                    <!--<div id="divSwitchParameter" class="bootstrap-switch-square">
-                                        <input id="switchParameter" type="checkbox" checked data-toggle="switch" name="custom-square-switch-icons"
-                                               data-on-text="Gilt" data-off-text="Gilt nicht"/>
-                                    </div>-->
                                 </div>
                                 <div>
                                     <div id="btnConfirmContextInfo" class="btn btn-info">
@@ -394,16 +334,16 @@
                             <a title="Relation der Lerneinheiten">Relation</a>
                         </div>
                         <div id="tabRelationBody">
-                            <label class="label-tabs label" for="selectRelations">Auswahl der Relation</label>
-                            <select id="selectRelations" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                            <p id="preLabelRelations" class="label-tabs label">Ist eine</p>
+                            <select id="selectRelations" class="form-control select select-primary select-block mbl">
                                 <option value="pre">Voraussetzung (PRE)</option>
                                 <option value="alt">Alternative (ALT)</option>
                                 <option value="bas">Grundlage (BAS)</option>
-                                <option value="ver">Version (VER)</option>
                                 <option value="ref">Referenz (REF)</option>
                                 <option value="ext">Erweiterung (EXT)</option>
                                 <option value="hlp">Hilfe (HLP)</option>
                             </select>
+                            <p id="postLabelRelations" class="label-tabs label">Für</p>
                         </div>
                     </div>
                 </div>
@@ -596,7 +536,7 @@
                         <p>Wollen Sie die Lerneinheiten wirklich löschen?</p>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDeleteUnits" class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="btnDeleteUnits2" class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
                         <button type="button" class="btn btn-default" onclick="deleteUnitsNot()" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>

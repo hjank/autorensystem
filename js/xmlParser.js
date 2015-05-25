@@ -22,24 +22,20 @@ var array_ContextClasses = [];
 $(function() {
 
     // http://localhost:9998/xml/get-context-information
+    // build url
     var domain = "localhost";
     var port = "9998";
     var uri = "/xml/get-context-information";
     var url = "http://" + domain + ":" + port + uri;
-    //header('Access-Control-Allow-Origin: *');
 
-    /*$.ajaxSetup({
-        beforeSend: function(xhr) {xhr.setRequestHeader('Access-Control-Allow-Origin', '*');}
-    });*/
-
+    // get context information from xml file
     $.ajax({
         type: "GET",
         url: "measurable-context-information.xml",
         //url: url,
         dataType: "xml",
-        //headers: {"Access-Control-Allow-Origin": "*"},
-        //crossDomain: true,
-        //beforeSend: function(xhr) {xhr.setRequestHeader('Access-Control-Allow-Origin', '*');},
+
+        // if file is available parse out all information
         success: function(xml) {
 
             // parse all needed information from the xml file
@@ -55,6 +51,8 @@ $(function() {
                 /* get the context classes from the current information */
                 var array_classes = [];
                 var contextClasses = $('contextClasses', this).children();
+
+                // get all classes and put them into an array
                 contextClasses.each(function() {
                     var contextClass = this.getAttribute("id");
                     contextClass = translate_contextClass(contextClass);
@@ -176,10 +174,11 @@ $(function() {
                 }
                 array_parameter.name = "Parameters (id, type, values)";
 
+                // put all information into an array
                 array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter, originalName);
                 array_ContextInformations.push(array_ContextInformation);
-                //console.log(array_ContextInformation);
             });
+            // after finishing the parsing, elements could be added into tab bar
             parsingFinished();
         }
     });
@@ -191,6 +190,11 @@ $(function() {
 
 // translate context information into german
 var dictionary_optionsContextInfos = {};
+/**
+ * Functions translate context information into german.
+ * @param {String} ci Contains a context information
+ * return translated context information
+ * */
 function translate_contextInformation(ci) {
 
     switch (ci) {
@@ -375,6 +379,11 @@ function translate_contextInformation(ci) {
 }
 
 // translate context classes into german
+/**
+ * Functions translate context class into german.
+ * @param {String} cc Contains a context class
+ * return translated context class
+ * */
 function translate_contextClass(cc) {
 
     switch (cc) {
@@ -401,6 +410,11 @@ function translate_contextClass(cc) {
 }
 
 // translate operator into german
+/**
+ * Functions translate operator into german.
+ * @param {String} op Contains a operator
+ * return translated operator
+ * */
 function translate_operator(op) {
 
     switch (op) {
@@ -427,6 +441,11 @@ function translate_operator(op) {
 }
 
 // translate context parameter into german
+/**
+ * Functions translate context parameter into german.
+ * @param {String} cp Contains a context parameter
+ * return translated context parameter
+ * */
 function translate_contextParameter(cp) {
 
     switch (cp) {
@@ -495,6 +514,11 @@ function translate_contextParameter(cp) {
 }
 
 // translate parameter into german
+/**
+ * Functions translate parameter into german.
+ * @param {String} p Contains a parameter
+ * return translated parameter
+ * */
 function translate_parameter(p) {
 
     switch (p) {
@@ -557,6 +581,11 @@ function translate_parameter(p) {
 }
 
 // translate parameter values into german
+/**
+ * Functions translate parameter values into german.
+ * @param {String} pv Contains a parameter value
+ * return translated parameter value
+ * */
 function translate_parameterValues(pv) {
 
     switch (pv) {

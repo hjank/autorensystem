@@ -24,26 +24,22 @@
 
 var myAuthorSystem = [];
 
-// drag specific elements
-/*$(function() {
-    $("#state1").draggable();
-    $("#state2").draggable();
-    $("#state3").draggable();
-});*/
-
 
 // slider
 var valueSlider, scaleSlider, diffSlider;
 $(function() {
-    //$(".slider").slider({max:10}).slider("pips", {first:"pip", last:"pip"});
+
+    // slider properties and functionalities
     $(".slider").slider({max:8, min:0, value:4, orientation: "vertical", step:1,
-        create: function(event, ui) {
+        // default properties
+        create: function() {
             valueSlider = 4;
             scaleSlider = 1;
         },
+        // if slider is used, change size of all elements in working place
         change: function(event, ui) {
             diffSlider = ui.value - valueSlider;
-            scaleSlider = scaleSlider + (0.1 * diffSlider);
+            scaleSlider = scaleSlider + (0.1 * diffSlider);     // scale factor
             $("#stm div").css({
                 "-webkit-transform":"scale(" + scaleSlider + ")",
                 "-moz-transform":"scale(" + scaleSlider + ")",
@@ -62,13 +58,14 @@ $(function() {
             valueSlider = ui.value;
             inst.repaintEverything();
         }})
+        // add pips and label to slider
         .slider("pips", {first:"label", last:"label", labels:{"first":"-", "last":"+"}});
 });
 
 // events on little menu bar
 $(function() {
 
-    // menu hover
+    // menu hover --> change color
     $("#navmenu").mouseover(function() {
         $(this).css("background", "#48c9b0");
         $(this).css("cursor", "pointer");
@@ -85,14 +82,7 @@ $(function() {
         $("#navmenu a").toggleClass("fui-arrow-left fui-arrow-right");
     });
 
-    // tooltip for menu icon
-    /*$("#navmenu").tooltip({
-        content: "Show/Hide Menu",
-        show: {delay: 1000},
-        position: {my: "left", at: "right center"}
-    });*/
-
-    // add learning unit hover
+    // add learning unit hover --> change color
     $("#navadd").mouseover(function() {
         $(this).css("background", "#48c9b0");
         $(this).css("color", "#ffffff");
@@ -101,15 +91,10 @@ $(function() {
         $(this).css("background", "#ddd");
         $(this).css("color", "#666");
     });
+    $("#navadd").css("pointer-events", "none");
+    $("#navadd").css("color", "rgb(150,150,150)");
 
-    // tooltip for add learning unit
-    /*$("#navadd").tooltip({
-        content: "Add Item",
-        show: {delay: 1000},
-        position: {my: "right", at: "left center"}
-    });*/
-
-    // tab bar hover
+    // tab bar hover --> change color
     $("#navtab").mouseover(function() {
         $(this).css("background", "#48c9b0");
         $(this).css("cursor", "pointer");
@@ -119,6 +104,7 @@ $(function() {
         $(this).css("background", "#ddd");
         $("#navtab a").css("color", "#666");
     });
+
     // toggle tab bar
     $("#navtab").on("click",function() {
         $( ".properties" ).toggle("slide");
@@ -134,7 +120,8 @@ $(function() {
         var inputName = $("<input>").addClass("form-control");
         var scenarioName = $("#lname")[0].innerHTML;
         inputName.attr("value", scenarioName);
-        $(inputName).css("height", "100%");
+        //$(inputName).css("height", "100%");
+        $(inputName).css("height", "30");
         $(inputName).css("width", "200");
         $(inputName).css("display", "inherit");
 
@@ -148,8 +135,10 @@ $(function() {
             if (e.keyCode === 13) {
                 // get new name in label
                 $("#lname").html($(inputName).val());
+
                 // show label again
                 $("#lname").show();
+
                 // remove input field
                 $(inputName).remove();
 
@@ -159,6 +148,13 @@ $(function() {
                         $(this).html($("#lname")[0].innerHTML);
                     }
                 });
+
+                // update name JSON structure
+                for (var m=0; m<myAuthorSystem.length; m++) {
+                    if (myAuthorSystem[m].name == scenarioName) {
+                        myAuthorSystem[m].name = $("#lname")[0].innerHTML;
+                    }
+                }
             }
         });
     });
@@ -166,15 +162,16 @@ $(function() {
 
 // tabs
 $(function() {
+
     // default hide tabs
     $(".tab-Container").hide();
     $(".tabContents").hide();
-    //$(".tabContents:first").show();
     $("#firstTab").addClass("active");
 
-    // if one tab is clicked show it
+    // if one tab is clicked show this one
     $(".tab-Container ul li a").click(function() {
 
+        // hide other tab content
         var activeTab = $(this).attr("href");
         $(".tab-Container ul li a").removeClass("active");
         $(this).addClass("active");
@@ -214,34 +211,40 @@ $(function() {
         $(".tabContents").hide();
         $(".tab-Container").hide();
         $("#tabUnitLabel").hide();
-
     });
 });
 
 // reloading
 var loadedData;
 $(function() {
-    jQuery.get('Testszenario5.json', function(data) {
+    jQuery.get('Testszenario.json', function(data) {
         console.log(data);
-        loadedData = data[0];
-        loadScenario(data[0]);
+        //loadedData = data[0];
+        loadedData = data;
 
-        updateScenario(data[0].name);
+        // load scenario from JSON file
+        loadScenario(loadedData);
+
+        // update scenario list
+        updateScenario(loadedData.name);
         myAuthorSystem.splice(-1);
+
+        // update label
         setLabelBtnScenarioDeletion();
     });
 });
 
+/**
+ * Function loads a scenario which contains all units, connections und functions.
+ * @param {Object} data Contains all data from a scenario
+ * */
 function loadScenario(data) {
 
     // get scenario in myAuthorSystem
     myAuthorSystem.push(data);
 
-    // get name in current scenario label
-    //$("#lname").html(data.name);
-
-    // get scenario in menu
-    // create nur container to see new scenario in menu bar
+    /* get scenario in menu */
+    // create new container to see new scenario in menu bar
     var liScenario;
     if (data["units"].length != 0) {
         liScenario = $('<li>').addClass('has-sub');
@@ -287,6 +290,7 @@ function loadScenario(data) {
 
         ulScenario = $("<ul>").attr("style", "display:none");
 
+        // put all units in scenario in menu bar
         for (var i=0; i<data["units"].length; i++) {
             var ulScenario;
             var liUnit = $("<li>").addClass("last");
@@ -299,70 +303,38 @@ function loadScenario(data) {
             liUnit.append(aUnit);
             ulScenario.append(liUnit);
         }
-
         liScenario.append(ulScenario);
     }
 
     // set container
     jsPlumb.setContainer($("#stm"));
 
-    // initialize instance
-    //var x = 1;
-    /*var inst = jsPlumb.getInstance({
-        Endpoint: ["Dot", {radius: 2}],
-        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
-        ConnectionOverlays: [
-            [ "Arrow", {
-                location: 1,
-                id: "arrow",
-                length: 14,
-                foldback: 0.8
-            } ]
-            //[ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
-        ],
-        Container: "stm"
-    });*/
-
     // load units from scenario
     for (var j=0; j<data["units"].length; j++) {
-        var unit = loadUnit(data["units"][j], j, inst);
+        var unit = loadUnit(data["units"][j], (j+1).toString(), inst);
 
+        // set event listeners
         activateFunctionalities(unit);
     }
 
     // set connections
     for (var k=0; k<data["connections"].length; k++) {
-        inst.connect({
+        var c = inst.connect({
             source: data["connections"][k].sourceId,
             target: data["connections"][k].targetId,
             anchors: ["Continuous", "Continuous"],
-            overlays: [["Label", {label: "PRE", id: "label", cssClass: "aLabel" }]]
+            //overlays: [["Label", {label: "PRE", id: "label", cssClass: "aLabel" }]]
+            overlays: [["Label", {label: data["connections"][k].connLabel, id: "label", cssClass: "aLabel" }]]
         });
+        // set title for label
+        var label = c.getOverlay("label");
+        var labelID = $(label)[0].canvas.id;
+        $("#" + labelID)[0].setAttribute("title", data["connections"][k].connTitle);
     }
-    //var num_connections = k + 1;
 
-    // triggered if new connections are set
-    /*inst.bind("connection", function (con) {
-        data["connections"].push({sourceId:con.sourceId, targetId:con.targetId,
-            connId:con.connection.id, connLabel:"PRE"
-        });
-        con.connection.addOverlay([ "Label", { label: "PRE", id: "label", cssClass: "aLabel" }]);
-        //con.connection.getOverlay("label").setLabel(max_connections.toString());
-        //num_connections ++;
-    });*/
-
-    /*inst.bind("click", function (c) {
-        console.log("he");
-        inst.detach(c);
-        var connID = c.connection.id;
-
-        for (var l=0; l<data["connections"].length; l++) {
-            if (data["connections"][l].connId == connID) {
-                data["connections"].splice(l, 1);
-            }
-        }
-        console.log(data["connections"]);
-    });*/
+    // activate quick add learning unit button (little navbar right)
+    $("#navadd").css("pointer-events", "");
+    $("#navadd").css("color", "rgb(102,102,102)");
 
     // get name in current scenario label
     $("#lname").html(data.name);
@@ -370,6 +342,7 @@ function loadScenario(data) {
 
 // global unit instance
 var inst;
+// initialize jsPlumb instance if jsPlumb is ready
 jsPlumb.ready(function () {
     inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],

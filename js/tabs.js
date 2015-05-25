@@ -1,10 +1,8 @@
 /**
- * Created by juliushofler on 30.03.15.
+ * Created by Julius Höfler on 30.03.15.
  */
 
 var global_currentInputUnitName = "";
-//var counter_parameter = 0;
-//var counter_parElem = 0;
 var list_units = [];
 var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
@@ -12,14 +10,14 @@ var array_multiSelectionMetaData = [];
 var counter_multiSelectionMetaData = 0;
 var bool_unitClicked = false;
 
-$(function() {
-
-
-});
 
 // Jobs: - make details in tab "Kontextinformation" visible,
 //       - hide main part
 //       - get information into the selections and input fields
+/**
+ * Function gets information into the selection bar and input fields.
+ * Furthermore hide main part in tab and show details of context information.
+ * */
 function showDetailContextInfo() {
 
     // show detail, hide main
@@ -37,17 +35,20 @@ function showDetailContextInfo() {
     // clean input fields
     $("#formContextInformation")[0].reset();
 
-    // make objects invisible --> keine Oberkategorien
+    // make objects invisible
     $("#inputContextValue").css("display", "none");
     $("#selectPossibleValues").css("display", "none");
     $("#s2id_selectPossibleValues").css("display", "none");
     $("#divContextParameter").css("display", "none");
 
-    /* fill selection "Kontextinformation" */
+    // fill selection "Kontextinformation"
     fillSelectionContextInformation();
 }
 
 // if home button is clicked change view
+/**
+ * Function changes view of context information tab from detail view to main view.
+ * */
 function showMainContextInfo() {
 
     // show main, hide detail
@@ -56,8 +57,13 @@ function showMainContextInfo() {
 }
 
 // bind unit with properties (tabs)
+/**
+ * Function add event listeners after learning unit creation.
+ * @param {Object} newState Contains new created learning unit.
+ * */
 function activateFunctionalities(newState) {
 
+    // get id from new state (unit)
     var id = newState[0].getAttribute("id");
     var unit = document.getElementById(id);
     var name = "";
@@ -70,12 +76,11 @@ function activateFunctionalities(newState) {
     list_units.push(unit);
 
     var current_unit;
-    //$(unit).draggable({scroll:true, containment:".content"});
 
     // triggered if learning unit is clicked
     $(unit).click(function(event) {
 
-        // clear marking
+        // clear marking from all units
         for (var l=0; l<list_units.length; l++) {
             $(list_units[l]).css("background", "");
             $(list_units[l]).css("color", "");
@@ -93,6 +98,7 @@ function activateFunctionalities(newState) {
 
         // hide tab from unit label connection
         $("#tabUnitLabel").hide();
+
         // clear marking from label connections
         $(".aLabel").css("background-color", "");
         $(".aLabel").css("color", "");
@@ -114,25 +120,23 @@ function activateFunctionalities(newState) {
                 for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
                     if (myAuthorSystem[p]["units"][q]["name"] == name) {
                         current_unit = myAuthorSystem[p]["units"][q];
-                        //console.log("current Unit:");
-                        //console.log(current_unit);
                     }
                 }
             }
         }
 
-        /* Test */
+        // get current unit dictionary if scenario was loaded
         if (loadedData) {
             for (var q=0; q<loadedData["units"].length; q++) {
                 if (loadedData["units"][q]["name"] == name) {
                     current_unit = loadedData["units"][q];
                 }
             }
-            /* End Test*/
         }
 
         // set description field
         formObject.elements["unitDescription"].value = current_unit["description"];
+
 
         /* tab "Kontextinformation" */
         // check how much context information are needed to reach SAT
@@ -163,6 +167,7 @@ function activateFunctionalities(newState) {
                 "text":$(array_unitIcons[n]).children("img")[0].title
             });
         }
+        // get data in multi selection bar
         $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
 
         // needed too re-color the selections
@@ -180,34 +185,38 @@ function activateFunctionalities(newState) {
         for (var j=0; j<array_icons.length; j++) {
             array_multiSelectionMetaData.push({"id":j, "text":$(array_icons[j])[0].title});
         }
+
+        // change format: add icons to text
         $("#selectMultiMetaData").select2({
             formatSelection: formatMultiMetaData,
             escapeMarkup: function(m) {return m;}
         });
+        // get data in multi selection bar
         $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
 
-        //console.log(myAuthorSystem);
-        //console.log(JSON.stringify(myAuthorSystem));
+        console.log(myAuthorSystem);
+        console.log(JSON.stringify(myAuthorSystem));
     });
 
     // triggered if one option was selected ("Eine" or "Alle")
     $("#selectNumberContextInfos").select2().on("select2-selecting", function(e) {
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
-            // decides that one of the group of context information has to be satisfied (1 == "Eine")
+            // decides that one of the group of selected context information has to be satisfied (1 == "Eine")
             if (e.val == 1) {
 
-                // if a border exists before and is unequal to 1 --> change
+                // if a border already exists and is unequal to 1 --> change design
                 if (unitSatisfiesAllContextInfos) {
                     // check if icons exist
                     if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
                         $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
 
-                        // check if ci attribute exists
+                        // check if ci attribute exists and change attribute ci
                         if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
                             $(unit).children("div.unit-icons").attr("ci", "one");
                         }
@@ -215,17 +224,19 @@ function activateFunctionalities(newState) {
                 }
                 // false == one has to be satisfied
                 unitSatisfiesAllContextInfos = false;
+
+                // change sat information in current unit
                 current_unit["sat"] = "one";
             }
-            // decides that all of the group of context information has to be satisfied (0 == "Alle")
+            // decides that all of the group of selected context information has to be satisfied (0 == "Alle")
             if (e.val == 0) {
 
-                // if a border exists before and is unequal to 0 --> change
+                // if a border already exists and is unequal to 0 --> change design
                 if (!unitSatisfiesAllContextInfos) {
                     if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
                         $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
 
-                        // check if ci attribute exists
+                        // check if ci attribute exists and change attribute ci
                         if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
                             $(unit).children("div.unit-icons").attr("ci", "all");
                         }
@@ -233,18 +244,23 @@ function activateFunctionalities(newState) {
                 }
                 // true == all have to be satisfied
                 unitSatisfiesAllContextInfos = true;
+
+                // change sat information in current unit
                 current_unit["sat"] = "all";
             }
         }
     });
 
-    // triggered if string is changed in input field
+    // triggered if string is changed in input field in tab "Eigenschaften"
     $("#inputUnitName").bind("input", function() {
 
+        // get current input field value
         var val = $(this).val();
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
+            // store old name
             var old_name = name;
 
             // change unit name if his corresponding input field is changing
@@ -252,11 +268,12 @@ function activateFunctionalities(newState) {
             name = $(unit).children("div.title")[0].innerText;
             global_currentInputUnitName = val;
 
-            // change name in menu bar
+            // find right scenario in menu bar
             var scenarioName = $("#lname")[0].innerText;
             var findScenario = $("span.title").filter(":contains('" + scenarioName + "')");
             findScenario = findScenario.parent("a").parent("li");
 
+            // change name in menu bar
             if (findScenario.length != 0) {
                 var findUnit = findScenario.children("ul").children("li").children("a")
                     .children("span").filter(":contains('" + old_name + "')");
@@ -265,15 +282,6 @@ function activateFunctionalities(newState) {
 
             // update JSON structure
             current_unit["name"] = name;
-            /*for (var p=0; p<myAuthorSystem.length; p++) {
-                if (myAuthorSystem[p]["name"] == scenarioName) {
-                    for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
-                        if (myAuthorSystem[p]["units"][q]["name"] == old_name) {
-                            myAuthorSystem[p]["units"][q]["name"] = name;
-                        }
-                    }
-                }
-            }*/
 
             // necessary to redraw endpoints
             inst.repaintEverything();
@@ -283,78 +291,31 @@ function activateFunctionalities(newState) {
     // triggered if string is changed in description field in tab "Eigenschaften"
     $("#inputUnitDescription").bind("input", function() {
 
+        // get current input field value
         var val = $(this).val();
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
             // update JSON structure
             current_unit["description"] = val;
-            /*var scenarioName = $("#lname")[0].innerText;
-            for (var p=0; p<myAuthorSystem.length; p++) {
-                if (myAuthorSystem[p]["name"] == scenarioName) {
-                    for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
-                        if (myAuthorSystem[p]["units"][q]["name"] == name) {
-                            myAuthorSystem[p]["units"][q]["description"] = val;
-                        }
-                    }
-                }
-            }*/
         }
     });
 
-    // triggered if an option in selection "Kontextinformation" was selected
-    /*$("#selectContextInfos").select2().on("select2-selecting", function(e) {
-
-        var selecElem = e.object.element[0];
-        var optgroup = $(selecElem).parent()[0].label;
-
-        if (name == global_currentInputUnitName) {
-
-            // only addable if icon doesn't exist already
-            for (var h=0; h<array_multiSelectionContextInfos.length; h++) {
-                if (e.choice.text == array_multiSelectionContextInfos[h]["text"]) {
-                    alert(e.choice.text + " existiert bereits!");
-                    return true;
-                }
-            }
-
-            var ccID = e.object.element[0].value;
-            var divContextIcon = $("<div>").addClass("unit-icon").attr("id", id + "icon");
-            //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
-            //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
-
-            var icon = formatUnitIcons(e.choice, optgroup, ccID);
-
-            // add icon und div to unit
-            divContextIcon.append(icon);
-            $(unit).children("div.unit-icons").append(divContextIcon);
-
-            // design reasons //
-            // all SAT needs solid border
-            if (unitSatisfiesAllContextInfos) {
-                $(unit).children("div.unit-icons").css("border", "1px solid #34495e");
-                $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-            // one SAT needs dotted border
-            } else {
-                $(unit).children("div.unit-icons").css("border", "1px dotted #34495e");
-                $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
-            }
-            $(unit).children("div.unit-icons").css("border-radius", "4px");
-            $(unit).css("padding-top", "10px");
-            $(unit).children("div.unit-icons").css("height", "21px");
-            $(unit).children("div.unit-icons").css("display", "inline-block");
-        }
-    });*/
-
+    // triggered if an operator was selected in tab "Kontextinformation"
     $("#selectOperator").select2().on("select2-selecting", function(e) {
+        // check string of the operator value
         if (e.choice.text == "Hat keinen Wert") {
+            // disable input field if operator needs no value
             if ($("#inputContextValue").css("display") == "block") {
                 $("#inputContextValue").attr("disabled", true);
             }
+            // disable selection bar if operator needs no value
             if ($("#selectPossibleValues").css("display") == "block") {
                 $("#selectPossibleValues").attr("disabled", true);
             }
 
+            // in both cases enable input/selection if operator needs a value
         } else {
             if ($("#inputContextValue").css("display") == "block") {
                 $("#inputContextValue").attr("disabled", false);
@@ -365,21 +326,10 @@ function activateFunctionalities(newState) {
         }
     });
 
-    // triggered if an option in multi selection in tab "Kontextinformation" was selected
-    //$("#selectMultiContextInfos").select2().on("select2-selecting", function(e) {
-        /*
-        array_multiSelectionContextInfos.push({"id":e.val, "text": e.choice.text});
-        $("#selectMultiContextInfos").empty();
-        $("#selectMultiContextInfos").select2("data", null);
-        $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-
-        changeColorMultiContextInfos();
-        */
-    //});
-
     // triggered if one option in multi selection bar in tab "Kontextinformation" was removed
     $("#selectMultiContextInfos").select2().on("select2-removed", function(e) {
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
             // remove this option from array
@@ -390,7 +340,7 @@ function activateFunctionalities(newState) {
                 }
             }
 
-            // remove option icon from unit
+            // remove icon from learning unit
             $(unit).children("div.unit-icons").children("div.unit-icon").each(function() {
                 var iconName = $(this).children("img")[0].title;
                 if (iconName == e.choice.text) {
@@ -420,11 +370,12 @@ function activateFunctionalities(newState) {
     });
 
     // button "Bestätigen" in tab "Kontextinformation" was clicked
-    // Jobs: - evaluate the seletions and inputs
+    // Jobs: - evaluate the selections and inputs
     //       - put context information in multi selection bar
     //       - add icons in current unit
     $("#btnConfirmContextInfo").on("click", function() {
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
             // check if all needed fields were filled with information
@@ -434,36 +385,40 @@ function activateFunctionalities(newState) {
             missing_content = returnArray[0];
             var selectedInfos = returnArray[1];
 
+            // if content is missing do not except adding of the context information
             if (missing_content == "Error999") {
-                console.log("AE");
                 return false;
+
             } else {
 
                 // if something needed is missing
                 if (!!missing_content) {
                     alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
                     return false;
+
                 } else {
 
+                    // push all new information about the context unit in current scenario
                     current_unit["contextInformations"].push(selectedInfos);
 
+                    // get selected context information
                     var contentContextInfo = $("#selectContextInfos").select2("data");
                     var selecElem = contentContextInfo.element[0];
+
+                    // get corresponding context class
                     var optgroup = $(selecElem).parent()[0].label;
 
-                    // only addable if icon doesn't exist already
-                    /*for (var h=0; h<array_multiSelectionContextInfos.length; h++) {
-                     if (contentContextInfo.text == array_multiSelectionContextInfos[h]["text"]) {
-                     alert(contentContextInfo.text + " existiert bereits!");
-                     return true;
-                     }
-                     }*/
-
+                    // get corresponding context class id
                     var ccID = contentContextInfo.element[0].value;
+
+                    // create icon DOM
                     var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
                     //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
                     //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
 
+                    // get right format for icon visualisation in learning unit
+                    // case 1: context specific icon
+                    // case 2: context class icon (upper class icon, only color)
                     var icon = formatUnitIcons(contentContextInfo, optgroup, ccID);
 
                     // get icon information in JSON structure
@@ -473,7 +428,7 @@ function activateFunctionalities(newState) {
                         }
                     }
 
-                    // add icon und div to unit
+                    // add icon and div to unit
                     divContextIcon.append(icon);
                     $(unit).children("div.unit-icons").append(divContextIcon);
 
@@ -482,7 +437,8 @@ function activateFunctionalities(newState) {
                     if (unitSatisfiesAllContextInfos) {
                         $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
                         $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-                        // one SAT needs dotted border
+
+                    // one SAT needs dotted border
                     } else {
                         $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
                         $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
@@ -517,14 +473,7 @@ function activateFunctionalities(newState) {
                     array_multiSelectionContextInfos.push({id: id, text: contextInfoName});
                     $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
 
-                    // update JSON structure
-                    /*current_unit["contextInformations"].push({
-                     name:contentContextInfo.text,
-                     operator:$("#selectOperator").select2("data")["text"]
-                     });*/
-
-
-                    // change color per option
+                    // change color per option in multi selection bar
                     changeColorMultiContextInfos();
 
                     // increase counter --> needed for continuous ids
@@ -542,9 +491,10 @@ function activateFunctionalities(newState) {
         }
     });
 
-    // triggered if an option in selection "Metadaten" was seleceted
+    // triggered if an option in selection "Metadaten" was selected
     $("#selectMetaData").select2().on("select2-selecting", function(e) {
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
             // no two same meta data symbols allowed
@@ -554,9 +504,10 @@ function activateFunctionalities(newState) {
                 }
             }
 
+            // create meta data DOM
             var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
 
-            // choose icon symbol
+            // choose icon symbol and add it to meta data DOM
             var metaIcon;
             switch (e.choice.text) {
                 case "Bild":
@@ -585,16 +536,15 @@ function activateFunctionalities(newState) {
                     break;
             }
 
+            // add DOM for meta data icon (glyph)
             var bMetaIcon = $("<b>").addClass(metaIcon);
 
-            // get icon in learning unit
+            // get icon into learning unit
             divMetaIcon.append(bMetaIcon);
             $(unit).append(divMetaIcon);
 
             // change size of learning unit
-            //if (counter_multiSelectionMetaData == 0) {
             $(unit).css("padding-bottom", "5px");
-            //}
 
             // clear multi selection bar
             $("#selectMultiMetaData").empty();
@@ -621,9 +571,10 @@ function activateFunctionalities(newState) {
         }
     });
 
-    // remove option from multi selection bar
+    // remove option from multi selection bar in tab "Metadaten"
     $("#selectMultiMetaData").select2().on("select2-removed", function(e) {
 
+        // only for the selected unit
         if (name == global_currentInputUnitName) {
 
             // find the right meta icon
@@ -649,7 +600,7 @@ function activateFunctionalities(newState) {
                 }
             });
 
-            // updata JSON structure
+            // update JSON structure
             for (var j=0; j<current_unit["metaData"].length; j++) {
                 if (current_unit["metaData"][j].name == e.choice.text) {
                     current_unit["metaData"].splice(j, 1);
@@ -674,7 +625,7 @@ function activateFunctionalities(newState) {
         var top = $(unit)[0].offsetTop;
         var left = $(unit)[0].offsetLeft;
 
-        // set only if current unit object exists
+        // only set if current unit object exists
         if (current_unit) {
             current_unit.posX = left;
             current_unit.posY = top;
@@ -687,14 +638,19 @@ function activateFunctionalities(newState) {
         $(list_units[l]).css("color", "");
     }
 
-    // clear
+    // clear multi selection bar
     $("#selectMultiContextInfos").empty();
     $("#selectMultiContextInfos").select2("data", null);
     array_multiSelectionContextInfos = [];
 
 }
 
-// change shown format in multi selection bar in "Metadaten"
+// change shown format in multi selection bar in tab "Metadaten"
+/**
+ * Function
+ * @param {Object} item Contains the selected option from meta data selection bar.
+ * @return {String} Returns DOM string which contains a meta data specific glyph.
+ * */
 function formatMultiMetaData(item) {
 
     switch (item.text) {
@@ -713,7 +669,12 @@ function formatMultiMetaData(item) {
     }
 }
 
-// change shown format in selection bar in "Metadaten"
+// change shown format in selection bar in tab "Metadaten"
+/**
+ * Function
+ * @param {Object} item Contains the selected option from meta data selection bar.
+ * @return {String} Returns DOM string which contains a meta data specific glyph and the corresponding text.
+ * */
 function formatMetaData(item) {
 
     switch (item.text) {
@@ -733,11 +694,20 @@ function formatMetaData(item) {
 }
 
 // fill selection bars in tab "Kontextinformation"
+/**
+ * Function sets a event listener for selection bar context information after parsing is finished.
+ * In this listener all selections and input fields were filled.
+ * Furthermore the meta data selection bar is also filled with information.
+ * */
 function parsingFinished() {
 
-    // triggered if context information was selected
+    /* tab "Kontextinformation" */
+    // triggered if a context information was selected
     $("#selectContextInfos").select2().on("select2-selecting", function(e) {
+        // get index (value) of the selected option
         var j = e.val;
+
+        // get the corresponding operators to the selected context information
         var operators = array_ContextInformations[j][2][1];
 
         // clear selection bar
@@ -762,7 +732,8 @@ function parsingFinished() {
         fillParameterSelection(array_ContextInformations[j][3]);
     });
 
-    /* 3.tab "Metadaten" */
+    /* tab "Metadaten" */
+    // set all needed meta data
     var array_SelectionMetaData = ["Bild", "Film", "Text", "Navigation", "Test", "Audio"];
 
     // get meta data options in selection bar
@@ -780,10 +751,13 @@ function parsingFinished() {
 }
 
 // fill selection bar "Kontextinformation"
+/**
+ * Function adds all context information and context classes into the selection bar context information.
+ * */
 function fillSelectionContextInformation() {
 
+    // create array for all context classes
     var array_optgroups = [];
-    //var array_contextInfos = [];
 
     // iterate through all context classes
     for (var j=0; j<array_ContextClasses.length; j++) {
@@ -792,8 +766,9 @@ function fillSelectionContextInformation() {
         array_optgroups.push(optgroup);
     }
 
-    // iterate through all context informations
+    // iterate through all context information
     for (var i=0; i<array_ContextInformations.length; i++) {
+        // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
         option.attr("origin", array_ContextInformations[i][4]);     // save origin name
         option.html(array_ContextInformations[i][0]);
@@ -805,12 +780,12 @@ function fillSelectionContextInformation() {
                 break;
             }
         }
-
-        //$("#selectContextInfos").append(option);
     }
 
+    // change color of all context classes if selection bar "Kontextinformation" is opening
     $("#selectContextInfos").select2().on("select2-open", function() {
         $(".select2-results").children("li").children("div.select2-result-label").each(function() {
+            // for all context classes set a specific color
             if ( $(this)[0].textContent == "Lernszenario" ) {
                 $(this).css("background-color", "#3287C8");
                 $(this).css("color", "white");
@@ -840,209 +815,17 @@ function fillSelectionContextInformation() {
         escapeMarkup: function(m) {return m;}
     });
 
-    // append optgroups and included options in selection bar "Kontextinformation"
+    // append optgroups (context classes) and their included options in selection bar "Kontextinformation"
     for (var l=0; l<array_optgroups.length; l++) {
         $("#selectContextInfos").append(array_optgroups[l]);
     }
 }
 
-// format in selection context information
-/*function formatContextInfos(item) {
-    switch (item.text) {
-
-        // scenario (Lernszenario)
-        case dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT:
-            return '<img src="img/icons-context-information/ci-scenario-current-learning-unit.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT:
-            return '<img src="img/icons-context-information/ci-scenario-learning-unit-completed.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION:
-            return '<img src="img/icons-context-information/ci-scenario-time-for-completion.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-
-        // personal (Persönlich)
-        case dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION:
-            return '<img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_AGE:
-            return '<img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT:
-            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION:
-            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING:
-            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING:
-            return '<img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_ROLE:
-            return '<img src="img/icons-context-information/ci-personal-role.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND:
-            return '<img src="img/icons-context-information/ci-personal-user-state-of-mind.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-
-        // situational (Situationsbezogen)
-        case dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT:
-            return '<img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT:
-            return '<img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP:
-            return '<img src="img/icons-context-information/ci-situational-timeduration.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-
-        // technical (Infrastruktur)
-        case dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-audio-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_DEVICE_TYPE:
-            return '<img src="img/icons-context-information/ci-technical-device-type.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION:
-            return '<img src="img/icons-context-information/ci-technical-display-resolution.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-display-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY:
-            return '<img src="img/icons-context-information/ci-technical-screenreader-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-micropone-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-photo-camera-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-printer-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
-            return '<img src="img/icons-context-information/ci-technical-video-camera-available.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-
-        // physical (Umwelt)
-        case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:
-            return '<img src="img/icons-context-information/ci-physical-air-pressure2.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE:
-            return '<img src="img/icons-context-information/ci-physical-ambient-noise.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY:
-            return '<img src="img/icons-context-information/ci-physical-humidity.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY:
-            return '<img src="img/icons-context-information/ci-physical-luminosity.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENTLY_RAINING:
-            return '<img src="img/icons-context-information/ci-physical-raining.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY:
-            return '<img src="img/icons-context-information/ci-physical-sunny.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE:
-            return '<img src="img/icons-context-information/ci-physical-temperature.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_CURRENT_TIME:
-            return '<img src="img/icons-context-information/ci-physical-time.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-
-        // location (Ortung)
-        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
-            return '<img src="img/icons-context-information/ci-location-goal.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
-            return '<img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION:
-            return '<img src="img/icons-context-information/ci-location-goal-mirrored.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_IS_AT_LOCATION:
-            return '<img src="img/icons-context-information/ci-location-location.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS:
-            return '<img src="img/icons-context-information/ci-location-address.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING:
-            return '<img src="img/icons-context-information/ci-location-building.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY:
-            return '<img src="img/icons-context-information/ci-location-country.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE:
-            return '<img src="img/icons-context-information/ci-location-distance.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE:
-            return '<img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE:
-            return '<img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_LOCATION_REGION:
-            return '<img src="img/icons-context-information/ci-location-region.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION:
-            return '<img src="img/icons-context-information/ci-location-transport.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-        case dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED:
-            return '<img src="img/icons-context-information/ci-location-speed.png" width="17" height="17">' +
-                '<span class="formatIconText">' + item.text + '</span>';
-    }
-    return item.text;
-}*/
-
-// format for multi selection context information
-/*function formatMultiContextInfos(item) {
-    switch (item.text) {
-        case "Regnerisch":
-            return '<img src="img/context-information/physical-context-water.png" width="17" height="17" title="' +
-                item.text + '">';
-        case "Drucker verfügbar":
-            return '<img src="img/context-information/technical-context-printer-big.png" width="17" height="17" title="' +
-                item.text + '">';
-        case "Gerätetyp":
-            return '<img src="img/context-information/technical-context-device-big.png" width="17" height="17" title="' +
-                item.text + '">';
-        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
-            return '<img src="img/icons-context-information/ci-location-goal.png" width="17" height="17" title="' +
-                item.text + '">';
-        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
-            return '<img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17" title="' +
-                item.text + '">';
-    }
-    return item.text;
-}*/
-
-// format icons in units
-/*function formatUnitIcons(item, optgroup, ccID) {
-    switch (item.text) {
-        case "Regnerisch":
-            return '<img src="img/context-information/physical-context-water.png" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-        case "Drucker verfügbar":
-            return '<img src="img/context-information/technical-context-printer-big.png" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-        case "Gerätetyp":
-            return '<img src="img/context-information/technical-context-device-big.png" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
-            return '<img src="img/icons-context-information/ci-location-goal.png" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
-            return '<img src="img/icons-context-information/ci-location-arrived.png" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-    }
-    return '<img src="img/context-classes/' + optgroup + '.png" width="15" height="15" title="' +
-        item.text + '" ccID="' + ccID + '">';
-}*/
-
 // fill input field (value in tab Kontexinformation)
+/**
+ * Function gets the seletect context information and decides which input field has to be set on GUI.
+ * @param {Object} ci Contains current context information.
+ * */
 function fillInputField(ci) {
 
     // clear input field caused by removing input field and re-building
@@ -1051,8 +834,10 @@ function fillInputField(ci) {
         .attr("onkeyup", "getInputContextValue(this)");
     $("#divContextValue").append(inputField);
 
+    // get type of the context information
     var type = ci[0][0]["type"];   // float, integer, string, enum, boolean
 
+    // decide which type of input field is needed
     switch (type) {
 
         case "FLOAT":
@@ -1103,15 +888,19 @@ function fillInputField(ci) {
             $("#selectPossibleValues").append(option0);
 
             break;
-
     }
-
 }
 
 // set the need functionalities into the input field for float and integer values
+/**
+ * Function shows an input field an set minimum, maximum and default values if needed.
+ * @param {Object} ci Contains current context information.
+ * */
 function configureInputContextValueForFloatInt(ci) {
 
     var min, max, def = null;
+
+    // activate and show input field and hide selection bar
     $("#inputContextValue").attr("disabled", false);
     $("#inputContextValue").attr("type", "number");
     $("#inputContextValue").css("display", "block");
@@ -1139,22 +928,28 @@ function configureInputContextValueForFloatInt(ci) {
 
     // set minimum and maximum in input field
     if (min && max) {
-        //$("#inputContextValue").attr("pattern", ".{" + min + "," + max + "}");
         $("#inputContextValue").attr("min", min).attr("max", max);
     }
-    if (min &&  !max) {
+    // set minimum only
+    if (min && !max) {
         $("#inputContextValue").attr("min", min);
     }
+    // set maximum only
     if (!min && max) {
         $("#inputContextValue").attr("max", max);
     }
 }
 
 // get current value from input field
+/**
+ * Function evaluate the input value and sets too big values to maximum and too small values to minimum.
+ * @param {Object} val Contains the current value of the context value input field.
+ * */
 function getInputContextValue(val) {
 
     // reduce to big values to maximum
     if ( $("#inputContextValue")[0].hasAttribute("max") ) {
+        // get max attribute value
         var max = $("#inputContextValue")[0].getAttribute("max");
         max = parseInt(max);
         if (val.value > max) {
@@ -1164,6 +959,7 @@ function getInputContextValue(val) {
 
     // increase to little values to minimum
     if ( $("#inputContextValue")[0].hasAttribute("min") ) {
+        // get min attribute value
         var min = $("#inputContextValue")[0].getAttribute("min");
         min = parseInt(min);
         if (val.value < min) {
@@ -1182,6 +978,10 @@ function getInputContextValue(val) {
 }
 
 // get the current needed input fields and selection bars (tab Kontextinformation)
+/**
+ * Function show all needed input fields and selection bar for the selected context information.
+ * @param {Object} cp Contains all existing context parameter.
+ * */
 function fillParameterSelection(cp) {
 
     // clear selection bar
@@ -1208,7 +1008,6 @@ function fillParameterSelection(cp) {
     // set all parameter fields invisible
     $("#divContextParameter > div").css("display", "none");
 
-    //console.log(cp);
     // cp[i][0] = parameter name
     // cp[i][1] = type (enum, string, float, integer)
     // cp[i][2] = possible values
@@ -1221,7 +1020,7 @@ function fillParameterSelection(cp) {
 
         switch (type) {
 
-            // type enum needs a dropdown selection for only possible values
+            // type enum needs a drop down selection for only possible values
             case "ENUM":
 
                 // get all possible values
@@ -1252,7 +1051,7 @@ function fillParameterSelection(cp) {
                 $("#divParameterSelection1").css("display", "block");
                 break;
 
-            // type float needs one/two input fields and a label
+            // type float needs one/two input fields and a specific label
             case "FLOAT":
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
@@ -1270,31 +1069,36 @@ function fillParameterSelection(cp) {
                 }
                 break;
 
-            // type integer needs one/two input fields and a label
+            // type integer needs one/two input fields and a specific label
             case "INTEGER":
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
                     $("#divParameterInput2").children("label").html(cp[i][0]);
-                    //setMinMax(cp[i][2], $("#inputContextParameter2"));
+
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(cp[i][0]);
-                    //setMinMax(cp[i][2], $("#inputContextParameter1"));
                 }
                 break;
 
-            // type string needs an input field and a label
+            // type string needs an input field and a specific label
             case "STRING":
                 $("#divParameterString").css("display", "block");
                 $("#divParameterString").children("label").html(cp[i][0]);
                 break;
 
         }
+        // show context parameter section
         $("#divContextParameter").css("display", "block");
     }
 }
 
 // set minima and maxima if needed in input fields in tab "Kontextinformation"
+/**
+ * Function set minimum and maximum values for an input field.
+ * @param {Array} values Contains minimum and maximum values.
+ * @param {Object} inputField Contains an input field.
+ * */
 function setMinMax(values, inputField) {
 
     var min, max = null;
@@ -1314,19 +1118,29 @@ function setMinMax(values, inputField) {
     if (min && max) {
         inputField.attr("min", min).attr("max", max);
     }
-    if (min &&  !max) {
+    // set minimum only
+    if (min && !max) {
         inputField.attr("min", min);
     }
+    // set maximum only
     if (!min && max) {
         inputField.attr("max", max);
     }
 }
 
 // get current value from input field
+/**
+ * Function evaluate the input value of the context parameter.
+ * Resets values if they are too high (maximum) or too small (minimum).
+ * Set marker on Google Maps if two input fields and the map are available.
+ * @param {Object} val Contains current input field content.
+ * @param {int} num Contains the specific input id number.
+ * */
 function getParameterInput(val, num) {
 
     // reduce to big values to maximum
     if ( $("#inputContextParameter" + num)[0].hasAttribute("max") ) {
+        // get max attribute value
         var max = $("#inputContextParameter" + num)[0].getAttribute("max");
         max = parseInt(max);
         if (val.value > max) {
@@ -1336,6 +1150,7 @@ function getParameterInput(val, num) {
 
     // increase to little values to minimum
     if ( $("#inputContextParameter" + num)[0].hasAttribute("min") ) {
+        // get min attribute value
         var min = $("#inputContextParameter" + num)[0].getAttribute("min");
         min = parseInt(min);
         if (val.value < min) {
@@ -1349,25 +1164,39 @@ function getParameterInput(val, num) {
     if ($("#inputContextParameter1").val()) {
         lat = $("#inputContextParameter1").val();
     }
+
     // check if longitude is not empty
     if ($("#inputContextParameter2").val()) {
         long = $("#inputContextParameter2").val();
     }
+
     // only if both inputs have a value set marker
     if ($("#inputContextParameter1").val() && $("#inputContextParameter2").val()) {
         var new_LatLong = new google.maps.LatLng(lat, long);
+
+        // replace old marker and set the new one
         replaceMarker2(new_LatLong);
+
+        // conter the map and set zoom factor
         map.setCenter(new_LatLong);
         map.setOptions({zoom: 15});
     }
 }
 
 // check if all needed fields were filled with information
+/**
+ * Function checks whether all visible selections and input fields are not empty
+ * @param {String} missing_content Contains an empty string.
+ * @param {Object} current_unit Contains the current selected unit.
+ * @return {Array} Returns and array which includes the string with the missing content and which an object with selected infos.
+ * */
 function checkInformation(missing_content, current_unit) {
 
     var selectedInfos = {};
+
     // check selection bar "Kontextinformationen"
     if ( $("#selectContextInfos").select2("data") == null ) {
+        // if selection bar context information is empty, concatenate it in missing_content string
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
@@ -1379,12 +1208,15 @@ function checkInformation(missing_content, current_unit) {
     for (var h=0; h<current_unit["contextInformations"].length; h++) {
         if ($("#selectContextInfos").select2("data")["text"] == current_unit["contextInformations"][h]["name"]) {
             alert($("#selectContextInfos").select2("data")["text"] + " existiert bereits!");
+
+            // if already exist return with error code
             return ["Error999", {}];
         }
     }
 
     // check selection bar "Operator"
     if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
+        // if selection bar operator is empty, concatenate it in missing_content string
         missing_content += " - Operator\n";
     } else {
         // update JSON structure
@@ -1394,6 +1226,8 @@ function checkInformation(missing_content, current_unit) {
     // check input "Wert" is visible AND filled with information
     if ( $("#inputContextValue")[0].style.display == "block" &&
         $("#inputContextValue")[0].disabled == false ) {
+
+        // if input field context value is empty, concatenate it in missing_content string
         if ( $("#inputContextValue")[0].value == "" ) {
             missing_content += " - Wert\n";
         }
@@ -1404,6 +1238,8 @@ function checkInformation(missing_content, current_unit) {
     // check if selection bar "Wert" is visible AND filled with information
     } else if ( $("#selectPossibleValues")[0].style.display == "block" &&
         $("#selectPossibleValues")[0].disabled != true ) {
+
+        // if selection bar context value is empty, concatenate it in missing_content string
         if ( $("#selectPossibleValues").select2("data")["text"] == "\r" ) {
             missing_content += " - Wert\n";
         }
@@ -1411,8 +1247,10 @@ function checkInformation(missing_content, current_unit) {
         // update JSON structure
         selectedInfos.value = $("#selectPossibleValues").select2("data")["text"];
     }
-    // check selection bar "Parameter"
+    // check selection bar "Parameter" is visible
     if ( $("#divParameterSelection1")[0].style.display == "block") {
+
+        // if selection bar parameter is empty, concatenate it in missing_content string
         if ($("#selectParameter").select2("data")["text"] == "\r") {
             missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
         }
@@ -1420,8 +1258,10 @@ function checkInformation(missing_content, current_unit) {
         // update JSON structure
         selectedInfos.parameter1 = $("#selectParameter").select2("data")["text"];
     }
-    // check selection bar "Parameter"
+    // check selection bar "Parameter" is visible
     if ( $("#divParameterSelection2")[0].style.display == "block") {
+
+        // if selection bar parameter is empty, concatenate it in missing_content string
         if ($("#selectParameter2").select2("data")["text"] == "\r") {
             missing_content += " - " + $("#selectParameter2")[0].labels[0].innerHTML + "\n";
         }
@@ -1429,8 +1269,10 @@ function checkInformation(missing_content, current_unit) {
         // update JSON structure
         selectedInfos.parameter2 = $("#selectParameter2").select2("data")["text"];
     }
-    // check input context parameter 1
+    // check input context parameter 1 is visible
     if ( $("#divParameterInput1")[0].style.display == "table-cell" ) {
+
+        // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputContextParameter1")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter1")[0].labels[0].innerHTML + "\n";
         }
@@ -1438,8 +1280,10 @@ function checkInformation(missing_content, current_unit) {
         // update JSON structure
         selectedInfos.input1 = $("#inputContextParameter1")[0].value;
     }
-    // check input context parameter 2
+    // check input context parameter 2 is visible
     if ( $("#divParameterInput2")[0].style.display == "table-cell" ) {
+
+        // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputContextParameter2")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter2")[0].labels[0].innerHTML + "\n";
         }
@@ -1447,8 +1291,10 @@ function checkInformation(missing_content, current_unit) {
         // update JSON structure
         selectedInfos.input2 = $("#inputContextParameter2")[0].value;
     }
-    // check input context parameter 2
+    // check input context parameter 2 is visible
     if ( $("#divParameterString")[0].style.display == "block" ) {
+
+        // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputParameterString")[0].value == "") {
             missing_content += " - " + $("#inputParameterString")[0].labels[0].innerHTML + "\n";
         }
@@ -1457,16 +1303,19 @@ function checkInformation(missing_content, current_unit) {
         selectedInfos.inputString = $("#inputParameterString")[0].value;
     }
 
-    //current_unit["contextInformations"].push(selectedInfos);
-
+    // create return array
     var returnArray = [missing_content, selectedInfos];
+
     return returnArray;
-    //return missing_content;
 }
 
 // change all colors in multi selection in tab "Kontextinformation"
+/**
+ * Function changes colors of all selected options in multi selection bar context information.
+ * */
 function changeColorMultiContextInfos() {
 
+    // get all names from selected options
     var name = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div");
     $(name).each(function() {
 
@@ -1479,6 +1328,7 @@ function changeColorMultiContextInfos() {
             // needed to prevent failure, if no img exist
             var title;
             if ($(this).children("img").length != 0) {
+                // get context information title
                 title = $(this).children("img")[0].title;
             }
 
@@ -1503,32 +1353,42 @@ function changeColorMultiContextInfos() {
 }
 
 // get the specific color for each context class
+/**
+ * Function finds specific color of a context class.
+ * @param {String} cc Contains a context class.
+ * @return {String} Returns the specific color.
+ * */
 function getColor(cc) {
     var color;
 
     switch (cc) {
         case "Lernszenario":
-            color = "#3287C8";    // color: #3287C8
+            color = "#3287C8";
             break;
         case "Persönlich":
-            color = "#AF46C8";      // color: #AF46C8
+            color = "#AF46C8";
             break;
         case "Situationsbezogen":
-            color = "#91F52D";   // color: #91F52D
+            color = "#91F52D";
             break;
         case "Infrastruktur":
-            color = "#969696";   // color: #969696
+            color = "#969696";
             break;
         case "Umwelt":
-            color = "#FADC3C";        // color: #FADC3C
+            color = "#FADC3C";
             break;
         case "Ortung":
-            color = "#F03C32";      // color: #F03C32
+            color = "#F03C32";
             break;
     }
     return color;
 }
 
+// cleans selection bars
+/**
+ * Function cleans a selection bar.
+ * @param {String} s Contains a selection bar id.
+ * */
 function cleanSection(s) {
     $(s).empty();
     $(s).select2("data", {id:"\r",text:"\r"});
@@ -1547,34 +1407,22 @@ $(function(){
     // central point of the map
     var latlng = new google.maps.LatLng('52.3877833', '13.0831297');
 
-    // resize map if modal window is opening
-    /*$("#modal-maps").on("shown.bs.modal", function() {
-        resizeMap();
-    });*/
-
-    // show modal map window
-    /*$("#navmaps").on("click", function() {
-        $("#modal-maps").modal({
-            keyboard: true,
-            backdrop: true,
-            show: true
-        });
-    });*/
-
-    // create the map
+    // creates the map
+    /**
+     * Function visualize Google Maps and marker on it.
+     * */
     function showMap() {
 
         markers = [];
 
         var myOptions = {
-            zoom: 15,
-            center: latlng,
-            //mapTypeId: 'terrain'
-            mapTypeId: 'roadmap',
-            mapTypeControl: true,
+            zoom: 15,                                                   // set zoom factor
+            center: latlng,                                             // center map at set coordinates
+            mapTypeId: 'roadmap',                                       // set map type
+            mapTypeControl: true,                                       // activate map control elements
             mapTypeControlOptions: {
-                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                position: google.maps.ControlPosition.LEFT_BOTTOM
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,   // set drop down menu for control element
+                position: google.maps.ControlPosition.LEFT_BOTTOM       // set position of control element
             }
         };
 
@@ -1727,7 +1575,6 @@ $(function(){
             url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/marker.png',
             scaledSize: new google.maps.Size(20, 40),
             origin: new google.maps.Point(0, 0),
-            //anchor: new google.maps.Point(12, 59)
             anchor: new google.maps.Point(10, 45)
         };
         // get flat marker shadow image
@@ -1743,8 +1590,8 @@ $(function(){
             icon: image,
             shadow: shadow
         });
+        // marker not set on map per default
         marker.setMap(null);
-        //marker.setMap(map);
 
         // set new marker if user clicked into the map
         google.maps.event.addListener(map, "click", function(e) {
@@ -1756,6 +1603,10 @@ $(function(){
         });
 
         // delete old and set new marker
+        /**
+         * Function deletes old and set new google maps marker.
+         * @param {Object} location Contains location of a google maps marker.
+         * */
         function replaceMarker(location) {
             // deletion
             marker.setMap(null);
@@ -1773,11 +1624,12 @@ $(function(){
             });
         }
 
-        /* new search box */
+        /* add search box */
         // Create the search box and link it to the UI element.
         var input = /** @type {HTMLInputElement} */(
             document.getElementById('pac-input')
         );
+        // add input to map
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
         var searchBox = new google.maps.places.SearchBox(
@@ -1802,13 +1654,6 @@ $(function(){
             markers = [];
             var bounds = new google.maps.LatLngBounds();
             for (var i = 0, place; place = places[i]; i++) {
-                /*var image = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25)
-                };*/
 
                 // Create a marker for each place.
                 var marker = new google.maps.Marker({
@@ -1818,6 +1663,7 @@ $(function(){
                     position: place.geometry.location
                 });
 
+                // add marker
                 markers.push(marker);
 
                 bounds.extend(place.geometry.location);
@@ -1849,11 +1695,15 @@ $(function(){
         map.setCenter(center);
     }*/
 
+    // add event listeners showMap and resizeMap
     google.maps.event.addDomListener(window, 'load', showMap);
     google.maps.event.addDomListener(window, "resize", resizeMap());
 });
 
 // resize map due to map opening
+/**
+ * Function resize map if it becomes visible.
+ * */
 function resizeMap() {
     if (typeof map == "undefined") return;
     var center = map.getCenter();
@@ -1863,11 +1713,19 @@ function resizeMap() {
 }
 
 // delete old and set new marker
+/**
+ * Function deletes old and set new google maps marker.
+ * @param {Object} location Contains location of a google maps marker.
+ * */
 function replaceMarker2(location) {
+
+    // clean map and delete marker
     marker.setMap(null);
     for (var i = 0, mark; mark = markers[i]; i++) {
         mark.setMap(null);
     }
+
+    // set new marker
     markers = [];
     marker = new google.maps.Marker({
         position: location,

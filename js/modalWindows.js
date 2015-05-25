@@ -1,5 +1,5 @@
 /**
- * Created by juliushofler on 17.03.15.
+ * Created by Julius Höfler on 17.03.15.
  */
 
 var global_ScenarioCounter = 0;
@@ -33,6 +33,11 @@ $(function() {
 });
 
 // triggered after clicking save button in scenario creation
+/**
+ * Function creates a new scenario.
+ * It adds the name in the menu bar and in the header above the working place.
+ * Is Triggered after clicking save button in modal window scenario creation.
+ * */
 function saveCloseSzenario() {
 
     // get name from input field
@@ -41,9 +46,10 @@ function saveCloseSzenario() {
     // write scenario name on the little navigation bar
     $("#lname").html(scenarioName);
 
+    // count number of scenarios (needed for different ids)
     global_ScenarioLiNumber = global_ScenarioLiNumber + 1;
 
-    // create nur container to see new scenario in menu bar
+    // create new container to see new scenario in menu bar
     var liClass = $('<li>').addClass('last');
     liClass.attr("id", "menu-scenario-" + global_ScenarioLiNumber);
     var aClass = $('<a>').attr('href', '#');
@@ -62,28 +68,34 @@ function saveCloseSzenario() {
     // remove all units from state machine container
     $("#stm").empty();
 
+    // defines DOM as jsPlump container
     jsPlumb.setContainer($("#stm"));
 
+    // activate quick add learning unit button (little navbar right)
+    $("#navadd").css("pointer-events", "");
+    $("#navadd").css("color", "rgb(102,102,102)");
 }
 
-// write any typed character in ssname
-/*var ssname = "";
-function logKey(k) {
-    ssname = k.value;
-}*/
-
 // triggered after clicking "Passwort ändern"
+/**
+ * Function makes input fields for password change visible/invisible (toggle).
+ * */
 function showPW() {
     $(".invis").toggleClass("vis");
 }
 
 // trigger profile modal window
+/**
+ * Function shows the user profile modal window and sets focus to the first input field.
+ * */
 function showProfil() {
 
+    // set focus on user name input field
     $("#modal-user").on("shown.bs.modal", function () {
         $("#inputUsername").focus();
     });
 
+    // show modal window
     $("#modal-user").modal({
         keyboard: true,
         backdrop: true,
@@ -92,8 +104,12 @@ function showProfil() {
 }
 
 // trigger contact modal window
+/**
+ * Function shows the contact modal window.
+ * */
 function showContact() {
 
+    // show modal window
     $("#modal-contact").modal({
         keyboard: true,
         backdrop: true,
@@ -102,6 +118,10 @@ function showContact() {
 }
 
 // get all content of the input fields and send a mail
+/**
+ * Function reads out the input fields in the contact modal window after clicking the send button.
+ * @parma {Object} f form object from contact modal window
+ * */
 function getContentContact(f) {
     var name = f.userName.value;
     var mail = f.userMail.value;
@@ -118,12 +138,12 @@ function getContentContact(f) {
 }
 
 // trigger login modal window
+/**
+ * Function shows the login modal window.
+ * */
 function showLogin() {
 
-    $("#modal-login").on("shown.bs.modal", function () {
-        //$("#").focus();
-    });
-
+    // show modal window
     $("#modal-login").modal({
         keyboard: true,
         backdrop: true,
@@ -132,12 +152,17 @@ function showLogin() {
 }
 
 // trigger new scenario modal window
+/**
+ * Function shows the new scenario modal window.
+ * */
 function showNewSzenario() {
 
+    // set focus to scenario name input field
     $("#modal-new-szenario").on("shown.bs.modal", function () {
         $("#sname").focus();
     });
 
+    // show modal window
     $("#modal-new-szenario").modal({
         keyboard: true,
         backdrop: true,
@@ -147,8 +172,12 @@ function showNewSzenario() {
 }
 
 // trigger delete scenarios modal window
+/**
+ * Function shows the delete scenario modal window.
+ * */
 function showDeleteSzenario() {
 
+    // show modal window
     $("#modal-delete-szenario").modal({
         keyboard: true,
         backdrop: true,
@@ -158,24 +187,24 @@ function showDeleteSzenario() {
 }
 
 // trigger load scenarios modal window
+/**
+ * Function shows the load scenario modal window.
+ * */
 function showLoadSzenario() {
 
+    // show modal window
     $("#modal-load-szenario").modal({
         keyboard: true,
         backdrop: true,
         show: true
     });
 
-    // delete scenarios and put them and new scenarios in selection bar again
+    // delete scenarios
     $("#listLoadScenarios > option").each(function() {
         $(this).remove();
     });
-    /*for (var i = 0; i < global_dataArrayScenarios.length; i++) {
-        var option = $("<option>").attr("value", global_dataArrayScenarios[i]["id"]);
-        option.html(global_dataArrayScenarios[i]["text"]);
-        $("#listLoadScenarios").append(option);
-    }*/
 
+    // put all scenarios in selection bar
     for (var i = 0; i < myAuthorSystem.length; i++) {
         var option = $("<option>").attr("value", "val" + myAuthorSystem[i].name);
         option.html(myAuthorSystem[i].name);
@@ -184,8 +213,13 @@ function showLoadSzenario() {
 }
 
 // trigger delete scenarios modal window
+/**
+ * Function shows the delete unit modal window.
+ * Sets event listeners to the selection and multi selection bar.
+ * */
 function showDeleteUnits() {
 
+    // show modal window
     $("#modal-delete-units").modal({
         keyboard: true,
         backdrop: true,
@@ -205,29 +239,24 @@ function showDeleteUnits() {
         $("#selectScenarioDeleteUnit").append(option);
     }
 
+    // clean multi selection bar and fill it again
     $("#selectMultiDeleteUnits").empty();
     $("#selectMultiDeleteUnits").select2("data", null);
+
+    // triggered if an scenario was selected
     $("#selectScenarioDeleteUnit").on("select2-selecting", function(e) {
 
+        // clean multi selection bar
         $("#selectMultiDeleteUnits").empty();
+        list_units = [];
+        $("#btnDeleteUnits").text("Löschen (" + 0 + ")");
 
-        /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
-            if (gloabl_unitsPerScenario[j]["id"] == e.choice.text) {
-
-                for (var k=0; k<gloabl_unitsPerScenario[j]["text"].length; k++) {
-                    console.log(gloabl_unitsPerScenario[j]["text"][k]);
-                    var option = $("<option>").attr('value', e.val);
-                    option.html(gloabl_unitsPerScenario[j]["text"][k]);
-                    //list_units.push({id:k, text:gloabl_unitsPerScenario[j]["text"][k]});
-                    $("#selectMultiDeleteUnits").append(option);
-                }
-            }
-        }*/
-
-        // get units into multi selection bar
+        // get units into multi selection choice
         for (var j=0; j<myAuthorSystem.length; j++) {
+            // find right scenario
             if (myAuthorSystem[j]["name"] == e.choice.text) {
 
+                // get all units
                 var units = $("#stm").children("div.w").children("div.title");
 
                 for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
@@ -249,13 +278,24 @@ function showDeleteUnits() {
 
         // select unit which should be deleted
         $("#selectMultiDeleteUnits").select2().on("select2-selecting", function(e) {
-            // add unit to list
-            list_units.push({id: e.val, text:e.choice.text});
+
+            // test if unit is already in the list
+            var isContained = false;
+            for (var i=0; i<list_units.length; i++) {
+                if (e.val == list_units[i].id) {
+                    isContained = true;
+                }
+            }
+            // if not in list add unit
+            if (!isContained) {
+                list_units.push({id: e.val, text:e.choice.text});
+            }
 
             // set label
             $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
         });
 
+        // triggered if a unit was deleted
         $("#selectMultiDeleteUnits").select2().on("select2-removed", function(e) {
             // remove unit from list
             for (var j=0; j<list_units.length; j++) {
@@ -270,30 +310,48 @@ function showDeleteUnits() {
 }
 
 // opens new modal window to confirm unit deletion
+/**
+ * Function shows the confirmation of unit deletion modal window.
+ * */
 function showDeleteUnitsConfirm() {
 
+    // show modal window
     $("#modal-delete-units-confirm").modal({
         show: true
     });
 }
 
 // triggered if conformation button of delete units was clicked
+/**
+ * Function deletes a learning unit from the working place.
+ * Triggered in the modal window "confirm unit deletion".
+ * */
 function deleteUnits(){
 
+    // get units which should be deleted
     var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
+
+    // get right scenario name
     var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
 
-    // needed to find scenario and units in menu bar
-    var liCurrentScenario = $("span.title").filter(":contains('" + currentScenario + "')");
-    liCurrentScenario = liCurrentScenario.parent("a").parent("li");
+    // needed to find scenario in menu bar
+    var liCurrentScenario;
+    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+        if ( $(this)[0].innerHTML == currentScenario ) {
+            liCurrentScenario = $(this).parent("a").parent("li");
+        }
+    });
 
     // update gui
     for (var j=0; j<myAuthorSystem.length; j++) {
+        // find right scenario
         if (myAuthorSystem[j]["name"] == currentScenario) {
             for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
 
+                // delete all units in deletable list
                 for (var i=0; i<list_deleteableUnits.length; i++) {
 
+                    // Note: unit deletion on working place see statemaschine.js
                     // delete unit in statemaschine
                     //var unit = list_deleteableUnits[i].id;
                     //$("#" + unit).remove();
@@ -324,11 +382,20 @@ function deleteUnits(){
         liCurrentScenario.addClass("last");
     }*/
 
+    // all tab content invisible
+    $(".tabContents").hide();
+    $(".tab-Container").hide();
+    $("#tabUnitLabel").hide();
+
 }
 
 // get back to deletion overview after canceling deletion
+/**
+ * Function shows delete units modal window after canceling deletion in confirmation.
+ * */
 function deleteUnitsNot() {
 
+    // show modal window
     $("#modal-delete-units").modal({
         keyboard: true,
         backdrop: true,
@@ -337,8 +404,12 @@ function deleteUnitsNot() {
 }
 
 // trigger help modal window
+/**
+ * Function shows help modal window
+ * */
 function showHelp() {
 
+    // show modal window
     $("#modal-help").modal({
         keyboard: true,
         backdrop: true,
@@ -347,7 +418,7 @@ function showHelp() {
 }
 
 // set scenarios in selection bar
-function setScenarios() {
+/*function setScenarios() {
     var countScenarios = $("#menuScenarios").children("li").length;
     var scenarios = $("#menuScenarios").children("li");
 
@@ -373,28 +444,41 @@ function setScenarios() {
 
     }
     $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
-}
+}*/
 
 // add scenario as a select option
+/**
+ * Function
+ * @param {String} name Name of the new Scenario
+ * */
 function updateScenario(name) {
     var j = global_ScenarioCounter;
+
+    // add scenario as an option in selection bar
     var optionClass = $('<option>').attr('value', j.toString());
     optionClass.html(name);
     optionClass.attr("selected", "");
     $("#selectSzenarioDeletion").append(optionClass);
+
+    // get scenario data in multi selection bar
     global_dataArrayScenarios.push({id: j, text: name});
     $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
     global_ScenarioCounter = global_ScenarioCounter + 1;
 
     // update list with units per scenario
-    //gloabl_unitsPerScenario.push({id: name, text:[]});
     myAuthorSystem.push({name: name, units:[], connections:[]});
 }
 
 // label delete button for modal window "Delete Scenarios"
+/**
+ * Function get the number of scenarios which should be deleted and set the label of deletion button
+ * with this number.
+ * */
 function setLabelBtnScenarioDeletion() {
-    //var countSelectedDelete = $("#selectSzenarioDeletion2 option:selected").length;
+    // get the length
     var countSelectedDelete = global_arrayShowSzenarioDeletion.length;
+
+    // set label of of the deletion button
     $("#btnDeleteSzenario").text("Löschen (" + countSelectedDelete.toString() + ")");
 }
 
@@ -402,41 +486,52 @@ $(function() {
 
     // remove elements from scenario list, add elements in delete scenario list
     $("#selectSzenarioDeletion").select2().on("select2-removed", function(e) {
-        var optionSzenarioDeletion = $('<option>').attr('value', e.val);
-        optionSzenarioDeletion.html(e.choice.text);
-        optionSzenarioDeletion.attr("selected", "");
-        $("#selectSzenarioDeletion2").append(optionSzenarioDeletion);
+        // build option DOM
+        var optionScenarioDeletion = $('<option>').attr('value', e.val);
+        optionScenarioDeletion.html(e.choice.text);
+        optionScenarioDeletion.attr("selected", "");
+
+        // add option to selection bar
+        $("#selectSzenarioDeletion2").append(optionScenarioDeletion);
         global_arrayShowSzenarioDeletion.push({id: e.val, text: e.choice.text});
         $("#selectSzenarioDeletion2").select2("data", global_arrayShowSzenarioDeletion);
 
+        // delete element in scenario list
         for (var i = global_dataArrayScenarios.length - 1; i >= 0; i--) {
             if (global_dataArrayScenarios[i]["id"] === e.val) {
                 global_dataArrayScenarios.splice(i,1);
             }
         }
+        // set label
         setLabelBtnScenarioDeletion();
     });
 
     // remove elements from delete scenario list, add elements in scenario list
     $("#selectSzenarioDeletion2").select2().on("select2-removed", function(e) {
+        // build option DOM
         var optionSzenarioDeletion = $('<option>').attr('value', e.val);
         optionSzenarioDeletion.html(e.choice.text);
         optionSzenarioDeletion.attr("selected", "");
+
+        // add option to selection bar
         $("#selectSzenarioDeletion").append(optionSzenarioDeletion);
         global_dataArrayScenarios.push({id: e.val, text: e.choice.text});
         $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
 
+        // delete element in deletion list
         for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
             if (global_arrayShowSzenarioDeletion[i]["id"] === e.val) {
                 global_arrayShowSzenarioDeletion.splice(i,1);
             }
         }
+        // set label
         setLabelBtnScenarioDeletion();
     });
 
     // add element in scenario list and immediately delete it in delete list
     $("#selectSzenarioDeletion").select2().on("select2-selecting", function(e) {
 
+        // remove element
         for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
             if (global_arrayShowSzenarioDeletion[i]["id"] == e.val) {
                 global_arrayShowSzenarioDeletion.splice(i,1);
@@ -445,28 +540,41 @@ $(function() {
             }
         }
 
+        // push elements in selection bar
         $("#selectSzenarioDeletion2").select2("data", global_arrayShowSzenarioDeletion);
+
+        // set label
         setLabelBtnScenarioDeletion();
     });
 
 });
 
 // opens new modal window to confirm scenario deletion
+/**
+ * Function shows the confirmation of scenario deletion modal window
+ * */
 function deleteScenariosConfirm() {
 
+    // show modal window
     $("#modal-delete-szenario-confirm").modal({
         show: true
     });
 }
 
-// delete scenarios from menu bar
+// delete scenarios from menu bar and clears state machine
+/**
+ * Function deletes selected scenarios from menu bar. All corresponding learning units on the work place
+ * were deleted was well.
+ * */
 function deleteScenarios() {
 
+    // delete all wished scenarios
     for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
+        // get scenario name
         var nameScenario = global_arrayShowSzenarioDeletion[i]["text"];
         nameScenario = nameScenario.replace(/(\r\n|\n|\r)/gm,"");       // remove return character
 
-        // find right scenario in menu bar
+        // find right scenario in menu bar and remove it
         $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
             if ( $(this)[0].innerHTML == nameScenario ) {
                 var parent = $(this).parent("a").parent("li");
@@ -477,12 +585,6 @@ function deleteScenarios() {
         // delete units in container
         $("#stm").children().remove();
 
-        // update unit per scenario list
-        /*for (var j=0; j<gloabl_unitsPerScenario.length; j++) {
-            if (gloabl_unitsPerScenario[j]["id"] == nameScenario) {
-                gloabl_unitsPerScenario.splice(j, 1);
-            }
-        }*/
         // update unit per scenario list
         for (var j=0; j<myAuthorSystem.length; j++) {
             if (myAuthorSystem[j]["name"] == nameScenario) {
@@ -503,8 +605,12 @@ function deleteScenarios() {
 }
 
 // get back to deletion overview after canceling deletion
+/**
+ * Function shows delete scenarios modal window again after canceling the confirmation.
+ * */
 function deleteScenariosNot() {
 
+    // show modal window
     $("#modal-delete-szenario").modal({
         keyboard: true,
         backdrop: true,
@@ -512,49 +618,13 @@ function deleteScenariosNot() {
     });
 }
 
-// load scenario with learning units on the main window
-/*function loadScenario_old() {
-
-    // remove all units from the container
-    $("#stm").empty();
-
-    // change name to new scenario
-    var selectedScenario = $("#listLoadScenarios").select2("data")["text"];
-    $("#lname").html(selectedScenario);
-
-    // find scenario in JSON structure
-    for (var i=0; i<myAuthorSystem.length; i++) {
-
-        if (myAuthorSystem[i].name == selectedScenario) {
-
-            // load units from new scenario
-            for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
-                var unit = loadUnit(myAuthorSystem[i]["units"][j], j);
-
-                // place unit in state machine
-                $(unit).css("top", myAuthorSystem[i]["units"][j].posY + "px");
-                $(unit).css("left", myAuthorSystem[i]["units"][j].posX + "px");
-
-                activateFunctionalities(unit);
-
-                //console.log(myAuthorSystem[i]["units"][j]);
-            }
-        }
-    }
-
-    // hide tabs
-    $(".tabContents").hide();
-}*/
-
 // triggered if save scenario was clicked
 /**
- * dfsd
- *
- * @param {String} name description
- * @return {Boolean} bar
+ * Function saves current open scenario as a JSON file.
  */
 function showSaveScenario() {
 
+    // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
     var json;
     var jsonFile = null;
@@ -589,10 +659,19 @@ function showSaveScenario() {
      window.focus();*/
 }
 
+/**
+ * Function loads
+ * Hint: The website will be new loaded.
+ * @param {Object} unit Contains all information about the unit
+ * @param {String} j Contains the running ID number
+ * @param {Object} inst Contains the jsPlumb
+ * @return {Object} Contains the unit DOM element
+ * */
 function loadUnit(unit, j, inst) {
 
     window.jsp = inst;
 
+    // build unit DOM
     var newState = $('<div>').attr('id', 'state' + j).addClass('w');
     var title = $('<div>').addClass('title').css("padding", "0px 7px");
     title.html(unit.name);
@@ -601,9 +680,12 @@ function loadUnit(unit, j, inst) {
     // add div for context information icons
     var divContextIcons = $("<div>").addClass("unit-icons");
 
+    // add elements to unit DOM
     newState.append(divContextIcons);
     newState.append(title);
     newState.append(ep);
+
+    // add unit to state machine
     $('#stm').append(newState);
 
     // get all context information
@@ -663,6 +745,7 @@ function loadUnit(unit, j, inst) {
                 break;
         }
 
+        // add meta icon to unit DOM
         var bMetaIcon = $("<b>").addClass(metaIcon);
         divMetaIcon.append(bMetaIcon);
         newState.append(divMetaIcon);
@@ -684,7 +767,7 @@ function loadUnit(unit, j, inst) {
     inst.makeTarget(newState, {
         anchor: "Continuous",
         dropOptions: { hoverClass: "dragHover" },
-        allowLoopback: true
+        allowLoopback: false
     });
 
     // set unit source point
@@ -700,26 +783,40 @@ function loadUnit(unit, j, inst) {
 }
 
 // triggered if delete button in tab "Eigenschaften" was clicked
+/**
+ * Function shows delete unit confirmation modal window.
+ * Triggered in tab properties after clicking the unit delete button
+ * */
 function showDeleteUnitConfirm() {
 
+    // show modal window
     $("#modal-delete-unit-confirm").modal({
         keyboard: true,
         backdrop: true,
         show: true
     });
 
+    // get unit name and show the unit specific text
     var unitName = $("#inputUnitName")[0].value;
     $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich löschen?');
 }
 
 // delete unit after confirming deletion in tab "Eigenschaften"
+/**
+ * Function deletes selected unit from the working place.
+ * */
 function deleteUnit() {
 
+    // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
 
-    // needed to find scenario and units in menu bar
-    var liCurrentScenario = $("span.title").filter(":contains('" + currentScenario + "')");
-    liCurrentScenario = liCurrentScenario.parent("a").parent("li");
+    // needed to find scenario in menu bar
+    var liCurrentScenario;
+    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+        if ( $(this)[0].innerHTML == currentScenario ) {
+            liCurrentScenario = $(this).parent("a").parent("li");
+        }
+    });
 
     // update gui
     for (var j=0; j<myAuthorSystem.length; j++) {
@@ -728,6 +825,8 @@ function deleteUnit() {
 
                 // delete unit in state machine
                 var unit = $("#inputUnitName")[0].value;
+
+                // Note: unit deletion on working place see statemaschine.js
                 /*$("#stm").children("div.w").children("div.title").each(function() {
                     if (this.innerHTML == unit) {
                         $(this).parent().remove();
@@ -757,13 +856,16 @@ function deleteUnit() {
 // reset modal windows after closing
 $(function() {
 
+    // triggered if modal window was closed
     $("body").on("hidden.bs.modal", ".modal", function() {
+        // only reset modal windows if they have forms
         if ( $(this)[0].id == "modal-login"
             || $(this)[0].id == "modal-new-szenario"
             || $(this)[0].id == "modal-delete-szenario"
             || $(this)[0].id == "modal-user"
             || $(this)[0].id == "modal-contact"
         ) {
+            // reset form
             $(this).find("form")[0].reset();
         }
     });

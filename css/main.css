@@ -106,7 +106,6 @@ textarea {
 
 .body {
     position: absolute;
-    /*top: 50px;    old */
     top: 53px;
     right: 0;
     bottom: 0;
@@ -126,7 +125,7 @@ textarea {
 }
 
 .page-hdr {
-    height: 30px;
+    /*height: 30px;*/
 }
 
 .content {
@@ -134,11 +133,6 @@ textarea {
     display: flex;
     overflow: auto;
 }
-
-/*.box {
-    min-height: -webkit-min-content;
-    display: flex;
-}*/
 
 .column {
     padding: 200px;
@@ -156,7 +150,6 @@ textarea {
 
 .properties {
     width: 275px;
-    /*width: 216px;*/
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -166,16 +159,12 @@ body {
     font-family: sans-serif;
     font-size: 10px;
     line-height: 20px;
-    /*text-transform: uppercase;*/
-    /*font-weight: bold;*/
 }
 
 .header {
     font-size: 20px;
     font-weight: bold;
     line-height: 50px;
-    /*text-transform: uppercase;*/
-    /*text-align: center;*/
     color: #fff;
     background: #444;
 
@@ -196,7 +185,6 @@ ul.navbar {
 ul.navbar li {
     list-style: none;
     margin: 0;
-    /*padding: 0.5em;*/
     flex-direction: row;
     display: flex;
     float: left;
@@ -249,24 +237,22 @@ ul#navbar-right {
 .page-hdr {
     padding: 0px 0px;
     background: #ddd;
-    /*color: #fff;*/
     color: #000000;
-    font-size: .8em;
+    /*font-size: .8em;*/
     text-align: center;
     font-size: 10px;
     font-weight: bold;
+    height: 685px;
 }
 
 /* little navigation bar*/
 #navbar-left-little {
-    /*color: #000000;*/
     padding: 0px 0px;
     display: block;
-    height: 25px;
+    height: 30px;
     width: auto;
 }
 #navbar-left-little > li{
-    /*color: #000000;*/
     padding: 0px 9px;
     display: block;
     height: 30px;
@@ -275,21 +261,16 @@ ul#navbar-right {
     float: right;
     padding: 0px 0px;
     display: block;
-    height: 25px;
+    height: 30px;
     width: auto;
 }
 #navbar-right-little > li{
-    /*color: #000000;*/
     padding: 0px 10px;
     display: block;
     height: 30px;
 }
-/*#navmenu {
-    /*font-size: 20px;
-    background: #ddd;
-}*/
+
 #navadd {
-    /*font-size: 15px;*/
     background: #ddd;
     cursor: pointer;
     color: #666;
@@ -311,8 +292,6 @@ ul#navbar-right {
 
 .properties {
     background: #eee;
-    /*padding: 4px 20px;*/
-    /*color: #fff;*/
 }
 
 #tabs > ul {
@@ -330,8 +309,6 @@ ul#navbar-right {
 
 .btns {
     position: absolute;
-    /*padding-top: 10px;
-    padding-bottom: 10px;*/
 }
 
 #btn-menu {
@@ -340,15 +317,11 @@ ul#navbar-right {
 
 #icon-plus {
     padding: 10px;
-    /*width: auto;
-    height: auto;*/
 }
 
 #icon-menu {
     padding: 10px;
     left: auto;
-    /*width: auto;
-    height: auto;*/
 }
 
 .pm-content {
@@ -363,22 +336,7 @@ ul#navbar-right {
     border-radius: 4px;
     padding: 0px 10px;
     background-color: whitesmoke;
-}/*
-.cbox ul {
-    padding: 0px 0px;
-    display: block;
-    margin-bottom: 10px;
-    margin-top: 0px;
-    overflow: auto;
-    max-height: 200px;
 }
-.cbox li{
-    float: left;
-    padding: 10px;
-    list-style: none;
-}*/
-/* End checkbox */
-
 
 /* make objects visible */
 .invis {
@@ -401,14 +359,6 @@ ul#navbar-right {
 #lname:hover {
     cursor: pointer;
 }
-
-
-
-/* scale statistic icon in big navigation bar */
-/*#navHeadStatistic>a>img{
-    width: 15px;
-    height: 15px;
-}*/
 
 /* modal window */
 /* set label color */

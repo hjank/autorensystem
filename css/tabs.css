@@ -1,19 +1,11 @@
 .tab-Container{
-    /*background:#f0f0f0;
-    border:1px solid #fff;
-    margin:100px auto;
-    padding:20px;*/
     position:relative;
     width: inherit;
     height: 30px;
 }
 .tab-Container ul{
     overflow:hidden;
-    /*border-right:1px solid #fff;*/
-    /*height:35px;*/
     height: 30px;
-    /*height: 60px;*/
-    /*position:absolute;*/
     z-index:100;
     margin:0;
     padding:0;
@@ -27,38 +19,26 @@
     width: 33.33%;
 }
 .tab-Container li a{
-    /*background:#ddd;*/
     background:#ccc;
-    /*border:1px solid #fcfcfc;*/
     border-right:0;
     color:#666;
     cursor:pointer;
     display:block;
-    /*height: 35px;*/
-    /*line-height:35px;*/
     line-height:30px;
-    /*padding:0 30px;*/
     padding:0 8px;
     text-decoration:none;
     text-transform:uppercase;
 }
 .tab-Container li a:hover{
-    /*background:#eee;*/
     background:#ddd;
 }
 .tab-Container li a.active{
-    /*background:#fbfbfb;*/
-    /*background:#eee;*/
     background: #48c9b0;
-    /*border:1px solid #fff;*/
     border-right:0;
-    /*color:#333;*/
     color: #ffffff;
 }
 .tabDetails{
-    /*background:#fbfbfb;*/
     background:#eee;
-    /*border:1px solid #fff;*/
 }
 .tabContents{
     padding:20px;
@@ -79,12 +59,6 @@
 #inputUnitName {
     margin-bottom: 20px;
 }
-
-/*.contextInfo-add {
-    float: right;
-    color: #666;
-    line-height: 2.3;
-}*/
 
 #tabBtnDeleteUnit {
     margin-top: 50px;
@@ -107,32 +81,14 @@
     border-top: 1px solid #ccc;
 }
 
-/*.parameter-add {
-    float: right;
-    color: #666;
-}*/
-
-/*.parameter-close {
-    line-height: 2.3;
-    margin-left: 3px;
-    color: #666;
-}*/
-
 .unit-icons {
 }
 .unit-icon {
-    /*position: absolute;
-    top: 3%;
-    left: 40%;*/
     padding: 0 1px;
     display: inline-flex;
 }
 
 .unit-meta-icons {
-    /*position: absolute;
-    bottom: 3%;
-    left: 42%;*/
-    /*float: left;*/
     padding: 0 5px;
     display: inline-flex;
 }
@@ -163,17 +119,13 @@
     -moz-box-sizing: border-box;
     height: 32px;
     outline: none;
-    /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);*/
 }
 #pac-input {
     background-color: #fff;
-    /*font-family: Roboto;*/
     font-size: 15px;
     font-weight: 300;
-    /*margin-left: 12px;*/
     padding: 0 11px 0 13px;
     text-overflow: ellipsis;
-    /*width: 400px;*/
     width: 84%;
 }
 #pac-input:focus {
@@ -188,7 +140,6 @@
     padding: 5px 11px 0px 11px;
 }
 #type-selector label {
-    /*font-family: Roboto;*/
     font-size: 13px;
     font-weight: 300;
 }
@@ -203,11 +154,24 @@
     background: #48c9b0;
 }
 #tabRelationHead a {
-    /*background: #48c9b0;*/
     color: #ffffff;
 }
 #tabRelationBody {
     padding: 20px;
+}
+
+#preLabelRelations {
+    font-size: 18px;
+    font-weight: 400;
+}
+#s2id_selectRelations {
+    min-width: 235px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+#postLabelRelations {
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .formatIconText {

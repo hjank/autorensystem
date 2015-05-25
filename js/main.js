@@ -1,5 +1,5 @@
 
-
+/*
 $(function() {
     $( "#draggable" ).draggable();
 });
@@ -12,4 +12,4 @@ $(function() {
     $("#state1").draggable();
     $("#state2").draggable();
     $("#state3").draggable();
-});
+});*/
