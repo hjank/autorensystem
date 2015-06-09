@@ -419,22 +419,22 @@ function translate_operator(op) {
 
     switch (op) {
         case "CONTAINS":
-            op = "Beinhaltet";
+            op = "beinhaltet";
             break;
         case "IS":
-            op = "Ist";
+            op = "ist";
             break;
         case "IS_NOT":
-            op = "Ist nicht";
+            op = "ist nicht";
             break;
         case "NO_VALUE":
-            op = "Hat keinen Wert";
+            op = "hat keinen Wert";
             break;
         case "GREATER_THEN":
-            op = "Ist größer als";
+            op = "ist größer als";
             break;
         case "LESS_THEN":
-            op = "Ist kleiner als";
+            op = "ist kleiner als";
             break;
     }
     return op;
@@ -492,10 +492,10 @@ function translate_contextParameter(cp) {
             cp = "Smartwatch";
             break;
         case "AFOOT":
-            cp = "Zu Fuß";
+            cp = "zu Fuß";
             break;
         case "BY_BIKE":
-            cp = "Mit dem Fahrrad";
+            cp = "mit dem Fahrrad";
             break;
         case "STUDENT":
             cp = "Student/Lernender";
@@ -593,7 +593,7 @@ function translate_parameterValues(pv) {
             pv = "Bar";
             break;
         case "MILLIMETER_OF_MERCURY":
-            pv = "Milimeter in Quecksilbersäule";
+            pv = "Millimeter in Quecksilbersäule";
             break;
         case "PASCAL":
             pv = "Pascal";

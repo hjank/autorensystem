@@ -65,6 +65,7 @@ jsPlumb.ready(function () {
     });
 
     var current_labelConnection;
+    var current_connection;
     // triggered if connection or label is clicked
     // c = connection element
     // e = event
@@ -83,6 +84,9 @@ jsPlumb.ready(function () {
 
             // update current label
             current_labelConnection = c.canvas.id;
+
+            // store current connection
+            current_connection = c;
 
             // clear marking from label connections
             $(".aLabel").css("background-color", "");
@@ -133,6 +137,36 @@ jsPlumb.ready(function () {
                 }
             }
         }
+    });
+
+    // deletes selected connection
+    $("#btnDeleteConnection").on("click", function() {
+
+        // get connection object
+        var con = $("#" + current_labelConnection)[0]._jsPlumb.component;
+
+        // detach connection
+        inst.detach(con);
+
+        // get id and current scenario name
+        var connID = con.id;
+        var currentScenario = $("#lname")[0].innerHTML;
+
+        // delete connection in JSON structure
+        for (var n=0; n<myAuthorSystem.length; n++) {
+            if (myAuthorSystem[n].name == currentScenario) {
+                for (var l=0; l<myAuthorSystem[n]["connections"].length; l++) {
+                    if (myAuthorSystem[n]["connections"][l].connId == connID) {
+                        myAuthorSystem[n]["connections"].splice(l, 1);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        // hide tab after connection was deleted
+        $("#tabUnitLabel").hide();
     });
 
     // triggered if an option for a label connection was selected
@@ -223,7 +257,7 @@ jsPlumb.ready(function () {
         // build unit DOM
         var newState = $('<div>').attr('id', 'state' + max).addClass('w');
         var title = $('<div>').addClass('title').css("padding", "0px 7px");
-        var stateName = $('<input>').attr('type', 'text');
+        var stateName = $('<input>').attr('type', 'text').css("color", "#34495e");
         title.append(stateName);
 
         // add div for context information icons

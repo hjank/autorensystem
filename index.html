@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Authorensystem</title>
+        <title>Autorensystem</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -122,7 +122,7 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
+                            <a id="navbarLearningUnit" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
                                 <li onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
@@ -220,19 +220,16 @@
                     <div id="tab2" class="tabContents">
                         <form id="formContextInformation">
                             <div id="mainContextInfo">
-                                <div>
+                                <div id="mainContextInfoSAT">
                                     <label class="label-tabs label" for="selectNumberContextInfos">Erfüllt</label><br>
                                     <select id="selectNumberContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 90px;">
                                         <option value="0">Alle</option>
                                         <option value="1">Eine</option>
                                     </select>
-                                    <!--<a href="#" class="contextInfo-add" title="Kontextinformation hinzufügen"><span class="fui-plus-circle"></span></a>-->
                                 </div>
-                                <div>
+                                <div id="mainContextInfoSelection">
                                     <label class="label-tabs label" for="selectMultiContextInfos">dieser Kontextinformationen</label>
                                     <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
-                                        <!--<option value="0" selected>Test</option>
-                                        <option value="1" selected>Hallo</option>-->
                                     </select>
                                     <hr class="hr-tabs">
                                 </div>
@@ -241,10 +238,12 @@
                                 </div>
                             </div>
                             <div id="detailContextInfo" style="display: none">
-                                <!--<hr class="hr-tabs">-->
                                 <div>
                                     <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Zurück zur Übersicht">
                                         <b class="fui-arrow-left"> </b><b class="fui-home"></b>
+                                    </div>
+                                    <div id="btnConfirmContextInfoSmall" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Eingaben bestätigen">
+                                        <b class="fui-check-circle"></b>
                                     </div>
                                 </div>
                                 <div id="contextSelection">
@@ -295,7 +294,8 @@
                                 </div>
                                 <div>
                                     <div id="btnConfirmContextInfo" class="btn btn-info">
-                                        <b class="fui-check-circle"> </b>Bestätigen
+                                        <b class="fui-check-circle"> </b>
+                                        Bestätigen
                                     </div>
                                 </div>
                             </div>
@@ -344,6 +344,11 @@
                                 <option value="hlp">Hilfe (HLP)</option>
                             </select>
                             <p id="postLabelRelations" class="label-tabs label">Für</p>
+                            <div>
+                                <div id="tabBtnDeleteConnection" class="btn btn-danger" onclick="showDeleteConnectionConfirm()">
+                                    <b class="fui-trash"> </b>Verbindung löschen
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -483,8 +488,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" onclick="loadScenario()" data-dismiss="modal" style="margin-right: 10px">Laden</button>
-                        <button class="btn btn-primary" onclick="location.reload()" style="margin-right: 10px">Laden2</button>
+                        <!--<button class="btn btn-primary" onclick="loadScenario()" data-dismiss="modal" style="margin-right: 10px">Laden</button>-->
+                        <button id="btnLoadScenario" class="btn btn-primary" style="margin-right: 10px">Laden</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
@@ -511,7 +516,7 @@
                             </div>
                             <div>
                                 <label class="label-modal label" for="selectMultiDeleteUnits">Lösche Lerneinheiten</label><br>
-                                <select id="selectMultiDeleteUnits" class="form-control multiselect multiselect-info" multiple="multiple">
+                                <select id="selectMultiDeleteUnits" class="form-control multiselect multiselect-danger" multiple="multiple">
                                 </select>
                             </div>
                         </div>
@@ -697,6 +702,25 @@
                     </div>
                     <div class="modal-footer">
                         <button id="btnDeleteUnit" class="btn btn-danger" onclick="deleteUnit()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- confirm delete unit in tab -->
+        <div id="modal-delete-connection-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p>Wollen Sie die Verbindung wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteConnection" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>

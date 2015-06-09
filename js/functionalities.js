@@ -112,7 +112,7 @@ $(function() {
     });
 
     // change scenario name
-    $("#lname").on("click", function() {
+    $("#lname").on("click", function(e) {
         // hide label
         $(this).hide();
 
@@ -133,32 +133,54 @@ $(function() {
         // triggered if enter was clicked in input field
         $(inputName).keyup(function(e) {
             if (e.keyCode === 13) {
-                // get new name in label
-                $("#lname").html($(inputName).val());
 
-                // show label again
-                $("#lname").show();
+                // save name in JSON structure and in GUI
+                saveScenarioName(inputName, scenarioName);
+            }
+        });
+        e.stopPropagation();
 
-                // remove input field
-                $(inputName).remove();
+        // triggered if body is clicked
+        $("body").on("click", function() {
 
-                // change name in menu bar
-                $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
-                    if ( $(this)[0].innerHTML == scenarioName ) {
-                        $(this).html($("#lname")[0].innerHTML);
-                    }
-                });
+            // only save scenario name if input field is visible
+            if ($(inputName).css("display") != "none" && $(inputName).css("display") != "inherit") {
 
-                // update name JSON structure
-                for (var m=0; m<myAuthorSystem.length; m++) {
-                    if (myAuthorSystem[m].name == scenarioName) {
-                        myAuthorSystem[m].name = $("#lname")[0].innerHTML;
-                    }
-                }
+                // save name in JSON structure and in GUI
+                saveScenarioName(inputName, scenarioName);
             }
         });
     });
+
 });
+
+// saves the current scenario name and hides input field
+function saveScenarioName(inputName, scenarioName) {
+
+    // get new name in label
+    $("#lname").html($(inputName).val());
+
+    // show label again
+    $("#lname").show();
+
+    // remove input field
+    $(inputName).remove();
+
+    // change name in menu bar
+    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+        if ( $(this)[0].innerHTML == scenarioName ) {
+            $(this).html($("#lname")[0].innerHTML);
+        }
+    });
+
+    // update name JSON structure
+    for (var m=0; m<myAuthorSystem.length; m++) {
+        if (myAuthorSystem[m].name == scenarioName) {
+            myAuthorSystem[m].name = $("#lname")[0].innerHTML;
+        }
+    }
+
+}
 
 // tabs
 $(function() {
@@ -214,13 +236,26 @@ $(function() {
     });
 });
 
+// big navigation bar
+$(function() {
+    $("#navbarLearningUnit").css("pointer-events", "none");
+    $("#navbarLearningUnit").css("color", "#aaa");
+});
+
 // reloading
 var loadedData;
 $(function() {
-    jQuery.get('Testszenario.json', function(data) {
-        console.log(data);
-        //loadedData = data[0];
-        loadedData = data;
+
+    // get URL parameter
+    var paramURL = location.search.substr(1);
+    paramURL = paramURL.replace(/%20/g, " ");
+
+    // get saved scenario data from loading process
+    var savedData = JSON.parse(localStorage.getItem("saveData"));
+
+    // get current scenario data
+    if (savedData != null && paramURL == savedData.name) {
+        loadedData = savedData;
 
         // load scenario from JSON file
         loadScenario(loadedData);
@@ -231,7 +266,27 @@ $(function() {
 
         // update label
         setLabelBtnScenarioDeletion();
-    });
+    }
+
+    // only needed for testing
+    if (paramURL == "Testszenario") {
+
+        jQuery.get('Testszenario.json', function (data) {
+            console.log(data);
+            //loadedData = data[0];
+            loadedData = data;
+
+            // load scenario from JSON file
+            loadScenario(loadedData);
+
+            // update scenario list
+            updateScenario(loadedData.name);
+            myAuthorSystem.splice(-1);
+
+            // update label
+            setLabelBtnScenarioDeletion();
+        });
+    }
 });
 
 /**
@@ -335,6 +390,10 @@ function loadScenario(data) {
     // activate quick add learning unit button (little navbar right)
     $("#navadd").css("pointer-events", "");
     $("#navadd").css("color", "rgb(102,102,102)");
+
+    // activate learning unit dropdown menu (big navigation bar)
+    $("#navbarLearningUnit").css("pointer-events", "");
+    $("#navbarLearningUnit").css("color", "");
 
     // get name in current scenario label
     $("#lname").html(data.name);

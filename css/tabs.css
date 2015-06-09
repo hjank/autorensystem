@@ -77,6 +77,11 @@
     width: 100%;
 }
 
+#btnConfirmContextInfoSmall {
+    width: 50px;
+    float: right;
+}
+
 .hr-tabs {
     border-top: 1px solid #ccc;
 }
@@ -172,6 +177,11 @@
 #postLabelRelations {
     font-size: 18px;
     font-weight: 400;
+}
+
+#tabBtnDeleteConnection {
+    width: 100%;
+    margin-top: 40px;
 }
 
 .formatIconText {

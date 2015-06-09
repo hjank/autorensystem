@@ -169,6 +169,15 @@ function activateFunctionalities(newState) {
         }
         // get data in multi selection bar
         $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+        
+        // check if multi selection bar is empty
+        if ( jQuery.isEmptyObject($("#selectMultiContextInfos").select2("data")) ) {
+            $("#mainContextInfoSAT").hide();
+            $("#mainContextInfoSelection").hide();
+        } else {
+            $("#mainContextInfoSAT").show();
+            $("#mainContextInfoSelection").show();
+        }
 
         // needed too re-color the selections
         changeColorMultiContextInfos();
@@ -197,7 +206,7 @@ function activateFunctionalities(newState) {
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
 
-        console.log(myAuthorSystem);
+        //console.log(myAuthorSystem);
         console.log(JSON.stringify(myAuthorSystem));
     });
 
@@ -265,7 +274,8 @@ function activateFunctionalities(newState) {
 
             // change unit name if his corresponding input field is changing
             $(unit).children("div.title")[0].innerText = val;
-            name = $(unit).children("div.title")[0].innerText;
+            //name = $(unit).children("div.title")[0].innerText;
+            name = val;
             global_currentInputUnitName = val;
 
             // find right scenario in menu bar
@@ -373,7 +383,7 @@ function activateFunctionalities(newState) {
     // Jobs: - evaluate the selections and inputs
     //       - put context information in multi selection bar
     //       - add icons in current unit
-    $("#btnConfirmContextInfo").on("click", function() {
+    $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
 
         // only for the selected unit
         if (name == global_currentInputUnitName) {
@@ -483,6 +493,10 @@ function activateFunctionalities(newState) {
                     $("#mainContextInfo").slideDown();
                     $("#detailContextInfo").slideUp();
 
+                    // show SAT and multi selection bar
+                    $("#mainContextInfoSAT").show();
+                    $("#mainContextInfoSelection").show();
+
                     //console.log(myAuthorSystem);
                     //console.log(JSON.stringify(myAuthorSystem));
                 }
@@ -532,6 +546,10 @@ function activateFunctionalities(newState) {
                     break;
                 case "Audio":
                     metaIcon = "fui-volume";
+                    divMetaIcon.attr("title", e.choice.text);
+                    break;
+                case "3D Umgebung":
+                    metaIcon = "fui-windows";
                     divMetaIcon.attr("title", e.choice.text);
                     break;
             }
@@ -666,6 +684,8 @@ function formatMultiMetaData(item) {
             return '<b class="fui-radio-unchecked"></b>';
         case "Audio":
             return '<b class="fui-volume"></b>';
+        case "3D Umgebung":
+            return '<b class="fui-windows"></b>';
     }
 }
 
@@ -690,6 +710,8 @@ function formatMetaData(item) {
             return '<b class="fui-radio-unchecked"> </b> ' + item.text;
         case "Audio":
             return '<b class="fui-volume"> </b>' + item.text;
+        case "3D Umgebung":
+            return '<b class="fui-windows"> </b>' + item.text;
     }
 }
 
@@ -734,7 +756,7 @@ function parsingFinished() {
 
     /* tab "Metadaten" */
     // set all needed meta data
-    var array_SelectionMetaData = ["Bild", "Film", "Text", "Navigation", "Test", "Audio"];
+    var array_SelectionMetaData = ["Bild", "Film", "Text", "Navigation", "Test", "Audio", "3D Umgebung"];
 
     // get meta data options in selection bar
     for (var i=0; i<array_SelectionMetaData.length; i++) {
@@ -882,8 +904,8 @@ function fillInputField(ci) {
             // get the two possible values true and false in selection bar
             var option0 = $("<option>").attr("value", 0);
             var option1 = $("<option>").attr("value", 1);
-            option0.html("Falsch");
-            option1.html("Wahr");
+            option0.html("falsch");
+            option1.html("wahr");
             $("#selectPossibleValues").append(option1);
             $("#selectPossibleValues").append(option0);
 

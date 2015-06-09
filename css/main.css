@@ -124,10 +124,6 @@ textarea {
     flex-direction: column;
 }
 
-.page-hdr {
-    /*height: 30px;*/
-}
-
 .content {
     flex: 1;
     display: flex;
@@ -242,7 +238,9 @@ ul#navbar-right {
     text-align: center;
     font-size: 10px;
     font-weight: bold;
-    height: 685px;
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
 }
 
 /* little navigation bar*/

@@ -30,6 +30,32 @@ $(function() {
             return false;
         }
     });
+
+    // triggered if load button was clicked in modal window load scenario
+    $("#btnLoadScenario").on("click", function() {
+
+        // get name of the selected scenario
+        var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
+
+        // find right scenario
+        for (var i=0; i<myAuthorSystem.length; i++) {
+            if (myAuthorSystem[i].name == selectedScenario) {
+                // save scenario object in JSON structure
+                localStorage.setItem("saveData", JSON.stringify(myAuthorSystem[i]));
+
+                // add name in URL
+                $(location).attr("href", "?" + selectedScenario);
+            }
+        }
+
+        // only for testing
+        if (selectedScenario == "Testszenario") {
+
+            // add name in URL
+            $(location).attr("href", "?" + selectedScenario);
+        }
+
+    });
 });
 
 // triggered after clicking save button in scenario creation
@@ -74,6 +100,10 @@ function saveCloseSzenario() {
     // activate quick add learning unit button (little navbar right)
     $("#navadd").css("pointer-events", "");
     $("#navadd").css("color", "rgb(102,102,102)");
+
+    // activate learning unit dropdown menu (big navigation bar)
+    $("#navbarLearningUnit").css("pointer-events", "");
+    $("#navbarLearningUnit").css("color", "");
 }
 
 // triggered after clicking "Passwort ändern"
@@ -204,12 +234,28 @@ function showLoadSzenario() {
         $(this).remove();
     });
 
+    var checkName = false;
+
     // put all scenarios in selection bar
     for (var i = 0; i < myAuthorSystem.length; i++) {
         var option = $("<option>").attr("value", "val" + myAuthorSystem[i].name);
         option.html(myAuthorSystem[i].name);
         $("#listLoadScenarios").append(option);
+
+        // only for testing --> add check variable
+        if (myAuthorSystem[i].name == "Testszenario") {
+            checkName = true;
+        }
+
     }
+
+    // only for testing --> add a fix scenario
+    if (!checkName) {
+        option = $("<option>").attr("value", "val" + "Testszenario");
+        option.html("Testszenario");
+        $("#listLoadScenarios").append(option);
+    }
+
 }
 
 // trigger delete scenarios modal window
@@ -851,6 +897,16 @@ function deleteUnit() {
     // all tab content invisible
     $(".tabContents").hide();
     $(".tab-Container").hide();
+}
+
+function showDeleteConnectionConfirm() {
+
+    // show modal window
+    $("#modal-delete-connection-confirm").modal({
+        keyboard: true,
+        backdrop: true,
+        show: true
+    });
 }
 
 // reset modal windows after closing
