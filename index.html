@@ -201,7 +201,7 @@
                 <!-- content of the tabs -->
                 <div class="tabDetails">
                     <div id="tab1" class="tabContents">
-                        <form id="formProperties">
+                        <div id="formProperties">
                             <div>
                                 <label for="inputUnitName" class="label-tabs label">Name</label>
                                 <input id="inputUnitName" class="form-control" name="unitName" value="" type="text">
@@ -215,7 +215,7 @@
                                     <b class="fui-trash"> </b>Lerneinheit löschen
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div id="tab2" class="tabContents">
                         <form id="formContextInformation">
@@ -606,7 +606,7 @@
                     <div class="modal-body">
                         <form>
                             <div>
-                                <label style="margin-bottom: 0px"><b>Name</b></label>
+                                <label class="label-modal label">Name</label>
                                 <div class="input-group">
                                     <input class="form-control" name="userName" placeholder="Gib deinen Namen ein" type="text">
                                     <span class="input-group-btn">
@@ -617,7 +617,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label style="margin-bottom: 0px"><b>E-Mail Adresse *</b></label>
+                                <label class="label-modal label">E-Mail Adresse *</label>
                                 <div class="form-group has-feedback">
                                     <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="email">
                                     <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
@@ -626,7 +626,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label><b>Anmerkung *</b></label>
+                                <label class="label-modal label">Anmerkung *</label>
                                 <div class="form-group has-feedback">
                                     <textarea class="form-control" name="userText" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
                                     <span class="form-control-feedback fui-question-circle"></span>
@@ -636,11 +636,9 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary" type="reset" onclick="getContentContact(this.form)" data-dismiss="modal" style="margin-right: 10px">Senden</button>
-                            <!--<button class="btn btn-primary" onclick="$.pgwModal('close')">Abbrechen</button>-->
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <!--<button class="btn btn-primary" style="margin-right: 10px">Senden</button>-->
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>

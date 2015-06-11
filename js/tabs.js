@@ -110,8 +110,8 @@ function activateFunctionalities(newState) {
         }
 
         // put name into the input field
-        var formObject = document.forms["formProperties"];
-        formObject.elements["unitName"].value = name;
+        //var formObject = document.forms["formProperties"];
+        $("#inputUnitName")[0].value = name;
         global_currentInputUnitName = name;
 
         // get current unit dictionary
@@ -135,7 +135,7 @@ function activateFunctionalities(newState) {
         }
 
         // set description field
-        formObject.elements["unitDescription"].value = current_unit["description"];
+        $("#inputUnitDescription")[0].value = current_unit["description"];
 
 
         /* tab "Kontextinformation" */
@@ -1252,6 +1252,10 @@ function checkInformation(missing_content, current_unit) {
         // if input field context value is empty, concatenate it in missing_content string
         if ( $("#inputContextValue")[0].value == "" ) {
             missing_content += " - Wert\n";
+            $("#inputContextValue").parent().addClass("has-error");
+
+        } else if ($("#inputContextValue").parent().hasClass("has-error")) {
+            $("#inputContextValue").parent().removeClass("has-error");
         }
 
         // update JSON structure
@@ -1297,6 +1301,10 @@ function checkInformation(missing_content, current_unit) {
         // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputContextParameter1")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter1")[0].labels[0].innerHTML + "\n";
+            $("#inputContextParameter1").parent().addClass("has-error");
+
+        } else if ($("#inputContextParameter1").parent().hasClass("has-error")) {
+            $("#inputContextParameter1").parent().removeClass("has-error");
         }
 
         // update JSON structure
@@ -1308,6 +1316,10 @@ function checkInformation(missing_content, current_unit) {
         // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputContextParameter2")[0].value == "") {
             missing_content += " - " + $("#inputContextParameter2")[0].labels[0].innerHTML + "\n";
+            $("#inputContextParameter2").parent().addClass("has-error");
+
+        } else if ($("#inputContextParameter2").parent().hasClass("has-error")) {
+            $("#inputContextParameter2").parent().removeClass("has-error");
         }
 
         // update JSON structure
@@ -1319,6 +1331,10 @@ function checkInformation(missing_content, current_unit) {
         // if input field context parameter is empty, concatenate it in missing_content string
         if ($("#inputParameterString")[0].value == "") {
             missing_content += " - " + $("#inputParameterString")[0].labels[0].innerHTML + "\n";
+            $("#inputParameterString").parent().addClass("has-error");
+
+        } else if ($("#inputParameterString").parent().hasClass("has-error")) {
+            $("#inputParameterString").parent().removeClass("has-error");
         }
 
         // update JSON structure
@@ -1353,6 +1369,76 @@ function changeColorMultiContextInfos() {
                 // get context information title
                 title = $(this).children("img")[0].title;
             }
+
+            /* new */
+            // add edit icon
+            var edit = $("<a>").attr("href", "#").addClass("select2-search-choice-edit").attr("tabindex", -1).attr("title", "Bearbeiten");
+            //var icon = $("<b>").addClass("fui-new edit-ci").attr("style", "padding-right: 10px;");
+            //edit.append(icon);
+            $(this).parent().append(edit);
+
+            $(this).parent().hover(
+                function() { $(this).css("width", "85px"); },
+                function() { var obj = $(this);
+                    setTimeout(function() { obj.css("width", ""); }, 200);
+                }
+            );
+
+            // add event listeners
+            $(".select2-search-choice-edit").on("click", function(e) {
+                console.log("edit");
+
+                var nameContextInfo = $(this).parent()[0].title;
+                var operator, value, parameter1, parameter2, input1, input2, inputString;
+
+                for (var i=0; i<myAuthorSystem.length; i++) {
+                    if ( myAuthorSystem[i].name == $("#lname")[0].innerText ) {
+                        for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
+                            if ( myAuthorSystem[i]["units"][j].name == global_currentInputUnitName ) {
+                                for (var k=0; k<myAuthorSystem[i]["units"][j]["contextInformations"].length; k++) {
+                                    if ( myAuthorSystem[i]["units"][j]["contextInformations"][k].name == nameContextInfo ) {
+                                        operator = myAuthorSystem[i]["units"][j]["contextInformations"][k].operator;
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].value) {
+                                            value = myAuthorSystem[i]["units"][j]["contextInformations"][k].value }
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1) {
+                                            parameter1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1 }
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2) {
+                                            parameter2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2 }
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input1) {
+                                            input1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input1 }
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input2) {
+                                            input2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input2 }
+                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString) {
+                                            inputString = myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                for (var l= 0; l<$("#selectContextInfos")[0].length; l++) {
+                    if ( $("#selectContextInfos")[0][l].text == nameContextInfo ) {
+                        $("#selectContextInfos").select2("data", {id:$("#selectContextInfos")[0][l].id, text:$("#selectContextInfos")[0][l].text});
+                    }
+                }
+
+                $("#mainContextInfo").hide();
+                $("#detailContextInfo").show();
+
+                e.stopPropagation();
+            });
+            $(".select2-search-choice-close").on("click", function(e) {
+                console.log("delete");
+                e.stopPropagation();
+            });
+            $(".select2-search-choice-close").hover(
+                function() {$(this).attr("title", "Löschen")}
+            );
+
+            /* end new */
 
             // find right one
             if (array_multiSelectionContextInfos[i]["text"] == this.innerHTML ||    // text

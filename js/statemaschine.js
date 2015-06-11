@@ -116,7 +116,8 @@ jsPlumb.ready(function () {
             e.stopPropagation();
 
         // if connection was clicked, delete it
-        } else {
+        }
+        /*else {
             // detach all connections
             inst.detach(c);
 
@@ -136,7 +137,7 @@ jsPlumb.ready(function () {
                     break;
                 }
             }
-        }
+        }*/
     });
 
     // deletes selected connection

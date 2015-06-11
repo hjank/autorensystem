@@ -318,7 +318,7 @@ function loadScenario(data) {
     $("#cssmenu > ul").append(liScenario);
 
     // get the functionalities into the menu bar
-    liScenario.children("a").click(function() {
+    /*liScenario.children("a").click(function() {
         $(this).removeAttr('href');
         var element = $(this).parent('li');
 
@@ -335,7 +335,7 @@ function loadScenario(data) {
             element.siblings('li').find('li').removeClass('open');
             element.siblings('li').find('ul').slideUp();
         }
-    });
+    });*/
 
     // get units in menu
     if (liScenario.hasClass("has-sub")) {
