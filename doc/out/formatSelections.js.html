@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: formatSelections.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: formatSelections.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by juliushofler on 10.05.15.
+ */
+
+// format in selection context information
+/**
+ * Function sets format for the context information in the selection bar (icon + text).
+ * @param {Object} item Context information which was selected in selection bar
+ * @return {String} Concatenation of an img (icon) and span (text) DOM, if no icon available return text only
+ * */
+function formatContextInfos(item) {
+    // find the right context information
+    switch (item.text) {
+
+        // scenario (Lernszenario)
+        case dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-current-learning-unit.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-learning-unit-completed.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION:
+            return '&lt;img src="img/icons-context-information/ci-scenario-time-for-completion.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+
+        // personal (Persönlich)
+        case dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_AGE:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_ROLE:
+            return '&lt;img src="img/icons-context-information/ci-personal-role.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND:
+            return '&lt;img src="img/icons-context-information/ci-personal-user-state-of-mind.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+
+        // situational (Situationsbezogen)
+        case dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP:
+            return '&lt;img src="img/icons-context-information/ci-situational-timeduration.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+
+        // technical (Infrastruktur)
+        case dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-audio-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_DEVICE_TYPE:
+            return '&lt;img src="img/icons-context-information/ci-technical-device-type.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-resolution.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY:
+            return '&lt;img src="img/icons-context-information/ci-technical-screenreader-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-micropone-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-photo-camera-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-printer-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-video-camera-available.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+
+        // physical (Umwelt)
+        case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-air-pressure2.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE:
+            return '&lt;img src="img/icons-context-information/ci-physical-ambient-noise.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-humidity.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-luminosity.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_RAINING:
+            return '&lt;img src="img/icons-context-information/ci-physical-raining.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY:
+            return '&lt;img src="img/icons-context-information/ci-physical-sunny.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-temperature.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_CURRENT_TIME:
+            return '&lt;img src="img/icons-context-information/ci-physical-time.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+
+        // location (Ortung)
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal-mirrored.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_IS_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-location.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS:
+            return '&lt;img src="img/icons-context-information/ci-location-address.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING:
+            return '&lt;img src="img/icons-context-information/ci-location-building.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY:
+            return '&lt;img src="img/icons-context-information/ci-location-country.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE:
+            return '&lt;img src="img/icons-context-information/ci-location-distance.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_REGION:
+            return '&lt;img src="img/icons-context-information/ci-location-region.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION:
+            return '&lt;img src="img/icons-context-information/ci-location-transport.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+        case dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED:
+            return '&lt;img src="img/icons-context-information/ci-location-speed.png" width="17" height="17">' +
+                '&lt;span class="formatIconText">' + item.text + '&lt;/span>';
+    }
+    return item.text;
+}
+
+// format for multi selection context information
+/**
+ * Function sets format for the context information in the multi selection bar (icon only).
+ * @param {Object} item Context information which was selected
+ * @return {String} img DOM if icon available, else text only
+ * */
+function formatMultiContextInfos(item) {
+    // find the right context information
+    switch (item.text) {
+
+        // scenario (Lernszenario)
+        case dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-current-learning-unit.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-learning-unit-completed.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION:
+            return '&lt;img src="img/icons-context-information/ci-scenario-time-for-completion.png" width="17" height="17" title="' +
+                item.text + '">';
+
+        // personal (Persönlich)
+        case dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_AGE:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_ROLE:
+            return '&lt;img src="img/icons-context-information/ci-personal-role.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND:
+            return '&lt;img src="img/icons-context-information/ci-personal-user-state-of-mind.png" width="17" height="17" title="' +
+                item.text + '">';
+
+        // situational (Situationsbezogen)
+        case dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP:
+            return '&lt;img src="img/icons-context-information/ci-situational-timeduration.png" width="17" height="17" title="' +
+                item.text + '">';
+
+        // technical (Infrastruktur)
+        case dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-audio-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_DEVICE_TYPE:
+            return '&lt;img src="img/icons-context-information/ci-technical-device-type.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-resolution.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY:
+            return '&lt;img src="img/icons-context-information/ci-technical-screenreader-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-micropone-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-photo-camera-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-printer-available.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-video-camera-available.png" width="17" height="17" title="' +
+                item.text + '">';
+
+        // physical (Umwelt)
+        case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-air-pressure2.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE:
+            return '&lt;img src="img/icons-context-information/ci-physical-ambient-noise.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-humidity.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-luminosity.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_RAINING:
+            return '&lt;img src="img/icons-context-information/ci-physical-raining.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY:
+            return '&lt;img src="img/icons-context-information/ci-physical-sunny.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-temperature.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_TIME:
+            return '&lt;img src="img/icons-context-information/ci-physical-time.png" width="17" height="17" title="' +
+                item.text + '">';
+
+        // location (Ortung)
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-arrived.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal-mirrored.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_IS_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-location.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS:
+            return '&lt;img src="img/icons-context-information/ci-location-address.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING:
+            return '&lt;img src="img/icons-context-information/ci-location-building.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY:
+            return '&lt;img src="img/icons-context-information/ci-location-country.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE:
+            return '&lt;img src="img/icons-context-information/ci-location-distance.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_REGION:
+            return '&lt;img src="img/icons-context-information/ci-location-region.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION:
+            return '&lt;img src="img/icons-context-information/ci-location-transport.png" width="17" height="17" title="' +
+                item.text + '">';
+        case dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED:
+            return '&lt;img src="img/icons-context-information/ci-location-speed.png" width="17" height="17" title="' +
+                item.text + '">';
+    }
+    return item.text;
+}
+
+// format icons in units
+/**
+ * Function sets format for the context information in the learning units (icon only).
+ * @param {Object} item Context information which was selected
+ * @param {String} optgroup Contains the context class of the selected context information
+ * @param {String} ccID Contains the id from the context information
+ * @return {String} specific img DOM if icon available, else context class icon
+ * */
+function formatUnitIcons(item, optgroup, ccID) {
+    // find the right context information
+    switch (item.text) {
+
+        // scenario (Lernszenario)
+        case dictionary_optionsContextInfos.CI_CURRENT_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-current-learning-unit.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_FINISHED_LEARNING_UNIT:
+            return '&lt;img src="img/icons-context-information/ci-scenario-learning-unit-completed.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_EXPECTED_TIME_NEEDED_FOR_COMPLETION:
+            return '&lt;img src="img/icons-context-information/ci-scenario-time-for-completion.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+
+        // personal (Persönlich)
+        case dictionary_optionsContextInfos.CI_USER_DID_PERFORM_ACTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_AGE:
+            return '&lt;img src="img/icons-context-information/ci-personal-user.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_INPUT:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PERCEPTION:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_PROCESSING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_CURRENT_LEARNING_STYLE_UNDERSTANDING:
+            return '&lt;img src="img/icons-context-information/ci-personal-knowledge.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_ROLE:
+            return '&lt;img src="img/icons-context-information/ci-personal-role.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_STATE_OF_MIND:
+            return '&lt;img src="img/icons-context-information/ci-personal-user-state-of-mind.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+
+        // situational (Situationsbezogen)
+        case dictionary_optionsContextInfos.CI_CURRENT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_NEXT_APPOINTMENT:
+            return '&lt;img src="img/icons-context-information/ci-situational-appointment.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_TIME_UNTIL_TIMESTAMP:
+            return '&lt;img src="img/icons-context-information/ci-situational-timeduration.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+
+        // technical (Infrastruktur)
+        case dictionary_optionsContextInfos.CI_AUDIO_OUTPUT_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-audio-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_DEVICE_TYPE:
+            return '&lt;img src="img/icons-context-information/ci-technical-device-type.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_DISPLAY_RESOLUTION:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-resolution.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_EXTERNAL_DISPLAY_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-display-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_HAS_SCREEN_READER_FUNCTIONALITY:
+            return '&lt;img src="img/icons-context-information/ci-technical-screenreader-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_MICROPHONE_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-micropone-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_PHOTO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-photo-camera-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_PRINTER_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-printer-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
+            return '&lt;img src="img/icons-context-information/ci-technical-video-camera-available.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+
+        // physical (Umwelt)
+        case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-air-pressure2.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_AMBIENT_NOISE:
+            return '&lt;img src="img/icons-context-information/ci-physical-ambient-noise.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_HUMIDITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-humidity.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_LUMINOSITY:
+            return '&lt;img src="img/icons-context-information/ci-physical-luminosity.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_RAINING:
+            return '&lt;img src="img/icons-context-information/ci-physical-raining.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENTLY_SUNNY:
+            return '&lt;img src="img/icons-context-information/ci-physical-sunny.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_TEMPERATURE:
+            return '&lt;img src="img/icons-context-information/ci-physical-temperature.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_CURRENT_TIME:
+            return '&lt;img src="img/icons-context-information/ci-physical-time.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+
+        // location (Ortung)
+        case dictionary_optionsContextInfos.CI_USER_DESTINATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_DID_ARRIVE_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-arrived.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_DID_LEAVE_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-goal-mirrored.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_IS_AT_LOCATION:
+            return '&lt;img src="img/icons-context-information/ci-location-location.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_ADDRESS:
+            return '&lt;img src="img/icons-context-information/ci-location-address.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_BUILDING:
+            return '&lt;img src="img/icons-context-information/ci-location-building.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_COUNTRY:
+            return '&lt;img src="img/icons-context-information/ci-location-country.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_DISTANCE:
+            return '&lt;img src="img/icons-context-information/ci-location-distance.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LATITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_LONGITUDE:
+            return '&lt;img src="img/icons-context-information/ci-location-latlng.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_LOCATION_REGION:
+            return '&lt;img src="img/icons-context-information/ci-location-region.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_MEANS_OF_TRANSPORTATION:
+            return '&lt;img src="img/icons-context-information/ci-location-transport.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+        case dictionary_optionsContextInfos.CI_USER_MOVEMENT_SPEED:
+            return '&lt;img src="img/icons-context-information/ci-location-speed.png" width="15" height="15" title="' +
+                item.text + '" ccID="' + ccID + '">';
+    }
+    // no icon was found --> return context class icon
+    return '&lt;img src="img/context-classes/' + optgroup + '.png" width="15" height="15" title="' +
+        item.text + '" ccID="' + ccID + '">';
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateFunctionalities">activateFunctionalities</a></li><li><a href="global.html#array_ContextInformations">array_ContextInformations</a></li><li><a href="global.html#changeColorMultiContextInfos">changeColorMultiContextInfos</a></li><li><a href="global.html#checkInformation">checkInformation</a></li><li><a href="global.html#cleanSection">cleanSection</a></li><li><a href="global.html#configureInputContextValueForFloatInt">configureInputContextValueForFloatInt</a></li><li><a href="global.html#deleteScenarios">deleteScenarios</a></li><li><a href="global.html#deleteScenariosConfirm">deleteScenariosConfirm</a></li><li><a href="global.html#deleteScenariosNot">deleteScenariosNot</a></li><li><a href="global.html#deleteUnit">deleteUnit</a></li><li><a href="global.html#deleteUnits">deleteUnits</a></li><li><a href="global.html#deleteUnitsNot">deleteUnitsNot</a></li><li><a href="global.html#fillInputField">fillInputField</a></li><li><a href="global.html#fillParameterSelection">fillParameterSelection</a></li><li><a href="global.html#fillSelectionContextInformation">fillSelectionContextInformation</a></li><li><a href="global.html#formatContextInfos">formatContextInfos</a></li><li><a href="global.html#formatMetaData">formatMetaData</a></li><li><a href="global.html#formatMultiContextInfos">formatMultiContextInfos</a></li><li><a href="global.html#formatMultiMetaData">formatMultiMetaData</a></li><li><a href="global.html#formatUnitIcons">formatUnitIcons</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getContentContact">getContentContact</a></li><li><a href="global.html#getInputContextValue">getInputContextValue</a></li><li><a href="global.html#getParameterInput">getParameterInput</a></li><li><a href="global.html#global_currentInputUnitName">global_currentInputUnitName</a></li><li><a href="global.html#global_ScenarioCounter">global_ScenarioCounter</a></li><li><a href="global.html#loadScenario">loadScenario</a></li><li><a href="global.html#loadUnit">loadUnit</a></li><li><a href="global.html#myAuthorSystem">myAuthorSystem</a></li><li><a href="global.html#parsingFinished">parsingFinished</a></li><li><a href="global.html#replaceMarker2">replaceMarker2</a></li><li><a href="global.html#resizeMap">resizeMap</a></li><li><a href="global.html#saveCloseSzenario">saveCloseSzenario</a></li><li><a href="global.html#setLabelBtnScenarioDeletion">setLabelBtnScenarioDeletion</a></li><li><a href="global.html#setMinMax">setMinMax</a></li><li><a href="global.html#showContact">showContact</a></li><li><a href="global.html#showDeleteSzenario">showDeleteSzenario</a></li><li><a href="global.html#showDeleteUnitConfirm">showDeleteUnitConfirm</a></li><li><a href="global.html#showDeleteUnits">showDeleteUnits</a></li><li><a href="global.html#showDeleteUnitsConfirm">showDeleteUnitsConfirm</a></li><li><a href="global.html#showDetailContextInfo">showDetailContextInfo</a></li><li><a href="global.html#showHelp">showHelp</a></li><li><a href="global.html#showLoadSzenario">showLoadSzenario</a></li><li><a href="global.html#showLogin">showLogin</a></li><li><a href="global.html#showMainContextInfo">showMainContextInfo</a></li><li><a href="global.html#showNewSzenario">showNewSzenario</a></li><li><a href="global.html#showProfil">showProfil</a></li><li><a href="global.html#showPW">showPW</a></li><li><a href="global.html#showSaveScenario">showSaveScenario</a></li><li><a href="global.html#translate_contextClass">translate_contextClass</a></li><li><a href="global.html#translate_contextInformation">translate_contextInformation</a></li><li><a href="global.html#translate_contextParameter">translate_contextParameter</a></li><li><a href="global.html#translate_operator">translate_operator</a></li><li><a href="global.html#translate_parameter">translate_parameter</a></li><li><a href="global.html#translate_parameterValues">translate_parameterValues</a></li><li><a href="global.html#updateScenario">updateScenario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Jul 31 2015 15:34:27 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
