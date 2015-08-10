@@ -88,6 +88,7 @@ function formatContextInfos(item) {
         case dictionary_optionsContextInfos.CI_VIDEO_CAMERA_AVAILABLE:
             return '<img src="img/icons-context-information/ci-technical-video-camera-available.png" width="17" height="17">' +
                 '<span class="formatIconText">' + item.text + '</span>';
+		//missing but important: battery status
 
         // physical (Umwelt)
         case dictionary_optionsContextInfos.CI_CURRENT_AIR_PRESSURE:

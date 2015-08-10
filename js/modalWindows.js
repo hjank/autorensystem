@@ -397,7 +397,7 @@ function deleteUnits(){
                 // delete all units in deletable list
                 for (var i=0; i<list_deleteableUnits.length; i++) {
 
-                    // Note: unit deletion on working place see statemaschine.js
+                    // Note: unit deletion on working place see statemachine.js
                     // delete unit in statemaschine
                     //var unit = list_deleteableUnits[i].id;
                     //$("#" + unit).remove();
@@ -872,7 +872,7 @@ function deleteUnit() {
                 // delete unit in state machine
                 var unit = $("#inputUnitName")[0].value;
 
-                // Note: unit deletion on working place see statemaschine.js
+                // Note: unit deletion on working place see statemachine.js
                 /*$("#stm").children("div.w").children("div.title").each(function() {
                     if (this.innerHTML == unit) {
                         $(this).parent().remove();

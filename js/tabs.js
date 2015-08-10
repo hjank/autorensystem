@@ -743,7 +743,7 @@ function parsingFinished() {
         // fill selection bar "Operator"
         for (var i=0; i<operators.length; i++) {
             var option = $("<option>").attr("value", i.toString());
-            option.html(operators[i]);
+            option.html(translate_operator(operators[i]));
             $("#selectOperator").append(option);
         }
 
@@ -792,12 +792,13 @@ function fillSelectionContextInformation() {
     for (var i=0; i<array_ContextInformations.length; i++) {
         // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
-        option.attr("origin", array_ContextInformations[i][4]);     // save origin name
-        option.html(array_ContextInformations[i][0]);
+        var ciId = array_ContextInformations[i][0];
+        option.attr("origin", ciId);     // save original name
+        option.html(translate_contextInformation(ciId));
 
         // find right context class and put it in this optgroup
         for (var k=0; k<array_ContextClasses.length; k++) {
-            if (array_ContextInformations[i][1][0] == array_ContextClasses[k]) {
+            if (translate_contextClass(array_ContextInformations[i][1][0]) == array_ContextClasses[k]) {
                 array_optgroups[k].append(option);
                 break;
             }
@@ -1037,8 +1038,10 @@ function fillParameterSelection(cp) {
     // iterate through all parameters
     for (var i=0; i<cp.length; i++) {
 
-        // get the current type
+        // get each parameter's translated name, type, and all its possible values
+        var parameterTranslation = translate_parameter(cp[i][0]);
         var type = cp[i][1];
+        var possibleValues = cp[i][2];
 
         switch (type) {
 
@@ -1046,9 +1049,9 @@ function fillParameterSelection(cp) {
             case "ENUM":
 
                 // get all possible values
-                for (var j=0; j<cp[i][2].length; j++) {
+                for (var j=0; j<possibleValues.length; j++) {
                     var option = $("<option>").attr("value", j.toString());
-                    option.html(cp[i][2][j]);
+                    option.html(translate_parameterValues(possibleValues[j]));
 
                     // needed if first selection is already existing
                     if ( $("#divParameterSelection1").css("display") == "block" ) {
@@ -1056,7 +1059,7 @@ function fillParameterSelection(cp) {
                         $("#selectParameter2").append(option);
 
                         // add specific label to selection
-                        $("#divParameterSelection2").children("label").html(cp[i][0]);
+                        $("#divParameterSelection2").children("label").html(parameterTranslation);
 
                         // make selection visible
                         $("#divParameterSelection2").css("display", "block");
@@ -1066,7 +1069,7 @@ function fillParameterSelection(cp) {
                         $("#selectParameter").append(option);
 
                         // add specific label to selection
-                        $("#divParameterSelection1").children("label").html(cp[i][0]);
+                        $("#divParameterSelection1").children("label").html(parameterTranslation);
                     }
                 }
                 // make selection visible
@@ -1077,8 +1080,8 @@ function fillParameterSelection(cp) {
             case "FLOAT":
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
-                    $("#divParameterInput2").children("label").html(cp[i][0]);
-                    setMinMax(cp[i][2], $("#inputContextParameter2"));
+                    $("#divParameterInput2").children("label").html(parameterTranslation);
+                    setMinMax(possibleValues, $("#inputContextParameter2"));
 
                     // display google maps
                     $("#divMaps").css("display", "block");
@@ -1086,8 +1089,8 @@ function fillParameterSelection(cp) {
 
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
-                    $("#divParameterInput1").children("label").html(cp[i][0]);
-                    setMinMax(cp[i][2], $("#inputContextParameter1"));
+                    $("#divParameterInput1").children("label").html(parameterTranslation);
+                    setMinMax(possibleValues, $("#inputContextParameter1"));
                 }
                 break;
 
@@ -1095,18 +1098,18 @@ function fillParameterSelection(cp) {
             case "INTEGER":
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
-                    $("#divParameterInput2").children("label").html(cp[i][0]);
+                    $("#divParameterInput2").children("label").html(parameterTranslation);
 
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
-                    $("#divParameterInput1").children("label").html(cp[i][0]);
+                    $("#divParameterInput1").children("label").html(parameterTranslation);
                 }
                 break;
 
             // type string needs an input field and a specific label
             case "STRING":
                 $("#divParameterString").css("display", "block");
-                $("#divParameterString").children("label").html(cp[i][0]);
+                $("#divParameterString").children("label").html(parameterTranslation);
                 break;
 
         }
@@ -1445,7 +1448,7 @@ function changeColorMultiContextInfos() {
                 array_multiSelectionContextInfos[i]["text"] == title) {             // icon
 
                 // get first context class
-                var contextClass = array_ContextInformations[thisID][1][0];
+                var contextClass = translate_contextClass(array_ContextInformations[thisID][1][0]);
 
                 // get specific context class color
                 var color = getColor(contextClass);
