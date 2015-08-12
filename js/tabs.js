@@ -743,7 +743,8 @@ function parsingFinished() {
         // fill selection bar "Operator"
         for (var i=0; i<operators.length; i++) {
             var option = $("<option>").attr("value", i.toString());
-            option.html(translate_operator(operators[i]));
+            option.html(operators[i]["translation"]);
+            option.attr("origin", operators[i]["original"]);
             $("#selectOperator").append(option);
         }
 
@@ -792,13 +793,12 @@ function fillSelectionContextInformation() {
     for (var i=0; i<array_ContextInformations.length; i++) {
         // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
-        var ciId = array_ContextInformations[i][0];
-        option.attr("origin", ciId);     // save original name
-        option.html(translate_contextInformation(ciId));
+        option.attr("origin", array_ContextInformations[i][0]["original"]);     // save original name
+        option.html(array_ContextInformations[i][0]["translation"]);
 
         // find right context class and put it in this optgroup
         for (var k=0; k<array_ContextClasses.length; k++) {
-            if (translate_contextClass(array_ContextInformations[i][1][0]) == array_ContextClasses[k]) {
+            if (array_ContextInformations[i][1][0]["translation"] == array_ContextClasses[k]) {
                 array_optgroups[k].append(option);
                 break;
             }
@@ -1039,7 +1039,8 @@ function fillParameterSelection(cp) {
     for (var i=0; i<cp.length; i++) {
 
         // get each parameter's translated name, type, and all its possible values
-        var parameterTranslation = translate_parameter(cp[i][0]);
+        var parameterTranslation = cp[i][0]["translation"];
+        var parameterOriginal = cp[i][0]["original"];
         var type = cp[i][1];
         var possibleValues = cp[i][2];
 
@@ -1051,7 +1052,8 @@ function fillParameterSelection(cp) {
                 // get all possible values
                 for (var j=0; j<possibleValues.length; j++) {
                     var option = $("<option>").attr("value", j.toString());
-                    option.html(translate_parameterValues(possibleValues[j]));
+                    option.html(possibleValues[j]["translation"]);
+                    option.attr("origin", possibleValues[j]["original"]);
 
                     // needed if first selection is already existing
                     if ( $("#divParameterSelection1").css("display") == "block" ) {
@@ -1060,6 +1062,7 @@ function fillParameterSelection(cp) {
 
                         // add specific label to selection
                         $("#divParameterSelection2").children("label").html(parameterTranslation);
+                        $("#divParameterSelection2").children("label").attr("origin", parameterOriginal);
 
                         // make selection visible
                         $("#divParameterSelection2").css("display", "block");
@@ -1070,6 +1073,7 @@ function fillParameterSelection(cp) {
 
                         // add specific label to selection
                         $("#divParameterSelection1").children("label").html(parameterTranslation);
+                        $("#divParameterSelection1").children("label").attr("origin", parameterOriginal);
                     }
                 }
                 // make selection visible
@@ -1081,6 +1085,7 @@ function fillParameterSelection(cp) {
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
                     $("#divParameterInput2").children("label").html(parameterTranslation);
+                    $("#divParameterInput2").children("label").attr("origin", parameterOriginal);
                     setMinMax(possibleValues, $("#inputContextParameter2"));
 
                     // display google maps
@@ -1090,6 +1095,7 @@ function fillParameterSelection(cp) {
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(parameterTranslation);
+                    $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
                     setMinMax(possibleValues, $("#inputContextParameter1"));
                 }
                 break;
@@ -1099,10 +1105,12 @@ function fillParameterSelection(cp) {
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
                     $("#divParameterInput2").children("label").html(parameterTranslation);
+                    $("#divParameterInput2").children("label").attr("origin", parameterOriginal);
 
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(parameterTranslation);
+                    $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
                 }
                 break;
 
@@ -1110,6 +1118,7 @@ function fillParameterSelection(cp) {
             case "STRING":
                 $("#divParameterString").css("display", "block");
                 $("#divParameterString").children("label").html(parameterTranslation);
+                $("#divParameterString").children("label").attr("origin", parameterOriginal);
                 break;
 
         }
@@ -1448,7 +1457,7 @@ function changeColorMultiContextInfos() {
                 array_multiSelectionContextInfos[i]["text"] == title) {             // icon
 
                 // get first context class
-                var contextClass = translate_contextClass(array_ContextInformations[thisID][1][0]);
+                var contextClass = array_ContextInformations[thisID][1][0]["translation"];
 
                 // get specific context class color
                 var color = getColor(contextClass);

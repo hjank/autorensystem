@@ -45,7 +45,10 @@ $(function() {
 
                 /* get the name of the information */
                 var originalName = this.getAttribute("id");
-                var name = translate_contextInformation(originalName);
+                var name = {
+                    "translation":translate_contextInformation(originalName),
+                    "original":originalName
+                };
 
                 /* get the context classes from the current information */
                 var array_classes = [];
@@ -53,8 +56,11 @@ $(function() {
 
                 // get all classes and put them into an array
                 contextClasses.each(function() {
-                    var contextClass = this.getAttribute("id");
-                    contextClass = translate_contextClass(contextClass);
+                    var contextClassId = this.getAttribute("id");
+                    var contextClass = {
+                        "translation":translate_contextInformation(contextClassId),
+                        "original":contextClassId
+                    };
                     array_classes.push(contextClass);
                 });
                 array_classes.name = "Context Classes";
@@ -89,8 +95,11 @@ $(function() {
                 // 2. all possible operators
                 var array_operators = [];
                 var operators = contextValue.children("operators").children().each(function() {
-                    var operator = this.getAttribute("id");
-                    operator = translate_operator(operator);
+                    var operatorId = this.getAttribute("id");
+                    var operator = {
+                        "translation":translate_contextInformation(operatorId),
+                        "original":operatorId
+                    };
                     array_operators.push(operator);
                 });
                 array_operators.name = "Operators";
@@ -98,8 +107,11 @@ $(function() {
                 // 3. all possible values
                 var array_posVal = [];
                 var possibleValues = contextValue.children("possibleValues").children().each(function() {
-                    var parameter = this.innerHTML;
-                    parameter = translate_contextParameter(parameter);
+                    var parameterId = this.innerHTML;
+                    var parameter = {
+                        "translation":translate_contextInformation(parameterId),
+                        "original":parameterId
+                    };
                     array_posVal.push(parameter);
                 });
                 array_posVal.name = "Possible Values";
@@ -121,8 +133,11 @@ $(function() {
                     parameters.children("parameter").each(function() {
 
                         // get id of each parameter
-                        var id = this.getAttribute("id");
-                        id = translate_parameter(id);
+                        var cid = this.getAttribute("id");
+                        var id = {
+                            "translation":translate_contextInformation(cid),
+                            "original":cid
+                        };
 
                         var array_values = [];
                         var paraValue = $(this).children("parameterValue");
@@ -142,8 +157,11 @@ $(function() {
                                     // get the only possible values for this parameter
                                     if (paraValue.children("possibleValues").length != 0) {
                                         paraValue.children("possibleValues").children("value").each(function() {
-                                            var value = this.innerHTML;
-                                            value = translate_parameterValues(value);
+                                            var valueId = this.innerHTML;
+                                            var value = {
+                                                "translation":translate_contextInformation(valueId),
+                                                "original":valueId
+                                            };
                                             array_values.push(value);
                                             array_values.name = "Possible Values";
                                         });
@@ -174,7 +192,7 @@ $(function() {
                 array_parameter.name = "Parameters (id, type, values)";
 
                 // put all information into an array
-                array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter, originalName);
+                array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter);
                 array_ContextInformations.push(array_ContextInformation);
             });
             // after finishing the parsing, elements could be added into tab bar
