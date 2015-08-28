@@ -58,7 +58,7 @@ $(function() {
                 contextClasses.each(function() {
                     var contextClassId = this.getAttribute("id");
                     var contextClass = {
-                        "translation":translate_contextInformation(contextClassId),
+                        "translation":translate_contextClass(contextClassId),
                         "original":contextClassId
                     };
                     array_classes.push(contextClass);
@@ -97,7 +97,7 @@ $(function() {
                 var operators = contextValue.children("operators").children().each(function() {
                     var operatorId = this.getAttribute("id");
                     var operator = {
-                        "translation":translate_contextInformation(operatorId),
+                        "translation":translate_operator(operatorId),
                         "original":operatorId
                     };
                     array_operators.push(operator);
@@ -107,12 +107,12 @@ $(function() {
                 // 3. all possible values
                 var array_posVal = [];
                 var possibleValues = contextValue.children("possibleValues").children().each(function() {
-                    var parameterId = this.innerHTML;
-                    var parameter = {
-                        "translation":translate_contextInformation(parameterId),
-                        "original":parameterId
+                    var possibleValue = this.innerHTML;
+                    var posVal = {
+                        "translation":translate_possibleValue(possibleValue),
+                        "original":possibleValue
                     };
-                    array_posVal.push(parameter);
+                    array_posVal.push(posVal);
                 });
                 array_posVal.name = "Possible Values";
 
@@ -133,10 +133,10 @@ $(function() {
                     parameters.children("parameter").each(function() {
 
                         // get id of each parameter
-                        var cid = this.getAttribute("id");
+                        var pid = this.getAttribute("id");
                         var id = {
-                            "translation":translate_contextInformation(cid),
-                            "original":cid
+                            "translation":translate_parameter(pid),
+                            "original":pid
                         };
 
                         var array_values = [];
@@ -159,7 +159,7 @@ $(function() {
                                         paraValue.children("possibleValues").children("value").each(function() {
                                             var valueId = this.innerHTML;
                                             var value = {
-                                                "translation":translate_contextInformation(valueId),
+                                                "translation":translate_parameterValues(valueId),
                                                 "original":valueId
                                             };
                                             array_values.push(value);
@@ -420,7 +420,7 @@ function translate_operator(op) {
  * @param {String} cp Contains a context parameter
  * return translated context parameter
  * */
-function translate_contextParameter(cp) {
+function translate_possibleValue(cp) {
 
     switch (cp) {
         case "ACTIVATE_ACTION":

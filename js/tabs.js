@@ -179,7 +179,7 @@ function activateFunctionalities(newState) {
             $("#mainContextInfoSelection").show();
         }
 
-        // needed too re-color the selections
+        // needed to re-color the selections
         changeColorMultiContextInfos();
 
 
