@@ -24,24 +24,39 @@
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"></script>
 
-        <!-- general functionalities -->
-        <script type="text/javascript" src="js/functionalities.js"></script>
-        <script type="text/javascript" src="js/xmlParser.js"></script>
+
+
+        <!-- models -->
+        <script type="text/javascript" src="js/models/xmlParser.js"></script>
+        <script type="text/javascript" src="js/models/contextClasses.js"></script>
+        <script type="text/javascript" src="js/models/myAuthorSystem.js"></script>
+
+        <!-- views -->
+        <script type="text/javascript" src="js/views/navBar.js"></script>
+        <script type="text/javascript" src="js/views/canvas/canvas.js"></script>
+        <script type="text/javascript" src="js/views/canvas/slider.js"></script>
+        <script type="text/javascript" src="js/views/canvas/unitContainer.js"></script>
+
+        <!-- controllers -->
+        <script type="text/javascript" src="js/controllers/functionalities.js"></script>
+        <script type="text/javascript" src="js/controllers/unitController.js"></script>
+        <script type="text/javascript" src="js/controllers/canvasController.js"></script>
+
 
         <!-- jsplumb statemachine functionalities -->
-        <script type="text/javascript" src="js/statemachine.js"></script>
+        <script type="text/javascript" src="js/views/canvas/unitContainer.js"></script>
 
         <!-- Menu bar -->
         <link rel="stylesheet" href="css/menu.css">
-        <script type="text/javascript" src="js/menu.js"></script>
+        <script type="text/javascript" src="js/views/menu.js"></script>
 
         <!-- tab bar -->
-        <script type="text/javascript" src="js/formatSelections.js"></script>
-        <script type="text/javascript" src="js/tabs.js"></script>
+        <script type="text/javascript" src="js/views/formatSelections.js"></script>
+        <script type="text/javascript" src="js/views/tabs/tabs.js"></script>
 
         <!-- modal window -->
         <link rel="stylesheet" href="css/pgwmodal.css">
-        <script type="text/javascript" src="js/modalWindows.js"></script>
+        <script type="text/javascript" src="js/views/modalWindows/modalWindows.js"></script>
 
         <!-- slider design -->
         <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
@@ -242,7 +257,7 @@
                                     <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Zurück zur Übersicht">
                                         <b class="fui-arrow-left"> </b><b class="fui-home"></b>
                                     </div>
-                                    <div id="btnConfirmContextInfoSmall" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Eingaben bestätigen">
+                                    <div id="btnConfirmContextInfoSmall" class="btn btn-info btn-xs" title="Eingaben bestätigen">
                                         <b class="fui-check-circle"></b>
                                     </div>
                                 </div>
@@ -507,7 +522,7 @@
                     <div class="modal-body">
                         <div>
                             <div>
-                                <label>Wähle die Lerneineheiten aus, welche gelöscht werden sollen!</label>
+                                <label>Wähle die Lerneinheiten aus, welche gelöscht werden sollen!</label>
                             </div>
                             <div>
                                 <label class="label-modal label" for="selectScenarioDeleteUnit">Auswahl des Szenarios</label><br>

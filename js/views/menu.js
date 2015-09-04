@@ -1,5 +1,4 @@
-( function( $ ) {
-$( document ).ready(function() {
+$(function() {
 
     $('#cssmenu li.has-sub>a').on('click', function(){
 		$(this).removeAttr('href');
@@ -64,4 +63,12 @@ $( document ).ready(function() {
 	}
 
 });
-} )( jQuery );
+
+
+function changeNameInMenu(oldName, newName) {
+	$("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+		if ( $(this)[0].innerHTML == oldName ) {
+			$(this).html(newName);
+		}
+	});
+}

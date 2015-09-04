@@ -2,13 +2,40 @@
  * Created by Julius Höfler on 30.03.15.
  */
 
+// tabs
+$(function() {
+
+    // default hide tabs
+    $(".tab-Container").hide();
+    $(".tabContents").hide();
+    $("#firstTab").addClass("active");
+
+    // if one tab is clicked show this one
+    $(".tab-Container ul li a").click(function() {
+
+        // hide other tab content
+        var activeTab = $(this).attr("href");
+        $(".tab-Container ul li a").removeClass("active");
+        $(this).addClass("active");
+        $(".tabContents").hide();
+
+        // only show tab content if a unit is clicked
+        if (bool_unitClicked) {
+            $(activeTab).fadeIn();
+        }
+
+        return false;
+    });
+});
+
+
+
+
 var global_currentInputUnitName = "";
-var list_units = [];
 var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
 var array_multiSelectionMetaData = [];
 var counter_multiSelectionMetaData = 0;
-var bool_unitClicked = false;
 
 
 // Jobs: - make details in tab "Kontextinformation" visible,
@@ -81,10 +108,7 @@ function activateFunctionalities(newState) {
     $(unit).click(function(event) {
 
         // clear marking from all units
-        for (var l=0; l<list_units.length; l++) {
-            $(list_units[l]).css("background", "");
-            $(list_units[l]).css("color", "");
-        }
+        clearMarkingFromLearningUnits();
 
         // unit is marked --> change color
         $(unit).css("background", "#16a085");
@@ -395,7 +419,7 @@ function activateFunctionalities(newState) {
             missing_content = returnArray[0];
             var selectedInfos = returnArray[1];
 
-            // if content is missing do not except adding of the context information
+            // if content is missing do not accept adding of the context information
             if (missing_content == "Error999") {
                 return false;
 
@@ -413,10 +437,9 @@ function activateFunctionalities(newState) {
 
                     // get selected context information
                     var contentContextInfo = $("#selectContextInfos").select2("data");
-                    var selecElem = contentContextInfo.element[0];
 
                     // get corresponding context class
-                    var optgroup = $(selecElem).parent()[0].label;
+                    var optgroup = $(contentContextInfo.element[0]).parent()[0].label;
 
                     // get corresponding context class id
                     var ccID = contentContextInfo.element[0].value;
@@ -433,7 +456,7 @@ function activateFunctionalities(newState) {
 
                     // get icon information in JSON structure
                     for (var j = 0; j < current_unit["contextInformations"].length; j++) {
-                        if (current_unit["contextInformations"][j].name == $("#selectContextInfos").select2("data")["text"]) {
+                        if (current_unit["contextInformations"][j].name == contentContextInfo["text"]) {
                             current_unit["contextInformations"][j].icon = icon;
                         }
                     }
@@ -462,10 +485,10 @@ function activateFunctionalities(newState) {
                     inst.repaintEverything();
 
                     /* get selected context information name into multi selection bar */
-                    var id = $("#selectContextInfos").select2("data").id;
+                    var id = contentContextInfo.id;
 
                     // get name
-                    var contextInfoName = $("#selectContextInfos").select2("data").text;
+                    var contextInfoName = contentContextInfo.text;
                     var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
                     option.html(contextInfoName);
 
@@ -490,8 +513,7 @@ function activateFunctionalities(newState) {
                     counter_multiSelectionContextInfos++;
 
                     // show main, hide detail
-                    $("#mainContextInfo").slideDown();
-                    $("#detailContextInfo").slideUp();
+                    showMainContextInfo;
 
                     // show SAT and multi selection bar
                     $("#mainContextInfoSAT").show();
@@ -651,10 +673,7 @@ function activateFunctionalities(newState) {
     });
 
     // clear marking from existing learning units
-    for (var l=0; l<list_units.length; l++) {
-        $(list_units[l]).css("background", "");
-        $(list_units[l]).css("color", "");
-    }
+    clearMarkingFromLearningUnits();
 
     // clear multi selection bar
     $("#selectMultiContextInfos").empty();
@@ -1228,20 +1247,26 @@ function checkInformation(missing_content, current_unit) {
 
     var selectedInfos = {};
 
+    var selectedContextInfo = $("#selectContextInfos").select2("data");
+    var selectedOperator = $("#selectOperator").select2("data");
+
+    var contextInfoInArray = array_ContextInformations[selectedContextInfo.id];
+
+
     // check selection bar "Kontextinformationen"
-    if ( $("#selectContextInfos").select2("data") == null ) {
+    if ( selectedContextInfo == null ) {
         // if selection bar context information is empty, concatenate it in missing_content string
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
-        selectedInfos.name = $("#selectContextInfos").select2("data")["text"];
-        selectedInfos.id = $("#selectContextInfos").select2("data").element[0].getAttribute("origin");
+        selectedInfos.name = contextInfoInArray[0].translation;
+        selectedInfos.id = contextInfoInArray[0].original;
     }
 
     // only addable if context info doesn't exist already
     for (var h=0; h<current_unit["contextInformations"].length; h++) {
-        if ($("#selectContextInfos").select2("data")["text"] == current_unit["contextInformations"][h]["name"]) {
-            alert($("#selectContextInfos").select2("data")["text"] + " existiert bereits!");
+        if (selectedContextInfo["text"] == current_unit["contextInformations"][h]["name"]) {
+            alert(selectedContextInfo["text"] + " existiert bereits!");
 
             // if already exist return with error code
             return ["Error999", {}];
@@ -1249,12 +1274,12 @@ function checkInformation(missing_content, current_unit) {
     }
 
     // check selection bar "Operator"
-    if ( $("#selectOperator").select2("data")["text"] == "\r" ) {
+    if ( selectedOperator["text"] == "\r" ) {
         // if selection bar operator is empty, concatenate it in missing_content string
         missing_content += " - Operator\n";
     } else {
         // update JSON structure
-        selectedInfos.operator = $("#selectOperator").select2("data")["text"];
+        selectedInfos.operator = contextInfoInArray[2][1][selectedOperator.id].original;
     }
 
     // check input "Wert" is visible AND filled with information
@@ -1384,7 +1409,12 @@ function changeColorMultiContextInfos() {
 
             /* new */
             // add edit icon
-            var edit = $("<a>").attr("href", "#").addClass("select2-search-choice-edit").attr("tabindex", -1).attr("title", "Bearbeiten");
+            var edit = $("<a>")
+                .attr("href", "#")
+                .addClass("select2-search-choice-edit")
+                .attr("tabindex", -1)
+                .attr("title", "Bearbeiten")
+                .attr("id", thisID);
             //var icon = $("<b>").addClass("fui-new edit-ci").attr("style", "padding-right: 10px;");
             //edit.append(icon);
             $(this).parent().append(edit);
@@ -1403,7 +1433,7 @@ function changeColorMultiContextInfos() {
                 var nameContextInfo = $(this).parent()[0].title;
                 var operator, value, parameter1, parameter2, input1, input2, inputString;
 
-                for (var i=0; i<myAuthorSystem.length; i++) {
+          /*      for (var i=0; i<myAuthorSystem.length; i++) {
                     if ( myAuthorSystem[i].name == $("#lname")[0].innerText ) {
                         for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
                             if ( myAuthorSystem[i]["units"][j].name == global_currentInputUnitName ) {
@@ -1429,11 +1459,15 @@ function changeColorMultiContextInfos() {
                         }
 
                     }
-                }
+                }*/
 
                 for (var l= 0; l<$("#selectContextInfos")[0].length; l++) {
                     if ( $("#selectContextInfos")[0][l].text == nameContextInfo ) {
-                        $("#selectContextInfos").select2("data", {id:$("#selectContextInfos")[0][l].id, text:$("#selectContextInfos")[0][l].text});
+                        $("#selectContextInfos").select2("data", {
+                                id:$("#selectContextInfos")[0][l].id,
+                                text:$("#selectContextInfos")[0][l].text
+                            });
+                        break;
                     }
                 }
 

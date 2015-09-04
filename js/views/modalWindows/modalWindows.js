@@ -87,7 +87,7 @@ function saveCloseSzenario() {
     liClass.append(aClass);
     $("#cssmenu > ul").append(liClass);
 
-    // update scenario list and panel
+    // update scenario list and canvas
     updateScenario(scenarioName);
     setLabelBtnScenarioDeletion();
 

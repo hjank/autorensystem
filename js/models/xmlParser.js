@@ -3,12 +3,11 @@
  */
 
 var array_ContextInformations = [];
-var array_ContextClasses = [];
 
 /** Structure context informations
 
  array_ContextInformations = [array_ContextInformation1, array_ContextInformation2, array_ContextInformation3, ...]
-    array_ContextInformation = [id, array_classes, array_contextValue, array_parameter, originalName]
+    array_ContextInformation = [id, array_classes, array_contextValue, array_parameter]
         array_classes = [class1, class2, ...]
         array_contextValue = [array_contextValueAttributes, array_operators, array_posVal]
             array_contextValueAttributes = [{type:value}, ({min:value}, {max:value}, {default:value})]
@@ -200,9 +199,6 @@ $(function() {
         }
     });
 
-    // fill context classes array (needed for visualization)
-    array_ContextClasses.push("Lernszenario", "Persönlich", "Situationsbezogen",
-        "Infrastruktur", "Umwelt", "Ortung");
 });
 
 // translate context information into german

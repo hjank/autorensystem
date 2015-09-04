@@ -1,4 +1,24 @@
+// global unit instance
+var inst;
 var i = 1;
+
+// initialize jsPlumb instance if jsPlumb is ready
+jsPlumb.ready(function () {
+    inst = jsPlumb.getInstance({
+        Endpoint: ["Dot", {radius: 2}],
+        HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
+        ConnectionOverlays: [
+            [ "Arrow", {
+                location: 1,
+                id: "arrow",
+                length: 14,
+                foldback: 0.8
+            } ]
+            //[ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
+        ],
+        Container: "stm"
+    });
+});
 
 // execute if jsPlum is ready
 jsPlumb.ready(function () {
@@ -66,6 +86,7 @@ jsPlumb.ready(function () {
 
     var current_labelConnection;
     var current_connection;
+
     // triggered if connection or label is clicked
     // c = connection element
     // e = event
