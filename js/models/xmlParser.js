@@ -195,7 +195,8 @@ $(function() {
                 array_ContextInformations.push(array_ContextInformation);
             });
             // after finishing the parsing, elements could be added into tab bar
-            parsingFinished();
+            fillContextTab();
+            fillMetadataTab();
         }
     });
 

@@ -290,7 +290,24 @@
 
 
 <div class="description">
-    -- JSON Structure for the personal author system data -- myAuthorSystem = [scenario1, scenario2, ..., scenarioN, options]     scenario = {name:name, units:[unit1, unit2, ...], connections:[connect1, connect2, ...]}         unit = {name:name, description:text,           contextInformations:[contextInformation1, contextInformation2, ...],           sat:choice,           metaData:[metaData1, metaData2, ...],           posX:number,           posY:number         }             contextInformation = {name:name, operator:name, value:value,               input1:value, input2:value, inputString:value,               parameter1:value, parameter2:value,               icon:path             }             metaData = {name:name, icon:path}     options = {option1:text, option2:text, ...}
+    -- JSON Structure for the personal author system data --
+ myAuthorSystem = [scenario1, scenario2, ..., scenarioN, options]
+     scenario = {name:name, units:[unit1, unit2, ...], connections:[connect1, connect2, ...]}
+         unit = {name:name, description:text,
+           contextInformations:[contextInformation1, contextInformation2, ...],
+           sat:choice,
+           metaData:[metaData1, metaData2, ...],
+
+           posX:number,
+           posY:number
+         }
+             contextInformation = {name:name, operator:name, value:value,
+               input1:value, input2:value, inputString:value,
+               parameter1:value, parameter2:value,
+               icon:path
+             }
+             metaData = {name:name, icon:path}
+     options = {option1:text, option2:text, ...}
 </div>
 
 
@@ -1013,7 +1030,8 @@
 
 
 <div class="description">
-    Function deletes selected scenarios from menu bar. All corresponding learning units on the work placewere deleted was well.
+    Function deletes selected scenarios from menu bar. All corresponding learning units on the work place
+were deleted was well.
 </div>
 
 
@@ -1341,7 +1359,8 @@
 
 
 <div class="description">
-    Function deletes a learning unit from the working place.Triggered in the modal window "confirm unit deletion".
+    Function deletes a learning unit from the working place.
+Triggered in the modal window "confirm unit deletion".
 </div>
 
 
@@ -3026,7 +3045,9 @@
 
 
 <div class="description">
-    Function evaluate the input value of the context parameter.Resets values if they are too high (maximum) or too small (minimum).Set marker on Google Maps if two input fields and the map are available.
+    Function evaluate the input value of the context parameter.
+Resets values if they are too high (maximum) or too small (minimum).
+Set marker on Google Maps if two input fields and the map are available.
 </div>
 
 
@@ -3311,7 +3332,8 @@
 
 
 <div class="description">
-    Function loadsHint: The website will be new loaded.
+    Function loads
+Hint: The website will be new loaded.
 </div>
 
 
@@ -3503,14 +3525,16 @@
 
     
 
-    <h4 class="name" id="parsingFinished"><span class="type-signature"></span>parsingFinished<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="parsingFinished"><span class="type-signature"></span>fillContextTab<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Function sets a event listener for selection bar context information after parsing is finished.In this listener all selections and input fields were filled.Furthermore the meta data selection bar is also filled with information.
+    Function sets a event listener for selection bar context information after parsing is finished.
+In this listener all selections and input fields were filled.
+Furthermore the meta data selection bar is also filled with information.
 </div>
 
 
@@ -3805,7 +3829,9 @@
 
 
 <div class="description">
-    Function creates a new scenario.It adds the name in the menu bar and in the header above the working place.Is Triggered after clicking save button in modal window scenario creation.
+    Function creates a new scenario.
+It adds the name in the menu bar and in the header above the working place.
+Is Triggered after clicking save button in modal window scenario creation.
 </div>
 
 
@@ -3887,7 +3913,8 @@
 
 
 <div class="description">
-    Function get the number of scenarios which should be deleted and set the label of deletion buttonwith this number.
+    Function get the number of scenarios which should be deleted and set the label of deletion button
+with this number.
 </div>
 
 
@@ -4287,7 +4314,8 @@
 
 
 <div class="description">
-    Function shows delete unit confirmation modal window.Triggered in tab properties after clicking the unit delete button
+    Function shows delete unit confirmation modal window.
+Triggered in tab properties after clicking the unit delete button
 </div>
 
 
@@ -4369,7 +4397,8 @@
 
 
 <div class="description">
-    Function shows the delete unit modal window.Sets event listeners to the selection and multi selection bar.
+    Function shows the delete unit modal window.
+Sets event listeners to the selection and multi selection bar.
 </div>
 
 
@@ -4533,7 +4562,8 @@
 
 
 <div class="description">
-    Function gets information into the selection bar and input fields.Furthermore hide main part in tab and show details of context information.
+    Function gets information into the selection bar and input fields.
+Furthermore hide main part in tab and show details of context information.
 </div>
 
 
@@ -5323,7 +5353,8 @@
 
             
 
-            <td class="description last">Contains a context classreturn translated context class</td>
+            <td class="description last">Contains a context class
+return translated context class</td>
         </tr>
 
     
@@ -5454,7 +5485,8 @@
 
             
 
-            <td class="description last">Contains a context informationreturn translated context information</td>
+            <td class="description last">Contains a context information
+return translated context information</td>
         </tr>
 
     
@@ -5585,7 +5617,8 @@
 
             
 
-            <td class="description last">Contains a context parameterreturn translated context parameter</td>
+            <td class="description last">Contains a context parameter
+return translated context parameter</td>
         </tr>
 
     
@@ -5716,7 +5749,8 @@
 
             
 
-            <td class="description last">Contains a operatorreturn translated operator</td>
+            <td class="description last">Contains a operator
+return translated operator</td>
         </tr>
 
     
@@ -5847,7 +5881,8 @@
 
             
 
-            <td class="description last">Contains a parameterreturn translated parameter</td>
+            <td class="description last">Contains a parameter
+return translated parameter</td>
         </tr>
 
     
@@ -5978,7 +6013,8 @@
 
             
 
-            <td class="description last">Contains a parameter valuereturn translated parameter value</td>
+            <td class="description last">Contains a parameter value
+return translated parameter value</td>
         </tr>
 
     
@@ -6192,7 +6228,7 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateFunctionalities">activateFunctionalities</a></li><li><a href="global.html#array_ContextInformations">array_ContextInformations</a></li><li><a href="global.html#changeColorMultiContextInfos">changeColorMultiContextInfos</a></li><li><a href="global.html#checkInformation">checkInformation</a></li><li><a href="global.html#cleanSection">cleanSection</a></li><li><a href="global.html#configureInputContextValueForFloatInt">configureInputContextValueForFloatInt</a></li><li><a href="global.html#deleteScenarios">deleteScenarios</a></li><li><a href="global.html#deleteScenariosConfirm">deleteScenariosConfirm</a></li><li><a href="global.html#deleteScenariosNot">deleteScenariosNot</a></li><li><a href="global.html#deleteUnit">deleteUnit</a></li><li><a href="global.html#deleteUnits">deleteUnits</a></li><li><a href="global.html#deleteUnitsNot">deleteUnitsNot</a></li><li><a href="global.html#fillInputField">fillInputField</a></li><li><a href="global.html#fillParameterSelection">fillParameterSelection</a></li><li><a href="global.html#fillSelectionContextInformation">fillSelectionContextInformation</a></li><li><a href="global.html#formatContextInfos">formatContextInfos</a></li><li><a href="global.html#formatMetaData">formatMetaData</a></li><li><a href="global.html#formatMultiContextInfos">formatMultiContextInfos</a></li><li><a href="global.html#formatMultiMetaData">formatMultiMetaData</a></li><li><a href="global.html#formatUnitIcons">formatUnitIcons</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getContentContact">getContentContact</a></li><li><a href="global.html#getInputContextValue">getInputContextValue</a></li><li><a href="global.html#getParameterInput">getParameterInput</a></li><li><a href="global.html#global_currentInputUnitName">global_currentInputUnitName</a></li><li><a href="global.html#global_ScenarioCounter">global_ScenarioCounter</a></li><li><a href="global.html#loadScenario">loadScenario</a></li><li><a href="global.html#loadUnit">loadUnit</a></li><li><a href="global.html#myAuthorSystem">myAuthorSystem</a></li><li><a href="global.html#parsingFinished">parsingFinished</a></li><li><a href="global.html#replaceMarker2">replaceMarker2</a></li><li><a href="global.html#resizeMap">resizeMap</a></li><li><a href="global.html#saveCloseSzenario">saveCloseSzenario</a></li><li><a href="global.html#setLabelBtnScenarioDeletion">setLabelBtnScenarioDeletion</a></li><li><a href="global.html#setMinMax">setMinMax</a></li><li><a href="global.html#showContact">showContact</a></li><li><a href="global.html#showDeleteSzenario">showDeleteSzenario</a></li><li><a href="global.html#showDeleteUnitConfirm">showDeleteUnitConfirm</a></li><li><a href="global.html#showDeleteUnits">showDeleteUnits</a></li><li><a href="global.html#showDeleteUnitsConfirm">showDeleteUnitsConfirm</a></li><li><a href="global.html#showDetailContextInfo">showDetailContextInfo</a></li><li><a href="global.html#showHelp">showHelp</a></li><li><a href="global.html#showLoadSzenario">showLoadSzenario</a></li><li><a href="global.html#showLogin">showLogin</a></li><li><a href="global.html#showMainContextInfo">showMainContextInfo</a></li><li><a href="global.html#showNewSzenario">showNewSzenario</a></li><li><a href="global.html#showProfil">showProfil</a></li><li><a href="global.html#showPW">showPW</a></li><li><a href="global.html#showSaveScenario">showSaveScenario</a></li><li><a href="global.html#translate_contextClass">translate_contextClass</a></li><li><a href="global.html#translate_contextInformation">translate_contextInformation</a></li><li><a href="global.html#translate_contextParameter">translate_contextParameter</a></li><li><a href="global.html#translate_operator">translate_operator</a></li><li><a href="global.html#translate_parameter">translate_parameter</a></li><li><a href="global.html#translate_parameterValues">translate_parameterValues</a></li><li><a href="global.html#updateScenario">updateScenario</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateFunctionalities">activateFunctionalities</a></li><li><a href="global.html#array_ContextInformations">array_ContextInformations</a></li><li><a href="global.html#changeColorMultiContextInfos">changeColorMultiContextInfos</a></li><li><a href="global.html#checkInformation">checkInformation</a></li><li><a href="global.html#cleanSection">cleanSection</a></li><li><a href="global.html#configureInputContextValueForFloatInt">configureInputContextValueForFloatInt</a></li><li><a href="global.html#deleteScenarios">deleteScenarios</a></li><li><a href="global.html#deleteScenariosConfirm">deleteScenariosConfirm</a></li><li><a href="global.html#deleteScenariosNot">deleteScenariosNot</a></li><li><a href="global.html#deleteUnit">deleteUnit</a></li><li><a href="global.html#deleteUnits">deleteUnits</a></li><li><a href="global.html#deleteUnitsNot">deleteUnitsNot</a></li><li><a href="global.html#fillInputField">fillInputField</a></li><li><a href="global.html#fillParameterSelection">fillParameterSelection</a></li><li><a href="global.html#fillSelectionContextInformation">fillSelectionContextInformation</a></li><li><a href="global.html#formatContextInfos">formatContextInfos</a></li><li><a href="global.html#formatMetaData">formatMetaData</a></li><li><a href="global.html#formatMultiContextInfos">formatMultiContextInfos</a></li><li><a href="global.html#formatMultiMetaData">formatMultiMetaData</a></li><li><a href="global.html#formatUnitIcons">formatUnitIcons</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getContentContact">getContentContact</a></li><li><a href="global.html#getInputContextValue">getInputContextValue</a></li><li><a href="global.html#getParameterInput">getParameterInput</a></li><li><a href="global.html#global_currentInputUnitName">global_currentInputUnitName</a></li><li><a href="global.html#global_ScenarioCounter">global_ScenarioCounter</a></li><li><a href="global.html#loadScenario">loadScenario</a></li><li><a href="global.html#loadUnit">loadUnit</a></li><li><a href="global.html#myAuthorSystem">myAuthorSystem</a></li><li><a href="global.html#parsingFinished">fillContextTab</a></li><li><a href="global.html#replaceMarker2">replaceMarker2</a></li><li><a href="global.html#resizeMap">resizeMap</a></li><li><a href="global.html#saveCloseSzenario">saveCloseSzenario</a></li><li><a href="global.html#setLabelBtnScenarioDeletion">setLabelBtnScenarioDeletion</a></li><li><a href="global.html#setMinMax">setMinMax</a></li><li><a href="global.html#showContact">showContact</a></li><li><a href="global.html#showDeleteSzenario">showDeleteSzenario</a></li><li><a href="global.html#showDeleteUnitConfirm">showDeleteUnitConfirm</a></li><li><a href="global.html#showDeleteUnits">showDeleteUnits</a></li><li><a href="global.html#showDeleteUnitsConfirm">showDeleteUnitsConfirm</a></li><li><a href="global.html#showDetailContextInfo">showDetailContextInfo</a></li><li><a href="global.html#showHelp">showHelp</a></li><li><a href="global.html#showLoadSzenario">showLoadSzenario</a></li><li><a href="global.html#showLogin">showLogin</a></li><li><a href="global.html#showMainContextInfo">showMainContextInfo</a></li><li><a href="global.html#showNewSzenario">showNewSzenario</a></li><li><a href="global.html#showProfil">showProfil</a></li><li><a href="global.html#showPW">showPW</a></li><li><a href="global.html#showSaveScenario">showSaveScenario</a></li><li><a href="global.html#translate_contextClass">translate_contextClass</a></li><li><a href="global.html#translate_contextInformation">translate_contextInformation</a></li><li><a href="global.html#translate_contextParameter">translate_contextParameter</a></li><li><a href="global.html#translate_operator">translate_operator</a></li><li><a href="global.html#translate_parameter">translate_parameter</a></li><li><a href="global.html#translate_parameterValues">translate_parameterValues</a></li><li><a href="global.html#updateScenario">updateScenario</a></li></ul>
 </nav>
 
 <br class="clear">
