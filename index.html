@@ -27,36 +27,43 @@
 
 
         <!-- models -->
-        <script type="text/javascript" src="js/models/xmlParser.js"></script>
-        <script type="text/javascript" src="js/models/contextClasses.js"></script>
-        <script type="text/javascript" src="js/models/myAuthorSystem.js"></script>
+        <script type="text/javascript" src="js/mvc/models/xmlParser.js"></script>
+        <script type="text/javascript" src="js/mvc/models/contextClasses.js"></script>
+        <script type="text/javascript" src="js/mvc/models/myAuthorSystem.js"></script>
+        <script type="text/javascript" src="js/mvc/models/contextInformation.js"></script>
+        <script type="text/javascript" src="js/mvc/models/unit.js"></script>
+        <script type="text/javascript" src="js/mvc/views/formatSelections.js"></script>
+
 
         <!-- views -->
-        <script type="text/javascript" src="js/views/navBar.js"></script>
-        <script type="text/javascript" src="js/views/canvas/canvas.js"></script>
-        <script type="text/javascript" src="js/views/canvas/slider.js"></script>
-        <script type="text/javascript" src="js/views/canvas/unitContainer.js"></script>
+        <script type="text/javascript" src="js/mvc/views/navBar.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/canvas.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/slider.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/unitContainer.js"></script>
+        <!-- jsplumb statemachine functionalities -->
+        <script type="text/javascript" src="js/mvc/views/canvas/unitContainer.js"></script>
+        <!-- tab bar -->
+        <script type="text/javascript" src="js/mvc/views/tabs/tabs.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/settingsTab.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/contextTab.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/metadataTab.js"></script>
 
         <!-- controllers -->
-        <script type="text/javascript" src="js/controllers/functionalities.js"></script>
-        <script type="text/javascript" src="js/controllers/unitController.js"></script>
-        <script type="text/javascript" src="js/controllers/canvasController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/functionalities.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/unitController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/canvasController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/contextTabController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/modalWindowController.js"></script>
 
-
-        <!-- jsplumb statemachine functionalities -->
-        <script type="text/javascript" src="js/views/canvas/unitContainer.js"></script>
 
         <!-- Menu bar -->
         <link rel="stylesheet" href="css/menu.css">
-        <script type="text/javascript" src="js/views/menu.js"></script>
+        <script type="text/javascript" src="js/mvc/views/menu.js"></script>
 
-        <!-- tab bar -->
-        <script type="text/javascript" src="js/views/formatSelections.js"></script>
-        <script type="text/javascript" src="js/views/tabs/tabs.js"></script>
 
         <!-- modal window -->
         <link rel="stylesheet" href="css/pgwmodal.css">
-        <script type="text/javascript" src="js/views/modalWindows/modalWindows.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/modalWindows.js"></script>
 
         <!-- slider design -->
         <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
@@ -78,38 +85,6 @@
         <!--<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>-->
         <script src="//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
 
-        <!-- functions -->
-        <script>
-
-            // add jQuery UI Sliders with flat design
-            $(function() {
-                var $verticalSlider = $('.slider');
-                if ($verticalSlider.length) {
-                    $verticalSlider.slider({
-                        min: 0,
-                        max: 8,
-                        value: 4,
-                        orientation: 'vertical',
-                        step: 1,
-                        range: 'min'
-                    });
-                }
-            });
-
-            $(function() {
-                $('[data-toggle="tooltip"]').tooltip();
-                $('[data-toggle="checkbox"]').radiocheck();
-                $('[data-toggle="switch"]').bootstrapSwitch();
-                $("select").select2({dropdownCssClass: "dropdown-inverse"});
-
-                //setScenarios();     // only needed if scenarios already exist at program start
-                setLabelBtnScenarioDeletion();
-            });
-
-        </script>
-
-
-
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -130,9 +105,9 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-credit-card"></b> Szenario <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li onclick="showNewSzenario()"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
-                                <li onclick="showDeleteSzenario()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
-                                <li onclick="showLoadSzenario()"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
+                                <li onclick="showNewScenario()"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li onclick="showDeleteScenario()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li onclick="showLoadScenario()"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
                                 <li id="saveScenario" onclick="showSaveScenario()"><a download="szenario.json">Speichern <b class="fui-exit" style="float: right"></b></a></li>
                             </ul>
                         </li>
@@ -556,8 +531,8 @@
                         <p>Wollen Sie die Lerneinheiten wirklich löschen?</p>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDeleteUnits2" class="btn btn-danger" onclick="deleteUnits()" data-dismiss="modal" style="margin-right: 10px">JA</button>
-                        <button type="button" class="btn btn-default" onclick="deleteUnitsNot()" data-dismiss="modal">NEIN</button>
+                        <button id="btnDeleteUnits2" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="btnDeleteUnitsNot" type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>
             </div>
