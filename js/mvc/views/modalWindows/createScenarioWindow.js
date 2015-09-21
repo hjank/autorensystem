@@ -3,6 +3,33 @@
  */
 
 
+var global_ScenarioLiNumber = 0;
+
+$(function() {
+
+    // make sure that after clicking enter in modal window "Neues Szenario erstellen"
+    // the same steps were gone like clicking on the create button
+    $("#modal-new-szenario").keypress(function(e) {
+        if (e.keyCode == 13) {
+            saveCloseSzenario();
+            $('#modal-new-szenario').modal('hide');
+            return true;
+        }
+    });
+
+    // make sure that after clicking enter in input "Neues Szenario erstellen"
+    // the same steps were gone like clicking on the create button
+    $("#sname").keypress(function(e) {
+        if (e.keyCode == 13) {
+            saveCloseSzenario();
+            $('#modal-new-szenario').modal('hide');
+            return false;
+        }
+    });
+
+});
+
+
 // trigger new scenario modal window
 /**
  * Function shows the new scenario modal window.
@@ -39,7 +66,7 @@ function saveCloseSzenario() {
     $("#lname").html(scenarioName);
 
     // count number of scenarios (needed for different ids)
-    global_ScenarioLiNumber = global_ScenarioLiNumber + 1;
+    global_ScenarioLiNumber++;
 
     // create new container to see new scenario in menu bar
     var liClass = $('<li>').addClass('last');
@@ -70,4 +97,28 @@ function saveCloseSzenario() {
     // activate learning unit dropdown menu (big navigation bar)
     $("#navbarLearningUnit").css("pointer-events", "");
     $("#navbarLearningUnit").css("color", "");
+}
+
+
+// add scenario as a select option
+/**
+ * Function
+ * @param {String} name Name of the new Scenario
+ * */
+function updateScenario(name) {
+    var j = global_ScenarioCounter;
+
+    // add scenario as an option in selection bar
+    var optionClass = $('<option>').attr('value', j.toString());
+    optionClass.html(name);
+    optionClass.attr("selected", "");
+    $("#selectSzenarioDeletion").append(optionClass);
+
+    // get scenario data in multi selection bar
+    global_dataArrayScenarios.push({id: j, text: name});
+    $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
+    global_ScenarioCounter = global_ScenarioCounter + 1;
+
+    // update list with units per scenario
+    myAuthorSystem.push({name: name, units:[], connections:[]});
 }

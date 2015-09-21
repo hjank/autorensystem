@@ -1,13 +1,14 @@
 /**
- * Created by Helena on 06.09.2015.
+ * Created by Helena on 04.09.2015.
  */
 
 
-// delete unit after confirming deletion in tab "Eigenschaften"
+
+
 /**
  * Function deletes selected unit from the working place.
  * */
-function deleteUnit() {
+function deleteUnitFromModel() {
 
     // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
@@ -53,24 +54,4 @@ function deleteUnit() {
     // all tab content invisible
     $(".tabContents").hide();
     $(".tab-Container").hide();
-}
-
-
-// triggered if delete button in tab "Eigenschaften" was clicked
-/**
- * Function shows delete unit confirmation modal window.
- * Triggered in tab properties after clicking the unit delete button
- * */
-function showDeleteUnitConfirm() {
-
-    // show modal window
-    $("#modal-delete-unit-confirm").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-
-    // get unit name and show the unit specific text
-    var unitName = $("#inputUnitName")[0].value;
-    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich löschen?');
 }

@@ -81,7 +81,6 @@ function showDetailContextInfo() {
     fillSelectionContextInformation();
 }
 
-
 // fill selection bar "Kontextinformation"
 /**
  * Function adds all context information and context classes into the selection bar context information.
@@ -156,7 +155,7 @@ function fillSelectionContextInformation() {
 
 // fill input field (value in tab Kontexinformation)
 /**
- * Function gets the seletect context information and decides which input field has to be set on GUI.
+ * Function gets the selected context information and decides which input field has to be set on GUI.
  * @param {Object} ci Contains current context information.
  * */
 function fillInputField(ci) {
@@ -172,11 +171,7 @@ function fillInputField(ci) {
 
     // decide which type of input field is needed
     switch (type) {
-
         case "FLOAT":
-            configureInputContextValueForFloatInt(ci[0]);
-            break;
-
         case "INTEGER":
             configureInputContextValueForFloatInt(ci[0]);
             break;
@@ -510,13 +505,171 @@ function cleanSection(s) {
 }
 
 
-// if home button is clicked change view
+// if home or confirm button is clicked change view
 /**
  * Function changes view of context information tab from detail view to main view.
  * */
 function showMainContextInfo() {
-
     // show main, hide detail
     $("#mainContextInfo").slideDown();
     $("#detailContextInfo").slideUp();
 }
+
+
+
+// get the specific color for each context class
+/**
+ * Function finds specific color of a context class.
+ * @param {String} cc Contains a context class.
+ * @return {String} Returns the specific color.
+ * */
+function getColor(cc) {
+    var color;
+
+    switch (cc) {
+        case "Lernszenario":
+            color = "#3287C8";
+            break;
+        case "Persönlich":
+            color = "#AF46C8";
+            break;
+        case "Situationsbezogen":
+            color = "#91F52D";
+            break;
+        case "Infrastruktur":
+            color = "#969696";
+            break;
+        case "Umwelt":
+            color = "#FADC3C";
+            break;
+        case "Ortung":
+            color = "#F03C32";
+            break;
+    }
+    return color;
+}
+
+
+
+// change all colors in multi selection in tab "Kontextinformation"
+/**
+ * Function changes colors of all selected options in multi selection bar context information.
+ * */
+function changeColorMultiContextInfos() {
+
+    // get all names from selected options
+    var name = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div");
+    $(name).each(function() {
+
+        // iterate over all multi selections
+        for (var i=0; i<array_multiSelectionContextInfos.length; i++) {
+
+            // get id
+            var thisID = array_multiSelectionContextInfos[i]["id"];
+
+            // needed to prevent failure, if no img exist
+            var title;
+            if ($(this).children("img").length != 0) {
+                // get context information title
+                title = $(this).children("img")[0].title;
+            }
+
+            /* new */
+            // add edit icon
+            var edit = $("<a>")
+                .attr("href", "#")
+                .addClass("select2-search-choice-edit")
+                .attr("tabindex", -1)
+                .attr("title", "Bearbeiten")
+                .attr("id", thisID);
+            //var icon = $("<b>").addClass("fui-new edit-ci").attr("style", "padding-right: 10px;");
+            //edit.append(icon);
+            $(this).parent().append(edit);
+
+            $(this).parent().hover(
+                function() { $(this).css("width", "85px"); },
+                function() { var obj = $(this);
+                    setTimeout(function() { obj.css("width", ""); }, 200);
+                }
+            );
+
+            // add event listeners
+            $(".select2-search-choice-edit").on("click", function(e) {
+                console.log("edit");
+
+                var nameContextInfo = $(this).parent()[0].title;
+                var operator, value, parameter1, parameter2, input1, input2, inputString;
+
+                /*      for (var i=0; i<myAuthorSystem.length; i++) {
+                 if ( myAuthorSystem[i].name == $("#lname")[0].innerText ) {
+                 for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
+                 if ( myAuthorSystem[i]["units"][j].name == global_currentInputUnitName ) {
+                 for (var k=0; k<myAuthorSystem[i]["units"][j]["contextInformations"].length; k++) {
+                 if ( myAuthorSystem[i]["units"][j]["contextInformations"][k].name == nameContextInfo ) {
+                 operator = myAuthorSystem[i]["units"][j]["contextInformations"][k].operator;
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].value) {
+                 value = myAuthorSystem[i]["units"][j]["contextInformations"][k].value }
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1) {
+                 parameter1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1 }
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2) {
+                 parameter2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2 }
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input1) {
+                 input1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input1 }
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input2) {
+                 input2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input2 }
+                 if (myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString) {
+                 inputString = myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString }
+                 break;
+                 }
+                 }
+                 }
+                 }
+
+                 }
+                 }*/
+
+                for (var l= 0; l<$("#selectContextInfos")[0].length; l++) {
+                    if ( $("#selectContextInfos")[0][l].text == nameContextInfo ) {
+                        $("#selectContextInfos").select2("data", {
+                            id:$("#selectContextInfos")[0][l].id,
+                            text:$("#selectContextInfos")[0][l].text
+                        });
+                        break;
+                    }
+                }
+
+                $("#mainContextInfo").hide();
+                $("#detailContextInfo").show();
+
+                e.stopPropagation();
+            });
+            $(".select2-search-choice-close").on("click", function(e) {
+                console.log("delete");
+                e.stopPropagation();
+            });
+            $(".select2-search-choice-close").hover(
+                function() {$(this).attr("title", "Löschen")}
+            );
+
+            /* end new */
+
+            // find right one
+            if (array_multiSelectionContextInfos[i]["text"] == this.innerHTML ||    // text
+                array_multiSelectionContextInfos[i]["text"] == title) {             // icon
+
+                // get first context class
+                var contextClass = array_ContextInformations[thisID][1][0]["translation"];
+
+                // get specific context class color
+                var color = getColor(contextClass);
+                $(this).parent().css("background-color", color);
+
+                // set title --> tooltip if the mouse is on the icon
+                $(this).parent().attr("title", title);
+
+                break;
+            }
+        }
+    });
+}
+

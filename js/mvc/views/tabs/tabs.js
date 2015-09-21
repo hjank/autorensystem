@@ -84,7 +84,7 @@ function activateFunctionalities(newState) {
         /* input field in tab "Eigenschaften"*/
         // get name of the unit
         if ($(unit).children("div").hasClass("title")) {
-            name = (this).innerText.replace(/(\r\n|\n|\r)/gm,"");
+            name = this.innerText.replace(/(\r\n|\n|\r)/gm,"");
         }
 
         // put name into the input field
@@ -367,11 +367,9 @@ function activateFunctionalities(newState) {
         if (name == global_currentInputUnitName) {
 
             // check if all needed fields were filled with information
-            var missing_content = "";
-            var returnArray = [];
-            returnArray = checkInformation(missing_content, current_unit);
-            missing_content = returnArray[0];
-            var selectedInfos = returnArray[1];
+            var returnArray = checkInformation(current_unit);
+            var missing_content = returnArray[0]; // displayed to user if something is missing
+            var selectedInfo = returnArray[1];
 
             // if content is missing do not accept adding of the context information
             if (missing_content == "Error999") {
@@ -387,7 +385,7 @@ function activateFunctionalities(newState) {
                 } else {
 
                     // push all new information about the context unit in current scenario
-                    current_unit["contextInformations"].push(selectedInfos);
+                    current_unit["contextInformations"].push(selectedInfo);
 
                     // get selected context information
                     var contentContextInfo = $("#selectContextInfos").select2("data");
@@ -467,7 +465,7 @@ function activateFunctionalities(newState) {
                     counter_multiSelectionContextInfos++;
 
                     // show main, hide detail
-                    showMainContextInfo;
+                    showMainContextInfo();
 
                     // show SAT and multi selection bar
                     $("#mainContextInfoSAT").show();
@@ -498,37 +496,8 @@ function activateFunctionalities(newState) {
             var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
 
             // choose icon symbol and add it to meta data DOM
-            var metaIcon;
-            switch (e.choice.text) {
-                case "Bild":
-                    metaIcon = "fui-photo";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "Film":
-                    metaIcon = "fui-video";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "Text":
-                    metaIcon = "fui-document";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "Navigation":
-                    metaIcon = "fui-location";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "Test":
-                    metaIcon = "fui-radio-unchecked";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "Audio":
-                    metaIcon = "fui-volume";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-                case "3D Umgebung":
-                    metaIcon = "fui-windows";
-                    divMetaIcon.attr("title", e.choice.text);
-                    break;
-            }
+            var metaIcon = chooseMetaIcon(e.choice.text);
+            divMetaIcon.attr("title", e.choice.text);
 
             // add DOM for meta data icon (glyph)
             var bMetaIcon = $("<b>").addClass(metaIcon);
@@ -552,7 +521,7 @@ function activateFunctionalities(newState) {
             });
             $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
 
-            counter_multiSelectionMetaData ++;
+            counter_multiSelectionMetaData++;
 
             // update JSON structure
             var currentMetaData = {};
@@ -607,11 +576,7 @@ function activateFunctionalities(newState) {
     });
 
     // re-sets the glyphs in selection bar
-    $("#selectMetaData").select2({
-        formatSelection: formatMetaData,
-        formatResult: formatMetaData,
-        escapeMarkup: function(m) {return m;}
-    });
+    addMetadataGlyphsToOptions();
 
     // triggered if unit was dragged
     $(unit).on("dragstop", function() {
@@ -636,161 +601,5 @@ function activateFunctionalities(newState) {
 
 }
 
-
-
-
-// change all colors in multi selection in tab "Kontextinformation"
-/**
- * Function changes colors of all selected options in multi selection bar context information.
- * */
-function changeColorMultiContextInfos() {
-
-    // get all names from selected options
-    var name = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div");
-    $(name).each(function() {
-
-        // iterate over all multi selections
-        for (var i=0; i<array_multiSelectionContextInfos.length; i++) {
-
-            // get id
-            var thisID = array_multiSelectionContextInfos[i]["id"];
-
-            // needed to prevent failure, if no img exist
-            var title;
-            if ($(this).children("img").length != 0) {
-                // get context information title
-                title = $(this).children("img")[0].title;
-            }
-
-            /* new */
-            // add edit icon
-            var edit = $("<a>")
-                .attr("href", "#")
-                .addClass("select2-search-choice-edit")
-                .attr("tabindex", -1)
-                .attr("title", "Bearbeiten")
-                .attr("id", thisID);
-            //var icon = $("<b>").addClass("fui-new edit-ci").attr("style", "padding-right: 10px;");
-            //edit.append(icon);
-            $(this).parent().append(edit);
-
-            $(this).parent().hover(
-                function() { $(this).css("width", "85px"); },
-                function() { var obj = $(this);
-                    setTimeout(function() { obj.css("width", ""); }, 200);
-                }
-            );
-
-            // add event listeners
-            $(".select2-search-choice-edit").on("click", function(e) {
-                console.log("edit");
-
-                var nameContextInfo = $(this).parent()[0].title;
-                var operator, value, parameter1, parameter2, input1, input2, inputString;
-
-          /*      for (var i=0; i<myAuthorSystem.length; i++) {
-                    if ( myAuthorSystem[i].name == $("#lname")[0].innerText ) {
-                        for (var j=0; j<myAuthorSystem[i]["units"].length; j++) {
-                            if ( myAuthorSystem[i]["units"][j].name == global_currentInputUnitName ) {
-                                for (var k=0; k<myAuthorSystem[i]["units"][j]["contextInformations"].length; k++) {
-                                    if ( myAuthorSystem[i]["units"][j]["contextInformations"][k].name == nameContextInfo ) {
-                                        operator = myAuthorSystem[i]["units"][j]["contextInformations"][k].operator;
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].value) {
-                                            value = myAuthorSystem[i]["units"][j]["contextInformations"][k].value }
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1) {
-                                            parameter1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter1 }
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2) {
-                                            parameter2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].parameter2 }
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input1) {
-                                            input1 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input1 }
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].input2) {
-                                            input2 = myAuthorSystem[i]["units"][j]["contextInformations"][k].input2 }
-                                        if (myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString) {
-                                            inputString = myAuthorSystem[i]["units"][j]["contextInformations"][k].inputString }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }*/
-
-                for (var l= 0; l<$("#selectContextInfos")[0].length; l++) {
-                    if ( $("#selectContextInfos")[0][l].text == nameContextInfo ) {
-                        $("#selectContextInfos").select2("data", {
-                                id:$("#selectContextInfos")[0][l].id,
-                                text:$("#selectContextInfos")[0][l].text
-                            });
-                        break;
-                    }
-                }
-
-                $("#mainContextInfo").hide();
-                $("#detailContextInfo").show();
-
-                e.stopPropagation();
-            });
-            $(".select2-search-choice-close").on("click", function(e) {
-                console.log("delete");
-                e.stopPropagation();
-            });
-            $(".select2-search-choice-close").hover(
-                function() {$(this).attr("title", "Löschen")}
-            );
-
-            /* end new */
-
-            // find right one
-            if (array_multiSelectionContextInfos[i]["text"] == this.innerHTML ||    // text
-                array_multiSelectionContextInfos[i]["text"] == title) {             // icon
-
-                // get first context class
-                var contextClass = array_ContextInformations[thisID][1][0]["translation"];
-
-                // get specific context class color
-                var color = getColor(contextClass);
-                $(this).parent().css("background-color", color);
-
-                // set title --> tooltip if the mouse is on the icon
-                $(this).parent().attr("title", title);
-
-                break;
-            }
-        }
-    });
-}
-
-// get the specific color for each context class
-/**
- * Function finds specific color of a context class.
- * @param {String} cc Contains a context class.
- * @return {String} Returns the specific color.
- * */
-function getColor(cc) {
-    var color;
-
-    switch (cc) {
-        case "Lernszenario":
-            color = "#3287C8";
-            break;
-        case "Persönlich":
-            color = "#AF46C8";
-            break;
-        case "Situationsbezogen":
-            color = "#91F52D";
-            break;
-        case "Infrastruktur":
-            color = "#969696";
-            break;
-        case "Umwelt":
-            color = "#FADC3C";
-            break;
-        case "Ortung":
-            color = "#F03C32";
-            break;
-    }
-    return color;
-}
 
 

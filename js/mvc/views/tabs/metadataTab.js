@@ -19,6 +19,11 @@ function fillMetadataTab () {
         $("#selectMetaData").append(option);
     }
     // change format: add glyphs per option
+    addMetadataGlyphsToOptions;
+}
+
+
+function addMetadataGlyphsToOptions() {
     $("#selectMetaData").select2({
         formatSelection: formatMetaData,
         formatResult: formatMetaData,

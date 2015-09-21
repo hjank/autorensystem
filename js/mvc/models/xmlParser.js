@@ -2,7 +2,6 @@
  * Created by juliushofler on 06.04.15.
  */
 
-var array_ContextInformations = [];
 
 /** Structure context informations
 

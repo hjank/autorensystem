@@ -2,6 +2,39 @@
  * Created by Helena on 06.09.2015.
  */
 
+
+
+$(function() {
+
+    // triggered if load button was clicked in modal window load scenario
+    $("#btnLoadScenario").on("click", function() {
+
+        // get name of the selected scenario
+        var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
+
+        // find right scenario
+        for (var i=0; i<myAuthorSystem.length; i++) {
+            if (myAuthorSystem[i].name == selectedScenario) {
+                // save scenario object in JSON structure
+                localStorage.setItem("saveData", JSON.stringify(myAuthorSystem[i]));
+
+                // add name in URL
+                $(location).attr("href", "?" + selectedScenario);
+            }
+        }
+
+        // only for testing
+        if (selectedScenario == "Testszenario") {
+
+            // add name in URL
+            $(location).attr("href", "?" + selectedScenario);
+        }
+
+    });
+});
+
+
+
 // trigger load scenarios modal window
 /**
  * Function shows the load scenario modal window.

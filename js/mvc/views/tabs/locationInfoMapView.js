@@ -2,13 +2,13 @@
  * Created by elis on 07.09.2015.
  */
 
-
 // google maps
 var map;
 var image;
 var shadow;
 var marker;
 var markers = [];
+
 $(function(){
 
     var currentLat, currentLng;

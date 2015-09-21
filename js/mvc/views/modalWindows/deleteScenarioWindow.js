@@ -3,28 +3,75 @@
  */
 
 
+var global_arrayShowSzenarioDeletion = [];
+
+
 $(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-    $('[data-toggle="checkbox"]').radiocheck();
-    $('[data-toggle="switch"]').bootstrapSwitch();
-    $("select").select2({dropdownCssClass: "dropdown-inverse"});
 
-    //setScenarios();     // only needed if scenarios already exist at program start
-    setLabelBtnScenarioDeletion();
-});
+    // remove elements from scenario list, add elements in delete scenario list
+    $("#selectSzenarioDeletion").select2().on("select2-removed", function(e) {
+        // build option DOM
+        var optionScenarioDeletion = $('<option>').attr('value', e.val);
+        optionScenarioDeletion.html(e.choice.text);
+        optionScenarioDeletion.attr("selected", "");
 
+        // add option to selection bar
+        $("#selectSzenarioDeletion2").append(optionScenarioDeletion);
+        global_arrayShowSzenarioDeletion.push({id: e.val, text: e.choice.text});
+        $("#selectSzenarioDeletion2").select2("data", global_arrayShowSzenarioDeletion);
 
-// opens new modal window to confirm scenario deletion
-/**
- * Function shows the confirmation of scenario deletion modal window
- * */
-function deleteScenariosConfirm() {
-
-    // show modal window
-    $("#modal-delete-szenario-confirm").modal({
-        show: true
+        // delete element in scenario list
+        for (var i = global_dataArrayScenarios.length - 1; i >= 0; i--) {
+            if (global_dataArrayScenarios[i]["id"] === e.val) {
+                global_dataArrayScenarios.splice(i,1);
+            }
+        }
+        // set label
+        setLabelBtnScenarioDeletion();
     });
-}
+
+    // remove elements from delete scenario list, add elements in scenario list
+    $("#selectSzenarioDeletion2").select2().on("select2-removed", function(e) {
+        // build option DOM
+        var optionSzenarioDeletion = $('<option>').attr('value', e.val);
+        optionSzenarioDeletion.html(e.choice.text);
+        optionSzenarioDeletion.attr("selected", "");
+
+        // add option to selection bar
+        $("#selectSzenarioDeletion").append(optionSzenarioDeletion);
+        global_dataArrayScenarios.push({id: e.val, text: e.choice.text});
+        $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
+
+        // delete element in deletion list
+        for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
+            if (global_arrayShowSzenarioDeletion[i]["id"] === e.val) {
+                global_arrayShowSzenarioDeletion.splice(i,1);
+            }
+        }
+        // set label
+        setLabelBtnScenarioDeletion();
+    });
+
+    // add element in scenario list and immediately delete it in delete list
+    $("#selectSzenarioDeletion").select2().on("select2-selecting", function(e) {
+
+        // remove element
+        for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
+            if (global_arrayShowSzenarioDeletion[i]["id"] == e.val) {
+                global_arrayShowSzenarioDeletion.splice(i,1);
+                var remove = $("#selectSzenarioDeletion2>option[value='"+ e.val +"']");
+                remove.remove();
+            }
+        }
+
+        // push elements in selection bar
+        $("#selectSzenarioDeletion2").select2("data", global_arrayShowSzenarioDeletion);
+
+        // set label
+        setLabelBtnScenarioDeletion();
+    });
+
+});
 
 
 // label delete button for modal window "Delete Scenarios"
@@ -39,6 +86,36 @@ function setLabelBtnScenarioDeletion() {
     // set label of the deletion button
     $("#btnDeleteSzenario").text("Löschen (" + countSelectedDelete.toString() + ")");
 }
+
+
+
+// trigger delete scenarios modal window
+/**
+ * Function shows the delete scenario modal window.
+ * */
+function showDeleteScenario() {
+
+    // show modal window
+    $("#modal-delete-szenario").modal({
+        keyboard: true,
+        backdrop: true,
+        show: true
+    });
+}
+
+
+// opens new modal window to confirm scenario deletion
+/**
+ * Function shows the confirmation of scenario deletion modal window
+ * */
+function deleteScenariosConfirm() {
+
+    // show modal window
+    $("#modal-delete-szenario-confirm").modal({
+        show: true
+    });
+}
+
 
 
 // delete scenarios from menu bar and clears state machine

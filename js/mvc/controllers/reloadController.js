@@ -3,45 +3,20 @@
  */
 
 
-
-
-
-
-// container
 $(function() {
-    // triggered if unit container is clicked
-    $("#container").on("click", function() {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="checkbox"]').radiocheck();
+    $('[data-toggle="switch"]').bootstrapSwitch();
+    $("select").select2({dropdownCssClass: "dropdown-inverse"});
 
-        // clear marking from existing learning units
-        clearMarkingFromLearningUnits();
-
-        bool_unitClicked = false;
-
-        // clear marking from label connections
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
-
-        // clear multi selection bar "Metadaten"
-        $("#selectMultiMetaData").empty();
-        array_multiSelectionMetaData = [];
-        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
-
-        // all tab content invisible
-        $(".tabContents").hide();
-        $(".tab-Container").hide();
-        $("#tabUnitLabel").hide();
-    });
+    //setScenarios();     // only needed if scenarios already exist at program start
+    setLabelBtnScenarioDeletion();
 });
 
-// big navigation bar
-$(function() {
-    $("#navbarLearningUnit").css("pointer-events", "none");
-    $("#navbarLearningUnit").css("color", "#aaa");
-});
 
 // reloading
 var loadedData;
-$(function() {
+jsPlumb.ready(function () {
 
     // get URL parameter
     var paramURL = location.search.substr(1);
@@ -85,6 +60,7 @@ $(function() {
         });
     }
 });
+
 
 /**
  * Function loads a scenario which contains all units, connections und functions.

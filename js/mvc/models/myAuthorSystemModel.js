@@ -25,7 +25,6 @@
 
 var myAuthorSystem = [];
 
-
 function changeScenarioName(oldName, newName) {
     for (var m=0; m<myAuthorSystem.length; m++) {
         if (myAuthorSystem[m].name == oldName) {

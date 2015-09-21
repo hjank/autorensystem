@@ -10,6 +10,8 @@ $(function() {
     // for button: delete unit = YES
     $("btnDeleteUnits2").click(function() {
         deleteUnits();
+        // delete one or more units + connections in modal window "Lernszenarien löschen"
+        deleteSelectedUnitsFromDOM();
     });
 
     // for button: delete unit = NO
@@ -17,8 +19,9 @@ $(function() {
         deleteUnitsNot();
     });
 
-
 });
+
+
 
 
 

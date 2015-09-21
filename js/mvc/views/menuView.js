@@ -72,3 +72,5 @@ function changeNameInMenu(oldName, newName) {
 		}
 	});
 }
+
+

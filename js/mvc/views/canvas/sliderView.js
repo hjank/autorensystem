@@ -40,6 +40,7 @@ $(function() {
         .slider("pips", {first:"label", last:"label", labels:{"first":"-", "last":"+"}});
 });
 
+/*
 
 // add jQuery UI Sliders with flat design
 $(function() {
@@ -54,4 +55,4 @@ $(function() {
             range: 'min'
         });
     }
-});
+});*/

@@ -22,48 +22,52 @@
         <script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"></script>
+        <!--<script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"/>-->
+        <script type="text/javascript" src="js/vendor/jsPlumb-1.7.10.js"></script>
 
-
-
-        <!-- models -->
-        <script type="text/javascript" src="js/mvc/models/xmlParser.js"></script>
-        <script type="text/javascript" src="js/mvc/models/contextClasses.js"></script>
-        <script type="text/javascript" src="js/mvc/models/myAuthorSystem.js"></script>
-        <script type="text/javascript" src="js/mvc/models/contextInformation.js"></script>
-        <script type="text/javascript" src="js/mvc/models/unit.js"></script>
-        <script type="text/javascript" src="js/mvc/views/formatSelections.js"></script>
-
-
-        <!-- views -->
-        <script type="text/javascript" src="js/mvc/views/navBar.js"></script>
-        <script type="text/javascript" src="js/mvc/views/canvas/canvas.js"></script>
-        <script type="text/javascript" src="js/mvc/views/canvas/slider.js"></script>
-        <script type="text/javascript" src="js/mvc/views/canvas/unitContainer.js"></script>
-        <!-- jsplumb statemachine functionalities -->
-        <script type="text/javascript" src="js/mvc/views/canvas/unitContainer.js"></script>
-        <!-- tab bar -->
-        <script type="text/javascript" src="js/mvc/views/tabs/tabs.js"></script>
-        <script type="text/javascript" src="js/mvc/views/tabs/settingsTab.js"></script>
-        <script type="text/javascript" src="js/mvc/views/tabs/contextTab.js"></script>
-        <script type="text/javascript" src="js/mvc/views/tabs/metadataTab.js"></script>
 
         <!-- controllers -->
-        <script type="text/javascript" src="js/mvc/controllers/functionalities.js"></script>
-        <script type="text/javascript" src="js/mvc/controllers/unitController.js"></script>
         <script type="text/javascript" src="js/mvc/controllers/canvasController.js"></script>
-        <script type="text/javascript" src="js/mvc/controllers/contextTabController.js"></script>
-        <script type="text/javascript" src="js/mvc/controllers/modalWindowController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/reloadController.js"></script>
+
+        <!-- models -->
+        <script type="text/javascript" src="js/mvc/models/myAuthorSystemModel.js"></script>
+        <script type="text/javascript" src="js/mvc/models/contextInformationModel.js"></script>
+        <script type="text/javascript" src="js/mvc/models/scenarioModel.js"></script>
+        <script type="text/javascript" src="js/mvc/models/unitModel.js"></script>
+        <script type="text/javascript" src="js/mvc/models/xmlParser.js"></script>
+
+        <!-- views -->
+        <script type="text/javascript" src="js/mvc/views/navBarView.js"></script>
+        <script type="text/javascript" src="js/mvc/views/menuView.js"></script>
+        <script type="text/javascript" src="js/mvc/views/formatSelections.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/canvasView.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/sliderView.js"></script>
+        <script type="text/javascript" src="js/mvc/views/canvas/unitView.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/contactWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/createScenarioWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/deleteRelationWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/deleteScenarioWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/deleteUnitWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/helpWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/loadScenarioWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/modalWindows.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/userLoginWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/modalWindows/userProfileWindow.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/tabs.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/propertiesTab.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/contextTab.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/metadataTab.js"></script>
+        <script type="text/javascript" src="js/mvc/views/tabs/locationInfoMapView.js"></script>
+
 
 
         <!-- Menu bar -->
         <link rel="stylesheet" href="css/menu.css">
-        <script type="text/javascript" src="js/mvc/views/menu.js"></script>
 
 
         <!-- modal window -->
         <link rel="stylesheet" href="css/pgwmodal.css">
-        <script type="text/javascript" src="js/mvc/views/modalWindows/modalWindows.js"></script>
 
         <!-- slider design -->
         <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
@@ -115,7 +119,7 @@
                             <a id="navbarLearningUnit" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
-                                <li onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="deleteLearnUnit" onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
@@ -427,7 +431,7 @@
                                 </select>
                             </div>
                             <div id="choiceDeletionScenarios">
-                                <label class="label label-modal" for="selectSzenarioDeletion2">Zu löschende Szenarios</label><br>
+                                <label class="label label-modal" for="selectSzenarioDeletion2">Zu löschende Szenarien</label><br>
                                 <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
                                 </select>
                             </div>
@@ -470,7 +474,7 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <label>Wähle ein Szanrio aus, welches geladen werden soll!</label>
+                            <label>Wähle ein Szenario aus, welches geladen werden soll!</label>
                         </div>
                         <div>
                             <select id="listLoadScenarios" class="form-control select select-primary mbl" data-toggle="select">
@@ -689,7 +693,7 @@
                         <p id="tabTextUnitDeletion">Wollen Sie die Lerneinheit wirklich löschen?</p>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDeleteUnit" class="btn btn-danger" onclick="deleteUnit()" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="btnDeleteUnit" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>

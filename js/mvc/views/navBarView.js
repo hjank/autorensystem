@@ -2,6 +2,13 @@
  * Created by Helena on 04.09.2015.
  */
 
+// big navigation bar
+$(function() {
+    $("#navbarLearningUnit").css("pointer-events", "none");
+    $("#navbarLearningUnit").css("color", "#aaa");
+});
+
+
 // events on little menu bar
 $(function() {
 
