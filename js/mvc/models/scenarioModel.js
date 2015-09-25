@@ -2,6 +2,24 @@
  * Created by elis on 07.09.2015.
  */
 
+$(function() {
+
+    function Scenario() {
+
+        this._name = "";
+        this._units = [];
+        this._connections = [];
+
+        return this;
+    }
+
+
+
+    return Scenario;
+});
+
+
+
 
 // triggered if save scenario was clicked
 /**

@@ -3,21 +3,7 @@
  */
 
 
-/** Structure context informations
-
- array_ContextInformations = [array_ContextInformation1, array_ContextInformation2, array_ContextInformation3, ...]
-    array_ContextInformation = [id, array_classes, array_contextValue, array_parameter]
-        array_classes = [class1, class2, ...]
-        array_contextValue = [array_contextValueAttributes, array_operators, array_posVal]
-            array_contextValueAttributes = [{type:value}, ({min:value}, {max:value}, {default:value})]
-            array_operators = [operator1, operator2, ...]
-            array_posVal = [value1, value2, ...]
-        array_parameter = [array_parameterValue1, array_parameterValue2, ...]
-            array_parameterValue = [id, type, array_values]
-                array_values = [value1, value2, ...]
- **/
-
-$(function() {
+function parseContextInfoXML () {
 
     // http://localhost:9998/xml/get-context-information
     // build url
@@ -39,167 +25,165 @@ $(function() {
             // parse all needed information from the xml file
             $('information', xml).each(function() {
 
-                var array_ContextInformation = [];
 
                 /* get the name of the information */
                 var originalName = this.getAttribute("id");
                 var name = {
-                    "translation":translate_contextInformation(originalName),
-                    "original":originalName
+                    translation:translate_contextInformation(originalName),
+                    original:originalName
                 };
+
 
                 /* get the context classes from the current information */
                 var array_classes = [];
-                var contextClasses = $('contextClasses', this).children();
+                array_classes.name = "Context Classes";
 
                 // get all classes and put them into an array
-                contextClasses.each(function() {
+                $('contextClasses', this).children().each(function() {
                     var contextClassId = this.getAttribute("id");
-                    var contextClass = {
-                        "translation":translate_contextClass(contextClassId),
-                        "original":contextClassId
-                    };
-                    array_classes.push(contextClass);
+                    array_classes.push({
+                        translation:translate_contextClass(contextClassId),
+                        original:contextClassId
+                    });
                 });
-                array_classes.name = "Context Classes";
+
 
 
                 /* get the context values from the current information */
                 var contextValue = $('contextValue', this);
 
                 // 1. type of context value
-                var array_contextValueAttributes = [];
-                var type = {"type": contextValue[0].getAttribute("type")};
-                array_contextValueAttributes.push(type);
+                // get border minimum if given, else null
+                // get border maximum if given, else null
+                // get default value if given, else null
+                var contextValueAttributes = {
+                    type:contextValue[0].getAttribute("type"),
+                    min:contextValue[0].getAttribute("min"),
+                    max:contextValue[0].getAttribute("max"),
+                    default:contextValue[0].getAttribute("default")
+                };
 
-                // get border minimum if given
-                if (contextValue[0].getAttribute("min")) {
-                    var min = {"min": contextValue[0].getAttribute("min")};
-                    array_contextValueAttributes.push(min);
-                }
-
-                // get border maximum if given
-                if (contextValue[0].getAttribute("max")) {
-                    var max = {"max": contextValue[0].getAttribute("max")};
-                    array_contextValueAttributes.push(max);
-                }
-
-                // get default value if given
-                if (contextValue[0].getAttribute("default")) {
-                    var def = {"default": contextValue[0].getAttribute("default")};
-                    array_contextValueAttributes.push(def);
-                }
 
                 // 2. all possible operators
                 var array_operators = [];
-                var operators = contextValue.children("operators").children().each(function() {
-                    var operatorId = this.getAttribute("id");
-                    var operator = {
-                        "translation":translate_operator(operatorId),
-                        "original":operatorId
-                    };
-                    array_operators.push(operator);
-                });
                 array_operators.name = "Operators";
 
-                // 3. all possible values
-                var array_posVal = [];
-                var possibleValues = contextValue.children("possibleValues").children().each(function() {
-                    var possibleValue = this.innerHTML;
-                    var posVal = {
-                        "translation":translate_possibleValue(possibleValue),
-                        "original":possibleValue
-                    };
-                    array_posVal.push(posVal);
-                });
-                array_posVal.name = "Possible Values";
-
-                // push all context values into an array
-                var array_contextValue = [];
-                array_contextValue.push(array_contextValueAttributes, array_operators, array_posVal);
-                array_contextValue.name = "Context Value";
-
-
-                /* get the parameters if needed */
-                var parameters = $('parameters', this);
-
-                // if parameter section exists
-                var array_parameter = [];
-                if (parameters.length != 0) {
-
-                    // all parameters
-                    parameters.children("parameter").each(function() {
-
-                        // get id of each parameter
-                        var pid = this.getAttribute("id");
-                        var id = {
-                            "translation":translate_parameter(pid),
-                            "original":pid
-                        };
-
-                        var array_values = [];
-                        var paraValue = $(this).children("parameterValue");
-
-                        // all parameter values
-                        paraValue.each(function() {
-
-                            // get the type of each parameter value
-                            var type = this.getAttribute("type");
-
-                            var array_parameterValue = [];
-
-                            // different types have different values
-                            switch (type) {
-
-                                case "ENUM":
-                                    // get the only possible values for this parameter
-                                    if (paraValue.children("possibleValues").length != 0) {
-                                        paraValue.children("possibleValues").children("value").each(function() {
-                                            var valueId = this.innerHTML;
-                                            var value = {
-                                                "translation":translate_parameterValues(valueId),
-                                                "original":valueId
-                                            };
-                                            array_values.push(value);
-                                            array_values.name = "Possible Values";
-                                        });
-                                    }
-                                    break;
-
-                                case "FLOAT":
-                                    // floats have always a minimum and maximum value
-                                    var min = this.getAttribute("min");
-                                    var max = this.getAttribute("max");
-                                    array_values.push({"min":min, "max":max});
-                                    array_values.name = "Minimum and Maximum Values";
-                                    break;
-
-                                case "INTEGER":
-                                    break;
-
-                                case "STRING":
-                                    break;
-                            }
-                            // push all parameters into an array
-                            array_parameterValue.push(id, type, array_values);
-                            array_parameterValue.name = "Parameter";
-                            array_parameter.push(array_parameterValue);
-                        });
+                contextValue.children("operators").children().each(function() {
+                    var operatorId = this.getAttribute("id");
+                    array_operators.push({
+                        translation:translate_operator(operatorId),
+                        original:operatorId
                     });
-                }
-                array_parameter.name = "Parameters (id, type, values)";
+                });
 
-                // put all information into an array
-                array_ContextInformation.push(name, array_classes, array_contextValue, array_parameter);
-                array_ContextInformations.push(array_ContextInformation);
+
+                // 3. all possible values
+                var array_possibleValues = [];
+                array_possibleValues.name = "Possible Values";
+
+                contextValue.children("possibleValues").children().each(function() {
+                    var possibleValue = this.innerHTML;
+                    array_possibleValues.push({
+                        translation:translate_possibleValue(possibleValue),
+                        original:possibleValue
+                    });
+                });
+
+
+                // combine attributes, operators, and possible values in one object
+                var value = {
+                    name:"Context Value",
+                    attributes:contextValueAttributes,
+                    operators:array_operators,
+                    enums:array_possibleValues
+                };
+
+
+                /* get the parameters (if parameter section exists) */
+                var array_parameters = [];
+                array_parameters.name = "Parameters (id, type, values)";
+
+                // for each parameter
+                $('parameters', this).children("parameter").each(function() {
+
+                    // get id of parameter
+                    var pid = this.getAttribute("id");
+                    var id = {
+                        translation:translate_parameter(pid),
+                        original:pid
+                    };
+
+                    var array_paramValues = [];
+
+                    // all parameter values
+                    var paraValue = $(this).children("parameterValue");
+                    paraValue.each(function() {
+
+                        // get the type of each parameter value
+                        var type = this.getAttribute("type");
+
+                        // different types have different values
+                        switch (type) {
+
+                            case "ENUM":
+                                // get the only possible values for this parameter
+                                paraValue.children("possibleValues").children("value").each(function() {
+                                    var valueId = this.innerHTML;
+                                    array_paramValues.push({
+                                        translation:translate_parameterValues(valueId),
+                                        original:valueId
+                                    });
+                                    array_paramValues.name = "Possible Values";
+                                });
+                                break;
+
+                            case "FLOAT":
+                                // floats have always a minimum and maximum value
+                                array_paramValues.push({
+                                    min:this.getAttribute("min"),
+                                    max:this.getAttribute("max")}
+                                );
+                                array_paramValues.name = "Minimum and Maximum Values";
+                                break;
+
+                            case "INTEGER":
+                            case "STRING":
+                                break;
+                        }
+
+                        // push all parameters into an array
+                        array_parameters.push({
+                            name:"Parameter",
+                            id:id,
+                            type:type,
+                            values:array_paramValues
+                        });
+
+                    });
+                });
+
+
+                // gather all information
+                var contextInformation = {
+                    name:name,
+                    classes:array_classes,
+                    value:value,
+                    parameters:array_parameters
+                };
+
+                array_ContextInformations.push(contextInformation);
             });
+
+            // TODO: Put this in its place (create entry point for entire app)!
             // after finishing the parsing, elements could be added into tab bar
             fillContextTab();
             fillMetadataTab();
         }
     });
 
-});
+    return array_ContextInformations;
+}
+
 
 // translate context information into german
 var dictionary_optionsContextInfos = {};

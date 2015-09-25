@@ -9,6 +9,8 @@
  * @return {String} Concatenation of an img (icon) and span (text) DOM, if no icon available return text only
  * */
 function formatContextInfos(item) {
+
+    // TODO: Merge this with dictionary creation: put translations AND icons into one dict!
     // find the right context information
     switch (item.text) {
 
