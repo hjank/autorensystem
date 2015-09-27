@@ -19,9 +19,10 @@ function fillContextTab() {
     $("#selectContextInfos").select2().on("select2-selecting", function(e) {
         // get index (value) of the selected option
         var j = e.val;
+        var selectedInfo = contextList.getItem(j);
 
         // get the corresponding operators to the selected context information
-        var operators = array_ContextInformations[j][2][1];
+        var operators = selectedInfo.value.operators;
 
         // clear selection bar
         $("#selectOperator").empty();
@@ -40,10 +41,10 @@ function fillContextTab() {
         }
 
         // fill input field
-        fillInputField(array_ContextInformations[j][2]);
+        fillInputField(contextList.getItem(j).value);
 
         // fill parameter selection bar
-        fillParameterSelection(array_ContextInformations[j][3]);
+        fillParameterSelection(contextList.getItem(j).parameters);
     });
 }
 
@@ -89,25 +90,29 @@ function fillSelectionContextInformation() {
 
     // create array for all context classes
     var array_optgroups = [];
+    var contextClasses = contextList.getClasses(); // German labels
 
     // iterate through all context classes
-    for (var j=0; j<array_ContextClasses.length; j++) {
-        var classname = array_ContextClasses[j];
-        var optgroup = $("<optgroup>").attr("label", classname);
-        array_optgroups.push(optgroup);
+    for (var j in contextClasses) {
+        array_optgroups.push($("<optgroup>").attr("label", contextClasses[j]));
     }
 
     // iterate through all context information
-    for (var i=0; i<array_ContextInformations.length; i++) {
+    for (var i in contextList.getItems()) {
+
+        var contextItem = contextList.getItem(i);
+
         // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
-        option.attr("origin", array_ContextInformations[i][0]["original"]);     // save original name
-        option.html(array_ContextInformations[i][0]["translation"]);
+        option.attr("origin", contextItem.name["original"]);     // save original name
+        option.html(contextItem.name["translation"]);
 
-        // find right context class and put it in this optgroup
-        for (var k=0; k<array_ContextClasses.length; k++) {
-            if (array_ContextInformations[i][1][0]["translation"] == array_ContextClasses[k]) {
-                array_optgroups[k].append(option);
+
+        // put context info into all optgroups corresponding to its classes
+        for (var k in contextItem.classes) {
+            var classIndex = contextClasses.indexOf(contextItem.classes[k]["translation"]);
+            if (classIndex != -1) {
+                array_optgroups[classIndex].append(option);
                 break;
             }
         }
@@ -156,9 +161,9 @@ function fillSelectionContextInformation() {
 // fill input field (value in tab Kontexinformation)
 /**
  * Function gets the selected context information and decides which input field has to be set on GUI.
- * @param {Object} ci Contains current context information.
+ * @param {Object} ciValue Contains current context information value details.
  * */
-function fillInputField(ci) {
+function fillInputField(ciValue) {
 
     // clear input field caused by removing input field and re-building
     $("#inputContextValue").remove();
@@ -166,14 +171,17 @@ function fillInputField(ci) {
         .attr("onkeyup", "getInputContextValue(this)");
     $("#divContextValue").append(inputField);
 
-    // get type of the context information
-    var type = ci[0][0]["type"];   // float, integer, string, enum, boolean
+    // get {type, min, max, default} of the context information
+    var ciAttributes = ciValue.attributes;
 
     // decide which type of input field is needed
-    switch (type) {
+    switch (ciAttributes.type) {
+
         case "FLOAT":
         case "INTEGER":
-            configureInputContextValueForFloatInt(ci[0]);
+            $("#inputContextValue").attr("min", ciAttributes.min);
+            $("#inputContextValue").attr("max", ciAttributes.max);
+            $("#inputContextValue").attr("value", ciAttributes.default);
             break;
 
         case "STRING":
@@ -195,9 +203,10 @@ function fillInputField(ci) {
             $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
 
             // fill selection bar
-            for (var i=0; i<ci[2].length; i++) {
+            for (var i in ciValue.enums) {
                 var option = $("<option>").attr("value", i.toString());
-                option.html(ci[2][i]);
+                option.html(ciValue.enums[i].translation);
+
                 $("#selectPossibleValues").append(option);
             }
             break;
@@ -346,59 +355,6 @@ function fillParameterSelection(cp) {
         $("#divContextParameter").css("display", "block");
     }
 }
-
-
-// set the need functionalities into the input field for float and integer values
-/**
- * Function shows an input field an set minimum, maximum and default values if needed.
- * @param {Object} ci Contains current context information.
- * */
-function configureInputContextValueForFloatInt(ci) {
-
-    var min, max, def = null;
-
-    // activate and show input field and hide selection bar
-    $("#inputContextValue").attr("disabled", false);
-    $("#inputContextValue").attr("type", "number");
-    $("#inputContextValue").css("display", "block");
-    $("#selectPossibleValues").css("display", "none");
-    $("#s2id_selectPossibleValues").css("display", "none");
-
-    for (var i=1; i<ci.length; i++) {
-
-        // find minimum if given
-        if (ci[i]["min"]) {
-            min = ci[i]["min"];
-        }
-        // find maximum if given
-        if (ci[i]["max"]) {
-            max = ci[i]["max"];
-        }
-        // find default value if given
-        if (ci[i]["default"]) {
-            def = ci[i]["default"];
-
-            // set default value in input field
-            $("#inputContextValue").attr("value", def);
-        }
-    }
-
-    // set minimum and maximum in input field
-    if (min && max) {
-        $("#inputContextValue").attr("min", min).attr("max", max);
-    }
-    // set minimum only
-    if (min && !max) {
-        $("#inputContextValue").attr("min", min);
-    }
-    // set maximum only
-    if (!min && max) {
-        $("#inputContextValue").attr("max", max);
-    }
-}
-
-
-
 
 
 // get current value from input field
@@ -657,11 +613,8 @@ function changeColorMultiContextInfos() {
             if (array_multiSelectionContextInfos[i]["text"] == this.innerHTML ||    // text
                 array_multiSelectionContextInfos[i]["text"] == title) {             // icon
 
-                // get first context class
-                var contextClass = array_ContextInformations[thisID][1][0]["translation"];
-
-                // get specific context class color
-                var color = getColor(contextClass);
+                // get color for first context class
+                var color = getColor(contextList.getItem(thisID).classes[0]["translation"]);
                 $(this).parent().css("background-color", color);
 
                 // set title --> tooltip if the mouse is on the icon

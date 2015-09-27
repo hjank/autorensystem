@@ -22,6 +22,8 @@ function parseContextInfoXML () {
         // if file is available parse out all information
         success: function(xml) {
 
+            var contextInfoList = [];
+
             // parse all needed information from the xml file
             $('information', xml).each(function() {
 
@@ -171,17 +173,12 @@ function parseContextInfoXML () {
                     parameters:array_parameters
                 };
 
-                array_ContextInformations.push(contextInformation);
+                contextInfoList.push(contextInformation);
             });
 
-            // TODO: Put this in its place (create entry point for entire app)!
-            // after finishing the parsing, elements could be added into tab bar
-            fillContextTab();
-            fillMetadataTab();
+            contextList.setItems(contextInfoList);
         }
     });
-
-    return array_ContextInformations;
 }
 
 

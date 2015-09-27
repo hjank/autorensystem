@@ -2,14 +2,8 @@
  * Created by Helena on 04.09.2015.
  */
 
-// global unit instance
-var inst;
-var bool_unitClicked = false;
-var list_units = [];
 
-
-// initialize jsPlumb instance if jsPlumb is ready
-jsPlumb.ready(function () {
+function initCanvas() {
 
     inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
@@ -395,4 +389,4 @@ jsPlumb.ready(function () {
         });
     });
 
-});
+}

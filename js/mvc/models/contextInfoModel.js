@@ -3,58 +3,36 @@
  */
 
 
-$(function() {
 
-    // the list of all available context information data types
-    function ContextInformation() {
+// the list of all available context information data types
+function ContextInformation() {
 
-        this.name = "";
+    this.name = "";
 
-        this.classes = [];
+    this.classes = [];
 
-        this.value = {
-            name:"Context Value",
-            attributes:{
-                type:"",
-                min:"",
-                max:"",
-                default:""
-            },
-            operators:[],
-            enums:[]
-        };
+    this.value = {
+        name:"Context Value",
+        attributes:{
+            type:"",
+            min:"",
+            max:"",
+            default:""
+        },
+        operators:[],
+        enums:[]
+    };
 
-        this.parameters = [];
-
-
-        return this;
-    }
+    this.parameters = [];
 
 
-
-    return ContextInformation;
-});
+    return this;
+}
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-var array_ContextClasses = [];
-
-$(function() {
-    // fill context classes array (needed for visualization)
-    array_ContextClasses.push("Lernszenario", "Persönlich", "Situationsbezogen",
-        "Infrastruktur", "Umwelt", "Ortung");
-});
 
 // check if all needed fields were filled with information
 /**
@@ -70,7 +48,7 @@ function checkInformation(current_unit) {
     var selectedContextInfo = $("#selectContextInfos").select2("data");
     var selectedOperator = $("#selectOperator").select2("data");
 
-    var contextInfoInArray = array_ContextInformations[selectedContextInfo.id];
+    var contextInfoInArray = contextList.getItem(selectedContextInfo.id);
 
 
     // check selection bar "Kontextinformationen"
@@ -79,8 +57,8 @@ function checkInformation(current_unit) {
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
-        selectedInfo.name = contextInfoInArray[0].translation;
-        selectedInfo.id = contextInfoInArray[0].original;
+        selectedInfo.name = contextInfoInArray.name.translation;
+        selectedInfo.id = contextInfoInArray.name.original;
     }
 
 /*    // only addable if context info doesn't exist already
@@ -99,7 +77,7 @@ function checkInformation(current_unit) {
         missing_content += " - Operator\n";
     } else {
         // update JSON structure
-        selectedInfo.operator = contextInfoInArray[2][1][selectedOperator.id].original;
+        selectedInfo.operator = contextInfoInArray.value.operators[selectedOperator.id].original;
     }
 
     // check input "Wert" is visible AND filled with information

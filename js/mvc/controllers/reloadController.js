@@ -3,20 +3,16 @@
  */
 
 
-$(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-    $('[data-toggle="checkbox"]').radiocheck();
-    $('[data-toggle="switch"]').bootstrapSwitch();
-    $("select").select2({dropdownCssClass: "dropdown-inverse"});
+function initLoader() {
 
+    // initialize global context list
+    contextList.init();
+
+    // after finishing the parsing, elements could be added into tab bar
+    fillContextTab();
+    fillMetadataTab();
     //setScenarios();     // only needed if scenarios already exist at program start
-    setLabelBtnScenarioDeletion();
-});
-
-
-// reloading
-var loadedData;
-jsPlumb.ready(function () {
+    formatGlobalElements();
 
     // get URL parameter
     var paramURL = location.search.substr(1);
@@ -35,9 +31,6 @@ jsPlumb.ready(function () {
         // update scenario list
         updateScenario(loadedData.name);
         myAuthorSystem.splice(-1);
-
-        // update label
-        setLabelBtnScenarioDeletion();
     }
 
     // only needed for testing
@@ -54,12 +47,12 @@ jsPlumb.ready(function () {
             // update scenario list
             updateScenario(loadedData.name);
             myAuthorSystem.splice(-1);
-
-            // update label
-            setLabelBtnScenarioDeletion();
         });
     }
-});
+
+    // update label
+    setLabelBtnScenarioDeletion();
+}
 
 
 /**

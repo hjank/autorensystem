@@ -2,21 +2,16 @@
  * Created by elis on 07.09.2015.
  */
 
-$(function() {
 
-    function Scenario() {
+function Scenario() {
 
-        this._name = "";
-        this._units = [];
-        this._connections = [];
+    this._name = "";
+    this._units = [];
+    this._connections = [];
 
-        return this;
-    }
+    return this;
+}
 
-
-
-    return Scenario;
-});
 
 
 

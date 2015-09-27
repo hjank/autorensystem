@@ -810,8 +810,8 @@ function fillSelectionContextInformation() {
     var array_optgroups = [];
 
     // iterate through all context classes
-    for (var j=0; j&lt;array_ContextClasses.length; j++) {
-        var classname = array_ContextClasses[j];
+    for (var j=0; j&lt;contextClasses.length; j++) {
+        var classname = contextClasses[j];
         var optgroup = $("&lt;optgroup>").attr("label", classname);
         array_optgroups.push(optgroup);
     }
@@ -824,8 +824,8 @@ function fillSelectionContextInformation() {
         option.html(array_ContextInformations[i][0]);
 
         // find right context class and put it in this optgroup
-        for (var k=0; k&lt;array_ContextClasses.length; k++) {
-            if (array_ContextInformations[i][1][0] == array_ContextClasses[k]) {
+        for (var k=0; k&lt;contextClasses.length; k++) {
+            if (array_ContextInformations[i][1][0] == contextClasses[k]) {
                 array_optgroups[k].append(option);
                 break;
             }

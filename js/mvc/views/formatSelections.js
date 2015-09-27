@@ -2,6 +2,13 @@
  * Created by juliushofler on 10.05.15.
  */
 
+function formatGlobalElements() {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="checkbox"]').radiocheck();
+    $('[data-toggle="switch"]').bootstrapSwitch();
+    $("select").select2({dropdownCssClass: "dropdown-inverse"});
+}
+
 // format in selection context information
 /**
  * Function sets format for the context information in the selection bar (icon + text).

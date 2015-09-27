@@ -2,18 +2,16 @@
  * Created by Helena on 04.09.2015.
  */
 
-$(function() {
 
-    function AuthorSystemContent() {
 
-        this._scenarioList = [];
-        this._options = {};
+function AuthorSystemContent() {
 
-        return this;
-    }
+    this._scenarioList = [];
+    this._options = {};
 
-    return AuthorSystemContent;
-});
+    return this;
+}
+
 
 
 

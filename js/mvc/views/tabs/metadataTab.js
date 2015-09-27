@@ -19,7 +19,7 @@ function fillMetadataTab () {
         $("#selectMetaData").append(option);
     }
     // change format: add glyphs per option
-    addMetadataGlyphsToOptions;
+    addMetadataGlyphsToOptions();
 }
 
 
