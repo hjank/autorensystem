@@ -37,14 +37,16 @@ parameterI : {
 function ContextInfoList() {
 
     this._items = [];
-    this._classes = ["CC_SCENARIO", "CC_PERSONAL", "CC_SITUATIONAL",
-        "CC_TECHNICAL", "CC_PHYSICAL", "CC_LOCATION"];
+    this._classes = [];
 
     return this;
 }
 
 ContextInfoList.prototype.init = function () {
     parseContextInfoXML();
+
+    for (var key in contextClassDictionary)
+        this._classes.push(key);
 };
 
 ContextInfoList.prototype.setItems = function (items) {
