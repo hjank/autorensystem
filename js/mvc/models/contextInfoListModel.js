@@ -8,40 +8,27 @@
 array_ContextInformations = [contextInformation1, contextInformation2, contextInformation3, ...]
 
 contextInformationI : {
-        name : {
-            translation,
-            original
-        },
-        classes : [class1, class2, ...].name = "Context Classes",
+        name,
+        classes : [class1, class2, ...],
         value : {
-            name :"Context Value",
             attributes : {
                 type,
                 min,
                 max,
                 default
             },
-            operators : [operator1, operator2, ..., operatorN].name = "Operators",
-            enums : [value1, value2, ..., valueN].name = "Possible Values"
+            operators : [operator1, operator2, ..., operatorN],
+            enums : [value1, value2, ..., valueN]
         },
-        parameters : [parameter1, paramater2, ..., parameterN].name = "Parameters (id, type, values)"
+        parameters : [parameter1, paramater2, ..., parameterN]
 }
 
 parameterI : {
-    name : "Parameter",
-    id : {
-        translation,
-        original
-    },
+    id,
     type,
-    values : [value1, value2, ..., valueN].name = "Possible Values"      // enum
-            || [{min, max}].name = "Minimum and Maximum Values"          // float
+    values : [value1, value2, ..., valueN]    // enum
+            || [{min, max}]                // float
 }
-
-valueI : {
-    translation,
-    original
-},
 
  **/
 
@@ -50,8 +37,8 @@ valueI : {
 function ContextInfoList() {
 
     this._items = [];
-    this._classes = ["Lernszenario", "Persönlich", "Situationsbezogen",
-        "Infrastruktur", "Umwelt", "Ortung"];
+    this._classes = ["CC_SCENARIO", "CC_PERSONAL", "CC_SITUATIONAL",
+        "CC_TECHNICAL", "CC_PHYSICAL", "CC_LOCATION"];
 
     return this;
 }

@@ -33,10 +33,9 @@ function fillContextTab() {
         $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
 
         // fill selection bar "Operator"
-        for (var i=0; i<operators.length; i++) {
+        for (var i in operators) {
             var option = $("<option>").attr("value", i.toString());
-            option.html(operators[i]["translation"]);
-            option.attr("origin", operators[i]["original"]);
+            option.html(translate_operator(operators[i]));
             $("#selectOperator").append(option);
         }
 
@@ -90,11 +89,12 @@ function fillSelectionContextInformation() {
 
     // create array for all context classes
     var array_optgroups = [];
-    var contextClasses = contextList.getClasses(); // German labels
+    var contextClasses = contextList.getClasses();
 
     // iterate through all context classes
     for (var j in contextClasses) {
-        array_optgroups.push($("<optgroup>").attr("label", contextClasses[j]));
+        var classLabelTranslation = translate_contextClass(contextClasses[j]);
+        array_optgroups.push($("<optgroup>").attr("label", classLabelTranslation));
     }
 
     // iterate through all context information
@@ -104,13 +104,13 @@ function fillSelectionContextInformation() {
 
         // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
-        option.attr("origin", contextItem.name["original"]);     // save original name
-        option.html(contextItem.name["translation"]);
+        option.attr("origin", contextItem.name);     // save original name
+        option.html(translate_contextInformation(contextItem.name));
 
 
-        // put context info into all optgroups corresponding to its classes
+        // put context info into optgroup corresponding to first of its matching classes
         for (var k in contextItem.classes) {
-            var classIndex = contextClasses.indexOf(contextItem.classes[k]["translation"]);
+            var classIndex = contextClasses.indexOf(contextItem.classes[k]);
             if (classIndex != -1) {
                 array_optgroups[classIndex].append(option);
                 break;
@@ -179,9 +179,13 @@ function fillInputField(ciValue) {
 
         case "FLOAT":
         case "INTEGER":
-            $("#inputContextValue").attr("min", ciAttributes.min);
-            $("#inputContextValue").attr("max", ciAttributes.max);
-            $("#inputContextValue").attr("value", ciAttributes.default);
+            // activate and show input field and hide selection bar
+            $("#inputContextValue").attr("disabled", false);
+            $("#inputContextValue").attr("type", "number");
+            $("#inputContextValue").css("display", "block");
+            $("#selectPossibleValues").css("display", "none");
+            $("#s2id_selectPossibleValues").css("display", "none");
+            setMinMaxDefault(ciAttributes, $("#inputContextValue"));
             break;
 
         case "STRING":
@@ -265,13 +269,13 @@ function fillParameterSelection(cp) {
     // cp[i][2] = possible values
 
     // iterate through all parameters
-    for (var i=0; i<cp.length; i++) {
+    for (var i in cp) {
 
         // get each parameter's translated name, type, and all its possible values
-        var parameterTranslation = cp[i][0]["translation"];
-        var parameterOriginal = cp[i][0]["original"];
-        var type = cp[i][1];
-        var possibleValues = cp[i][2];
+        var parameterOriginal = cp[i].id;
+        var parameterTranslation = translate_parameter(parameterOriginal);
+        var type = cp[i].type;
+        var possibleValues = cp[i].values;
 
         switch (type) {
 
@@ -279,10 +283,9 @@ function fillParameterSelection(cp) {
             case "ENUM":
 
                 // get all possible values
-                for (var j=0; j<possibleValues.length; j++) {
+                for (var j in possibleValues) {
                     var option = $("<option>").attr("value", j.toString());
-                    option.html(possibleValues[j]["translation"]);
-                    option.attr("origin", possibleValues[j]["original"]);
+                    option.html(translate_parameterValue(possibleValues[j]));
 
                     // needed if first selection is already existing
                     if ( $("#divParameterSelection1").css("display") == "block" ) {
@@ -315,7 +318,7 @@ function fillParameterSelection(cp) {
                     $("#divParameterInput2").css("display", "table-cell");
                     $("#divParameterInput2").children("label").html(parameterTranslation);
                     $("#divParameterInput2").children("label").attr("origin", parameterOriginal);
-                    setMinMax(possibleValues, $("#inputContextParameter2"));
+                    setMinMaxDefault(possibleValues[0], $("#inputContextParameter2"));
 
                     // display google maps
                     $("#divMaps").css("display", "block");
@@ -325,7 +328,7 @@ function fillParameterSelection(cp) {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(parameterTranslation);
                     $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
-                    setMinMax(possibleValues, $("#inputContextParameter1"));
+                    setMinMaxDefault(possibleValues[0], $("#inputContextParameter1"));
                 }
                 break;
 
@@ -614,7 +617,8 @@ function changeColorMultiContextInfos() {
                 array_multiSelectionContextInfos[i]["text"] == title) {             // icon
 
                 // get color for first context class
-                var color = getColor(contextList.getItem(thisID).classes[0]["translation"]);
+                var firstClassTranslation = translate_contextClass(contextList.getItem(thisID).classes[0]);
+                var color = getColor(firstClassTranslation);
                 $(this).parent().css("background-color", color);
 
                 // set title --> tooltip if the mouse is on the icon

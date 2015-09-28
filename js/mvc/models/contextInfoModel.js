@@ -7,7 +7,7 @@
 // the list of all available context information data types
 function ContextInformation() {
 
-    this.name = "";
+    this.name = {};
 
     this.classes = [];
 
@@ -57,8 +57,8 @@ function checkInformation(current_unit) {
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
-        selectedInfo.name = contextInfoInArray.name.translation;
-        selectedInfo.id = contextInfoInArray.name.original;
+        selectedInfo.id = contextInfoInArray.name;
+        selectedInfo.name = translate_contextInformation(contextInfoInArray.name);
     }
 
 /*    // only addable if context info doesn't exist already
@@ -77,7 +77,7 @@ function checkInformation(current_unit) {
         missing_content += " - Operator\n";
     } else {
         // update JSON structure
-        selectedInfo.operator = contextInfoInArray.value.operators[selectedOperator.id].original;
+        selectedInfo.operator = contextInfoInArray.value.operators[selectedOperator.id];
     }
 
     // check input "Wert" is visible AND filled with information
@@ -190,31 +190,19 @@ function checkInformation(current_unit) {
  * @param {Array} values Contains minimum and maximum values.
  * @param {Object} inputField Contains an input field.
  * */
-function setMinMax(values, inputField) {
+function setMinMaxDefault(values, inputField) {
 
-    var min, max = null;
-    for (var i=0; i<values.length; i++) {
+    var min = (values.min != undefined) ? values.min : false;
+    var max = (values.max != undefined) ? values.max : false;
+    var def = (values.default != undefined) ? values.default : false;
 
-        // find minimum if given
-        if (values[i]["min"]) {
-            min = values[i]["min"];
-        }
-        // find maximum if given
-        if (values[i]["max"]) {
-            max = values[i]["max"];
-        }
-    }
-
-    // set minimum and maximum in input field
-    if (min && max) {
-        inputField.attr("min", min).attr("max", max);
-    }
-    // set minimum only
-    if (min && !max) {
+    if (min) {
         inputField.attr("min", min);
     }
-    // set maximum only
-    if (!min && max) {
+    if (max) {
         inputField.attr("max", max);
+    }
+    if (def) {
+        inputField.attr("value", def);
     }
 }
