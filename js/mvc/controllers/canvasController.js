@@ -26,7 +26,10 @@ function initCanvas() {
     // triggered before connection is set to prevent drawing a self loop
     inst.bind("beforeDrop", function (con) {
         // source and target ID's are same
-        if (con.sourceId === con.targetId) {
+
+        // this doesn't work (anymore): con.sourceId returns ID of connection
+        // if (con.sourceId === con.targetId) {
+        if (con.connection.source.parentElement.id === con.targetId) {
             return false;
 
         } else {
@@ -74,7 +77,7 @@ function initCanvas() {
     inst.bind("click", function (c, e) {
 
         // if label was clicked show tab information
-        if (c.id == "label") {
+        if (c.getOverlay("label").id == "label") {
 
             // get name of source and target unit
             var sourceUnit = c._jsPlumb.component.source.textContent;
