@@ -12,12 +12,14 @@ var contextList = new ContextInfoList();
 // reloading
 var loadedData;
 
-// if jsPlumb is ready
+// if jsPlumb is ready (wrapper for jQuery.ready which means DOM is fully loaded)
 jsPlumb.ready(function () {
 
+    // initialize global context list
+    contextList.init();
     // initialize jsPlumb instance
     initCanvas();
-    // initialize global context list and reload data from localStorage
+    // reload data from localStorage
     initLoader();
 
 });

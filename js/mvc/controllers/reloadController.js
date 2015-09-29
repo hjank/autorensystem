@@ -5,9 +5,6 @@
 
 function initLoader() {
 
-    // initialize global context list
-    contextList.init();
-
     // after finishing the parsing, elements could be added into tab bar
     fillContextTab();
     fillMetadataTab();
@@ -145,7 +142,10 @@ function loadScenario(data) {
             target: data["connections"][k].targetId,
             anchors: ["Continuous", "Continuous"],
             //overlays: [["Label", {label: "PRE", id: "label", cssClass: "aLabel" }]]
-            overlays: [["Label", {label: data["connections"][k].connLabel, id: "label", cssClass: "aLabel" }]]
+            overlays: [["Label", {
+                label: data["connections"][k].connLabel,
+                id: "label",
+                cssClass: "aLabel" }]]
         });
         // set title for label
         var label = c.getOverlay("label");
