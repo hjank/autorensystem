@@ -14,6 +14,11 @@ var array_multiSelectionContextInfos = [];
  * */
 function fillContextTab() {
 
+    // triggered if add context info button was clicked
+    $("#btnAddContextInfos").click(function(e) {
+        showDetailContextInfo()
+    });
+
     /* tab "Kontextinformation" */
     // triggered if a context information was selected
     $("#selectContextInfos").select2().on("select2-selecting", function(e) {
