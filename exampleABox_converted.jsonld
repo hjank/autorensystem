@@ -4,6 +4,8 @@
     "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
     "xsd" : "http://www.w3.org/2001/XMLSchema#",
     "owl" : "http://www.w3.org/2002/07/owl#",
+    "kno" : "http://motivate-project.de/ontology/knowledge.owl#",
+    "abox" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#",
     "rdf:first" : {
       "@type" : "@id"
     },
@@ -206,345 +208,367 @@
     "@type" : "owl:Ontology",
     "owl:imports" : "http://motivate-project.de/ontology/knowledge.owl"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-AppUsageRestrictFeatureConstraint",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#RestrictFeatureConstraint", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasConstraintRequirement" : [ {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-EndTimeContextInformationConstraintRequirement"
-    }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-StartingTimeContextInformationConstraintRequirement"
-    }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserRoleContextInformationRequirement"
-    } ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasFeature" : {
-      "@id" : "http://motivate-project.de/ontology/knowledge.owl#AppUsageFeature"
-    },
-    "http://motivate-project.de/ontology/knowledge.owl#hasLogicalOperator" : "AND"
+    "@id" : "abox:Example-Unit-Eins",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasLID" : "Eins",
+    "kno:hasLogicalOperator" : "AND",
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-Context-Eins"
+    }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-Bob",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#User", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasAction" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedCancelActionInformation"
+    "@id" : "abox:Example-Context-Eins",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_TIME_UNTIL_TIMESTAMP",
+    "kno:hasValue" : "6",
+    "kno:hasValueOperator" : "IS"
+  }, {
+    "@id" : "abox:Example-AppUsageRestrictFeatureConstraint",
+    "@type" : [ "kno:RestrictFeatureConstraint", "owl:NamedIndividual" ],
+    "kno:hasConstraintRequirement" : [ {
+      "@id" : "abox:Example-EndTimeContextInformationConstraintRequirement"
+    }, {
+      "@id" : "abox:Example-StartingTimeContextInformationConstraintRequirement"
+    }, {
+      "@id" : "abox:Example-UserRoleContextInformationRequirement"
+    } ],
+    "kno:hasFeature" : {
+      "@id" : "kno:AppUsageFeature"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasRecordedContextInformation" : [ {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation2"
+    "kno:hasLogicalOperator" : "AND"
+  }, {
+    "@id" : "abox:Example-Bob",
+    "@type" : [ "kno:User", "owl:NamedIndividual" ],
+    "kno:hasAction" : {
+      "@id" : "abox:Example-RecordedCancelActionInformation"
+    },
+    "kno:hasRecordedContextInformation" : [ {
+      "@id" : "abox:Example-RecordedMovementSpeedInformation2"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation3"
+      "@id" : "abox:Example-RecordedMovementSpeedInformation3"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation"
+      "@id" : "abox:Example-RecordedMovementSpeedInformation"
     } ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintEndTimeContextInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_CURRENT_TIME",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "16:00:00",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "LESS_THEN"
+    "@id" : "abox:Example-ConstraintEndTimeContextInformation",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_CURRENT_TIME",
+    "kno:hasValue" : "16:00:00",
+    "kno:hasValueOperator" : "LESS_THEN"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintStartingTimeContextInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_CURRENT_TIME",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "09:00:00",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "GREATER_THEN"
+    "@id" : "abox:Example-ConstraintStartingTimeContextInformation",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_CURRENT_TIME",
+    "kno:hasValue" : "09:00:00",
+    "kno:hasValueOperator" : "GREATER_THEN"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintUserRoleTail",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_ROLE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "Student",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "IS"
+    "@id" : "abox:Example-ConstraintUserRoleTail",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_ROLE",
+    "kno:hasValue" : "Student",
+    "kno:hasValueOperator" : "IS"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-CurrentTemperature",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_CURRENT_TEMPERATURE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasContextInformationParameter" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-TemperatureScaleParameter"
+    "@id" : "abox:Example-CurrentTemperature",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_CURRENT_TEMPERATURE",
+    "kno:hasContextInformationParameter" : {
+      "@id" : "abox:Example-TemperatureScaleParameter"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "30.0"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "GREATER_THEN"
+    "kno:hasValueOperator" : "GREATER_THEN"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-DeviceTypeContextInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_DEVICE_TYPE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "FEATURE_PHONE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "IS"
+    "@id" : "abox:Example-DeviceTypeContextInformation",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_DEVICE_TYPE",
+    "kno:hasValue" : "FEATURE_PHONE",
+    "kno:hasValueOperator" : "IS"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-EndTimeContextInformationConstraintRequirement",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintEndTimeContextInformation"
+    "@id" : "abox:Example-EndTimeContextInformationConstraintRequirement",
+    "@type" : [ "kno:ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-ConstraintEndTimeContextInformation"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-HasLearningUnitClassConstraint",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnitClassConstraint", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasConstraintRequirement" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-MovementSpeedContextInformationRequirement"
+    "@id" : "abox:Example-HasLearningUnitClassConstraint",
+    "@type" : [ "kno:LearningUnitClassConstraint", "owl:NamedIndividual" ],
+    "kno:hasConstraintRequirement" : {
+      "@id" : "abox:Example-MovementSpeedContextInformationRequirement"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasLearningUnitClass" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-VideoOrImageContentLearningUnitClass"
+    "kno:hasLearningUnitClass" : {
+      "@id" : "abox:Example-VideoOrImageContentLearningUnitClass"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasLogicalOperator" : "AND"
+    "kno:hasLogicalOperator" : "AND"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-HasNotLearningUnitClassConstraint",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnitClassConstraint", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasConstraintRequirement" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-IsFeaturePhoneContextInformationConstraintRequirement"
+    "@id" : "abox:Example-HasNotLearningUnitClassConstraint",
+    "@type" : [ "kno:LearningUnitClassConstraint", "owl:NamedIndividual" ],
+    "kno:hasConstraintRequirement" : {
+      "@id" : "abox:Example-IsFeaturePhoneContextInformationConstraintRequirement"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasNotLearningUnitClass" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ScreenReaderSuitableLearningUnitClass"
+    "kno:hasNotLearningUnitClass" : {
+      "@id" : "abox:Example-ScreenReaderSuitableLearningUnitClass"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-IsFeaturePhoneContextInformationConstraintRequirement",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-DeviceTypeContextInformation"
+    "@id" : "abox:Example-IsFeaturePhoneContextInformationConstraintRequirement",
+    "@type" : [ "kno:ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-DeviceTypeContextInformation"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LatitudeParameter",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationParameter", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasPID" : "CP_LATITUDE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "@id" : "abox:Example-LatitudeParameter",
+    "@type" : [ "kno:ContextInformationParameter", "owl:NamedIndividual" ],
+    "kno:hasPID" : "CP_LATITUDE",
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "52.39351"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-124",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasAlternative" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-125"
+    "@id" : "abox:Example-LearningUnit-124",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasAlternative" : {
+      "@id" : "abox:Example-LearningUnit-125"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "124",
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-CurrentTemperature"
+    "kno:hasLID" : "124",
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-CurrentTemperature"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-125",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "125"
+    "@id" : "abox:Example-LearningUnit-125",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasLID" : "125"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-126",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasContentType" : "Image",
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "126",
-    "http://motivate-project.de/ontology/knowledge.owl#hasLogicalOperator" : "AND",
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : [ {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserLocationLatitude"
+    "@id" : "abox:Example-LearningUnit-126",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasContentType" : "Image",
+    "kno:hasLID" : "126",
+    "kno:hasLogicalOperator" : "AND",
+    "kno:hasMeasurableContextInformation" : [ {
+      "@id" : "abox:Example-UserLocationLatitude"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserLocationLongitude"
+      "@id" : "abox:Example-UserLocationLongitude"
     } ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasPrerequisite" : [ {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-124"
+    "kno:hasPrerequisite" : [ {
+      "@id" : "abox:Example-LearningUnit-124"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-127"
+      "@id" : "abox:Example-LearningUnit-127"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-128"
+      "@id" : "abox:Example-LearningUnit-128"
     } ],
-    "http://motivate-project.de/ontology/knowledge.owl#isReferencedByCancelAction" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedCancelActionInformation"
+    "kno:isReferencedByCancelAction" : {
+      "@id" : "abox:Example-RecordedCancelActionInformation"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#isScreenReaderSuitable" : {
+    "kno:isScreenReaderSuitable" : {
       "@type" : "xsd:boolean",
       "@value" : "true"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-127",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasContentType" : "Image",
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "127"
+    "@id" : "abox:Example-LearningUnit-127",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasContentType" : "Image",
+    "kno:hasLID" : "127"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-128",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasAlternative" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-125"
+    "@id" : "abox:Example-LearningUnit-128",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasAlternative" : {
+      "@id" : "abox:Example-LearningUnit-125"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasHelp" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-129"
+    "kno:hasHelp" : {
+      "@id" : "abox:Example-LearningUnit-129"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "128"
+    "kno:hasLID" : "128"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-129",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "129",
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserDidArriveAtLocation"
+    "@id" : "abox:Example-LearningUnit-129",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasLID" : "129",
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-UserDidArriveAtLocation"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LearningUnit-130",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnit", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasLID" : "130",
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-CurrentTemperature"
+    "@id" : "abox:Example-LearningUnit-130",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasLID" : "130",
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-CurrentTemperature"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#isScreenReaderSuitable" : {
+    "kno:isScreenReaderSuitable" : {
       "@type" : "xsd:boolean",
       "@value" : "false"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LongitudeParameter",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationParameter", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasPID" : "CP_LONGITUDE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "@id" : "abox:Example-LongitudeParameter",
+    "@type" : [ "kno:ContextInformationParameter", "owl:NamedIndividual" ],
+    "kno:hasPID" : "CP_LONGITUDE",
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "13.13024"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-Mary",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#User", "owl:NamedIndividual" ]
+    "@id" : "abox:Example-Mary",
+    "@type" : [ "kno:User", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-MovementSpeedContextInformationRequirement",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserMovementSpeedMeasurableInformation"
+    "@id" : "abox:Example-MovementSpeedContextInformationRequirement",
+    "@type" : [ "kno:ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-UserMovementSpeedMeasurableInformation"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedCancelActionInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#RecordedContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_DID_PERFORM_ACTION",
-    "http://motivate-project.de/ontology/knowledge.owl#hasTimestamp" : {
+    "@id" : "abox:Example-RecordedCancelActionInformation",
+    "@type" : [ "kno:RecordedContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_DID_PERFORM_ACTION",
+    "kno:hasTimestamp" : {
       "@type" : "xsd:integer",
       "@value" : "30"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "SUSPEND_ACTION"
+    "kno:hasValue" : "SUSPEND_ACTION"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#RecordedContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_MOVEMENT_SPEED",
-    "http://motivate-project.de/ontology/knowledge.owl#hasTimestamp" : {
+    "@id" : "abox:Example-RecordedMovementSpeedInformation",
+    "@type" : [ "kno:RecordedContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_MOVEMENT_SPEED",
+    "kno:hasTimestamp" : {
       "@type" : "xsd:unsignedInt",
       "@value" : "50"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "20.0"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation2",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#RecordedContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_MOVEMENT_SPEED",
-    "http://motivate-project.de/ontology/knowledge.owl#hasTimestamp" : {
+    "@id" : "abox:Example-RecordedMovementSpeedInformation2",
+    "@type" : [ "kno:RecordedContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_MOVEMENT_SPEED",
+    "kno:hasTimestamp" : {
       "@type" : "xsd:unsignedInt",
       "@value" : "26"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "0.0"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-RecordedMovementSpeedInformation3",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#RecordedContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_MOVEMENT_SPEED",
-    "http://motivate-project.de/ontology/knowledge.owl#hasTimestamp" : {
+    "@id" : "abox:Example-RecordedMovementSpeedInformation3",
+    "@type" : [ "kno:RecordedContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_MOVEMENT_SPEED",
+    "kno:hasTimestamp" : {
       "@type" : "xsd:unsignedInt",
       "@value" : "4"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "5.0"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ScreenReaderSuitableLearningUnitClass",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnitClass", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasLogicalOperator" : "AND",
-    "http://motivate-project.de/ontology/knowledge.owl#isScreenReaderSuitable" : {
+    "@id" : "abox:Example-ScreenReaderSuitableLearningUnitClass",
+    "@type" : [ "kno:LearningUnitClass", "owl:NamedIndividual" ],
+    "kno:hasLogicalOperator" : "AND",
+    "kno:isScreenReaderSuitable" : {
       "@type" : "xsd:boolean",
       "@value" : "true"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-Situation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#Situation", "owl:NamedIndividual" ]
+    "@id" : "abox:Example-Situation",
+    "@type" : [ "kno:Situation", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-StartingTimeContextInformationConstraintRequirement",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintStartingTimeContextInformation"
+    "@id" : "abox:Example-StartingTimeContextInformationConstraintRequirement",
+    "@type" : [ "kno:ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-ConstraintStartingTimeContextInformation"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-TemperatureScaleParameter",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationParameter", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasPID" : "CP_TEMPERATURE_SCALE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "FAHRENHEIT"
+    "@id" : "abox:Example-TemperatureScaleParameter",
+    "@type" : [ "kno:ContextInformationParameter", "owl:NamedIndividual" ],
+    "kno:hasPID" : "CP_TEMPERATURE_SCALE",
+    "kno:hasValue" : "FAHRENHEIT"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserCurrentLearningStylePerception",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_CURRENT_LEARNING_STYLE_PERCEPTION",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "@id" : "abox:Example-UserCurrentLearningStylePerception",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_CURRENT_LEARNING_STYLE_PERCEPTION",
+    "kno:hasValue" : {
       "@type" : "xsd:integer",
       "@value" : "10"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserDidArriveAtLocation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_DID_ARRIVE_AT_LOCATION",
-    "http://motivate-project.de/ontology/knowledge.owl#hasContextInformationParameter" : [ {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LatitudeParameter"
+    "@id" : "abox:Example-UserDidArriveAtLocation",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_DID_ARRIVE_AT_LOCATION",
+    "kno:hasContextInformationParameter" : [ {
+      "@id" : "abox:Example-LatitudeParameter"
     }, {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-LongitudeParameter"
+      "@id" : "abox:Example-LongitudeParameter"
     } ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:boolean",
       "@value" : "true"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "IS"
+    "kno:hasValueOperator" : "IS"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserLocationLatitude",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_LOCATION_LATITUDE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "@id" : "abox:Example-UserLocationLatitude",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_LOCATION_LATITUDE",
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "52.39346"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "IS"
+    "kno:hasValueOperator" : "IS"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserLocationLongitude",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_LOCATION_LONGITUDE",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "@id" : "abox:Example-UserLocationLongitude",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_LOCATION_LONGITUDE",
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "13.13021"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "IS"
+    "kno:hasValueOperator" : "IS"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserMovementSpeedMeasurableInformation",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformation", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasCID" : "CI_USER_MOVEMENT_SPEED",
-    "http://motivate-project.de/ontology/knowledge.owl#hasContextInformationParameter" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-VelocityUnitContextParameter"
+    "@id" : "abox:Example-UserMovementSpeedMeasurableInformation",
+    "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+    "kno:hasCID" : "CI_USER_MOVEMENT_SPEED",
+    "kno:hasContextInformationParameter" : {
+      "@id" : "abox:Example-VelocityUnitContextParameter"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : {
+    "kno:hasValue" : {
       "@type" : "xsd:float",
       "@value" : "20.0"
     },
-    "http://motivate-project.de/ontology/knowledge.owl#hasValueOperator" : "LESS_THEN"
+    "kno:hasValueOperator" : "LESS_THEN"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-UserRoleContextInformationRequirement",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasMeasurableContextInformation" : {
-      "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-ConstraintUserRoleTail"
+    "@id" : "abox:Example-UserRoleContextInformationRequirement",
+    "@type" : [ "kno:ContextInformationConstraintRequirement", "owl:NamedIndividual" ],
+    "kno:hasMeasurableContextInformation" : {
+      "@id" : "abox:Example-ConstraintUserRoleTail"
     }
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-VelocityUnitContextParameter",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#ContextInformationParameter", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasPID" : "CP_VELOCITY_UNIT",
-    "http://motivate-project.de/ontology/knowledge.owl#hasValue" : "KILOMETERS_PER_HOUR"
+    "@id" : "abox:Example-VelocityUnitContextParameter",
+    "@type" : [ "kno:ContextInformationParameter", "owl:NamedIndividual" ],
+    "kno:hasPID" : "CP_VELOCITY_UNIT",
+    "kno:hasValue" : "KILOMETERS_PER_HOUR"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#Example-VideoOrImageContentLearningUnitClass",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LearningUnitClass", "owl:NamedIndividual" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasContentType" : [ "Image", "Video" ],
-    "http://motivate-project.de/ontology/knowledge.owl#hasLogicalOperator" : "OR"
+    "@id" : "abox:Example-VideoOrImageContentLearningUnitClass",
+    "@type" : [ "kno:LearningUnitClass", "owl:NamedIndividual" ],
+    "kno:hasContentType" : [ "Image", "Video" ],
+    "kno:hasLogicalOperator" : "OR"
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#LocationContext",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#LocationContext", "owl:NamedIndividual" ]
+    "@id" : "abox:LocationContext",
+    "@type" : [ "kno:LocationContext", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#PersonalContext",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#PersonalContext", "owl:NamedIndividual" ]
+    "@id" : "abox:PersonalContext",
+    "@type" : [ "kno:PersonalContext", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#PhysicalContext",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#PhysicalContext", "owl:NamedIndividual" ]
+    "@id" : "abox:PhysicalContext",
+    "@type" : [ "kno:PhysicalContext", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#SituationalContext",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#SituationalContext", "owl:NamedIndividual" ]
+    "@id" : "abox:SituationalContext",
+    "@type" : [ "kno:SituationalContext", "owl:NamedIndividual" ]
   }, {
-    "@id" : "http://www.semanticweb.org/tobias/ontologies/2014/7/untitled-ontology-43#TechnicalContext",
-    "@type" : [ "http://motivate-project.de/ontology/knowledge.owl#TechnicalContext", "owl:NamedIndividual" ]
+    "@id" : "abox:TechnicalContext",
+    "@type" : [ "kno:TechnicalContext", "owl:NamedIndividual" ]
+  }, {
+    "@id" : "abox:Example-Unit-Zwei",
+    "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+    "kno:hasContentType" : "Test",
+    "kno:hasLID" : "Zwei",
+    "kno:hasPrerequisite" : {
+      "@id" : "abox:Example-Unit-Eins"
+    }
   } ]
 }
