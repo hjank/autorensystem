@@ -7,21 +7,21 @@ var global_ScenarioLiNumber = 0;
 
 $(function() {
 
-    // make sure that after clicking enter in modal window "Neues Szenario erstellen"
+    // make sure that after pressing enter in modal window "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
     $("#modal-new-szenario").keypress(function(e) {
         if (e.keyCode == 13) {
-            saveCloseSzenario();
+            createScenario();
             $('#modal-new-szenario').modal('hide');
             return true;
         }
     });
 
-    // make sure that after clicking enter in input "Neues Szenario erstellen"
+    // make sure that after pressing enter in input "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
     $("#sname").keypress(function(e) {
         if (e.keyCode == 13) {
-            saveCloseSzenario();
+            createScenario();
             $('#modal-new-szenario').modal('hide');
             return false;
         }
@@ -57,7 +57,7 @@ function showNewScenario() {
  * It adds the name in the menu bar and in the header above the working place.
  * Is Triggered after clicking save button in modal window scenario creation.
  * */
-function saveCloseSzenario() {
+function createScenario() {
 
     // get name from input field
     var scenarioName = $("#sname").val();
@@ -117,7 +117,7 @@ function updateScenario(name) {
     // get scenario data in multi selection bar
     global_dataArrayScenarios.push({id: j, text: name});
     $("#selectSzenarioDeletion").select2("data", global_dataArrayScenarios);
-    global_ScenarioCounter = global_ScenarioCounter + 1;
+    global_ScenarioCounter++;
 
     // update list with units per scenario
     myAuthorSystem.push({name: name, units:[], connections:[]});

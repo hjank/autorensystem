@@ -42,16 +42,11 @@
         <script type="text/javascript" src="js/mvc/views/canvas/canvasView.js"></script>
         <script type="text/javascript" src="js/mvc/views/canvas/sliderView.js"></script>
         <script type="text/javascript" src="js/mvc/views/canvas/unitView.js"></script>
-        <script type="text/javascript" src="js/mvc/views/modalWindows/contactWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/modalWindows/createScenarioWindow.js"></script>
-        <script type="text/javascript" src="js/mvc/views/modalWindows/deleteRelationWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/modalWindows/deleteScenarioWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/modalWindows/deleteUnitWindow.js"></script>
-        <script type="text/javascript" src="js/mvc/views/modalWindows/helpWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/modalWindows/loadScenarioWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/modalWindows/modalWindows.js"></script>
-        <script type="text/javascript" src="js/mvc/views/modalWindows/userLoginWindow.js"></script>
-        <script type="text/javascript" src="js/mvc/views/modalWindows/userProfileWindow.js"></script>
         <script type="text/javascript" src="js/mvc/views/tabs/tabs.js"></script>
         <script type="text/javascript" src="js/mvc/views/tabs/propertiesTab.js"></script>
         <script type="text/javascript" src="js/mvc/views/tabs/contextTab.js"></script>
@@ -61,6 +56,8 @@
         <!-- controllers -->
         <script type="text/javascript" src="js/mvc/controllers/canvasController.js"></script>
         <script type="text/javascript" src="js/mvc/controllers/reloadController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/unitController.js"></script>
+        <script type="text/javascript" src="js/mvc/controllers/contextInfoController.js"></script>
 
         <!-- single entry point -->
         <script type="text/javascript" src="js/main.js"></script>
@@ -408,7 +405,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="saveCloseSzenario()" style="margin-right: 10px">Erstellen</button>
+                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="createScenario()" style="margin-right: 10px">Erstellen</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>

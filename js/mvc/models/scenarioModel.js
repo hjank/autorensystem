@@ -12,6 +12,24 @@ function Scenario() {
     return this;
 }
 
+function addUnitToScenarioModel(scenarioName, unitName) {
+
+    for (var k=0; k<myAuthorSystem.length; k++) {
+        if (myAuthorSystem[k]["name"] == scenarioName) {
+            myAuthorSystem[k]["units"].push(
+                {   name:unitName,            // displayed name
+                    description:"",             // description of the unit
+                    sat:"all",                  // how much context information have to be satisfied
+                    contextInformations:[],     // list of containing context information
+                    metaData:[],                // list of containing meta data
+                    //connections:[],           // list of connections with other units
+                    posX:0,                     // absolute X position in the displayed container
+                    posY:0                      // absolute Y position in the displayed container
+                }
+            );
+        }
+    }
+}
 
 
 

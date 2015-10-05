@@ -118,7 +118,7 @@ function saveScenarioName(inputName, scenarioName) {
     $(inputName).remove();
 
     // change name in menu bar
-    changeNameInMenu(scenarioName, newName);
+    changeScenarioNameInMenu(scenarioName, newName);
 
     // update name JSON structure
     changeScenarioName(scenarioName, newName);

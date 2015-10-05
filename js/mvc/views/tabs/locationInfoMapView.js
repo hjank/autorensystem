@@ -211,28 +211,6 @@ $(function(){
             $("#inputContextParameter2")[0].value = currentLng;
         });
 
-        // delete old and set new marker
-        /**
-         * Function deletes old and set new google maps marker.
-         * @param {Object} location Contains location of a google maps marker.
-         * */
-        function replaceMarker(location) {
-            // deletion
-            marker.setMap(null);
-            for (var i = 0, mark; mark = markers[i]; i++) {
-                mark.setMap(null);
-            }
-            markers = [];
-
-            // set new marker
-            marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                icon: image,
-                shadow: shadow
-            });
-        }
-
         /* add search box */
         // Create the search box and link it to the UI element.
         var input = /** @type {HTMLInputElement} */(
@@ -328,16 +306,16 @@ function resizeMap() {
  * Function deletes old and set new google maps marker.
  * @param {Object} location Contains location of a google maps marker.
  * */
-function replaceMarker2(location) {
+function replaceMarker(location) {
 
     // clean map and delete marker
     marker.setMap(null);
     for (var i = 0, mark; mark = markers[i]; i++) {
         mark.setMap(null);
     }
+    markers = [];
 
     // set new marker
-    markers = [];
     marker = new google.maps.Marker({
         position: location,
         map: map,

@@ -214,7 +214,7 @@ function fillInputField(ciValue) {
             // fill selection bar
             for (var i in ciValue.enums) {
                 var option = $("<option>").attr("value", i.toString());
-                option.html(ciValue.enums[i].translation);
+                option.html(translate_possibleValue(ciValue.enums[i]));
 
                 $("#selectPossibleValues").append(option);
             }
@@ -364,6 +364,29 @@ function fillParameterSelection(cp) {
     }
 }
 
+// set minima and maxima if needed in input fields in tab "Kontextinformation"
+/**
+ * Function set minimum and maximum values for an input field.
+ * @param {Array} values Contains minimum and maximum values.
+ * @param {Object} inputField Contains an input field.
+ * */
+function setMinMaxDefault(values, inputField) {
+
+    var min = (values.min != undefined) ? values.min : false;
+    var max = (values.max != undefined) ? values.max : false;
+    var def = (values.default != undefined) ? values.default : false;
+
+    if (min) {
+        inputField.attr("min", min);
+    }
+    if (max) {
+        inputField.attr("max", max);
+    }
+    if (def) {
+        inputField.attr("value", def);
+    }
+}
+
 
 // get current value from input field
 /**
@@ -412,7 +435,7 @@ function getInputContextValue(val) {
  * */
 function getParameterInput(val, num) {
 
-    // reduce to big values to maximum
+    // reduce too big values to maximum
     if ( $("#inputContextParameter" + num)[0].hasAttribute("max") ) {
         // get max attribute value
         var max = $("#inputContextParameter" + num)[0].getAttribute("max");
@@ -422,7 +445,7 @@ function getParameterInput(val, num) {
         }
     }
 
-    // increase to little values to minimum
+    // increase too little values to minimum
     if ( $("#inputContextParameter" + num)[0].hasAttribute("min") ) {
         // get min attribute value
         var min = $("#inputContextParameter" + num)[0].getAttribute("min");
@@ -449,7 +472,7 @@ function getParameterInput(val, num) {
         var new_LatLong = new google.maps.LatLng(lat, long);
 
         // replace old marker and set the new one
-        replaceMarker2(new_LatLong);
+        replaceMarker(new_LatLong);
 
         // conter the map and set zoom factor
         map.setCenter(new_LatLong);
@@ -512,7 +535,6 @@ function getColor(cc) {
     }
     return color;
 }
-
 
 
 // change all colors in multi selection in tab "Kontextinformation"

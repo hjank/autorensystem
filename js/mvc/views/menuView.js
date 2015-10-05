@@ -65,7 +65,7 @@ $(function() {
 });
 
 
-function changeNameInMenu(oldName, newName) {
+function changeScenarioNameInMenu(oldName, newName) {
 	$("#menuScenarios").children("li").children("a").children("span.title").each(function() {
 		if ( $(this)[0].innerHTML == oldName ) {
 			$(this).html(newName);
@@ -74,3 +74,75 @@ function changeNameInMenu(oldName, newName) {
 }
 
 
+function addUnitToMenu(nameCurrentScenario) {
+	var liCurrentScenario;
+
+	// find correct scenario in menu
+	$("span.title").each(function() {
+		if ($(this)[0].innerText == nameCurrentScenario) {
+			liCurrentScenario = $(this);
+		}
+	});
+
+	// build DOM for menu bar
+	var ulCurrentScenario;
+	var liNewUnit = $("<li>").addClass("last");
+	var aNewUnit = $("<a>").attr("href", "#");
+	var spanNewUnit = $("<span>");
+	liCurrentScenario = liCurrentScenario.parent("a").parent("li");
+
+	// necessary if the running scenario has a unit already
+	if (liCurrentScenario.hasClass("has-sub")) {
+
+		// get unit list
+		ulCurrentScenario = liCurrentScenario.children("ul");
+
+		// add unit in menu bar
+		spanNewUnit[0].innerText = this.value;
+		aNewUnit.append(spanNewUnit);
+		liNewUnit.append(aNewUnit);
+		ulCurrentScenario.append(liNewUnit);
+	}
+
+	// necessary if the running scenario has no units
+	if (liCurrentScenario.hasClass("last")) {
+
+		// create list DOM
+		ulCurrentScenario = $("<ul>").attr("style", "display:none");
+
+		// editing scenario DOM
+		liCurrentScenario.removeClass("last");
+		liCurrentScenario.addClass("active");
+		liCurrentScenario.addClass("has-sub");
+
+		// append content name on DOM
+		spanNewUnit[0].innerText = this.value;
+		aNewUnit.append(spanNewUnit);
+		liNewUnit.append(aNewUnit);
+		ulCurrentScenario.append(liNewUnit);
+		liCurrentScenario.append(ulCurrentScenario);
+
+		// append a holder to toggle the menu bar
+		liCurrentScenario.children("a").append('<span class="holder"></span>');
+
+		// get the functionalities into the menu bar
+		liCurrentScenario.children("a").click(function() {
+			$(this).removeAttr('href');
+			var element = $(this).parent('li');
+
+			if (element.hasClass('open')) {
+				element.removeClass('open');
+				element.find('li').removeClass('open');
+				element.find('ul').slideUp();
+			}
+			else {
+				element.addClass('open');
+				element.children('ul').slideDown();
+				element.siblings('li').children('ul').slideUp();
+				element.siblings('li').removeClass('open');
+				element.siblings('li').find('li').removeClass('open');
+				element.siblings('li').find('ul').slideUp();
+			}
+		});
+	}
+}

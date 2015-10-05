@@ -129,7 +129,7 @@ function loadScenario(data) {
 
     // load units from scenario
     for (var j=0; j<data["units"].length; j++) {
-        var unit = loadUnit(data["units"][j], (j+1).toString(), inst);
+        var unit = loadUnit(data["units"][j], (j+1).toString());
 
         // set event listeners
         activateFunctionalities(unit);

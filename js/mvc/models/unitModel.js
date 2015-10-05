@@ -4,7 +4,6 @@
 
 
 
-
 /**
  * Function deletes selected unit from the working place.
  * */
