@@ -6,6 +6,17 @@ var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
 
 
+// if home or confirm button is clicked change view
+/**
+ * Function changes view of context information tab from detail view to main view.
+ * */
+function showMainContextInfo() {
+    // show main, hide detail
+    $("#mainContextInfo").slideDown();
+    $("#detailContextInfo").slideUp();
+}
+
+
 // fill selection bars in tab "Kontextinformation"
 /**
  * Function sets a event listener for selection bar context information after parsing is finished.
@@ -19,38 +30,8 @@ function fillContextTab() {
         showDetailContextInfo()
     });
 
-    /* tab "Kontextinformation" */
-    // triggered if a context information was selected
-    $("#selectContextInfos").select2().on("select2-selecting", function(e) {
-        // get index (value) of the selected option
-        var j = e.val;
-        var selectedInfo = contextList.getItem(j);
-
-        // get the corresponding operators to the selected context information
-        var operators = selectedInfo.value.operators;
-
-        // clear selection bar
-        $("#selectOperator").empty();
-        $("#selectPossibleValues").empty();
-
-        // set empty field in selected start field
-        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
-        $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
-
-        // fill selection bar "Operator"
-        for (var i in operators) {
-            var option = $("<option>").attr("value", i.toString());
-            option.html(translate_operator(operators[i]));
-            $("#selectOperator").append(option);
-        }
-
-        // fill input field
-        fillInputField(contextList.getItem(j).value);
-
-        // fill parameter selection bar
-        fillParameterSelection(contextList.getItem(j).parameters);
-    });
 }
+
 
 // Jobs: - make details in tab "Kontextinformation" visible,
 //       - hide main part
@@ -70,20 +51,38 @@ function showDetailContextInfo() {
     cleanSection("#selectContextInfos");
     cleanSection("#selectOperator");
     cleanSection("#selectPossibleValues");
-    cleanSection("#selectParameter");
-    cleanSection("#selectParameter2");
+    $("#divContextParameter").children().each(function(){
+        cleanSection($(this).id);
+    });
+
+    //cleanSection("#selectParameter");
+    //cleanSection("#selectParameter2");
 
     // clean input fields
     $("#formContextInformation")[0].reset();
 
     // make objects invisible
+    $("#selectOperator").css("display", "none");
     $("#inputContextValue").css("display", "none");
     $("#selectPossibleValues").css("display", "none");
     $("#s2id_selectPossibleValues").css("display", "none");
     $("#divContextParameter").css("display", "none");
 
-    // fill selection "Kontextinformation"
-    fillSelectionContextInformation();
+
+
+    // change color of all context classes if selection bar "Kontextinformation" is opening
+    $("#selectContextInfos").select2().on("select2-open", function() {
+
+        // fill selection "Kontextinformation"
+        fillSelectionContextInformation();
+
+        $(".select2-results").children("li").children("div.select2-result-label").each(function() {
+            // for all context classes set a specific color
+            $(this).css("background-color", getColor($(this)[0].textContent));
+            $(this).css("color", getClassNameColor($(this)[0].textContent));
+        });
+
+    });
 }
 
 // fill selection bar "Kontextinformation"
@@ -123,31 +122,11 @@ function fillSelectionContextInformation() {
         }
     }
 
-    // change color of all context classes if selection bar "Kontextinformation" is opening
-    $("#selectContextInfos").select2().on("select2-open", function() {
-        $(".select2-results").children("li").children("div.select2-result-label").each(function() {
-            // for all context classes set a specific color
-            if ( $(this)[0].textContent == "Lernszenario" ) {
-                $(this).css("background-color", "#3287C8");
-                $(this).css("color", "white");
-            } else if ( $(this)[0].textContent == "Persönlich" ) {
-                $(this).css("background-color", "#AF46C8");
-                $(this).css("color", "white");
-            } else if ( $(this)[0].textContent == "Situationsbezogen" ) {
-                $(this).css("background-color", "#91F52D");
-                $(this).css("color", "#555555");
-            } else if ( $(this)[0].textContent == "Infrastruktur" ) {
-                $(this).css("background-color", "#969696");
-                $(this).css("color", "white");
-            } else if ( $(this)[0].textContent == "Umwelt" ) {
-                $(this).css("background-color", "#FADC3C");
-                $(this).css("color", "#555555");
-            } else if ( $(this)[0].textContent == "Ortung" ) {
-                $(this).css("background-color", "#F03C32");
-                $(this).css("color", "white");
-            }
-        });
-    });
+    // append optgroups (context classes) and their included options in selection bar "Kontextinformation"
+    for (var l=0; l<array_optgroups.length; l++) {
+        $("#selectContextInfos").append(array_optgroups[l]);
+    }
+
 
     // change format: add glyphs per option
     $("#selectContextInfos").select2({
@@ -156,10 +135,38 @@ function fillSelectionContextInformation() {
         escapeMarkup: function(m) {return m;}
     });
 
-    // append optgroups (context classes) and their included options in selection bar "Kontextinformation"
-    for (var l=0; l<array_optgroups.length; l++) {
-        $("#selectContextInfos").append(array_optgroups[l]);
-    }
+
+    /* tab "Kontextinformation" */
+    // triggered if a context information was selected
+    $("#selectContextInfos").select2().on("select2-selecting", function(e) {
+        // get index (value) of the selected option
+        var j = e.val;
+        var selectedInfo = contextList.getItem(j);
+
+        // get the corresponding operators to the selected context information
+        var operators = selectedInfo.value.operators;
+
+        // clear selection bar
+        $("#selectOperator").empty();
+        $("#selectPossibleValues").empty();
+
+        // set empty field in selected start field
+        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
+        $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
+
+        // fill selection bar "Operator"
+        for (var i in operators) {
+            var option = $("<option>").attr("value", i.toString());
+            option.html(translate_operator(operators[i]));
+            $("#selectOperator").append(option);
+        }
+
+        // fill input field
+        fillInputField(contextList.getItem(j).value);
+
+        // fill parameter selection bar
+        fillParameterSelection(contextList.getItem(j).parameters);
+    });
 }
 
 
@@ -246,12 +253,8 @@ function fillInputField(ciValue) {
 function fillParameterSelection(cp) {
 
     // clear selection bar
-    $("#selectParameter").empty();
-    $("#selectParameter2").empty();
-
-    // set empty field in selected start field
-    $("#selectParameter").select2("data", {id:"\r",text:"\r"});
-    $("#selectParameter2").select2("data", {id:"\r",text:"\r"});
+    cleanSection("#selectParameter");
+    cleanSection("#selectParameter2");
 
     // clear input fields caused by removing input fields and re-building
     $("#inputContextParameter1").remove();
@@ -269,10 +272,6 @@ function fillParameterSelection(cp) {
     // set all parameter fields invisible
     $("#divContextParameter > div").css("display", "none");
 
-    // cp[i][0] = parameter name
-    // cp[i][1] = type (enum, string, float, integer)
-    // cp[i][2] = possible values
-
     // iterate through all parameters
     for (var i in cp) {
 
@@ -289,6 +288,7 @@ function fillParameterSelection(cp) {
 
                 // get all possible values
                 for (var j in possibleValues) {
+
                     var option = $("<option>").attr("value", j.toString());
                     option.html(translate_parameterValue(possibleValues[j]));
 
@@ -481,26 +481,6 @@ function getParameterInput(val, num) {
 }
 
 
-// cleans selection bars
-/**
- * Function cleans a selection bar.
- * @param {String} s Contains a selection bar id.
- * */
-function cleanSection(s) {
-    $(s).empty();
-    $(s).select2("data", {id:"\r",text:"\r"});
-}
-
-
-// if home or confirm button is clicked change view
-/**
- * Function changes view of context information tab from detail view to main view.
- * */
-function showMainContextInfo() {
-    // show main, hide detail
-    $("#mainContextInfo").slideDown();
-    $("#detailContextInfo").slideUp();
-}
 
 
 
@@ -511,29 +491,34 @@ function showMainContextInfo() {
  * @return {String} Returns the specific color.
  * */
 function getColor(cc) {
-    var color;
-
     switch (cc) {
         case "Lernszenario":
-            color = "#3287C8";
-            break;
+            return "#3287C8";
         case "Persönlich":
-            color = "#AF46C8";
-            break;
+            return "#AF46C8";
         case "Situationsbezogen":
-            color = "#91F52D";
-            break;
+            return "#91F52D";
         case "Infrastruktur":
-            color = "#969696";
-            break;
+            return "#969696";
         case "Umwelt":
-            color = "#FADC3C";
-            break;
+            return "#FADC3C";
         case "Ortung":
-            color = "#F03C32";
-            break;
+            return "#F03C32";
     }
-    return color;
+}
+
+function getClassNameColor(classText) {
+    // a little bit cumbersome but slightly easier to maintain
+    switch (classText) {
+        case "Lernszenario":
+        case "Persönlich":
+        case "Infrastruktur":
+        case "Ortung":
+            return "white";
+        case "Situationsbezogen":
+        case "Umwelt":
+            return "#555555";
+    }
 }
 
 

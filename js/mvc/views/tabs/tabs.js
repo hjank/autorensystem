@@ -603,3 +603,14 @@ function activateFunctionalities(newState) {
 
 
 
+
+
+// cleans selection bars
+/**
+ * Function cleans a selection bar.
+ * @param {String} s Contains a selection bar id.
+ * */
+function cleanSection(s) {
+    $(s).empty();
+    $(s).select2("data", {id:"\r",text:"\r"});
+}

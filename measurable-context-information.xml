@@ -635,6 +635,25 @@
 					</possibleValues>
 				</parameterValue>
 			</parameter>
+			<parameter id="CP_APPOINTMENT_DETAIL">
+				<parameterValue type="ENUM">
+					<possibleValues>
+						<value>DATE</value>
+						<value>LOCATION</value>
+						<value>NOTES</value>
+						<value>TIME</value>
+						<value>TITLE</value>
+					</possibleValues>
+				</parameterValue>
+			</parameter>
+			<parameter id="CP_VELOCITY_UNIT">
+				<parameterValue type="ENUM">
+					<possibleValues>
+						<value>KILOMETERS_PER_HOUR</value>
+						<value>MILES2_PER_HOUR</value>
+					</possibleValues>
+				</parameterValue>
+			</parameter>
 		</parameters>
 	</information>
 	<information id="CI_USER_LOCATION_LATITUDE">

@@ -130,7 +130,7 @@ function checkInformation(current_unit) {
         // update JSON structure
         selectedInfo.input2 = $("#inputContextParameter2")[0].value;
     }
-    // check input context parameter 2 is visible
+    // check input context parameter string is visible
     if ( $("#divParameterString")[0].style.display == "block" ) {
 
         // if input field context parameter is empty, concatenate it in missing_content string

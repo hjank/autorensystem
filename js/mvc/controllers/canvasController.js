@@ -3,7 +3,7 @@
  */
 
 
-function initCanvas() {
+function initPlumbCanvas() {
 
     inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
