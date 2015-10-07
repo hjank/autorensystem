@@ -27,9 +27,49 @@ function fillContextTab() {
 
     // triggered if add context info button was clicked
     $("#btnAddContextInfos").click(function(e) {
-        showDetailContextInfo()
+        showDetailContextInfo();
     });
 
+    // change color of all context classes if selection bar "Kontextinformation" is opening
+    $("#selectContextInfos").select2().on("select2-open", function() {
+        $(".select2-results").children("li").children("div.select2-result-label").each(function() {
+            // for all context classes set a specific color
+            $(this).css("background-color", getColor($(this)[0].textContent));
+            $(this).css("color", getClassNameColor($(this)[0].textContent));
+        });
+    });
+
+    /* tab "Kontextinformation" */
+    // triggered if a context information was selected
+    $("#selectContextInfos").select2().on("select2-selecting", function(e) {
+        // get index (value) of the selected option
+        var j = e.val;
+        var selectedInfo = contextList.getItem(j);
+
+        // get the corresponding operators to the selected context information
+        var operators = selectedInfo.value.operators;
+
+        // clear selection bar
+        $("#selectOperator").empty();
+        $("#selectPossibleValues").empty();
+
+        // set empty field in selected start field
+        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
+        $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
+
+        // fill selection bar "Operator"
+        for (var i in operators) {
+            var option = $("<option>").attr("value", i.toString());
+            option.html(translate_operator(operators[i]));
+            $("#selectOperator").append(option);
+        }
+
+        // fill input field
+        fillInputField(contextList.getItem(j).value);
+
+        // fill parameter selection bar
+        fillParameterSelection(contextList.getItem(j).parameters);
+    });
 }
 
 
@@ -68,22 +108,10 @@ function showDetailContextInfo() {
     $("#s2id_selectPossibleValues").css("display", "none");
     $("#divContextParameter").css("display", "none");
 
-
-
-    // change color of all context classes if selection bar "Kontextinformation" is opening
-    $("#selectContextInfos").select2().on("select2-open", function() {
-
-        // fill selection "Kontextinformation"
-        fillSelectionContextInformation();
-
-        $(".select2-results").children("li").children("div.select2-result-label").each(function() {
-            // for all context classes set a specific color
-            $(this).css("background-color", getColor($(this)[0].textContent));
-            $(this).css("color", getClassNameColor($(this)[0].textContent));
-        });
-
-    });
+    // fill selection "Kontextinformation"
+    fillSelectionContextInformation();
 }
+
 
 // fill selection bar "Kontextinformation"
 /**
@@ -122,12 +150,6 @@ function fillSelectionContextInformation() {
         }
     }
 
-    // append optgroups (context classes) and their included options in selection bar "Kontextinformation"
-    for (var l=0; l<array_optgroups.length; l++) {
-        $("#selectContextInfos").append(array_optgroups[l]);
-    }
-
-
     // change format: add glyphs per option
     $("#selectContextInfos").select2({
         formatSelection: formatContextInfos,
@@ -135,38 +157,10 @@ function fillSelectionContextInformation() {
         escapeMarkup: function(m) {return m;}
     });
 
-
-    /* tab "Kontextinformation" */
-    // triggered if a context information was selected
-    $("#selectContextInfos").select2().on("select2-selecting", function(e) {
-        // get index (value) of the selected option
-        var j = e.val;
-        var selectedInfo = contextList.getItem(j);
-
-        // get the corresponding operators to the selected context information
-        var operators = selectedInfo.value.operators;
-
-        // clear selection bar
-        $("#selectOperator").empty();
-        $("#selectPossibleValues").empty();
-
-        // set empty field in selected start field
-        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
-        $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
-
-        // fill selection bar "Operator"
-        for (var i in operators) {
-            var option = $("<option>").attr("value", i.toString());
-            option.html(translate_operator(operators[i]));
-            $("#selectOperator").append(option);
-        }
-
-        // fill input field
-        fillInputField(contextList.getItem(j).value);
-
-        // fill parameter selection bar
-        fillParameterSelection(contextList.getItem(j).parameters);
-    });
+    // append optgroups (context classes) and their included options in selection bar "Kontextinformation"
+    for (var l=0; l<array_optgroups.length; l++) {
+        $("#selectContextInfos").append(array_optgroups[l]);
+    }
 }
 
 
@@ -364,6 +358,7 @@ function fillParameterSelection(cp) {
     }
 }
 
+
 // set minima and maxima if needed in input fields in tab "Kontextinformation"
 /**
  * Function set minimum and maximum values for an input field.
@@ -481,9 +476,6 @@ function getParameterInput(val, num) {
 }
 
 
-
-
-
 // get the specific color for each context class
 /**
  * Function finds specific color of a context class.
@@ -507,6 +499,7 @@ function getColor(cc) {
     }
 }
 
+// get the color of each context class' label (depending on background color)
 function getClassNameColor(classText) {
     // a little bit cumbersome but slightly easier to maintain
     switch (classText) {
