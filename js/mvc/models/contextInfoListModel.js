@@ -36,7 +36,9 @@ parameterI : {
 // the list of all available context information data types
 function ContextInfoList() {
 
+    // all measurable context infos
     this._items = [];
+    // all available context classes' IDs ("CC_...")
     this._classes = [];
 
     return this;

@@ -9,7 +9,7 @@
  * @param {Object} current_unit Contains the current selected unit.
  * @return {Array} Returns and array which includes the string with the missing content and which an object with selected infos.
  * */
-function checkInformation(current_unit) {
+function checkInformation() {
 
     var selectedInfo = {};
     var missing_content = ""; // displayed to user if something is missing
@@ -26,8 +26,9 @@ function checkInformation(current_unit) {
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
-        selectedInfo.id = contextInfoInArray.name;
-        selectedInfo.name = translate_contextInformation(contextInfoInArray.name);
+        selectedInfo.id = selectedContextInfo.id;
+        selectedInfo.name = contextInfoInArray.name;
+        selectedInfo.text = translate_contextInformation(contextInfoInArray.name);
     }
 
     /*    // only addable if context info doesn't exist already
