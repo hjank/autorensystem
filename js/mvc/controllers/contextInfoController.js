@@ -6,7 +6,6 @@
 // check if all needed fields were filled with information
 /**
  * Function checks whether all visible selections and input fields are not empty
- * @param {Object} current_unit Contains the current selected unit.
  * @return {Array} Returns and array which includes the string with the missing content and which an object with selected infos.
  * */
 function checkInformation() {

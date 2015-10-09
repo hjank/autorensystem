@@ -47,28 +47,25 @@ function createUnit() {
     stateName.keyup(function(e) {
         if (e.keyCode === 13) {
 
-            var unitName = this.value;
+            global_currentInputUnitName = this.value;
             // prevent unnamed units
-            if (unitName == "") {
+            if (global_currentInputUnitName == "") {
                 alert("[Fehler] Bitte geben Sie einen Namen ein.\n");
                 return false;
             }
 
             // set unit name
-            $(this).parent().text(unitName);
+            $(this).parent().text(global_currentInputUnitName);
 
             // set event listeners
             activateFunctionalities(newState);
-
-            // set the new unit as current unit name
-            global_currentInputUnitName = unitName;
 
             // lname := scenario name in navBar
             var nameCurrentScenario = $("#lname")[0].innerText;
             // add learning unit in menu bar
             addUnitToMenu(nameCurrentScenario)
             // update JSON structure: get new unit in its scenario
-            addUnitToScenarioModel(nameCurrentScenario, unitName);
+            addUnitToScenarioModel(nameCurrentScenario);
 
             // hide tabs because all units will be unmarked
             $(".tabContents").hide();

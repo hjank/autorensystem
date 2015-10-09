@@ -15,6 +15,7 @@ function AuthorSystemContent() {
 
 
 
+
 /** -- JSON Structure for the personal author system data --
  *  myAuthorSystem = [scenario1, scenario2, ..., scenarioN, options]
  *      scenario = {name:name, units:[unit1, unit2, ...], connections:[connect1, connect2, ...]}
@@ -44,3 +45,4 @@ function changeScenarioName(oldName, newName) {
         }
     }
 }
+

@@ -10,14 +10,17 @@ function Scenario() {
     this._connections = [];
 
     return this;
+
 }
 
-function addUnitToScenarioModel(scenarioName, unitName) {
+
+
+function addUnitToScenarioModel(scenarioName) {
 
     for (var k=0; k<myAuthorSystem.length; k++) {
         if (myAuthorSystem[k]["name"] == scenarioName) {
             myAuthorSystem[k]["units"].push(
-                {   name:unitName,            // displayed name
+                {   name:global_currentInputUnitName,            // displayed name
                     description:"",             // description of the unit
                     sat:"all",                  // how much context information have to be satisfied
                     contextInformations:[],     // list of containing context information

@@ -98,7 +98,7 @@ function addUnitToMenu(nameCurrentScenario) {
 		ulCurrentScenario = liCurrentScenario.children("ul");
 
 		// add unit in menu bar
-		spanNewUnit[0].innerText = this.value;
+		spanNewUnit[0].innerText = global_currentInputUnitName;
 		aNewUnit.append(spanNewUnit);
 		liNewUnit.append(aNewUnit);
 		ulCurrentScenario.append(liNewUnit);
@@ -116,7 +116,7 @@ function addUnitToMenu(nameCurrentScenario) {
 		liCurrentScenario.addClass("has-sub");
 
 		// append content name on DOM
-		spanNewUnit[0].innerText = this.value;
+		spanNewUnit[0].innerText = global_currentInputUnitName;
 		aNewUnit.append(spanNewUnit);
 		liNewUnit.append(aNewUnit);
 		ulCurrentScenario.append(liNewUnit);

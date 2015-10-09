@@ -73,126 +73,122 @@ function fillContextTab() {
 
 }
 
-function activateContextConfirmation(unit, name, current_unit) {
+
+// Jobs: - evaluate the selections and inputs
+//       - put context information in multi selection bar
+//       - add icons in current unit
+function activateContextConfirmation(unit, unitSatisfiesAllContextInfos, current_unit) {
 
     // button "Bestätigen" in tab "Kontextinformation" was clicked
-    // Jobs: - evaluate the selections and inputs
-    //       - put context information in multi selection bar
-    //       - add icons in current unit
     $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
 
-        // only for the selected unit
-        if (name == global_currentInputUnitName) {
+        var contextClasses = contextList.getClasses();
+        // check if all needed fields were filled with information
+        var returnArray = checkInformation();
+        var missing_content = returnArray[0]; // displayed to user if something is missing
+        var selectedInfo = returnArray[1];
 
-            var contextClasses = contextList.getClasses()
-            // check if all needed fields were filled with information
-            var returnArray = checkInformation();
-            var missing_content = returnArray[0]; // displayed to user if something is missing
-            var selectedInfo = returnArray[1];
+        // if content is missing do not accept adding of the context information
+        if (missing_content == "Error999") {
+            return false;
 
-            // if content is missing do not accept adding of the context information
-            if (missing_content == "Error999") {
+        } else {
+
+            // if something needed is missing
+            if (!!missing_content) {
+                alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
                 return false;
 
             } else {
 
-                // if something needed is missing
-                if (!!missing_content) {
-                    alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-                    return false;
+                // push all new information about the context unit in current scenario
+                current_unit["contextInformations"].push(selectedInfo);
 
+                // get corresponding context class
+                var classIndex = getFirstMatchingClassIndex(contextList.getItem(selectedInfo.id), contextClasses);
+                var optgroup = contextClassDictionary[classIndex];
+                // get corresponding context class id
+                var ccID = contextClasses[classIndex];
+
+                // create icon DOM
+                var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
+                //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
+                //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
+
+                // get right format for icon visualisation in learning unit
+                // case 1: context specific icon
+                // case 2: context class icon (upper class icon, only color)
+                var icon = formatUnitIcons(selectedInfo, optgroup, ccID);
+
+                // TODO: Icons should be fetched on reload, not saved in JSON file
+                /*                    // get icon information in JSON structure
+                 for (var j = 0; j < current_unit["contextInformations"].length; j++) {
+                 if (current_unit["contextInformations"][j].name == contentContextInfo["text"]) {
+                 current_unit["contextInformations"][j].icon = icon;
+                 }
+                 }*/
+
+                // add icon and div to unit
+                divContextIcon.append(icon);
+                $(unit).children("div.unit-icons").append(divContextIcon);
+
+                /* design reasons */
+                // all SAT needs solid border
+                if (unitSatisfiesAllContextInfos) {
+                    $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
+                    $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
+
+                    // one SAT needs dotted border
                 } else {
-
-                    // push all new information about the context unit in current scenario
-                    current_unit["contextInformations"].push(selectedInfo);
-
-                    // get corresponding context class
-                    var classIndex = getFirstMatchingClassIndex(contextList.getItem(selectedInfo.id), contextClasses);
-                    var optgroup = contextClassDictionary[classIndex];
-                    // get corresponding context class id
-                    var ccID = contextClasses[classIndex];
-
-                    // create icon DOM
-                    var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
-                    //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
-                    //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
-
-                    // get right format for icon visualisation in learning unit
-                    // case 1: context specific icon
-                    // case 2: context class icon (upper class icon, only color)
-                    var icon = formatUnitIcons(selectedInfo, optgroup, ccID);
-
-                    // TODO: Icons should be fetched on reload, not saved in JSON file
-                    /*                    // get icon information in JSON structure
-                     for (var j = 0; j < current_unit["contextInformations"].length; j++) {
-                     if (current_unit["contextInformations"][j].name == contentContextInfo["text"]) {
-                     current_unit["contextInformations"][j].icon = icon;
-                     }
-                     }*/
-
-                    // add icon and div to unit
-                    divContextIcon.append(icon);
-                    $(unit).children("div.unit-icons").append(divContextIcon);
-
-                    /* design reasons */
-                    // all SAT needs solid border
-                    if (unitSatisfiesAllContextInfos) {
-                        $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
-                        $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-
-                        // one SAT needs dotted border
-                    } else {
-                        $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
-                        $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
-                    }
-                    $(unit).children("div.unit-icons").css("border-radius", "4px");
-                    $(unit).css("padding-top", "10px");
-                    $(unit).children("div.unit-icons").css("height", "23px");
-                    $(unit).children("div.unit-icons").css("display", "inline-block");
-
-                    // set endpoints on the right place
-                    inst.repaintEverything();
-
-                    /* get selected context information name into multi selection bar */
-                    var id = selectedInfo.id;
-
-                    // get name
-                    var contextInfoName = selectedInfo.text;
-                    var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
-                    option.html(contextInfoName);
-
-                    // change format: add icons to text
-                    $("#selectMultiContextInfos").select2({
-                        formatSelection: formatMultiContextInfos,
-                        formatResult: formatMultiContextInfos,
-                        escapeMarkup: function (m) {
-                            return m;
-                        }
-                    });
-
-                    // get name into multi selection
-                    //$("#selectMultiContextInfos").append(option);
-                    array_multiSelectionContextInfos.push({id: id, text: contextInfoName});
-                    $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-
-                    // change color per option in multi selection bar
-                    changeColorMultiContextInfos();
-
-                    // increase counter --> needed for continuous ids
-                    counter_multiSelectionContextInfos++;
-
-                    // show main, hide detail
-                    showMainContextInfo();
-
-                    // show SAT and multi selection bar
-                    $("#mainContextInfoSAT").show();
-                    $("#mainContextInfoSelection").show();
-
-                    //console.log(myAuthorSystem);
-                    //console.log(JSON.stringify(myAuthorSystem));
+                    $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
+                    $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
                 }
-            }
+                $(unit).children("div.unit-icons").css("border-radius", "4px");
+                $(unit).css("padding-top", "10px");
+                $(unit).children("div.unit-icons").css("height", "23px");
+                $(unit).children("div.unit-icons").css("display", "inline-block");
 
+                // set endpoints on the right place
+                inst.repaintEverything();
+
+                /* get selected context information name into multi selection bar */
+                var id = selectedInfo.id;
+
+                // get name
+                var contextInfoName = selectedInfo.text;
+                var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
+                option.html(contextInfoName);
+
+                // change format: add icons to text
+                $("#selectMultiContextInfos").select2({
+                    formatSelection: formatMultiContextInfos,
+                    formatResult: formatMultiContextInfos,
+                    escapeMarkup: function (m) {
+                        return m;
+                    }
+                });
+
+                // get name into multi selection
+                //$("#selectMultiContextInfos").append(option);
+                array_multiSelectionContextInfos.push({id: id, text: contextInfoName});
+                $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+                // change color per option in multi selection bar
+                changeColorMultiContextInfos();
+
+                // increase counter --> needed for continuous ids
+                counter_multiSelectionContextInfos++;
+
+                // show main, hide detail
+                showMainContextInfo();
+
+                // show SAT and multi selection bar
+                $("#mainContextInfoSAT").show();
+                $("#mainContextInfoSelection").show();
+
+                //console.log(myAuthorSystem);
+                //console.log(JSON.stringify(myAuthorSystem));
+            }
         }
     });
 
