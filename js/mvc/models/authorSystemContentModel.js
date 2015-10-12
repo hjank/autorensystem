@@ -2,20 +2,6 @@
  * Created by Helena on 04.09.2015.
  */
 
-
-
-function AuthorSystemContent() {
-
-    this._scenarioList = [];
-    this._options = {};
-
-    return this;
-}
-
-
-
-
-
 /** -- JSON Structure for the personal author system data --
  *  myAuthorSystem = [scenario1, scenario2, ..., scenarioN, options]
  *      scenario = {name:name, units:[unit1, unit2, ...], connections:[connect1, connect2, ...]}
@@ -35,8 +21,43 @@ function AuthorSystemContent() {
  *              metaData = {name:name, icon:path}
  *      options = {option1:text, option2:text, ...}
  *  **/
-
 var myAuthorSystem = [];
+
+
+function AuthorSystemContent() {
+
+    this._scenarioList = [];
+    this._options = {};
+
+    return this;
+}
+
+
+AuthorSystemContent.prototype.getScenario = function(scenarioName) {
+    for (var i in this._scenarioList) {
+        var scenario = this._scenarioList[i];
+        if (scenario.name == scenarioName)
+            return scenario;
+    }
+};
+
+AuthorSystemContent.prototype.addScenario = function (scenario) {
+    this._scenarioList.push(scenario);
+};
+
+AuthorSystemContent.prototype.addScenarios = function (scenarioList) {
+    this._scenarioList.concat(scenarioList);
+};
+
+AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
+    for (var i in this._scenarioList) {
+        var scenario = this._scenarioList[i];
+        if (scenario.name == scenarioName)
+            this._scenarioList.splice(i, 1);
+    }
+};
+
+
 
 function changeScenarioName(oldName, newName) {
     for (var m=0; m<myAuthorSystem.length; m++) {

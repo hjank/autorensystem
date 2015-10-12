@@ -23,6 +23,28 @@ function fillMetadataTab () {
 }
 
 
+function loadMetadataTabforUnit(unit) {
+    // clear multi selection in meta data tab
+    $("#selectMultiMetaData").empty();
+    $("#selectMultiMetaData").select2("data", null);
+    array_multiSelectionMetaData = [];
+
+    // get data back in multi selection bar from a past edited learning unit
+    var array_icons = $(unit).find(".unit-meta-icons");
+    for (var j=0; j<array_icons.length; j++) {
+        array_multiSelectionMetaData.push({"id":j, "text":$(array_icons[j])[0].title});
+    }
+
+    // change format: add icons to text
+    $("#selectMultiMetaData").select2({
+        formatSelection: formatMultiMetaData,
+        escapeMarkup: function(m) {return m;}
+    });
+    // get data in multi selection bar
+    $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+}
+
+
 function addMetadataGlyphsToOptions() {
     $("#selectMetaData").select2({
         formatSelection: formatMetaData,
@@ -30,7 +52,6 @@ function addMetadataGlyphsToOptions() {
         escapeMarkup: function(m) {return m;}
     });
 }
-
 
 // change shown format in selection bar in tab "Metadaten"
 /**
@@ -57,7 +78,6 @@ function formatMetaData(item) {
             return '<b class="fui-windows"> </b>' + item.text;
     }
 }
-
 
 // change shown format in multi selection bar in tab "Metadaten"
 /**

@@ -33,8 +33,6 @@ $(function() {
     });
 });
 
-
-
 // bind unit with properties (tabs)
 /**
  * Function add event listeners after learning unit creation.
@@ -108,72 +106,11 @@ function activateFunctionalities(newState) {
         // set description field
         $("#inputUnitDescription")[0].value = current_unit["description"];
 
-
         /* tab "Kontextinformation" */
-
-        // check how much context information are needed to reach SAT
-        var ciSAT = $(unit).children("div.unit-icons")[0].getAttribute("ci");
-        if (ciSAT == "all") {
-            $("#s2id_selectNumberContextInfos").children("a").children("span.select2-chosen").html("Alle");
-        } else if (ciSAT == "one") {
-            $("#s2id_selectNumberContextInfos").children("a").children("span.select2-chosen").html("Eine");
-        }
-
-        // clear multi selection in context info tab
-        $("#selectMultiContextInfos").empty();
-        $("#selectMultiContextInfos").select2("data", null);
-        array_multiSelectionContextInfos = [];
-
-        // change format: add icons to text
-        $("#selectMultiContextInfos").select2({
-            formatSelection: formatMultiContextInfos,
-            formatResult: formatMultiContextInfos,
-            escapeMarkup: function(m) {return m;}
-        });
-
-        // get data back in multi selection bar from a past edited learning unit
-        var array_unitIcons = $(unit).find(".unit-icon");
-        for (var n=0; n<array_unitIcons.length; n++) {
-            array_multiSelectionContextInfos.push({
-                "id":$(array_unitIcons[n]).children("img")[0].getAttribute("ccID"),
-                "text":$(array_unitIcons[n]).children("img")[0].title
-            });
-        }
-        // get data in multi selection bar
-        $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-        
-        // check if multi selection bar is empty
-        if ( jQuery.isEmptyObject($("#selectMultiContextInfos").select2("data")) ) {
-            $("#mainContextInfoSAT").hide();
-            $("#mainContextInfoSelection").hide();
-        } else {
-            $("#mainContextInfoSAT").show();
-            $("#mainContextInfoSelection").show();
-        }
-
-        // needed to re-color the selections
-        changeColorMultiContextInfos();
-
+        loadContextTabForUnit(unit);
 
         /* multi selection bar in tab "Metadaten" */
-        // clear multi selection in meta data tab
-        $("#selectMultiMetaData").empty();
-        $("#selectMultiMetaData").select2("data", null);
-        array_multiSelectionMetaData = [];
-
-        // get data back in multi selection bar from a past edited learning unit
-        var array_icons = $(unit).find(".unit-meta-icons");
-        for (var j=0; j<array_icons.length; j++) {
-            array_multiSelectionMetaData.push({"id":j, "text":$(array_icons[j])[0].title});
-        }
-
-        // change format: add icons to text
-        $("#selectMultiMetaData").select2({
-            formatSelection: formatMultiMetaData,
-            escapeMarkup: function(m) {return m;}
-        });
-        // get data in multi selection bar
-        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
+        loadMetadataTabforUnit(unit)
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
@@ -238,7 +175,7 @@ function activateFunctionalities(newState) {
         var old_name = global_currentInputUnitName;
 
         // get current input field value
-        var global_currentInputUnitName = $(this).val();
+        global_currentInputUnitName = $(this).val();
 
         // change unit name if his corresponding input field is changing
         $(unit).children("div.title")[0].innerText = global_currentInputUnitName;

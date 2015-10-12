@@ -13,6 +13,41 @@ function Scenario() {
 
 }
 
+Scenario.prototype.getUnit = function(unitName) {
+    for (var i in this._units) {
+        var unit = this._units[i];
+        if (unit.name == unitName)
+            return unit;
+    }
+};
+
+Scenario.prototype.addUnit = function(unit) {
+    this._units.push(unit);
+};
+
+
+Scenario.prototype.getConnection = function(connId) {
+    for (var i in this._connections) {
+        var conn = this._connections[i];
+        if (conn.connId == connId)
+            return conn;
+    }
+};
+
+Scenario.prototype.getConnections = function() {
+    return this._connections;
+};
+
+Scenario.prototype.addConnection = function(conn) {
+    this._connections.push(conn);
+};
+
+Scenario.prototype.removeConnection = function(conn) {
+    var index = this._connections.indexOf(conn);
+    if (index > -1)
+        this._connections.splice(index, 1);
+};
+
 
 
 function addUnitToScenarioModel(scenarioName) {
@@ -33,9 +68,6 @@ function addUnitToScenarioModel(scenarioName) {
         }
     }
 }
-
-
-
 
 // triggered if save scenario was clicked
 /**

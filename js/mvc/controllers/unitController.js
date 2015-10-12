@@ -165,7 +165,7 @@ function loadUnit(unit, j) {
 
 }
 
-
+// set properties for newly created unit in jsPlumb instance
 function plumbUnit(newState, ep) {
 
     // make the unit draggable
