@@ -8,22 +8,21 @@
 $(function() {
 
     // for button: delete unit = YES
-    $("btnDeleteUnits2").click(function() {
+    $("btnDeleteUnits2").on("click", function() {
         deleteUnits();
-        // delete one or more units + connections in modal window "Lernszenarien löschen"
+        // delete one or more units + connections in modal window "Lernszenarien lï¿½schen"
         deleteSelectedUnitsFromDOM();
     });
 
     // for button: delete unit = NO
-    $("btnDeleteUnitsNot").click(function() {
-        deleteUnitsNot();
-    });
+    $("btnDeleteUnitsNot").on("click", deleteUnitsNot);
 
+    // set the trigger for the delete scenarios modal window
+    $("#deleteLearnUnit").on("click", showDeleteUnits);
+
+    // set the trigger for opening a new modal window to confirm the unit deletion
+    $("#btnDeleteUnits").on("click", showDeleteUnitsConfirm);
 });
-
-
-
-
 
 // trigger delete scenarios modal window
 /**
@@ -41,7 +40,7 @@ function showDeleteUnits() {
 
     // set deletion button label
     var list_units = [];
-    $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+    $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
 
     // delete scenarios and put them and new scenarios in selection bar again
     $("#selectScenarioDeleteUnit").empty();
@@ -62,7 +61,7 @@ function showDeleteUnits() {
         // clean multi selection bar
         $("#selectMultiDeleteUnits").empty();
         list_units = [];
-        $("#btnDeleteUnits").text("Löschen (" + 0 + ")");
+        $("#btnDeleteUnits").text("Lï¿½schen (" + 0 + ")");
 
         // get units into multi selection choice
         for (var j=0; j<myAuthorSystem.length; j++) {
@@ -105,7 +104,7 @@ function showDeleteUnits() {
             }
 
             // set label
-            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
         });
 
         // triggered if a unit was deleted
@@ -117,7 +116,7 @@ function showDeleteUnits() {
                 }
             }
             // set label
-            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
         });
     });
 }

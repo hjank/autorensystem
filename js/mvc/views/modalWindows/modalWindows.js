@@ -9,7 +9,6 @@ var global_dataArrayScenarios = [];
 
 // reset modal windows after closing
 $(function() {
-
     // triggered if modal window was closed
     $("body").on("hidden.bs.modal", ".modal", function() {
         // only reset modal windows if they have forms
@@ -23,6 +22,26 @@ $(function() {
             $(this).find("form")[0].reset();
         }
     });
+
+    // set the trigger for the login modal window
+    $("#showLogin").on("click", showLogin);
+
+    // sets the trigger for the profile modal window
+    $("#showProfile").on("click", showProfil);
+
+    // set the trigger for the help modal window
+    $("#showHelp").on("click", showHelp);
+
+    // set the trigger for the confirmation modal window when deleting a connection
+    $("#tabBtnDeleteConnection").on("click", showDeleteConnectionConfirm);
+
+    // set the trigger for clicking "Passwort ändern"
+    $("#showPW").on("click", showPW);
+
+    // set the trigger for the contact modal window
+    $("#showContact").on("click", showContact);
+
+    $("#getContentContact").on("click", getContentContact);
 });
 
 
@@ -87,12 +106,17 @@ function showContact() {
 // get all content of the input fields and send a mail
 /**
  * Function reads out the input fields in the contact modal window after clicking the send button.
- * @parma {Object} f form object from contact modal window
+ *
  * */
-function getContentContact(f) {
-    var name = f.userName.value;
-    var mail = f.userMail.value;
-    var text = f.userText.value;
+function getContentContact() {
+    var f = $('#modalContactForm').serializeArray().reduce(function(obj, item) {
+        obj[item.name] = item.value;
+        return obj;
+    }, {});
+
+    var name = f.userName;
+    var mail = f.userMail;
+    var text = f.userText;
 
     //var subject = "Authorensystem Frage";
 
@@ -119,10 +143,7 @@ function showHelp() {
     });
 }
 
-
-
 function showDeleteConnectionConfirm() {
-
     // show modal window
     $("#modal-delete-connection-confirm").modal({
         keyboard: true,
@@ -130,9 +151,6 @@ function showDeleteConnectionConfirm() {
         show: true
     });
 }
-
-
-
 
 // set scenarios in selection bar
 /*function setScenarios() {

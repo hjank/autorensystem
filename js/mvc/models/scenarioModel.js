@@ -3,6 +3,12 @@
  */
 
 
+// probably shouldn't be here
+$(function() {
+    // sets the trigger for if save scenario was clicked
+    $("#saveScenario").on("click", showSaveScenario);
+});
+
 function Scenario() {
 
     this._name = "";
@@ -59,8 +65,6 @@ Scenario.prototype.removeConnection = function(conn) {
     if (index > -1)
         this._connections.splice(index, 1);
 };
-
-
 
 
 function changeScenarioName(oldName, newName) {

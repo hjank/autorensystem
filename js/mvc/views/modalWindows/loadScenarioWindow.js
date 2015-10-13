@@ -31,6 +31,9 @@ $(function() {
         }
 
     });
+
+    // set the trigger for the load scenarios modal window
+    $("#loadScenario").on("click", showLoadScenario);
 });
 
 

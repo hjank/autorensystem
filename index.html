@@ -110,32 +110,32 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-credit-card"></b> Szenario <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li onclick="showNewScenario()"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
-                                <li onclick="showDeleteScenario()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
-                                <li onclick="showLoadScenario()"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
-                                <li id="saveScenario" onclick="showSaveScenario()"><a download="szenario.json">Speichern <b class="fui-exit" style="float: right"></b></a></li>
+                                <li id="showNewScenario"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="deleteScenario"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="loadScenario"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
+                                <li id="saveScenario"><a download="szenario.json">Speichern <b class="fui-exit" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a id="navbarLearningUnit" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
-                                <li id="deleteLearnUnit" onclick="showDeleteUnits()"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="deleteLearnUnit"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
                         <!--<li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>-->
-                        <li onclick="showContact()"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
+                        <li id="showContact"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-user"></b> Benutzer<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li onclick="showProfil()"><a>Profil <b class="fui-gear" style="float: right"></b></a></li>
-                                <li onclick="showLogin()"><a href="#">Logout <b class="fui-lock" style="float: right"></b></a></li>
+                                <li id="showProfile"><a href="#">Profil <b class="fui-gear" style="float: right"></b></a></li>
+                                <li id="showLogin"><a href="#">Logout <b class="fui-lock" style="float: right"></b></a></li>
                             </ul>
                         </li>
-                        <li class="active" onclick="showHelp()" style="cursor: pointer"><a><b class="fui-question-circle"></b> Hilfe</a></li>
+                        <li class="active" id="showHelp" style="cursor: pointer"><a><b class="fui-question-circle"></b> Hilfe</a></li>
                     </ul>
                 </div>
             </div>
@@ -206,7 +206,7 @@
                                 <textarea id="inputUnitDescription" class="form-control" name="unitDescription" rows="5"></textarea>
                             </div>
                             <div>
-                                <div id="tabBtnDeleteUnit" class="btn btn-danger" onclick="showDeleteUnitConfirm()">
+                                <div id="tabBtnDeleteUnit" class="btn btn-danger">
                                     <b class="fui-trash"> </b>Lerneinheit löschen
                                 </div>
                             </div>
@@ -234,7 +234,7 @@
                             </div>
                             <div id="detailContextInfo" style="display: none">
                                 <div>
-                                    <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" onclick="showMainContextInfo()" title="Zurück zur Übersicht">
+                                    <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" title="Zurück zur Übersicht">
                                         <b class="fui-arrow-left"> </b><b class="fui-home"></b>
                                     </div>
                                     <div id="btnConfirmContextInfoSmall" class="btn btn-info btn-xs" title="Eingaben bestätigen">
@@ -340,8 +340,8 @@
                             </select>
                             <p id="postLabelRelations" class="label-tabs label">Für</p>
                             <div>
-                                <div id="tabBtnDeleteConnection" class="btn btn-danger" onclick="showDeleteConnectionConfirm()">
-                                    <b class="fui-trash"> </b>Verbindung löschen
+                                <div id="tabBtnDeleteConnection" class="btn btn-danger">
+                                    <b class="fui-trash" ></b>Verbindung löschen
                                 </div>
                             </div>
                         </div>
@@ -376,8 +376,8 @@
                             </div>
                         </form>
                         <div>
-                            <label id="hrefRegist" onclick="showRegistration()" style="cursor:pointer; color: #16a085; margin-right: 10px">Registrieren</label>
-                            <label id="hrefPWForgot" onclick="showPWForgot()" style="cursor:pointer; color: #16a085">Passwort vergessen</label>
+                            <label id="hrefRegist" style="cursor:pointer; color: #16a085; margin-right: 10px">Registrieren</label>
+                            <label id="hrefPWForgot" style="cursor:pointer; color: #16a085">Passwort vergessen</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -405,7 +405,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" onclick="createScenario()" style="margin-right: 10px">Erstellen</button>
+                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" style="margin-right: 10px">Erstellen</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
@@ -439,7 +439,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDeleteSzenario" class="btn btn-danger" onclick="deleteScenariosConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
+                        <button id="btnDeleteSzenario" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px"></button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
@@ -458,8 +458,8 @@
                         <p>Wollen Sie die Szenarien wirklich löschen?</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" onclick="deleteScenarios()" data-dismiss="modal" style="margin-right: 10px">JA</button>
-                        <button type="button" class="btn btn-default" onclick="deleteScenariosNot()" data-dismiss="modal">NEIN</button>
+                        <button id="deleteScenarios" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="deleteScenariosNot" type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
                     </div>
                 </div>
             </div>
@@ -517,7 +517,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDeleteUnits" class="btn btn-danger" onclick="showDeleteUnitsConfirm()" data-dismiss="modal" style="margin-right: 10px"></button>
+                        <button id="btnDeleteUnits" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px"></button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>
@@ -566,7 +566,7 @@
                                 <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort" type="password" maxlength="30">
                             </div>
                             <div>
-                                <a onclick="showPW()">
+                                <a id="showPW">
                                     <label id="hrefPW">Passwort ändern</label>
                                 </a>
                             </div>
@@ -599,7 +599,7 @@
                         Kontakt
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="modalContactForm">
                             <div>
                                 <label class="label-modal label">Name</label>
                                 <div class="input-group">
@@ -630,7 +630,7 @@
                                     <label>* notwendig</label>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="reset" onclick="getContentContact(this.form)" data-dismiss="modal" style="margin-right: 10px">Senden</button>
+                            <button id="getContentContact" class="btn btn-primary" type="reset" data-dismiss="modal" style="margin-right: 10px">Senden</button>
                         </form>
                     </div>
                     <div class="modal-footer">

@@ -11,6 +11,8 @@ $(function() {
         deleteUnitFromView();
     });
 
+    // set the trigger for if the delete button in tab "Eigenschaften" was clicked
+    $("#tabBtnDeleteUnit").on("click", showDeleteUnitConfirm);
 });
 
 
@@ -30,5 +32,5 @@ function showDeleteUnitConfirm() {
 
     // get unit name and show the unit specific text
     var unitName = $("#inputUnitName")[0].value;
-    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich löschen?');
+    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich lï¿½schen?');
 }

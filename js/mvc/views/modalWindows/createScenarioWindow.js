@@ -27,6 +27,11 @@ $(function() {
         }
     });
 
+    // set the trigger for the new scenario modal window
+    $("#showNewScenario").on("click", showNewScenario);
+
+    // set the trigger for after clicking the save button in scenario creation
+    $("#btnSE").on("click", createScenario);
 });
 
 

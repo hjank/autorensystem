@@ -71,6 +71,17 @@ $(function() {
         setLabelBtnScenarioDeletion();
     });
 
+    // set the trigger for the delete scenarios modal window
+    $("#deleteScenario").on("click", showDeleteScenario);
+
+    // set the trigger for opening a new modal window to confirm scenario deletion
+    $("#btnDeleteSzenario").on("click", deleteScenariosConfirm);
+
+    // set the trigger for deleting scenarios from the menu bar and clearing the state machine
+    $("#deleteScenarios").on("click", deleteScenarios);
+
+    // set the trigger for getting back to deletion overview after canceling deletion
+    $("#deleteScenariosNot").on("click", deleteScenariosNot);
 });
 
 
@@ -84,7 +95,7 @@ function setLabelBtnScenarioDeletion() {
     var countSelectedDelete = global_arrayShowSzenarioDeletion.length;
 
     // set label of the deletion button
-    $("#btnDeleteSzenario").text("Löschen (" + countSelectedDelete.toString() + ")");
+    $("#btnDeleteSzenario").text("LÃ¶schen (" + countSelectedDelete.toString() + ")");
 }
 
 
