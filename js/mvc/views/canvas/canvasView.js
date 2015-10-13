@@ -19,8 +19,24 @@ function deleteUnitFromView() {
 
     // get unit name from input field
     var unitName = $("#inputUnitName")[0].value;
+    // get current scenario name
+    var currentScenario = $("#lname")[0].innerHTML;
 
-    // find right unit
+    // needed to find scenario in menu bar
+    var liCurrentScenario;
+    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+        if ( $(this)[0].innerHTML == currentScenario ) {
+            liCurrentScenario = $(this).parent("a").parent("li");
+        }
+    });
+    // delete unit in menu bar
+    liCurrentScenario.children("ul").children("li").each(function() {
+        if ($(this).children("a").children("span")[0].innerHTML == unitName) {
+            $(this).remove();
+        }
+    });
+
+    // find right unit and remove it from canvas
     $("#stm").children("div.w").children("div.title").each(function() {
         if (this.innerHTML == unitName) {
             // get unit id

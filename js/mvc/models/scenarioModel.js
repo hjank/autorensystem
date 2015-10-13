@@ -13,6 +13,13 @@ function Scenario() {
 
 }
 
+Scenario.prototype.getName = function() {
+    return this._name;
+};
+Scenario.prototype.setName = function(name) {
+    this._name = name;
+};
+
 Scenario.prototype.getUnit = function(unitName) {
     for (var i in this._units) {
         var unit = this._units[i];
@@ -25,6 +32,11 @@ Scenario.prototype.addUnit = function(unit) {
     this._units.push(unit);
 };
 
+Scenario.prototype.removeUnit = function(unit) {
+    var index = this._units.indexOf(unit);
+    if (index > -1)
+        this._units.splice(index, 1);
+};
 
 Scenario.prototype.getConnection = function(connId) {
     for (var i in this._connections) {
@@ -49,6 +61,15 @@ Scenario.prototype.removeConnection = function(conn) {
 };
 
 
+
+
+function changeScenarioName(oldName, newName) {
+    for (var m=0; m<myAuthorSystem.length; m++) {
+        if (myAuthorSystem[m].name == oldName) {
+            myAuthorSystem[m].name = newName;
+        }
+    }
+}
 
 function addUnitToScenarioModel(scenarioName) {
 

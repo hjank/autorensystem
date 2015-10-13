@@ -45,10 +45,6 @@ AuthorSystemContent.prototype.addScenario = function (scenario) {
     this._scenarioList.push(scenario);
 };
 
-AuthorSystemContent.prototype.addScenarios = function (scenarioList) {
-    this._scenarioList.concat(scenarioList);
-};
-
 AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
     for (var i in this._scenarioList) {
         var scenario = this._scenarioList[i];
@@ -57,13 +53,4 @@ AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
     }
 };
 
-
-
-function changeScenarioName(oldName, newName) {
-    for (var m=0; m<myAuthorSystem.length; m++) {
-        if (myAuthorSystem[m].name == oldName) {
-            myAuthorSystem[m].name = newName;
-        }
-    }
-}
 
