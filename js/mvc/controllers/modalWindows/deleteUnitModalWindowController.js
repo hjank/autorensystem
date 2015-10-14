@@ -30,13 +30,9 @@ $(function() {
  * Sets event listeners to the selection and multi selection bar.
  * */
 function showDeleteUnits() {
+    var selectScenarioDeleteUnitElement = $("#selectScenarioDeleteUnit");
 
-    // show modal window
-    $("#modal-delete-units").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
+    showModalWindow($("#modal-delete-units"));
 
     // set deletion button label
     var list_units = [];
@@ -52,14 +48,14 @@ function showDeleteUnits() {
     }
 
     // clean multi selection bar and fill it again
-    $("#selectMultiDeleteUnits").empty();
-    $("#selectMultiDeleteUnits").select2("data", null);
+    selectScenarioDeleteUnitElement.empty();
+    selectScenarioDeleteUnitElement.select2("data", null);
 
     // triggered if an scenario was selected
     $("#selectScenarioDeleteUnit").on("select2-selecting", function(e) {
 
         // clean multi selection bar
-        $("#selectMultiDeleteUnits").empty();
+        selectScenarioDeleteUnitElement.empty();
         list_units = [];
         $("#btnDeleteUnits").text("L�schen (" + 0 + ")");
 
@@ -83,13 +79,13 @@ function showDeleteUnits() {
 
                     // set option name and append in multi selection bar
                     option.html(myAuthorSystem[j]["units"][k]["name"]);
-                    $("#selectMultiDeleteUnits").append(option);
+                    selectScenarioDeleteUnitElement.append(option);
                 }
             }
         }
 
         // select unit which should be deleted
-        $("#selectMultiDeleteUnits").select2().on("select2-selecting", function(e) {
+        selectScenarioDeleteUnitElement.select2().on("select2-selecting", function(e) {
 
             // test if unit is already in the list
             var isContained = false;
@@ -108,7 +104,7 @@ function showDeleteUnits() {
         });
 
         // triggered if a unit was deleted
-        $("#selectMultiDeleteUnits").select2().on("select2-removed", function(e) {
+        selectScenarioDeleteUnitElement.select2().on("select2-removed", function(e) {
             // remove unit from list
             for (var j=0; j<list_units.length; j++) {
                 if (list_units[j].text == e.choice.text) {
@@ -133,16 +129,11 @@ function showDeleteUnitsConfirm() {
     });
 }
 
-
-
-
-// triggered if conformation button of delete units was clicked
 /**
  * Function deletes a learning unit from the working place.
  * Triggered in the modal window "confirm unit deletion".
- * */
+ */
 function deleteUnits(){
-
     // get units which should be deleted
     var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
 

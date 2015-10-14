@@ -2,54 +2,19 @@
  * Created by Helena on 06.09.2015.
  */
 
-
-
 $(function() {
-
-    // triggered if load button was clicked in modal window load scenario
-    $("#btnLoadScenario").on("click", function() {
-
-        // get name of the selected scenario
-        var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
-
-        // find right scenario
-        for (var i=0; i<myAuthorSystem.length; i++) {
-            if (myAuthorSystem[i].name == selectedScenario) {
-                // save scenario object in JSON structure
-                localStorage.setItem("saveData", JSON.stringify(myAuthorSystem[i]));
-
-                // add name in URL
-                $(location).attr("href", "?" + selectedScenario);
-            }
-        }
-
-        // only for testing
-        if (selectedScenario == "Testszenario") {
-
-            // add name in URL
-            $(location).attr("href", "?" + selectedScenario);
-        }
-
-    });
-
     // set the trigger for the load scenarios modal window
     $("#loadScenario").on("click", showLoadScenario);
+
+    // triggered if load button was clicked in modal window load scenario
+    $("#btnLoadScenario").on("click", loadScenario);
 });
 
-
-
-// trigger load scenarios modal window
 /**
  * Function shows the load scenario modal window.
  * */
 function showLoadScenario() {
-
-    // show modal window
-    $("#modal-load-szenario").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
+    showModalWindow($("#modal-load-szenario"));
 
     // delete scenarios
     $("#listLoadScenarios > option").each(function() {
@@ -68,7 +33,6 @@ function showLoadScenario() {
         if (myAuthorSystem[i].name == "Testszenario") {
             checkName = true;
         }
-
     }
 
     // only for testing --> add a fix scenario
@@ -77,5 +41,29 @@ function showLoadScenario() {
         option.html("Testszenario");
         $("#listLoadScenarios").append(option);
     }
+}
 
+/**
+ * Loads the selected scenario.
+ */
+function loadScenario() {
+    // get name of the selected scenario
+    var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
+
+    // find right scenario
+    for (var i=0; i<myAuthorSystem.length; i++) {
+        if (myAuthorSystem[i].name == selectedScenario) {
+            // save scenario object in JSON structure
+            localStorage.setItem("saveData", JSON.stringify(myAuthorSystem[i]));
+
+            // add name in URL
+            $(location).attr("href", "?" + selectedScenario);
+        }
+    }
+
+    // only for testing
+    if (selectedScenario == "Testszenario") {
+        // add name in URL
+        $(location).attr("href", "?" + selectedScenario);
+    }
 }

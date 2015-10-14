@@ -2,11 +2,9 @@
  * Created by Helena on 06.09.2015.
  */
 
-
 var global_ScenarioLiNumber = 0;
 
 $(function() {
-
     // make sure that after pressing enter in modal window "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
     $("#modal-new-szenario").keypress(function(e) {
@@ -34,35 +32,29 @@ $(function() {
     $("#btnSE").on("click", createScenario);
 });
 
-
-// trigger new scenario modal window
 /**
  * Function shows the new scenario modal window.
- * */
+ */
 function showNewScenario() {
+    var newScenarioElement = $("#modal-new-szenario");
 
     // set focus to scenario name input field
-    $("#modal-new-szenario").on("shown.bs.modal", function () {
+    newScenarioElement.on("shown.bs.modal", function () {
         $("#sname").focus();
     });
 
-    // show modal window
-    $("#modal-new-szenario").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-
+    showModalWindow(newScenarioElement);
 }
 
-
-// triggered after clicking save button in scenario creation
 /**
  * Function creates a new scenario.
  * It adds the name in the menu bar and in the header above the working place.
  * Is Triggered after clicking save button in modal window scenario creation.
- * */
+ */
 function createScenario() {
+    var stateMachineContainerElement = $("#stm");
+    var navbarAddLearningUnitButtonElement = $("#navadd");
+    var learningUnitDropdownMenuElement = $("#navbarLearningUnit");
 
     // get name from input field
     var scenarioName = $("#sname").val();
@@ -90,24 +82,23 @@ function createScenario() {
     setLabelBtnScenarioDeletion();
 
     // remove all units from state machine container
-    $("#stm").empty();
+    stateMachineContainerElement.empty();
 
     // defines DOM as jsPlump container
-    jsPlumb.setContainer($("#stm"));
+    jsPlumb.setContainer(stateMachineContainerElement);
 
     // activate quick add learning unit button (little navbar right)
-    $("#navadd").css("pointer-events", "");
-    $("#navadd").css("color", "rgb(102,102,102)");
+    navbarAddLearningUnitButtonElement.css("pointer-events", "");
+    navbarAddLearningUnitButtonElement.css("color", "rgb(102,102,102)");
 
     // activate learning unit dropdown menu (big navigation bar)
-    $("#navbarLearningUnit").css("pointer-events", "");
-    $("#navbarLearningUnit").css("color", "");
+    learningUnitDropdownMenuElement.css("pointer-events", "");
+    learningUnitDropdownMenuElement.css("color", "");
 }
 
-
-// add scenario as a select option
 /**
- * Function
+ * Add scenario as a select option.
+ *
  * @param {String} name Name of the new Scenario
  * */
 function updateScenario(name) {
