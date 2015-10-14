@@ -1,10 +1,9 @@
 /**
  * Created by Helena on 04.09.2015.
  */
-
+//var i = 1;
 
 function initPlumbCanvas() {
-
     inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
         HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
@@ -31,7 +30,6 @@ function initPlumbCanvas() {
         // if (con.sourceId === con.targetId) {
         return !(con.connection.source.parentElement.id === con.targetId);
     });
-
 
     // triggered if a connection was drawn between to units
     inst.bind("connection", function (con) {
@@ -64,7 +62,6 @@ function initPlumbCanvas() {
         }
     });
 
-
     var current_labelConnection;
     // triggered if connection or label is clicked
     // c = connection element
@@ -82,7 +79,7 @@ function initPlumbCanvas() {
 
             // add names in relations labels
             $("#preLabelRelations").html(sourceUnit + " ist eine");
-            $("#postLabelRelations").html("für " + targetUnit);
+            $("#postLabelRelations").html("fï¿½r " + targetUnit);
 
             // update current label
             current_labelConnection = label.canvas.id;
@@ -215,4 +212,67 @@ function initPlumbCanvas() {
         });
     });
 
+}
+
+function clearMarkingFromLearningUnits () {
+    for (var l=0; l<list_units.length; l++) {
+        $(list_units[l]).css("background", "");
+        $(list_units[l]).css("color", "");
+    }
+}
+
+// delete current unit + connections in tab "Eigenschaften"
+function deleteUnitFromView() {
+
+    // get unit name from input field
+    var unitName = $("#inputUnitName")[0].value;
+    // get current scenario name
+    var currentScenario = $("#lname")[0].innerHTML;
+
+    // needed to find scenario in menu bar
+    var liCurrentScenario;
+    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+        if ( $(this)[0].innerHTML == currentScenario ) {
+            liCurrentScenario = $(this).parent("a").parent("li");
+        }
+    });
+    // delete unit in menu bar
+    liCurrentScenario.children("ul").children("li").each(function() {
+        if ($(this).children("a").children("span")[0].innerHTML == unitName) {
+            $(this).remove();
+        }
+    });
+
+    // find right unit and remove it from canvas
+    $("#stm").children("div.w").children("div.title").each(function() {
+        if (this.innerHTML == unitName) {
+            // get unit id
+            var unitID = $(this).parent()[0].getAttribute("id");
+
+            // delete all connections
+            inst.detachAllConnections($("#" + unitID));
+
+            // delete unit
+            $(this).parent().remove();
+        }
+    });
+}
+
+
+// delete one or more units + connections in modal window "Lernszenarien lï¿½schen"
+function deleteSelectedUnitsFromDOM() {
+
+    // get all selected units which should be deleted from multi selection bar
+    var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
+
+    for (var i=0; i<list_deleteableUnits.length; i++) {
+        // get unit id
+        var unitID = list_deleteableUnits[i].id;
+
+        // delete all connections
+        inst.detachAllConnections($("#" + unitID));
+
+        // delete unit in canvas
+        $("#" + unitID).remove();
+    }
 }

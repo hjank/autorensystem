@@ -7,7 +7,6 @@ var global_currentInputUnitName = "";
 
 // tabs
 $(function() {
-
     // default hide tabs
     $(".tab-Container").hide();
     $(".tabContents").hide();
@@ -33,11 +32,11 @@ $(function() {
     });
 });
 
-// bind unit with properties (tabs)
 /**
  * Function add event listeners after learning unit creation.
+ *
  * @param {Object} newState Contains new created learning unit.
- * */
+ */
 function activateFunctionalities(newState) {
 
     // get id from new state (unit)
@@ -385,10 +384,6 @@ function activateFunctionalities(newState) {
     array_multiSelectionContextInfos = [];
 
 }
-
-
-
-
 
 // cleans selection bars
 /**

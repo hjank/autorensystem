@@ -5,9 +5,7 @@
 var array_multiSelectionMetaData = [];
 var counter_multiSelectionMetaData = 0;
 
-
 function fillMetadataTab () {
-
     /* tab "Metadaten" */
     // set all needed meta data
     var array_SelectionMetaData = ["Bild", "Film", "Text", "Navigation", "Test", "Audio", "3D Umgebung"];
@@ -21,7 +19,6 @@ function fillMetadataTab () {
     // change format: add glyphs per option
     addMetadataGlyphsToOptions();
 }
-
 
 function loadMetadataTabforUnit(unit) {
     // clear multi selection in meta data tab
@@ -44,7 +41,6 @@ function loadMetadataTabforUnit(unit) {
     $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
 }
 
-
 function addMetadataGlyphsToOptions() {
     $("#selectMetaData").select2({
         formatSelection: formatMetaData,
@@ -53,14 +49,13 @@ function addMetadataGlyphsToOptions() {
     });
 }
 
-// change shown format in selection bar in tab "Metadaten"
 /**
- * Function
+ * Change shown format in selection bar in tab "Metadaten".
+ *
  * @param {Object} item Contains the selected option from meta data selection bar.
  * @return {String} Returns DOM string which contains a meta data specific glyph and the corresponding text.
- * */
+ */
 function formatMetaData(item) {
-
     switch (item.text) {
         case "Bild":
             return '<b class="fui-photo"> </b>' + item.text;
@@ -86,7 +81,6 @@ function formatMetaData(item) {
  * @return {String} Returns DOM string which contains a meta data specific glyph.
  * */
 function formatMultiMetaData(item) {
-
     switch (item.text) {
         case "Bild":
             return '<b class="fui-photo"></b>';
