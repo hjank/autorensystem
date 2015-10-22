@@ -97,6 +97,7 @@ function loadContextTabForUnit(unit) {
         escapeMarkup: function(m) {return m;}
     });
 
+    // TODO: Fetch this unit's context info from model, not icons!
     // get data back in multi selection bar from a past edited learning unit
     var array_unitIcons = $(unit).find(".unit-icon");
     for (var n=0; n<array_unitIcons.length; n++) {

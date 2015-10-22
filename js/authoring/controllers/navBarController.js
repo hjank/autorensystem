@@ -105,8 +105,8 @@ $(function() {
             }
         });
     });
-
 });
+
 
 /**
  * Saves the current scenario name and hides input field.
