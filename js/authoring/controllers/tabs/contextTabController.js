@@ -414,27 +414,13 @@ function fillInputField(ciValue) {
  * */
 function fillParameterSelection(cp) {
 
-    var coordIdentRegex = /CP_.*(LONGITUDE|LONGITUDE)/;
+    var coordIdentRegex = /CP_.*(LONGITUDE|LATITUDE)/;
 
-    // clear selection bar
-    cleanSection("#selectParameter");
-    cleanSection("#selectParameter2");
-
-    // clear input fields caused by removing input fields and re-building
-    $("#inputContextParameter1").remove();
-    $("#inputContextParameter2").remove();
-    $("#inputParameterString").remove();
-    var inputField = $("<input>").addClass("form-control").attr("id", "inputContextParameter1")
-        .attr("type", "number").attr("onkeyup", "getParameterInput(this,1)");
-    var inputField2 = $("<input>").addClass("form-control").attr("id", "inputContextParameter2")
-        .attr("type", "number").attr("onkeyup", "getParameterInput(this,2)");
-    var inputField3 = $("<input>").addClass("form-control").attr("id", "inputParameterString");
-    $("#divParameterInput1").append(inputField);
-    $("#divParameterInput2").append(inputField2);
-    $("#divParameterString").append(inputField3);
-
+    // clear stale parameters fields from former editing for a fresh start
+    $("#divContextParameter").empty();
     // set all parameter fields invisible
     $("#divContextParameter > div").css("display", "none");
+
 
     // iterate through all parameters
     for (var i in cp) {
@@ -444,76 +430,66 @@ function fillParameterSelection(cp) {
         var parameterTranslation = translate_parameter(parameterOriginal);
         var type = cp[i].type;
         var possibleValues = cp[i].values;
+        var id, div, child;
 
         switch (type) {
 
             // type enum needs a drop down selection for only possible values
             case "ENUM":
+                id = "selectParameter" + i;
+                div = createNamedDOMElement("div", "divParameterSelection"+i)
+                    .css("display", "block")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("select", id)
+                    .addClass("form-control select select-primary select-block mbl")
+                    .attr("style", "min-width: 235px;");
 
-                // get all possible values
+                // append all possible values
                 for (var j in possibleValues) {
-
-                    var option = $("<option>").attr("value", j.toString());
-                    option.html(translate_parameterValue(possibleValues[j]));
-
-                    // needed if first selection is already existing
-                    if ( $("#divParameterSelection1").css("display") == "block" ) {
-                        // append possible values
-                        $("#selectParameter2").append(option);
-
-                        // add specific label to selection
-                        $("#divParameterSelection2").children("label").html(parameterTranslation);
-                        $("#divParameterSelection2").children("label").attr("origin", parameterOriginal);
-
-                        // make selection visible
-                        $("#divParameterSelection2").css("display", "block");
-
-                    } else {
-                        // append possible values
-                        $("#selectParameter").append(option);
-
-                        // add specific label to selection
-                        $("#divParameterSelection1").children("label").html(parameterTranslation);
-                        $("#divParameterSelection1").children("label").attr("origin", parameterOriginal);
-                    }
+                    child.append(
+                        $("<option>")
+                            .attr("value", j.toString())
+                            .html(translate_parameterValue(possibleValues[j]))
+                    );
                 }
-                // make selection visible
-                $("#divParameterSelection1").css("display", "block");
                 break;
 
             // type float or integer each need an input field and a specific label
             case "INTEGER":
             case "FLOAT":
-                if ( $("#divParameterInput1").css("display") == "table-cell" ) {
-                    $("#divParameterInput2").css("display", "table-cell");
-                    $("#divParameterInput2").children("label").html(parameterTranslation);
-                    $("#divParameterInput2").children("label").attr("origin", parameterOriginal);
-                    setMinMaxDefault(possibleValues[0], $("#inputContextParameter2"));
+                id = "inputContextParameter"+i;
+                div = createNamedDOMElement("div", "divParameterInput"+i)
+                    .addClass("divParameterInputs")
+                    .css("display", "table-cell")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("input", id)
+                    .addClass("form-control")
+                    .attr("type", "number")
+                    .attr("onkeyup", "getParameterInput(this,"+i+")");
+                setMinMaxDefault(possibleValues[0], child);
 
-                    // display google maps
-                    if (coordIdentRegex.test(parameterOriginal)) {
-                        $("#divMaps").css("display", "block");
-                        resizeMap();
-                    }
-
-                } else {
-                    $("#divParameterInput1").css("display", "table-cell");
-                    $("#divParameterInput1").children("label").html(parameterTranslation);
-                    $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
-                    setMinMaxDefault(possibleValues[0], $("#inputContextParameter1"));
+                // display google maps if coordinates are expected input
+                if (coordIdentRegex.test(parameterOriginal)) {
+                    $("#divMaps").css("display", "block");
+                    resizeMap();
                 }
                 break;
 
             // type string needs an input field and a specific label
             case "STRING":
-                $("#divParameterString").css("display", "block");
-                $("#divParameterString").children("label").html(parameterTranslation);
-                $("#divParameterString").children("label").attr("origin", parameterOriginal);
+                id = "inputParameterString"+i;
+                div = createNamedDOMElement("div", "divParameterString"+i)
+                    .css("display", "block")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("input", id)
+                    .addClass("form-control")
+                    .attr("type", "text");
                 break;
-
         }
+
         // show context parameter section
-        $("#divContextParameter").css("display", "block");
+        div.append(child);
+        $("#divContextParameter").append(div).css("display", "block");
     }
 }
 
@@ -578,6 +554,7 @@ function getInputContextValue(val) {
      }*/
 
 }
+
 
 // get current value from input field
 /**
@@ -657,6 +634,7 @@ function getColor(cc) {
             return "#F03C32";
     }
 }
+
 
 // get the color of each context class' label (depending on background color)
 function getClassNameColor(classText) {
@@ -803,4 +781,19 @@ function getFirstMatchingClassIndex(contextItem, contextClasses) {
             break;
     }
     return classIndex;
+}
+
+
+/**************************tiny little helper******************************/
+// create any new DOM element with an ID
+function createNamedDOMElement(elem, id) {
+    return $("<"+elem+">").attr("id", id);
+}
+
+// create a new label (which is also a DOM element)
+function createParameterLabelDOM(elem, label) {
+    return $("<label>")
+        .attr("class", "label-tabs label")
+        .attr("for", elem)
+        .html(label);
 }
