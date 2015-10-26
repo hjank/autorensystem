@@ -5,6 +5,9 @@
 var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
 
+$(function() {
+    $("#btnBackToMainContextInfo").on("click", showMainContextInfo);
+});
 
 // if home or confirm button is clicked change view
 /**
@@ -94,6 +97,7 @@ function loadContextTabForUnit(unit) {
         escapeMarkup: function(m) {return m;}
     });
 
+    // TODO: Fetch this unit's context info from model, not icons!
     // get data back in multi selection bar from a past edited learning unit
     var array_unitIcons = $(unit).find(".unit-icon");
     for (var n=0; n<array_unitIcons.length; n++) {
@@ -125,7 +129,7 @@ function loadContextTabForUnit(unit) {
 //       - add icons in current unit
 function activateContextConfirmation(unit, unitSatisfiesAllContextInfos, current_unit) {
 
-    // button "Bestätigen" in tab "Kontextinformation" was clicked
+    // button "Bestï¿½tigen" in tab "Kontextinformation" was clicked
     $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
 
         var contextClasses = contextList.getClasses();
@@ -650,7 +654,7 @@ function getColor(cc) {
     switch (cc) {
         case "Lernszenario":
             return "#3287C8";
-        case "Persönlich":
+        case "Persï¿½nlich":
             return "#AF46C8";
         case "Situationsbezogen":
             return "#91F52D";
@@ -668,7 +672,7 @@ function getClassNameColor(classText) {
     // a little bit cumbersome but slightly easier to maintain
     switch (classText) {
         case "Lernszenario":
-        case "Persönlich":
+        case "Persï¿½nlich":
         case "Infrastruktur":
         case "Ortung":
             return "white";
@@ -776,7 +780,7 @@ function changeColorMultiContextInfos() {
                 e.stopPropagation();
             });
             $(".select2-search-choice-close").hover(
-                function() {$(this).attr("title", "Löschen")}
+                function() {$(this).attr("title", "Lï¿½schen")}
             );
 
             /* end new */

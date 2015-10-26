@@ -83,7 +83,6 @@ function createUnit() {
     stateName.focus();
 }
 
-
 /**
  * Function loads
  * Hint: The website will be new loaded.
@@ -167,7 +166,6 @@ function loadUnit(unit, j) {
 
 // set properties for newly created unit in jsPlumb instance
 function plumbUnit(newState, ep) {
-
     // make the unit draggable
     inst.draggable(newState, {
         //containment: 'parent'
@@ -193,4 +191,21 @@ function plumbUnit(newState, ep) {
             outlineWidth: 4
         }
     });
+}
+
+function chooseMetaIcon(metaDataName) {
+    switch (metaDataName) {
+        case "Bild":
+            return "fui-photo";
+        case "Film":
+            return "fui-video";
+        case "Text":
+            return "fui-document";
+        case "Navigation":
+            return "fui-location";
+        case "Test":
+            return "fui-radio-unchecked";
+        case "Audio":
+            return "fui-volume";
+    }
 }

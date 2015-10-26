@@ -86,6 +86,7 @@ function checkInformation() {
             missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
         }
 
+        // TODO: Get selected parameter identifier to get at values!
         // update JSON structure
         selectedInfo.parameter1 = contextInfoInArray.parameters.values[$("#selectParameter").select2("data").id];
     }

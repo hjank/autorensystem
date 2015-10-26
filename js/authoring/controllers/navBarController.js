@@ -2,44 +2,50 @@
  * Created by Helena on 04.09.2015.
  */
 
-// big navigation bar
 $(function() {
-    $("#navbarLearningUnit").css("pointer-events", "none");
-    $("#navbarLearningUnit").css("color", "#aaa");
-});
+    var navMenuElement = $("#navmenu");
+    var navAddElement = $("#navadd");
 
-
-// events on little menu bar
-$(function() {
+    $("#navbarLearningUnit").css({
+        "pointer-events": "none",
+        "color": "#aaa"}
+    );
 
     // menu hover --> change color
-    $("#navmenu").mouseover(function() {
-        $(this).css("background", "#48c9b0");
-        $(this).css("cursor", "pointer");
-        $("#navmenu a").css("color", "#ffffff");
+    navMenuElement.mouseover(function() {
+        $(this).css({
+            background: "#48c9b0",
+            cursor: "pointer"
+        });
+        $(this).find("a").css("color", "#ffffff");
     });
-    $("#navmenu").mouseout(function() {
+
+    navMenuElement.mouseout(function() {
         $(this).css("background", "#ddd");
-        $("#navmenu a").css("color", "#666");
+        $(this).find("a").css("color", "#666");
     });
 
     // toggle menu bar
-    $("#navmenu").on("click",function() {
+    navMenuElement.on("click",function() {
         $( "#cssmenu" ).toggle("slide");
-        $("#navmenu a").toggleClass("fui-arrow-left fui-arrow-right");
+        $(this).find("a").toggleClass("fui-arrow-left fui-arrow-right");
     });
 
     // add learning unit hover --> change color
-    $("#navadd").mouseover(function() {
+    navAddElement.mouseover(function() {
         $(this).css("background", "#48c9b0");
         $(this).css("color", "#ffffff");
     });
-    $("#navadd").mouseout(function() {
+
+    navAddElement.mouseout(function() {
         $(this).css("background", "#ddd");
         $(this).css("color", "#666");
     });
-    $("#navadd").css("pointer-events", "none");
-    $("#navadd").css("color", "rgb(150,150,150)");
+
+    navAddElement.css({
+        "pointer-events": "none",
+        color: "rgb(150,150,150)"
+    });
 
     // tab bar hover --> change color
     $("#navtab").mouseover(function() {
@@ -99,13 +105,16 @@ $(function() {
             }
         });
     });
-
 });
 
 
-// saves the current scenario name and hides input field
+/**
+ * Saves the current scenario name and hides input field.
+ *
+ * @param inputName
+ * @param scenarioName
+ */
 function saveScenarioName(inputName, scenarioName) {
-
     var newName = $(inputName).val();
 
     // get new name in label
@@ -122,5 +131,4 @@ function saveScenarioName(inputName, scenarioName) {
 
     // update name JSON structure
     changeScenarioName(scenarioName, newName);
-
 }

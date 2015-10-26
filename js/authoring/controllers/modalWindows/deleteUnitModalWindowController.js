@@ -8,22 +8,21 @@
 $(function() {
 
     // for button: delete unit = YES
-    $("btnDeleteUnits2").click(function() {
+    $("btnDeleteUnits2").on("click", function() {
         deleteUnits();
-        // delete one or more units + connections in modal window "Lernszenarien löschen"
+        // delete one or more units + connections in modal window "Lernszenarien lï¿½schen"
         deleteSelectedUnitsFromDOM();
     });
 
     // for button: delete unit = NO
-    $("btnDeleteUnitsNot").click(function() {
-        deleteUnitsNot();
-    });
+    $("btnDeleteUnitsNot").on("click", deleteUnitsNot);
 
+    // set the trigger for the delete scenarios modal window
+    $("#deleteLearnUnit").on("click", showDeleteUnits);
+
+    // set the trigger for opening a new modal window to confirm the unit deletion
+    $("#btnDeleteUnits").on("click", showDeleteUnitsConfirm);
 });
-
-
-
-
 
 // trigger delete scenarios modal window
 /**
@@ -31,17 +30,13 @@ $(function() {
  * Sets event listeners to the selection and multi selection bar.
  * */
 function showDeleteUnits() {
+    var selectScenarioDeleteUnitElement = $("#selectScenarioDeleteUnit");
 
-    // show modal window
-    $("#modal-delete-units").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
+    showModalWindow($("#modal-delete-units"));
 
     // set deletion button label
     var list_units = [];
-    $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+    $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
 
     // delete scenarios and put them and new scenarios in selection bar again
     $("#selectScenarioDeleteUnit").empty();
@@ -53,16 +48,16 @@ function showDeleteUnits() {
     }
 
     // clean multi selection bar and fill it again
-    $("#selectMultiDeleteUnits").empty();
-    $("#selectMultiDeleteUnits").select2("data", null);
+    selectScenarioDeleteUnitElement.empty();
+    selectScenarioDeleteUnitElement.select2("data", null);
 
     // triggered if an scenario was selected
     $("#selectScenarioDeleteUnit").on("select2-selecting", function(e) {
 
         // clean multi selection bar
-        $("#selectMultiDeleteUnits").empty();
+        selectScenarioDeleteUnitElement.empty();
         list_units = [];
-        $("#btnDeleteUnits").text("Löschen (" + 0 + ")");
+        $("#btnDeleteUnits").text("Lï¿½schen (" + 0 + ")");
 
         // get units into multi selection choice
         for (var j=0; j<myAuthorSystem.length; j++) {
@@ -84,13 +79,13 @@ function showDeleteUnits() {
 
                     // set option name and append in multi selection bar
                     option.html(myAuthorSystem[j]["units"][k]["name"]);
-                    $("#selectMultiDeleteUnits").append(option);
+                    selectScenarioDeleteUnitElement.append(option);
                 }
             }
         }
 
         // select unit which should be deleted
-        $("#selectMultiDeleteUnits").select2().on("select2-selecting", function(e) {
+        selectScenarioDeleteUnitElement.select2().on("select2-selecting", function(e) {
 
             // test if unit is already in the list
             var isContained = false;
@@ -105,11 +100,11 @@ function showDeleteUnits() {
             }
 
             // set label
-            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
         });
 
         // triggered if a unit was deleted
-        $("#selectMultiDeleteUnits").select2().on("select2-removed", function(e) {
+        selectScenarioDeleteUnitElement.select2().on("select2-removed", function(e) {
             // remove unit from list
             for (var j=0; j<list_units.length; j++) {
                 if (list_units[j].text == e.choice.text) {
@@ -117,7 +112,7 @@ function showDeleteUnits() {
                 }
             }
             // set label
-            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Lï¿½schen (" + list_units.length.toString() + ")");
         });
     });
 }
@@ -134,16 +129,11 @@ function showDeleteUnitsConfirm() {
     });
 }
 
-
-
-
-// triggered if conformation button of delete units was clicked
 /**
  * Function deletes a learning unit from the working place.
  * Triggered in the modal window "confirm unit deletion".
- * */
+ */
 function deleteUnits(){
-
     // get units which should be deleted
     var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
 

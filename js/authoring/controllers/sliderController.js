@@ -5,8 +5,8 @@
 
 // slider
 var valueSlider, scaleSlider, diffSlider;
-$(function() {
 
+$(function() {
     // slider properties and functionalities
     $(".slider").slider({max:8, min:0, value:4, orientation: "vertical", step:1,
         // default properties

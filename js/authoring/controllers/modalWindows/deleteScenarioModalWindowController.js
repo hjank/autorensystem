@@ -5,8 +5,8 @@
 
 var global_arrayShowSzenarioDeletion = [];
 
-
 $(function() {
+
 
     // remove elements from scenario list, add elements in delete scenario list
     $("#selectSzenarioDeletion").select2().on("select2-removed", function(e) {
@@ -71,6 +71,17 @@ $(function() {
         setLabelBtnScenarioDeletion();
     });
 
+    // set the trigger for the delete scenarios modal window
+    $("#deleteScenario").on("click", showDeleteScenario);
+
+    // set the trigger for opening a new modal window to confirm scenario deletion
+    $("#btnDeleteSzenario").on("click", deleteScenariosConfirm);
+
+    // set the trigger for deleting scenarios from the menu bar and clearing the state machine
+    $("#deleteScenarios").on("click", deleteScenarios);
+
+    // set the trigger for getting back to deletion overview after canceling deletion
+    $("#deleteScenariosNot").on("click", deleteScenariosNot);
 });
 
 
@@ -84,45 +95,30 @@ function setLabelBtnScenarioDeletion() {
     var countSelectedDelete = global_arrayShowSzenarioDeletion.length;
 
     // set label of the deletion button
-    $("#btnDeleteSzenario").text("Löschen (" + countSelectedDelete.toString() + ")");
+    $("#btnDeleteSzenario").text("LÃ¶schen (" + countSelectedDelete.toString() + ")");
 }
-
-
 
 // trigger delete scenarios modal window
 /**
  * Function shows the delete scenario modal window.
  * */
 function showDeleteScenario() {
-
-    // show modal window
-    $("#modal-delete-szenario").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
+    showModalWindow($("#modal-delete-szenario"));
 }
 
-
-// opens new modal window to confirm scenario deletion
 /**
  * Function shows the confirmation of scenario deletion modal window
  * */
 function deleteScenariosConfirm() {
-
-    // show modal window
     $("#modal-delete-szenario-confirm").modal({
         show: true
     });
 }
 
-
-
-// delete scenarios from menu bar and clears state machine
 /**
  * Function deletes selected scenarios from menu bar. All corresponding learning units on the work place
  * were deleted was well.
- * */
+ */
 function deleteScenarios() {
 
     // delete all wished scenarios
@@ -150,7 +146,7 @@ function deleteScenarios() {
         }
 
         // deletes label with currently open scenario if this one was deleted
-        if ( $("#lname")[0].innerText == nameScenario ) {
+        if ($("#lname")[0].innerText == nameScenario) {
             $("#lname").html("");
         }
     }
@@ -161,17 +157,9 @@ function deleteScenarios() {
     $("#choiceDeletionScenarios > select").select2("val", "");
 }
 
-
-// get back to deletion overview after canceling deletion
 /**
  * Function shows delete scenarios modal window again after canceling the confirmation.
- * */
+ */
 function deleteScenariosNot() {
-
-    // show modal window
-    $("#modal-delete-szenario").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
+    showModalWindow($("#modal-delete-szenario"));
 }

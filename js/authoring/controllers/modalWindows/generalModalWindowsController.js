@@ -6,10 +6,7 @@ var global_ScenarioCounter = 0;
 var global_dataArrayScenarios = [];
 //var gloabl_unitsPerScenario = [];
 
-
-// reset modal windows after closing
 $(function() {
-
     // triggered if modal window was closed
     $("body").on("hidden.bs.modal", ".modal", function() {
         // only reset modal windows if they have forms
@@ -25,114 +22,13 @@ $(function() {
     });
 });
 
-
-// trigger login modal window
-/**
- * Function shows the login modal window.
- * */
-function showLogin() {
-
-    // show modal window
-    $("#modal-login").modal({
+function showModalWindow(element) {
+    element.modal({
         keyboard: true,
         backdrop: true,
         show: true
     });
 }
-
-
-// trigger profile modal window
-/**
- * Function shows the user profile modal window and sets focus to the first input field.
- * */
-function showProfil() {
-
-    // set focus on user name input field
-    $("#modal-user").on("shown.bs.modal", function () {
-        $("#inputUsername").focus();
-    });
-
-    // show modal window
-    $("#modal-user").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-}
-
-
-// triggered after clicking "Passwort ändern"
-/**
- * Function makes input fields for password change visible/invisible (toggle).
- * */
-function showPW() {
-    $(".invis").toggleClass("vis");
-}
-
-
-// trigger contact modal window
-/**
- * Function shows the contact modal window.
- * */
-function showContact() {
-
-    // show modal window
-    $("#modal-contact").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-}
-
-// get all content of the input fields and send a mail
-/**
- * Function reads out the input fields in the contact modal window after clicking the send button.
- * @parma {Object} f form object from contact modal window
- * */
-function getContentContact(f) {
-    var name = f.userName.value;
-    var mail = f.userMail.value;
-    var text = f.userText.value;
-
-    //var subject = "Authorensystem Frage";
-
-    alert("Name:" + name + ", Mail:" + mail + ", Text:" + text);
-
-    /*$(location).attr("href", "mailto:airj@gmx.net?"
-     + "subject=" + encodeURIComponent(subject)
-     + "&body=" + encodeURIComponent(text)
-     );*/
-}
-
-
-// trigger help modal window
-/**
- * Function shows help modal window
- * */
-function showHelp() {
-
-    // show modal window
-    $("#modal-help").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-}
-
-
-
-function showDeleteConnectionConfirm() {
-
-    // show modal window
-    $("#modal-delete-connection-confirm").modal({
-        keyboard: true,
-        backdrop: true,
-        show: true
-    });
-}
-
-
-
 
 // set scenarios in selection bar
 /*function setScenarios() {
