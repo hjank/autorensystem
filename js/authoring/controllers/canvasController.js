@@ -1,7 +1,6 @@
 /**
  * Created by Helena on 04.09.2015.
  */
-//var i = 1;
 
 function initPlumbCanvas() {
     inst = jsPlumb.getInstance({

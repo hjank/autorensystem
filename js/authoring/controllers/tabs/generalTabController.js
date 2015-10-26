@@ -3,8 +3,6 @@
  */
 
 
-var global_currentInputUnitName = "";
-
 // tabs
 $(function() {
     // default hide tabs

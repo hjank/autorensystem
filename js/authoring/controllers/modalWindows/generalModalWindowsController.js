@@ -4,7 +4,7 @@
 
 var global_ScenarioCounter = 0;
 var global_dataArrayScenarios = [];
-//var gloabl_unitsPerScenario = [];
+//var global_unitsPerScenario = [];
 
 $(function() {
     // triggered if modal window was closed

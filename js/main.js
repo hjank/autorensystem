@@ -7,6 +7,7 @@
 var inst;
 var bool_unitClicked = false;
 var list_units = [];
+var global_currentInputUnitName = "";
 var contextList = new ContextInfoList();
 
 // reloading

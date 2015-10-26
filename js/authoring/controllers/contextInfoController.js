@@ -88,7 +88,7 @@ function checkInformation() {
 
         // TODO: Get selected parameter identifier to get at values!
         // update JSON structure
-        selectedInfo.parameter1 = contextInfoInArray.parameters.values[$("#selectParameter").select2("data").id];
+        selectedInfo.parameter1 = contextInfoInArray.parameters[0].values[$("#selectParameter").select2("data").id];
     }
     // check selection bar "Parameter" is visible
     if ( $("#divParameterSelection2")[0].style.display == "block") {
