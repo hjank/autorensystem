@@ -414,6 +414,8 @@ function fillInputField(ciValue) {
  * */
 function fillParameterSelection(cp) {
 
+    var coordIdentRegex = /CP_.*(LONGITUDE|LONGITUDE)/;
+
     // clear selection bar
     cleanSection("#selectParameter");
     cleanSection("#selectParameter2");
@@ -479,7 +481,8 @@ function fillParameterSelection(cp) {
                 $("#divParameterSelection1").css("display", "block");
                 break;
 
-            // type float needs one/two input fields and a specific label
+            // type float or integer each need an input field and a specific label
+            case "INTEGER":
             case "FLOAT":
                 if ( $("#divParameterInput1").css("display") == "table-cell" ) {
                     $("#divParameterInput2").css("display", "table-cell");
@@ -488,28 +491,16 @@ function fillParameterSelection(cp) {
                     setMinMaxDefault(possibleValues[0], $("#inputContextParameter2"));
 
                     // display google maps
-                    $("#divMaps").css("display", "block");
-                    resizeMap();
+                    if (coordIdentRegex.test(parameterOriginal)) {
+                        $("#divMaps").css("display", "block");
+                        resizeMap();
+                    }
 
                 } else {
                     $("#divParameterInput1").css("display", "table-cell");
                     $("#divParameterInput1").children("label").html(parameterTranslation);
                     $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
                     setMinMaxDefault(possibleValues[0], $("#inputContextParameter1"));
-                }
-                break;
-
-            // type integer needs one/two input fields and a specific label
-            case "INTEGER":
-                if ( $("#divParameterInput1").css("display") == "table-cell" ) {
-                    $("#divParameterInput2").css("display", "table-cell");
-                    $("#divParameterInput2").children("label").html(parameterTranslation);
-                    $("#divParameterInput2").children("label").attr("origin", parameterOriginal);
-
-                } else {
-                    $("#divParameterInput1").css("display", "table-cell");
-                    $("#divParameterInput1").children("label").html(parameterTranslation);
-                    $("#divParameterInput1").children("label").attr("origin", parameterOriginal);
                 }
                 break;
 

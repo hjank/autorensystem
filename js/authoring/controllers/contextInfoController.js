@@ -16,7 +16,7 @@ function checkInformation() {
     var selectedContextInfo = $("#selectContextInfos").select2("data");
     var selectedOperator = $("#selectOperator").select2("data");
 
-    var contextInfoInArray = contextList.getItem(selectedContextInfo.id);
+    var contextInfoInArray;
 
 
     // check selection bar "Kontextinformationen"
@@ -25,6 +25,7 @@ function checkInformation() {
         missing_content += " - Kontextinformation\n";
     } else {
         // update JSON structure
+        contextInfoInArray = contextList.getItem(selectedContextInfo.id);
         selectedInfo.id = selectedContextInfo.id;
         selectedInfo.name = contextInfoInArray.name;
         selectedInfo.text = translate_contextInformation(contextInfoInArray.name);
