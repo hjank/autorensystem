@@ -52,5 +52,3 @@ AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
             this._scenarioList.splice(i, 1);
     }
 };
-
-
