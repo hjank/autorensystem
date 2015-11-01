@@ -7,23 +7,11 @@ var global_ScenarioLiNumber = 0;
 $(function() {
     // make sure that after pressing enter in modal window "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
-    $("#modal-new-szenario").keypress(function(e) {
-        if (e.keyCode == 13) {
-            createScenario();
-            $('#modal-new-szenario').modal('hide');
-            return true;
-        }
-    });
+    $("#modal-new-szenario").on("keyup", function(e) { return checkScenarioName(e); });
 
     // make sure that after pressing enter in input "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
-    $("#sname").keypress(function(e) {
-        if (e.keyCode == 13) {
-            createScenario();
-            $('#modal-new-szenario').modal('hide');
-            return false;
-        }
-    });
+    $("#sname").on("keypress", function(e) { return checkScenarioName(e); });
 
     // set the trigger for the new scenario modal window
     $("#showNewScenario").on("click", showNewScenario);
@@ -31,6 +19,18 @@ $(function() {
     // set the trigger for after clicking the save button in scenario creation
     $("#btnSE").on("click", createScenario);
 });
+
+// checks if a valid name was entered, and in that case calls scenario creation
+function checkScenarioName(e) {
+    if (e.keyCode == 13) {
+        if (!/[A-Z]+[0-9]*/i.test($("#sname").val()))
+            alert("[Fehler] Bitte geben Sie einen gültigen Namen ein. Zulässig sind Buchstaben und (optional) Zahlen.\n");
+        createScenario();
+        $('#modal-new-szenario').modal('hide');
+        return (e.target.id != "sname");
+    }
+    return true;
+}
 
 /**
  * Function shows the new scenario modal window.
