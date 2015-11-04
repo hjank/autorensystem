@@ -410,11 +410,8 @@ function fillParameterSelection(cp) {
 
     var coordIdentRegex = /CP_.*(LONGITUDE|LATITUDE)/;
 
-    // set all parameter fields invisible
-    $("#divContextParameter > div").css("display", "none");
-    $("#divContextParameter").children().each(function(){
-        cleanSection(this.id);
-    });
+    // remove all parameter fields from previous editing
+    cleanSection("#divContextParameter");
 
     // iterate through all parameters
     for (var i in cp) {
@@ -432,7 +429,7 @@ function fillParameterSelection(cp) {
             case "ENUM":
                 id = "selectParameter" + i;
 
-               /* div = $("#divParameterSelection").clone()
+                /*div = $("#divParameterSelection").clone()
                     .attr("id","divParameterSelection"+i)
                     .css("display", "block");
                 div.children("label")
@@ -441,6 +438,9 @@ function fillParameterSelection(cp) {
                 child = $("#selectParameter").clone();
                 child.attr("id",id);*/
 
+
+                // This does not work properly since select2 does not support dynamically added elements yet.
+                // For detaisl see: https://github.com/select2/select2/issues/2830
                 div = createNamedDOMElement("div", "divParameterSelection"+i)
                     .css("display", "block")
                     .append(createParameterLabelDOM(id, parameterTranslation));
@@ -458,7 +458,8 @@ function fillParameterSelection(cp) {
                 }
                 div.append(child);
                 $("#divContextParameter").append(div);
-                $(id).select2("data", {id:"\r",text:"\r"});
+                $("#" + id).select2("data", {id:"\r",text:"\r"});
+                $("#divParameterSelection"+i).select2("data", {id:"\r",text:"\r"});
                 break;
 
             // type float or integer each need an input field and a specific label
