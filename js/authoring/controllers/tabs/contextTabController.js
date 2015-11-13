@@ -410,7 +410,12 @@ function fillParameterSelection(cp) {
 
     var coordIdentRegex = /CP_.*(LONGITUDE|LATITUDE)/;
 
-    // remove all parameter fields from previous editing
+    var id, div, child;
+    var divContextParams = $("#divContextParameter");
+    var divMaps = $("#divMaps");
+
+    // remove all parameter fields from previous editing (except maps div)
+    $("#divMapsTemplate").append(divMaps);
     cleanSection("#divContextParameter");
 
     // iterate through all parameters
@@ -421,26 +426,13 @@ function fillParameterSelection(cp) {
         var parameterTranslation = translate_parameter(parameterOriginal);
         var type = cp[i].type;
         var possibleValues = cp[i].values;
-        var id, div, child;
+
 
         switch (type) {
 
             // type enum needs a drop down selection for only possible values
             case "ENUM":
                 id = "selectParameter" + i;
-
-                /*div = $("#divParameterSelection").clone()
-                    .attr("id","divParameterSelection"+i)
-                    .css("display", "block");
-                div.children("label")
-                    .attr("for", id)
-                    .html(parameterTranslation);
-                child = $("#selectParameter").clone();
-                child.attr("id",id);*/
-
-
-                // This does not work properly since select2 does not support dynamically added elements yet.
-                // For detaisl see: https://github.com/select2/select2/issues/2830
                 div = createNamedDOMElement("div", "divParameterSelection"+i)
                     .css("display", "block")
                     .append(createParameterLabelDOM(id, parameterTranslation));
@@ -457,9 +449,9 @@ function fillParameterSelection(cp) {
                     );
                 }
                 div.append(child);
-                $("#divContextParameter").append(div);
+                divContextParams.append(div);
+                $("#" + id).select2();
                 $("#" + id).select2("data", {id:"\r",text:"\r"});
-                $("#divParameterSelection"+i).select2("data", {id:"\r",text:"\r"});
                 break;
 
             // type float or integer each need an input field and a specific label
@@ -476,13 +468,11 @@ function fillParameterSelection(cp) {
                     .attr("onkeyup", "getParameterInput(this,"+i+")");
                 setMinMaxDefault(possibleValues[0], child);
                 div.append(child);
-                $("#divContextParameter").append(div);
+                divContextParams.append(div);
 
                 // display google maps if coordinates are expected input
                 if (coordIdentRegex.test(parameterOriginal)) {
-                    $("#divMaps")
-                        .css("display", "block")
-                        .insertAfter("#divParameterInput"+i);
+                    divContextParams.append(divMaps);
                     resizeMap();
                 }
                 break;
@@ -497,12 +487,12 @@ function fillParameterSelection(cp) {
                     .addClass("form-control")
                     .attr("type", "text");
                 div.append(child);
-                $("#divContextParameter").append(div);
+                divContextParams.append(div);
                 break;
         }
 
         // show context parameter section
-        $("#divContextParameter").css("display", "block");
+        divContextParams.css("display", "block");
     }
 }
 
