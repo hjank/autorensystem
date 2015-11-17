@@ -167,7 +167,7 @@ $(function(){
             }, {
                 "visibility": "off"
             }]
-        }]
+        }];
 
         // create new map object
         map = new google.maps.Map($('#maps')[0], myOptions);
@@ -205,10 +205,8 @@ $(function(){
         // set new marker if user clicked into the map
         google.maps.event.addListener(map, "click", function(e) {
             replaceMarker(e.latLng);
-            currentLat = e.latLng.lat();
-            $("#inputContextParameter1")[0].value = currentLat;
-            currentLng = e.latLng.lng();
-            $("#inputContextParameter2")[0].value = currentLng;
+            $("#divMaps").prev().prev().children("input")[0].value = e.latLng.lat();
+            $("#divMaps").prev().children("input")[0].value = e.latLng.lng();
         });
 
         /* add search box */

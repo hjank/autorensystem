@@ -3,6 +3,8 @@
  */
 
 
+var counter_multiSelectionMetaData = 0;
+
 function createUnit() {
 
     /* if loaded sceanrio */
@@ -194,7 +196,7 @@ function plumbUnit(newState, ep) {
 }
 
 function chooseMetaIcon(metaDataName) {
-    switch (metaDataName) {
+    switch (translate_metaData(metaDataName)) {
         case "Bild":
             return "fui-photo";
         case "Film":
@@ -207,5 +209,103 @@ function chooseMetaIcon(metaDataName) {
             return "fui-radio-unchecked";
         case "Audio":
             return "fui-volume";
+        case "3D Umgebung":
+            return "fui-windows";
+    }
+}
+
+/**
+ * This function adds the given meta datum to the given unit's DOM element.
+ * @param {String} metaDatum The meta datum's ID
+ * @param {Element} unit Contains the currently clicked unit's DOM element
+ * */
+function addMetaDataToUnit(metaDatum, unit) {
+
+    // create meta data DOM
+    var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
+
+    // choose icon symbol and add it to meta data DOM
+    var metaIcon = chooseMetaIcon(metaDatum);
+    divMetaIcon.attr("title", metaDatum);
+
+    // add DOM for meta data icon (glyph)
+    var bMetaIcon = $("<b>").addClass(metaIcon);
+
+    // get icon into learning unit
+    divMetaIcon.append(bMetaIcon);
+    $(unit).append(divMetaIcon);
+
+    // change size of learning unit
+    $(unit).css("padding-bottom", "5px");
+
+    counter_multiSelectionMetaData++;
+
+    // update JSON structure
+    var current_unit = getCurrentUnitDataModel();
+    current_unit["metaData"].push({
+        name : metaDatum,
+        icon : metaIcon
+    });
+
+    // set endpoints on the right place
+    inst.repaintEverything();
+}
+
+/**
+ * This function removes the given meta datum from the given unit's DOM element.
+ * @param {String} metaDatum The meta datum's ID
+ * @param {Element} unit Contains the currently clicked unit's DOM element
+ * */
+function removeMetaDataFromUnit(metaDatum, unit) {
+
+    // find the right meta icon
+    $(unit).find("div.unit-meta-icons").each(function() {
+
+        // get icon title name
+        var icon = $(this)[0].title;
+
+        // remove the right icon from unit
+        if (icon == metaDatum) {
+            this.remove();
+
+            // if no more meta icons in unit go back to old unit design
+            if (counter_multiSelectionMetaData == 0) {
+                $(unit).css("padding-bottom", "");
+            }
+        }
+    });
+
+    var current_unit = getCurrentUnitDataModel();
+    // update JSON structure
+    for (var j=0; j<current_unit["metaData"].length; j++) {
+        if (current_unit["metaData"][j].name == metaDatum) {
+            current_unit["metaData"].splice(j, 1);
+        }
+    }
+
+    // set endpoints on the right place
+    inst.repaintEverything();
+}
+
+// temporary helper function: returns the data model of the currently clicked unit
+function getCurrentUnitDataModel() {
+
+    // get current unit dictionary if scenario was loaded
+    if (loadedData) {
+        for (var q=0; q<loadedData["units"].length; q++) {
+            if (loadedData["units"][q]["name"] == global_currentInputUnitName) {
+                return loadedData["units"][q];
+            }
+        }
+    }
+    // get current unit dictionary
+    for (var p=0; p<myAuthorSystem.length; p++) {
+        if (myAuthorSystem[p]["name"] == $("#lname")[0].innerText) {
+            for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
+                if (myAuthorSystem[p]["units"][q]["name"] == global_currentInputUnitName) {
+                    return myAuthorSystem[p]["units"][q];
+                }
+            }
+        }
     }
 }

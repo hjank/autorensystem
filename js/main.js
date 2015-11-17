@@ -8,6 +8,7 @@ var inst;
 var bool_unitClicked = false;
 var list_units = [];
 var global_currentInputUnitName = "";
+var global_currentScenarioName = "";
 var contextList = new ContextInfoList();
 
 // reloading

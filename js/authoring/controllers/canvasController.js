@@ -188,11 +188,6 @@ function initPlumbCanvas() {
         $(".aLabel").css("background-color", "");
         $(".aLabel").css("color", "");
 
-        // clear multi selection bar "Metadaten"
-        $("#selectMultiMetaData").empty();
-        array_multiSelectionMetaData = [];
-        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
-
         // all tab content invisible
         $(".tabContents").hide();
         $(".tab-Container").hide();

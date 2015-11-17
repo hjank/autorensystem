@@ -149,6 +149,16 @@ var contextParameterValueDictionary = {
     "TIREDNESS" : "Ersch�pft"
 };
 
+var metaDataDictionary = {
+    "MD_IMAGE" : "Bild",
+    "MD_FILM" : "Film",
+    "MD_TEXT" : "Text",
+    "MD_NAVIGATION" : "Navigation",
+    "MD_TEST" : "Test",
+    "MD_AUDIO" : "Audio",
+    "MD_3D_ENVIRONMENT" : "3D Umgebung"
+};
+
 /**
  * Functions translate context information into german.
  * @param {String} ci Contains a context information name
@@ -206,4 +216,8 @@ function translate_parameter(p) {
  * */
 function translate_parameterValue(pv) {
     return contextParameterValueDictionary[pv];
+}
+
+function translate_metaData(md) {
+    return metaDataDictionary[md]
 }

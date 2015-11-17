@@ -82,32 +82,13 @@ function activateFunctionalities(newState) {
         //var formObject = document.forms["formProperties"];
         $("#inputUnitName")[0].value = global_currentInputUnitName;
 
-        // get current unit dictionary
-        for (var p=0; p<myAuthorSystem.length; p++) {
-            if (myAuthorSystem[p]["name"] == $("#lname")[0].innerText) {
-                for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
-                    if (myAuthorSystem[p]["units"][q]["name"] == global_currentInputUnitName) {
-                        current_unit = myAuthorSystem[p]["units"][q];
-                    }
-                }
-            }
-        }
-        // get current unit dictionary if scenario was loaded
-        if (loadedData) {
-            for (var q=0; q<loadedData["units"].length; q++) {
-                if (loadedData["units"][q]["name"] == global_currentInputUnitName) {
-                    current_unit = loadedData["units"][q];
-                }
-            }
-        }
+        current_unit = getCurrentUnitDataModel();
+
         // set description field
         $("#inputUnitDescription")[0].value = current_unit["description"];
 
         /* tab "Kontextinformation" */
         loadContextTabForUnit(unit);
-
-        /* multi selection bar in tab "Metadaten" */
-        loadMetadataTabforUnit(unit)
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
@@ -266,99 +247,6 @@ function activateFunctionalities(newState) {
         inst.repaintEverything();
 
     });
-
-
-    // triggered if an option in selection "Metadaten" was selected
-    $("#selectMetaData").select2().on("select2-selecting", function(e) {
-
-        // no two same meta data symbols allowed
-        for (var i = 0; i < array_multiSelectionMetaData.length; i++) {
-            if (array_multiSelectionMetaData[i]["text"] == e.choice.text) {
-                return true;
-            }
-        }
-
-        // create meta data DOM
-        var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
-
-        // choose icon symbol and add it to meta data DOM
-        var metaIcon = chooseMetaIcon(e.choice.text);
-        divMetaIcon.attr("title", e.choice.text);
-
-        // add DOM for meta data icon (glyph)
-        var bMetaIcon = $("<b>").addClass(metaIcon);
-
-        // get icon into learning unit
-        divMetaIcon.append(bMetaIcon);
-        $(unit).append(divMetaIcon);
-
-        // change size of learning unit
-        $(unit).css("padding-bottom", "5px");
-
-        // clear multi selection bar
-        $("#selectMultiMetaData").empty();
-        $("#selectMultiMetaData").select2("data", null);
-
-        // get meta data in multi selection bar
-        array_multiSelectionMetaData.push({"id": counter_multiSelectionMetaData, "text": e.choice.text});
-        $("#selectMultiMetaData").select2({
-            formatSelection: formatMultiMetaData,
-            escapeMarkup: function(m) {return m;}
-        });
-        $("#selectMultiMetaData").select2("data", array_multiSelectionMetaData);
-
-        counter_multiSelectionMetaData++;
-
-        // update JSON structure
-        var currentMetaData = {};
-        currentMetaData.name = e.choice.text;
-        currentMetaData.icon = metaIcon;
-        current_unit["metaData"].push(currentMetaData);
-
-        // set endpoints on the right place
-        inst.repaintEverything();
-
-    });
-
-    // remove option from multi selection bar in tab "Metadaten"
-    $("#selectMultiMetaData").select2().on("select2-removed", function(e) {
-
-        // find the right meta icon
-        $(unit).find("div.unit-meta-icons").each(function() {
-
-            // get icon title name
-            var icon = $(this)[0].title;
-
-            // remove the right icon from unit
-            if (icon == e.choice.text) {
-                this.remove();
-
-                // update the array of the multi selection meta data
-                for (var k=0; k<array_multiSelectionMetaData.length; k++) {
-                    if (array_multiSelectionMetaData[k]["text"] == e.choice.text) {
-                        array_multiSelectionMetaData.splice(k, 1);
-                    }
-                }
-                // if no more meta icons in unit go back to old unit design
-                if (array_multiSelectionMetaData.length == 0) {
-                    $(unit).css("padding-bottom", "");
-                }
-            }
-        });
-
-        // update JSON structure
-        for (var j=0; j<current_unit["metaData"].length; j++) {
-            if (current_unit["metaData"][j].name == e.choice.text) {
-                current_unit["metaData"].splice(j, 1);
-            }
-        }
-
-        // set endpoints on the right place
-        inst.repaintEverything();
-    });
-
-    // re-sets the glyphs in selection bar
-    addMetadataGlyphsToOptions();
 
     // triggered if unit was dragged
     $(unit).on("dragstop", function() {

@@ -7,7 +7,6 @@ function initLoader() {
 
     // after finishing the parsing, elements could be added into tab bar
     fillContextTab();
-    fillMetadataTab();
     //setScenarios();     // only needed if scenarios already exist at program start
     formatGlobalElements();
 
@@ -164,5 +163,4 @@ function loadScenario(data) {
     // get name in current scenario label
     $("#lname").html(data.name);
 }
-
 

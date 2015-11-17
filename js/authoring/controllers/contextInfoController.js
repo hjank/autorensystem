@@ -79,8 +79,8 @@ function checkInformation() {
         selectedInfo.value = contextInfoInArray.value.enums[$("#selectPossibleValues").select2("data").id];
     }
 
-    // check selection bar "Parameter" is visible
-    if ( $("#divParameterSelection1")[0].style.display == "block") {
+    // check parameters (if existent)
+    contextInfoInArray.parameters.forEach(checkParameter, selectedInfo);
 
         // if selection bar parameter is empty, concatenate it in missing_content string
         if ($("#selectParameter").select2("data")["text"] == "\r") {
@@ -152,3 +152,13 @@ function checkInformation() {
     return [missing_content, selectedInfo];
 }
 
+function checkParameter (parameter, index, parameterArray) {
+    var param = {
+        id: parameter.id,
+        type: parameter.type,
+        value: $("#parameter"+index).children()[0] :
+    };
+
+
+    this.parameters.push(param);
+}
