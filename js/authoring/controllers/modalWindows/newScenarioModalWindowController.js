@@ -20,7 +20,7 @@ $(function() {
 function checkScenarioName(e) {
     if (e.keyCode == 13) {
         if (!/[A-Z]+[0-9]*/i.test($("#sname").val()))
-            alert("[Fehler] Bitte geben Sie einen gültigen Namen ein. Zulässig sind Buchstaben und (optional) Zahlen.\n");
+            alert("[Fehler] Bitte geben Sie einen gï¿½ltigen Namen ein. Zulï¿½ssig sind Buchstaben und (optional) Zahlen.\n");
         createScenario();
         $('#modal-new-szenario').modal('hide');
         return (e.target.id != "sname");
@@ -116,5 +116,9 @@ function updateScenario(name) {
     global_ScenarioCounter++;
 
     // update list with units per scenario
-    myAuthorSystem.push({name: name, units:[], connections:[]});
+    //myAuthorSystem.push({name: name, units:[], connections:[]});
+
+    var newScenario = new Scenario();
+    newScenario.setName(name);
+    authorSystemContent.addScenario(newScenario);
 }

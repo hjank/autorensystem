@@ -21,7 +21,6 @@
  *              metaData = {name:name, icon:path}
  *      options = {option1:text, option2:text, ...}
  *  **/
-var myAuthorSystem = [];
 
 
 function AuthorSystemContent() {
@@ -31,6 +30,10 @@ function AuthorSystemContent() {
 
     return this;
 }
+
+AuthorSystemContent.prototype.getScenarios = function() {
+    return this._scenarioList;
+};
 
 
 AuthorSystemContent.prototype.getScenario = function(scenarioName) {

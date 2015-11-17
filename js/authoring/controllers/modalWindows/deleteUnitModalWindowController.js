@@ -57,10 +57,23 @@ function showDeleteUnits() {
         // clean multi selection bar
         selectScenarioDeleteUnitElement.empty();
         list_units = [];
-        $("#btnDeleteUnits").text("L�schen (" + 0 + ")");
+        $("#btnDeleteUnits").text("Löschen (" + 0 + ")");
 
         // get units into multi selection choice
-        for (var j=0; j<myAuthorSystem.length; j++) {
+        var selectedScenario = authorSystemContent.getScenario(e.choice.text);
+        // get all units of this scenario
+        var units = selectedScenario.getUnits();
+        for (var i in units) {
+            var option = $("<option>");
+            option.attr('value', units[i].getUUID());
+            // set option name and append in multi selection bar
+            option.html(units[i].getName());
+            selectScenarioDeleteUnitElement.append(option);
+        }
+
+// TODO: Unit deletion currently depends on units' names fetched from select in modal window (see below).
+// TODO: This must be changed toward using UUIDs.
+      /*  for (var j=0; j<myAuthorSystem.length; j++) {
             // find right scenario
             if (myAuthorSystem[j]["name"] == e.choice.text) {
 
@@ -73,7 +86,7 @@ function showDeleteUnits() {
                     // get unit id and set value = id
                     for (var l=0; l<units.length; l++) {
                         if (myAuthorSystem[j]["units"][k]["name"] == units[l].innerText) {
-                            option.attr('value', $(units[l]).parent()[0].id);
+                            option.attr('value', $(units[l]).parent()[0].id); // stateX
                         }
                     }
 
@@ -83,7 +96,7 @@ function showDeleteUnits() {
                 }
             }
         }
-
+*/
         // select unit which should be deleted
         selectScenarioDeleteUnitElement.select2().on("select2-selecting", function(e) {
 
@@ -140,16 +153,25 @@ function deleteUnits(){
     // get right scenario name
     var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
 
-    // needed to find scenario in menu bar
+/*    // needed to find scenario in menu bar
     var liCurrentScenario;
     $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
         if ( $(this)[0].innerHTML == currentScenario ) {
             liCurrentScenario = $(this).parent("a").parent("li");
         }
-    });
+    });*/
 
-    // update gui
-    for (var j=0; j<myAuthorSystem.length; j++) {
+    // update gui and JSON structure
+    var selectedScenario = authorSystemContent.getScenario(currentScenario);
+    for (var i in list_deleteableUnits) {
+        var unitName = list_deleteableUnits[i].text;
+        var deletableUnit = selectedScenario.getUnitByName(unitName);
+        selectedScenario.removeUnit(deletableUnit);
+        removeUnitFromMenu(currentScenario, unitName);
+    }
+
+
+ /*   for (var j=0; j<myAuthorSystem.length; j++) {
         // find right scenario
         if (myAuthorSystem[j]["name"] == currentScenario) {
             for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
@@ -177,7 +199,7 @@ function deleteUnits(){
 
             }
         }
-    }
+    }*/
     // delete holder in scenario in menu bar
     /*if (liCurrentScenario.children("ul").children("li").length == 0 &&
      liCurrentScenario.hasClass("has-sub")) {

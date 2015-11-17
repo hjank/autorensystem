@@ -10,6 +10,9 @@ var list_units = [];
 var global_currentInputUnitName = "";
 var global_currentScenarioName = "";
 var contextList = new ContextInfoList();
+// will be deleted once refactoring is complete
+//var myAuthorSystem = [];
+var authorSystemContent = new AuthorSystemContent();
 
 // reloading
 var loadedData;

@@ -19,8 +19,15 @@ function createUnit() {
     // prevent that two unit have the same id
     max = max + 1;
 
+    // generate a UUID for this new unit. This will also serve as its A-box identifier.
+    // TODO: Maybe replace "state"+max by uuid...
+    var uuid = uuid4();
+
     // build unit DOM
-    var newState = $('<div>').attr('id', 'state' + max).addClass('w');
+    var newState = $('<div>')
+        .attr('id', 'state' + max)
+        .attr("uuid", uuid)
+        .addClass('w');
     var title = $('<div>').addClass('title').css("padding", "0px 7px");
 
     var stateName = $('<input>').attr('type', 'text').css("color", "#34495e");
@@ -64,10 +71,11 @@ function createUnit() {
 
             // lname := scenario name in navBar
             var nameCurrentScenario = $("#lname")[0].innerText;
+
             // add learning unit in menu bar
-            addUnitToMenu(nameCurrentScenario)
+            addUnitToMenu(nameCurrentScenario);
             // update JSON structure: get new unit in its scenario
-            addUnitToScenarioModel(nameCurrentScenario);
+            addUnitToScenarioModel(nameCurrentScenario, uuid);
 
             // hide tabs because all units will be unmarked
             $(".tabContents").hide();
@@ -290,7 +298,10 @@ function removeMetaDataFromUnit(metaDatum, unit) {
 // temporary helper function: returns the data model of the currently clicked unit
 function getCurrentUnitDataModel() {
 
-    // get current unit dictionary if scenario was loaded
+    var currentScenario = authorSystemContent.getScenario($("#lname")[0].innerText);
+    return currentScenario.getUnitByName(global_currentInputUnitName);
+
+/*    // get current unit dictionary if scenario was loaded
     if (loadedData) {
         for (var q=0; q<loadedData["units"].length; q++) {
             if (loadedData["units"][q]["name"] == global_currentInputUnitName) {
@@ -307,5 +318,5 @@ function getCurrentUnitDataModel() {
                 }
             }
         }
-    }
+    }*/
 }

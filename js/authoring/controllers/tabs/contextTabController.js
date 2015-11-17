@@ -505,7 +505,7 @@ function fillParameterSelection(cp) {
  * */
 function setMinMaxDefault(values, inputField) {
 
-    if (typeof values == undefined)
+    if (typeof values === "undefined")
         return;
 
     var min = (values.min != undefined) ? values.min : false;

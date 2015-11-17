@@ -138,12 +138,13 @@ function deleteScenarios() {
         // delete units in container
         $("#stm").children().remove();
 
-        // update unit per scenario list
+        authorSystemContent.removeScenario(nameScenario);
+        /*// update unit per scenario list
         for (var j=0; j<myAuthorSystem.length; j++) {
             if (myAuthorSystem[j]["name"] == nameScenario) {
                 myAuthorSystem.splice(j, 1);
             }
-        }
+        }*/
 
         // deletes label with currently open scenario if this one was deleted
         if ($("#lname")[0].innerText == nameScenario) {

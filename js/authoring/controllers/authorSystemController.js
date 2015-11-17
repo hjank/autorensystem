@@ -26,7 +26,9 @@ function initLoader() {
 
         // update scenario list
         updateScenario(loadedData.name);
-        myAuthorSystem.splice(-1);
+        //myAuthorSystem.splice(-1);
+        // TODO: Find out why this should be necessary. Seems inefficient, if not useless.
+        authorSystemContent.removeScenario(loadedData.name);
     }
 
     // only needed for testing
@@ -42,7 +44,8 @@ function initLoader() {
 
             // update scenario list
             updateScenario(loadedData.name);
-            myAuthorSystem.splice(-1);
+            //myAuthorSystem.splice(-1)
+            authorSystemContent.removeScenario(loadedData.name);
         });
     }
 
@@ -58,7 +61,8 @@ function initLoader() {
 function loadScenario(data) {
 
     // get scenario in myAuthorSystem
-    myAuthorSystem.push(data);
+    //myAuthorSystem.push(data);
+    authorSystemContent.addScenario(data);
 
     /* get scenario in menu */
     // create new container to see new scenario in menu bar

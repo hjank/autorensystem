@@ -24,7 +24,18 @@ function showLoadScenario() {
     var checkName = false;
 
     // put all scenarios in selection bar
-    for (var i = 0; i < myAuthorSystem.length; i++) {
+    var allScenarios = authorSystemContent.getScenarios();
+    for (var i in allScenarios) {
+        var option = $("<option>").attr("value", "val" + allScenarios[i].getName());
+        option.html(allScenarios[i].getName());
+        $("#listLoadScenarios").append(option);
+        if (allScenarios[i].getName() === "Testszenario") {
+            checkName = true;
+        }
+    }
+
+
+/*    for (var i = 0; i < myAuthorSystem.length; i++) {
         var option = $("<option>").attr("value", "val" + myAuthorSystem[i].name);
         option.html(myAuthorSystem[i].name);
         $("#listLoadScenarios").append(option);
@@ -33,7 +44,7 @@ function showLoadScenario() {
         if (myAuthorSystem[i].name == "Testszenario") {
             checkName = true;
         }
-    }
+    }*/
 
     // only for testing --> add a fix scenario
     if (!checkName) {
@@ -50,7 +61,12 @@ function loadScenario() {
     // get name of the selected scenario
     var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
 
-    // find right scenario
+    var thisScenario = authorSystemContent.getScenario(selectedScenario);
+    localStorage.setItem("saveData", JSON.stringify(thisScenario));
+    // add name in URL
+    $(location).attr("href", "?" + selectedScenario);
+
+   /* // find right scenario
     for (var i=0; i<myAuthorSystem.length; i++) {
         if (myAuthorSystem[i].name == selectedScenario) {
             // save scenario object in JSON structure
@@ -59,7 +75,7 @@ function loadScenario() {
             // add name in URL
             $(location).attr("href", "?" + selectedScenario);
         }
-    }
+    }*/
 
     // only for testing
     if (selectedScenario == "Testszenario") {

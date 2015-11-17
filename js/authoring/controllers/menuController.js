@@ -146,3 +146,20 @@ function addUnitToMenu(nameCurrentScenario) {
 		});
 	}
 }
+
+
+function removeUnitFromMenu(scenarioName, unitName) {
+	// needed to find scenario in menu bar
+	var liCurrentScenario;
+	$("#menuScenarios").children("li").children("a").children("span.title").each(function() {
+		if ( $(this)[0].innerHTML == scenarioName ) {
+			liCurrentScenario = $(this).parent("a").parent("li");
+		}
+	});
+	// delete unit in menu bar
+	liCurrentScenario.children("ul").children("li").each(function() {
+		if ($(this).children("a").children("span")[0].innerHTML == unitName) {
+			$(this).remove();
+		}
+	});
+}

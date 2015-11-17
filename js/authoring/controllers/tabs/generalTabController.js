@@ -94,7 +94,7 @@ function activateFunctionalities(newState) {
         event.stopPropagation();
 
         //console.log(myAuthorSystem);
-        console.log(JSON.stringify(myAuthorSystem));
+        console.log(JSON.stringify(authorSystemContent));
 
         // set listener for button "Bestätigen" in tab "Kontextinformation"
         activateContextConfirmation(unit, unitSatisfiesAllContextInfos, current_unit);

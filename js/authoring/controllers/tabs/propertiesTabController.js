@@ -3,10 +3,12 @@
  */
 
 $(function() {
+    // delete unit after confirming deletion in tab "Eigenschaften"
     $("#btnDeleteUnit").on("click", function() {
-        // delete unit after confirming deletion in tab "Eigenschaften"
-        deleteUnitFromModel();
-        deleteUnitFromView();
+        // get unit name from input field
+        var unitName = $("#inputUnitName")[0].value;
+        deleteUnitFromModel(unitName);
+        deleteUnitFromView(unitName);
     });
 
     // set the trigger for if the delete button in tab "Eigenschaften" was clicked

@@ -38,8 +38,28 @@ function initPlumbCanvas() {
             // get current scenario name
             var currentScenario = $("#lname")[0].innerHTML;
 
-            // add connection in JSON structure
-            for (var n=0; n<myAuthorSystem.length; n++) {
+            // get current scenario's JSON
+            var thisScenario = authorSystemContent.getScenario(currentScenario);
+            if (typeof thisScenario !== "undefined") {
+                // add connection in current scenario's JSON structure
+                thisScenario.addConnection(new Connection(
+                    con.source.parentElement.id,
+                    con.targetId,
+                    con.connection.id,
+                    "PRE",
+                    "Voraussetzung (PRE)"));
+
+                // add label to connection
+                con.connection.addOverlay([ "Label", { label: "PRE", id: "label", cssClass: "aLabel" }]);
+
+                // add title to label
+                var label = con.connection.getOverlay("label");
+                var labelID = $(label)[0].canvas.id;
+                $("#" + labelID)[0].setAttribute("title", "Vorausetzung (PRE)");
+            }
+
+
+            /*for (var n=0; n<myAuthorSystem.length; n++) {
                 if (myAuthorSystem[n].name == currentScenario) {
                     myAuthorSystem[n]["connections"].push({
                         sourceId:con.source.parentElement.id,
@@ -57,7 +77,7 @@ function initPlumbCanvas() {
                     $("#" + labelID)[0].setAttribute("title", "Vorausetzung (PRE)");
                     break;
                 }
-            }
+            }*/
         }
     });
 
@@ -127,8 +147,13 @@ function initPlumbCanvas() {
         var connID = con.id;
         var currentScenario = $("#lname")[0].innerHTML;
 
+        // get current scenario's JSON
+        var thisScenario = authorSystemContent.getScenario(currentScenario);
+        var deletableConnection = thisScenario.getConnection(connID);
         // delete connection in JSON structure
-        for (var n=0; n<myAuthorSystem.length; n++) {
+        thisScenario.removeConnection(deletableConnection);
+
+   /*     for (var n=0; n<myAuthorSystem.length; n++) {
             if (myAuthorSystem[n].name == currentScenario) {
                 for (var l=0; l<myAuthorSystem[n]["connections"].length; l++) {
                     if (myAuthorSystem[n]["connections"][l].connId == connID) {
@@ -138,7 +163,7 @@ function initPlumbCanvas() {
                 }
                 break;
             }
-        }
+        }*/
         // hide tab after connection was deleted
         $("#tabUnitLabel").hide();
     });
@@ -161,7 +186,14 @@ function initPlumbCanvas() {
         var connID = $("#" + current_labelConnection)[0]._jsPlumb.component.id;
         var currentScenario = $("#lname")[0].innerHTML;
 
-        // put label text in JSON structure
+
+        // get current scenario's JSON
+        var thisScenario = authorSystemContent.getScenario(currentScenario);
+        var thisConnection = thisScenario.getConnection(connID);
+        thisConnection.setLabel(e.val.toUpperCase());
+        thisConnection.setTitle(e.choice.text);
+
+    /*    // put label text in JSON structure
         for (var m=0; m<myAuthorSystem.length; m++) {
             if (myAuthorSystem[m].name == currentScenario) {
                 for (var p=0; p<myAuthorSystem[m]["connections"].length; p++) {
@@ -172,7 +204,7 @@ function initPlumbCanvas() {
                     }
                 }
             }
-        }
+        }*/
     });
 
 
@@ -216,10 +248,8 @@ function clearMarkingFromLearningUnits () {
 }
 
 // delete current unit + connections in tab "Eigenschaften"
-function deleteUnitFromView() {
+function deleteUnitFromView(unitName) {
 
-    // get unit name from input field
-    var unitName = $("#inputUnitName")[0].value;
     // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
 

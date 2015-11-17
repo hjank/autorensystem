@@ -6,6 +6,7 @@
 function Unit() {
 
     this._name = "";                // displayed name
+    this._uuid = "";                // UUID of the unit
     this._description = "";         // description of the unit
     this._sat = "all";              // how much context information have to be satisfied
     this._contextData = [];         // list containing context information
@@ -19,6 +20,9 @@ function Unit() {
 // getter
 Unit.prototype.getName = function() {
     return this._name;
+};
+Unit.prototype.getUUID = function() {
+    return this._uuid;
 };
 Unit.prototype.getDescription = function() {
     return this._description;
@@ -42,6 +46,9 @@ Unit.prototype.getMetaData = function() {
 // setter
 Unit.prototype.setName = function(name) {
     this._name = name;
+};
+Unit.prototype.setUUID = function(uuid) {
+    this._uuid = uuid;
 };
 Unit.prototype.setDescription = function(description) {
     this._description = description;
@@ -67,33 +74,53 @@ Unit.prototype.addMetaInfo = function(mi) {
 /**
  * Function deletes selected unit from the working place.
  * */
-function deleteUnitFromModel() {
+function deleteUnitFromModel(unitName) {
 
     // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
 
     // update gui
-    for (var j=0; j<myAuthorSystem.length; j++) {
+    var thisScenario = authorSystemContent.getScenario(currentScenario);
+    thisScenario.removeUnit(thisScenario.getUnitByName(unitName));
+
+
+  /*  for (var j=0; j<myAuthorSystem.length; j++) {
         if (myAuthorSystem[j]["name"] == currentScenario) {
             for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
 
                 // Note: unit deletion on working place see statemachine.js
-                /*$("#stm").children("div.w").children("div.title").each(function() {
+                /!*$("#stm").children("div.w").children("div.title").each(function() {
                  if (this.innerHTML == unit) {
                  $(this).parent().remove();
                  }
-                 });*/
+                 });*!/
 
                 // delete unit in JSON structure
-                if (myAuthorSystem[j]["units"][k]["name"] == unit) {
+                if (myAuthorSystem[j]["units"][k]["name"] == unitName) {
                     myAuthorSystem[j]["units"].splice(k, 1);
                 }
 
             }
         }
-    }
+    }*/
 
     // all tab content invisible
     $(".tabContents").hide();
     $(".tab-Container").hide();
 }
+
+
+
+/**
+ * The following function and comment are taken from:
+ * https://github.com/University-of-Potsdam-MM/UP.App/blob/bdcd669ae4a75e4666b4bf7c0750a94262e9d5c1/www/js/lib/utils.js
+ * (courtesy of Alexander Kiy)
+ *
+ * Generates a uuid v4. Code is taken from broofas answer in http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+ */
+var uuid4 = function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+};

@@ -635,17 +635,6 @@
 					</possibleValues>
 				</parameterValue>
 			</parameter>
-			<parameter id="CP_APPOINTMENT_DETAIL">
-				<parameterValue type="ENUM">
-					<possibleValues>
-						<value>DATE</value>
-						<value>LOCATION</value>
-						<value>NOTES</value>
-						<value>TIME</value>
-						<value>TITLE</value>
-					</possibleValues>
-				</parameterValue>
-			</parameter>
 			<parameter id="CP_VELOCITY_UNIT">
 				<parameterValue type="ENUM">
 					<possibleValues>
