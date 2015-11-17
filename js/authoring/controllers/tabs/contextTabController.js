@@ -262,7 +262,6 @@ function showDetailContextInfo() {
     cleanSection("#selectContextInfos");
     cleanSection("#selectOperator");
     cleanSection("#selectPossibleValues");
-    cleanSection("#selectParameterTemplate");
 
     // clean input fields
     $("#formContextInformation")[0].reset();
@@ -272,7 +271,7 @@ function showDetailContextInfo() {
     $("#inputContextValue").css("display", "none");
     $("#selectPossibleValues").css("display", "none");
     $("#s2id_selectPossibleValues").css("display", "none");
-    $("#divContextParameters").css("display", "none");
+    $("#divContextParameter").css("display", "none");
 
     // fill selection "Kontextinformation"
     fillSelectionContextInformation();
@@ -411,8 +410,13 @@ function fillParameterSelection(cp) {
 
     var coordIdentRegex = /CP_.*(LONGITUDE|LATITUDE)/;
 
-    // remove all parameter fields from previous editing
-    cleanSection("#divContextParameters");
+    var id, div, child;
+    var divContextParams = $("#divContextParameter");
+    var divMaps = $("#divMaps");
+
+    // remove all parameter fields from previous editing (except maps div)
+    $("#divMapsTemplate").append(divMaps);
+    cleanSection("#divContextParameter");
 
     // iterate through all parameters
     for (var i in cp) {
@@ -423,71 +427,72 @@ function fillParameterSelection(cp) {
         var type = cp[i].type;
         var possibleValues = cp[i].values;
 
-        // prepare DOM elements
-        var id = "parameter"+i;
-        var divContainer = $("#divContextParameters");
 
         switch (type) {
 
             // type enum needs a drop down selection for only possible values
             case "ENUM":
+                id = "selectParameter" + i;
+                div = createNamedDOMElement("div", "divParameterSelection"+i)
+                    .css("display", "block")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("select", id)
+                    .addClass("form-control select select-primary select-block mbl")
+                    .attr("style", "min-width: 235px;");
 
-                // This does not work properly since select2 does not support dynamically added elements yet.
-                // See initContainer() in flat-ui.js --> only gets called on DOM load; does things like addClass "select2-offscreen"
-                // For details see: https://github.com/select2/select2/issues/2830
-
-                var div = $("#divParameterSelectionTemplate").clone();
-                div.attr("id", "divParameter"+i);
-                div.css("display", "block");
-                divContainer.append(div);
-
-                var select = $("#divParameter"+i+" select");
-                select.attr("id",id);
                 // append all possible values
                 for (var j in possibleValues) {
-                    select.append(new Option(translate_parameterValue(possibleValues[j]), j.toString()));
+                    child.append(
+                        $("<option>")
+                            .attr("value", j.toString())
+                            .html(translate_parameterValue(possibleValues[j]))
+                    );
                 }
+                div.append(child);
+                divContextParams.append(div);
+                $("#" + id).select2();
+                $("#" + id).select2("data", {id:"\r",text:"\r"});
                 break;
 
             // type float or integer each need an input field and a specific label
             case "INTEGER":
             case "FLOAT":
-                var div = $("#divParameterInputTemplate").clone();
-                div
-                    .attr("id", "divParameter"+i)
+                id = "inputContextParameter"+i;
+                div = createNamedDOMElement("div", "divParameterInput"+i)
                     .addClass("divParameterInputs")
-                    .css("display", "table-cell");
-
-                var input = $("#inputParameterTemplate").clone()
-                    .attr("id", id)
+                    .css("display", "table-cell")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("input", id)
+                    .addClass("form-control")
                     .attr("type", "number")
                     .attr("onkeyup", "getParameterInput(this,"+i+")");
-                div.append(input);
-                setMinMaxDefault(possibleValues[0], input);
-                $("#divContextParameters").append(div);
+                setMinMaxDefault(possibleValues[0], child);
+                div.append(child);
+                divContextParams.append(div);
 
                 // display google maps if coordinates are expected input
                 if (coordIdentRegex.test(parameterOriginal)) {
-                    $("#divMaps").css("display", "block");
-                    $("#divContextParameters").append($("#divMaps"));
+                    divContextParams.append(divMaps);
                     resizeMap();
                 }
                 break;
 
             // type string needs an input field and a specific label
             case "STRING":
-                div.css("display", "block");
-                div.append($("#inputParameterTemplate").clone()
-                    .attr("id", id)
-                    .attr("type", "text"));
-                $("#divContextParameters").append(div);
+                id = "inputParameterString"+i;
+                div = createNamedDOMElement("div", "divParameterString"+i)
+                    .css("display", "block")
+                    .append(createParameterLabelDOM(id, parameterTranslation));
+                child = createNamedDOMElement("input", id)
+                    .addClass("form-control")
+                    .attr("type", "text");
+                div.append(child);
+                divContextParams.append(div);
                 break;
         }
 
-        // update parameter label
-        $("#divParameter"+i+" label").attr("for", id).html(parameterTranslation);
         // show context parameter section
-        $("#divContextParameters").css("display", "block");
+        divContextParams.css("display", "block");
     }
 }
 
@@ -500,7 +505,7 @@ function fillParameterSelection(cp) {
  * */
 function setMinMaxDefault(values, inputField) {
 
-    if (values == undefined)
+    if (typeof values == undefined)
         return;
 
     var min = (values.min != undefined) ? values.min : false;
@@ -782,4 +787,20 @@ function getFirstMatchingClassIndex(contextItem, contextClasses) {
             break;
     }
     return classIndex;
+}
+
+
+/**************************tiny little helper******************************/
+// create any new DOM element with an ID
+function createNamedDOMElement(elem, id) {
+    return $("<"+elem+">")
+        .attr("id", id);
+}
+
+// create a new label (which is also a DOM element)
+function createParameterLabelDOM(elem, label) {
+    return $("<label>")
+        .attr("class", "label-tabs label")
+        .attr("for", elem)
+        .html(label);
 }

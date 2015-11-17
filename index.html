@@ -49,6 +49,7 @@
         <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/generalTabController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/locationInfoMapViewController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/tabs/metadataTabController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/propertiesTabController.js"></script>
 
         <!-- modal window controllers -->
@@ -193,6 +194,7 @@
                     <ul>
                         <li><a id="firstTab" href="#tab1" title="Eigenschaften" class="fui-gear"></a> </li>
                         <li><a href="#tab2" title="Kontextinformationen">K</a></li>
+                        <li><a href="#tab3" title="Metadaten">M</a></li>
                     </ul>
                 </div>
 
@@ -260,27 +262,16 @@
                                     <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 235px; display: none">
                                     </select>
                                 </div>
-                                <div id="divContextParameters" style="display: none">
+                                <div id="divContextParameter">
                                 </div>
-
-                                <!-- This workaround is needed since select2 only supports elements existent at DOM load. -->
-                                <div id="divContextParameterTemplates" style="display: none">
-                                    <div id="divParameterSelectionTemplate">
-                                        <label class="label-tabs label" for="selectParameterTemplate">Parameter</label>
-                                        <select id="selectParameterTemplate" class="form-control select select-primary select-block mbl" style="min-width: 235px;"></select>
-                                    </div>
-                                    <div id="divParameterInputTemplate">
-                                        <label class="label-tabs label" for="inputTemplate">Parameter</label>
-                                        <input id="inputTemplate" class="form-control">
-                                    </div>
-                                    <div id="divMaps">
+                                <div id="divMapsTemplate" style="display:none">
+                                    <div id="divMaps" style="display:block">
                                         <div class="maps-row">
                                             <input id="pac-input" class="controls" type="text" placeholder="Suchen">
                                             <div id="maps" style="height: 250px;"></div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div>
                                     <div id="btnConfirmContextInfo" class="btn btn-info">
                                         <b class="fui-check-circle"> </b>
@@ -288,6 +279,30 @@
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                    <div id="tab3" class="tabContents">
+                        <form>
+                            <div>
+                                <div style="padding-bottom: 20px">
+                                    <label class="label-tabs label">Gewählt</label>
+                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label-tabs label">Auswahl Metadaten</label>
+                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                                        <option disabled selected>METADATEN</option>
+                                        <!--<option value="0">Bild</option>
+                                        <option value="1">Film</option>
+                                        <option value="2">Text</option>
+                                        <option value="3">Navigation</option>
+                                        <option value="4">Test</option>
+                                        <option value="5">Audio</option>-->
+                                    </select>
+                                </div>
+                            </div>
+
                         </form>
                     </div>
                 </div>

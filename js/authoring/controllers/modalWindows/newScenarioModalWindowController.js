@@ -5,13 +5,9 @@
 var global_ScenarioLiNumber = 0;
 
 $(function() {
-    // make sure that after pressing enter in modal window "Neues Szenario erstellen"
+    // make sure that after pressing enter in input or modal window "Neues Szenario erstellen"
     // the same steps were gone like clicking on the create button
-    $("#modal-new-szenario").on("keyup", function(e) { return checkScenarioName(e); });
-
-    // make sure that after pressing enter in input "Neues Szenario erstellen"
-    // the same steps were gone like clicking on the create button
-    $("#sname").on("keypress", function(e) { return checkScenarioName(e); });
+    $("#modal-new-szenario, #sname").on("keyup", checkScenarioName );
 
     // set the trigger for the new scenario modal window
     $("#showNewScenario").on("click", showNewScenario);
@@ -37,6 +33,10 @@ function checkScenarioName(e) {
  */
 function showNewScenario() {
     var newScenarioElement = $("#modal-new-szenario");
+
+    newScenarioElement.submit(function(e){
+        e.preventDefault();
+    });
 
     // set focus to scenario name input field
     newScenarioElement.on("shown.bs.modal", function () {
