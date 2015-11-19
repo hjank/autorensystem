@@ -85,7 +85,7 @@ function activateFunctionalities(newState) {
         current_unit = getCurrentUnitDataModel();
 
         // set description field
-        $("#inputUnitDescription")[0].value = current_unit["description"];
+        $("#inputUnitDescription")[0].value = current_unit.getDescription();
 
         /* tab "Kontextinformation" */
         loadContextTabForUnit(unit);
@@ -122,7 +122,7 @@ function activateFunctionalities(newState) {
             unitSatisfiesAllContextInfos = false;
 
             // change sat information in current unit
-            current_unit["sat"] = "one";
+            current_unit.setSat("one");
         }
         // decides that all of the group of selected context information has to be satisfied (0 == "Alle")
         if (e.val == 0) {
@@ -142,7 +142,7 @@ function activateFunctionalities(newState) {
             unitSatisfiesAllContextInfos = true;
 
             // change sat information in current unit
-            current_unit["sat"] = "all";
+            current_unit.setSat("all");
         }
     });
 
@@ -172,7 +172,7 @@ function activateFunctionalities(newState) {
         }
 
         // update JSON structure
-        current_unit["name"] = global_currentInputUnitName;
+        current_unit.setName(global_currentInputUnitName);
 
         // necessary to redraw endpoints
         inst.repaintEverything();
@@ -182,7 +182,7 @@ function activateFunctionalities(newState) {
     // triggered if string is changed in description field in tab "Eigenschaften"
     $("#inputUnitDescription").bind("input", function() {
         // update JSON structure with current input field value
-        current_unit["description"] = $(this).val();
+        current_unit.setDescription($(this).val());
     });
 
     // triggered if an operator was selected in tab "Kontextinformation"
@@ -236,9 +236,10 @@ function activateFunctionalities(newState) {
         }
 
         // update JSON structure
-        for (var i=0; i<current_unit["contextInformations"].length; i++) {
-            if (current_unit["contextInformations"][i].name == e.choice.text) {
-                current_unit["contextInformations"].splice(i, 1);
+        var currentUnitContextList = current_unit.getContextData();
+        for (var i in currentUnitContextList) {
+            if (currentUnitContextList[i].name == e.choice.text) {
+                currentUnitContextList.splice(i, 1);
                 break;
             }
         }

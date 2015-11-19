@@ -7,9 +7,9 @@
 // the list of all available context information data types
 function ContextInformation() {
 
-    this.name = "";
-    this.classes = [];
-    this.value = {
+    this._name = "";
+    this._classes = [];
+    this._value = {
         attributes:{
             type:"",
             min:"",
@@ -19,16 +19,16 @@ function ContextInformation() {
         operators:[],
         enums:[]
     };
-    this.parameters = [];
+    this._parameters = [];
 
     return this;
 }
 
 
 function Parameter() {
-    this.id = "";
-    this.type = "";
-    this.values = [];
+    this._id = "";
+    this._type = "";
+    this._values = [];
 
     return this;
 }

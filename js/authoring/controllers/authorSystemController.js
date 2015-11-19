@@ -131,10 +131,12 @@ function loadScenario(data) {
     jsPlumb.setContainer($("#stm"));
 
     // load units from scenario
-    for (var j=0; j<data["units"].length; j++) {
-        var unit = loadUnit(data["units"][j], (j+1).toString());
+    var unitsList = data.getUnits();
+    for (var j in unitsList) {
+        var unit = loadUnit(unitsList[j], (j+1).toString());
 
         // set event listeners
+        // TODO: activateFunctionalities expects a DOM element as parameter!
         activateFunctionalities(unit);
     }
 

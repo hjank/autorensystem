@@ -17,7 +17,7 @@ $(function() {
     // for button: delete unit = NO
     $("btnDeleteUnitsNot").on("click", deleteUnitsNot);
 
-    // set the trigger for the delete scenarios modal window
+    // set the trigger for the delete units modal window
     $("#deleteLearnUnit").on("click", showDeleteUnits);
 
     // set the trigger for opening a new modal window to confirm the unit deletion
@@ -30,13 +30,13 @@ $(function() {
  * Sets event listeners to the selection and multi selection bar.
  * */
 function showDeleteUnits() {
-    var selectScenarioDeleteUnitElement = $("#selectScenarioDeleteUnit");
+    var selectMultiDeleteUnitsElement = $("#selectMultiDeleteUnits");
 
     showModalWindow($("#modal-delete-units"));
 
     // set deletion button label
     var list_units = [];
-    $("#btnDeleteUnits").text("L�schen (" + list_units.length.toString() + ")");
+    $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
 
     // delete scenarios and put them and new scenarios in selection bar again
     $("#selectScenarioDeleteUnit").empty();
@@ -48,14 +48,14 @@ function showDeleteUnits() {
     }
 
     // clean multi selection bar and fill it again
-    selectScenarioDeleteUnitElement.empty();
-    selectScenarioDeleteUnitElement.select2("data", null);
+    selectMultiDeleteUnitsElement.empty();
+    selectMultiDeleteUnitsElement.select2("data", null);
 
     // triggered if an scenario was selected
     $("#selectScenarioDeleteUnit").on("select2-selecting", function(e) {
 
         // clean multi selection bar
-        selectScenarioDeleteUnitElement.empty();
+        selectMultiDeleteUnitsElement.empty();
         list_units = [];
         $("#btnDeleteUnits").text("Löschen (" + 0 + ")");
 
@@ -68,11 +68,9 @@ function showDeleteUnits() {
             option.attr('value', units[i].getUUID());
             // set option name and append in multi selection bar
             option.html(units[i].getName());
-            selectScenarioDeleteUnitElement.append(option);
+            selectMultiDeleteUnitsElement.append(option);
         }
 
-// TODO: Unit deletion currently depends on units' names fetched from select in modal window (see below).
-// TODO: This must be changed toward using UUIDs.
       /*  for (var j=0; j<myAuthorSystem.length; j++) {
             // find right scenario
             if (myAuthorSystem[j]["name"] == e.choice.text) {
@@ -98,7 +96,7 @@ function showDeleteUnits() {
         }
 */
         // select unit which should be deleted
-        selectScenarioDeleteUnitElement.select2().on("select2-selecting", function(e) {
+        selectMultiDeleteUnitsElement.select2().on("select2-selecting", function(e) {
 
             // test if unit is already in the list
             var isContained = false;
@@ -113,19 +111,19 @@ function showDeleteUnits() {
             }
 
             // set label
-            $("#btnDeleteUnits").text("L�schen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
         });
 
         // triggered if a unit was deleted
-        selectScenarioDeleteUnitElement.select2().on("select2-removed", function(e) {
+        selectMultiDeleteUnitsElement.select2().on("select2-removed", function(e) {
             // remove unit from list
             for (var j=0; j<list_units.length; j++) {
-                if (list_units[j].text == e.choice.text) {
+                if (list_units[j].id == e.val) {
                     list_units.splice(j, 1);
                 }
             }
             // set label
-            $("#btnDeleteUnits").text("L�schen (" + list_units.length.toString() + ")");
+            $("#btnDeleteUnits").text("Löschen (" + list_units.length.toString() + ")");
         });
     });
 }
@@ -148,7 +146,7 @@ function showDeleteUnitsConfirm() {
  */
 function deleteUnits(){
     // get units which should be deleted
-    var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
+    var list_deletableUnits = $("#selectMultiDeleteUnits").select2("data");
 
     // get right scenario name
     var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
@@ -163,8 +161,8 @@ function deleteUnits(){
 
     // update gui and JSON structure
     var selectedScenario = authorSystemContent.getScenario(currentScenario);
-    for (var i in list_deleteableUnits) {
-        var unitName = list_deleteableUnits[i].text;
+    for (var i in list_deletableUnits) {
+        var unitName = list_deletableUnits[i].text;
         var deletableUnit = selectedScenario.getUnitByName(unitName);
         selectedScenario.removeUnit(deletableUnit);
         removeUnitFromMenu(currentScenario, unitName);
@@ -200,15 +198,6 @@ function deleteUnits(){
             }
         }
     }*/
-    // delete holder in scenario in menu bar
-    /*if (liCurrentScenario.children("ul").children("li").length == 0 &&
-     liCurrentScenario.hasClass("has-sub")) {
-     liCurrentScenario.removeClass("has-sub");
-     liCurrentScenario.children("a").children("span.holder").remove();
-     liCurrentScenario.children("ul").remove();
-
-     liCurrentScenario.addClass("last");
-     }*/
 
     // all tab content invisible
     $(".tabContents").hide();

@@ -1,6 +1,6 @@
 $(function() {
 
-    $('#cssmenu li.has-sub>a').on('click', function(){
+	$('#cssmenu li.has-sub>a').on('click', function(){
 		$(this).removeAttr('href');
 		var element = $(this).parent('li');
 		if (element.hasClass('open')) {
@@ -42,24 +42,24 @@ $(function() {
 	})();
 
 	function rgbToHsl(r, g, b) {
-	    r /= 255, g /= 255, b /= 255;
-	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-	    var h, s, l = (max + min) / 2;
+		r /= 255, g /= 255, b /= 255;
+		var max = Math.max(r, g, b), min = Math.min(r, g, b);
+		var h, s, l = (max + min) / 2;
 
-	    if(max == min){
-	        h = s = 0;
-	    }
-	    else {
-	        var d = max - min;
-	        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-	        switch(max){
-	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-	            case g: h = (b - r) / d + 2; break;
-	            case b: h = (r - g) / d + 4; break;
-	        }
-	        h /= 6;
-	    }
-	    return l;
+		if(max == min){
+			h = s = 0;
+		}
+		else {
+			var d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+			switch(max){
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2; break;
+				case b: h = (r - g) / d + 4; break;
+			}
+			h /= 6;
+		}
+		return l;
 	}
 
 });
@@ -151,15 +151,25 @@ function addUnitToMenu(nameCurrentScenario) {
 function removeUnitFromMenu(scenarioName, unitName) {
 	// needed to find scenario in menu bar
 	var liCurrentScenario;
-	$("#menuScenarios").children("li").children("a").children("span.title").each(function() {
-		if ( $(this)[0].innerHTML == scenarioName ) {
+	$("#menuScenarios").children("li").children("a").children("span.title").each(function () {
+		if ($(this)[0].innerHTML == scenarioName) {
 			liCurrentScenario = $(this).parent("a").parent("li");
 		}
 	});
 	// delete unit in menu bar
-	liCurrentScenario.children("ul").children("li").each(function() {
+	liCurrentScenario.children("ul").children("li").each(function () {
 		if ($(this).children("a").children("span")[0].innerHTML == unitName) {
 			$(this).remove();
 		}
 	});
+
+	// delete holder in scenario in menu bar
+	if (liCurrentScenario.children("ul").children("li").length == 0 &&
+			liCurrentScenario.hasClass("has-sub")) {
+		liCurrentScenario.removeClass("has-sub");
+		liCurrentScenario.children("a").children("span.holder").remove();
+		liCurrentScenario.children("ul").remove();
+
+		liCurrentScenario.addClass("last");
+	}
 }

@@ -70,27 +70,27 @@ $(function() {
         $(this).hide();
 
         // create input field
-        var inputName = $("<input>").addClass("form-control");
+        var inputNameField = $("<input>").addClass("form-control");
         var scenarioName = $("#lname")[0].innerHTML;
-        inputName.attr("value", scenarioName);
+        inputNameField.attr("value", scenarioName);
         //$(inputName).css("height", "100%");
-        $(inputName).css("height", "30");
-        $(inputName).css("width", "200");
-        $(inputName).css("display", "inherit");
+        $(inputNameField).css("height", "30");
+        $(inputNameField).css("width", "200");
+        $(inputNameField).css("display", "inherit");
 
         // place it in parent DOM and set focus on last position
-        $(this).parent().append(inputName);
-        inputName.focus();
-        $(inputName)[0].setSelectionRange(scenarioName.length, scenarioName.length);
+        $(this).parent().append(inputNameField);
+        inputNameField.focus();
+        $(inputNameField)[0].setSelectionRange(scenarioName.length, scenarioName.length);
 
         e.stopPropagation();
 
         // triggered if enter was clicked in input field
-        $(inputName).keyup(function(e) {
+        $(inputNameField).keyup(function(e) {
             if (e.keyCode === 13) {
 
                 // save name in JSON structure and in GUI
-                saveScenarioName(inputName, scenarioName);
+                saveScenarioName(inputNameField, scenarioName);
             }
         });
 
@@ -98,10 +98,10 @@ $(function() {
         $("body").on("click", function() {
 
             // only save scenario name if input field is visible
-            if ($(inputName).css("display") != "none" && $(inputName).css("display") != "inherit") {
+            if ($(inputNameField).css("display") != "none" && $(inputNameField).css("display") != "inherit") {
 
                 // save name in JSON structure and in GUI
-                saveScenarioName(inputName, scenarioName);
+                saveScenarioName(inputNameField, scenarioName);
             }
         });
     });
@@ -114,8 +114,8 @@ $(function() {
  * @param inputName
  * @param scenarioName
  */
-function saveScenarioName(inputName, scenarioName) {
-    var newName = $(inputName).val();
+function saveScenarioName(inputNameField, scenarioName) {
+    var newName = $(inputNameField).val();
 
     // get new name in label
     $("#lname").html(newName);
@@ -124,11 +124,11 @@ function saveScenarioName(inputName, scenarioName) {
     $("#lname").show();
 
     // remove input field
-    $(inputName).remove();
+    $(inputNameField).remove();
 
     // change name in menu bar
     changeScenarioNameInMenu(scenarioName, newName);
 
     // update name JSON structure
-    changeScenarioName(scenarioName, newName);
+    authorSystemContent.getScenario(scenarioName).setName(newName);
 }

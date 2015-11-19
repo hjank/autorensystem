@@ -24,5 +24,5 @@ function showDeleteUnitConfirm() {
 
     // get unit name and show the unit specific text
     var unitName = $("#inputUnitName")[0].value;
-    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich l�schen?');
+    $("#tabTextUnitDeletion").html('Wollen Sie die Lerneinheit "' + unitName + '" wirklich löschen?');
 }

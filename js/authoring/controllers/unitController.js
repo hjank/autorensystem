@@ -3,52 +3,14 @@
  */
 
 
-var counter_multiSelectionMetaData = 0;
-
 function createUnit() {
 
     /* if loaded sceanrio */
-    // get last id number
-    var max = 0;
-    $("#stm").children("div.w").each(function() {
-        var id = parseInt($(this)[0].getAttribute("id").slice(-1));
-        if (id > max) {
-            max = id;
-        }
-    });
-    // prevent that two unit have the same id
-    max = max + 1;
-
     // generate a UUID for this new unit. This will also serve as its A-box identifier.
-    // TODO: Maybe replace "state"+max by uuid...
     var uuid = uuid4();
-
-    // build unit DOM
-    var newState = $('<div>')
-        .attr('id', 'state' + max)
-        .attr("uuid", uuid)
-        .addClass('w');
-    var title = $('<div>').addClass('title').css("padding", "0px 7px");
-
     var stateName = $('<input>').attr('type', 'text').css("color", "#34495e");
-    title.append(stateName);
-
-    // add div for context information icons
-    var divContextIcons = $("<div>").addClass("unit-icons");
-
-    // create connection point
-    var ep = $('<div>').addClass('ep');
-
-    window.jsp = inst;
-    var windows = jsPlumb.getSelector("#stm .w");
-
-    // add elements to unit DOM
-    newState.append(divContextIcons);
-    newState.append(title);
-    newState.append(ep);
-
-    // add unit DOM to state machine
-    $('#stm').append(newState);
+    // get new unit DOM
+    var newState = buildUnitDOM(uuid, stateName);
 
     var nameSet = false;
 
@@ -74,8 +36,12 @@ function createUnit() {
 
             // add learning unit in menu bar
             addUnitToMenu(nameCurrentScenario);
+
             // update JSON structure: get new unit in its scenario
-            addUnitToScenarioModel(nameCurrentScenario, uuid);
+            var newUnit = new Unit();
+            newUnit.setUUID(uuid);
+            newUnit.setName(global_currentInputUnitName);
+            authorSystemContent.getScenario(nameCurrentScenario).addUnit(newUnit);
 
             // hide tabs because all units will be unmarked
             $(".tabContents").hide();
@@ -85,7 +51,7 @@ function createUnit() {
         // to set the source and target points, it is necessary to wait until the name was entered
         // --> prevent the wrong placement of the dots
         if (nameSet) {
-            plumbUnit(newState, ep);
+            plumbUnit(newState);
             nameSet = false;
         }
     });
@@ -98,42 +64,26 @@ function createUnit() {
  * Hint: The website will be new loaded.
  * @param {Object} unit Contains all information about the unit
  * @param {String} j Contains the running ID number
- * @return {Object} Contains the unit DOM element
  * */
 function loadUnit(unit, j) {
 
-    window.jsp = inst;
-
-    // build unit DOM
-    var newState = $('<div>').attr('id', 'state' + j).addClass('w');
-    var title = $('<div>').addClass('title').css("padding", "0px 7px");
-    title.html(unit.name);
-    var ep = $('<div>').addClass('ep');
-
-    // add div for context information icons
-    var divContextIcons = $("<div>").addClass("unit-icons");
-
-    // add elements to unit DOM
-    newState.append(divContextIcons);
-    newState.append(title);
-    newState.append(ep);
-
-    // add unit to state machine
-    $('#stm').append(newState);
+    var newState = buildUnitDOM(unit.getUID(), unit.getName());
+    var divContextIcons = newState.children(".unit-icons")[0];
 
     // get all context information
-    for (var k= 0; k<unit["contextInformations"].length; k++) {
+    var unitContextInfoList = unit.getContextData();
+    for (var k in unitContextInfoList) {
         var divContextIcon = $("<div>")
             .addClass("unit-icon")
-            .attr("id", unit["contextInformations"][k]["name"] + k + "icon");
-        var icon = unit["contextInformations"][k]["icon"];
+            .attr("id", unitContextInfoList[k]["name"] + k + "icon");
+        var icon = unitContextInfoList[k]["icon"];
 
         // add icon und div to unit
         divContextIcon.append(icon);
         divContextIcons.append(divContextIcon);
 
         // get state of satisfiability
-        if (unit["sat"] == "all") {
+        if (unit.getSat() == "all") {
             divContextIcons.css("border", "2px solid #adadad");
             divContextIcons.attr("ci", "all");
         } else {
@@ -149,11 +99,14 @@ function loadUnit(unit, j) {
     }
 
     // get all meta data
-    for (var l= 0; l<unit["metaData"].length; l++) {
-        var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", unit["name"] + l + "metaIcon");
+    var unitMetaData = unit.getMetaData();
+    for (var l in unitMetaData) {
+        var divMetaIcon = $("<div>")
+            .addClass("unit-meta-icons")
+            .attr("id", unit.getName() + l + "metaIcon");
 
-        var metaIcon = chooseMetaIcon(unit["metaData"][l]["name"]);
-        divMetaIcon.attr("title", unit["metaData"][l]["name"]);
+        var metaIcon = chooseMetaIcon(unitMetaData[l]["name"]);
+        divMetaIcon.attr("title", unitMetaData[l]["name"]);
 
         // add meta icon to unit DOM
         var bMetaIcon = $("<b>").addClass(metaIcon);
@@ -165,17 +118,19 @@ function loadUnit(unit, j) {
     }
 
     // place unit in state machine
-    $(newState).css("top", unit.posY + "px");
-    $(newState).css("left", unit.posX + "px");
+    $(newState).css("top", unit.getPosY() + "px");
+    $(newState).css("left", unit.getPosX() + "px");
 
-    plumbUnit(newState, ep);
+    plumbUnit(newState);
 
     return newState;
 
 }
 
 // set properties for newly created unit in jsPlumb instance
-function plumbUnit(newState, ep) {
+function plumbUnit(newState) {
+    var ep = newState.children(".ep")[0];
+
     // make the unit draggable
     inst.draggable(newState, {
         //containment: 'parent'
@@ -229,8 +184,17 @@ function chooseMetaIcon(metaDataName) {
  * */
 function addMetaDataToUnit(metaDatum, unit) {
 
+    // update JSON structure
+    var current_unit = getCurrentUnitDataModel();
+    current_unit.addMetaInfo({
+        name : metaDatum,
+        icon : metaIcon
+    });
+
     // create meta data DOM
-    var divMetaIcon = $("<div>").addClass("unit-meta-icons").attr("id", counter_multiSelectionMetaData + "metaIcon");
+    var divMetaIcon = $("<div>")
+        .addClass("unit-meta-icons")
+        .attr("id", current_unit.getName() + current_unit.getMetaData().length + "metaIcon");
 
     // choose icon symbol and add it to meta data DOM
     var metaIcon = chooseMetaIcon(metaDatum);
@@ -246,14 +210,6 @@ function addMetaDataToUnit(metaDatum, unit) {
     // change size of learning unit
     $(unit).css("padding-bottom", "5px");
 
-    counter_multiSelectionMetaData++;
-
-    // update JSON structure
-    var current_unit = getCurrentUnitDataModel();
-    current_unit["metaData"].push({
-        name : metaDatum,
-        icon : metaIcon
-    });
 
     // set endpoints on the right place
     inst.repaintEverything();
@@ -266,30 +222,27 @@ function addMetaDataToUnit(metaDatum, unit) {
  * */
 function removeMetaDataFromUnit(metaDatum, unit) {
 
+    // update JSON structure
+    var current_unit = getCurrentUnitDataModel();
+    var currentUnitMetaData = current_unit.getMetaData();
+    for (var j in currentUnitMetaData) {
+        if (currentUnitMetaData[j].name == metaDatum) {
+            currentUnitMetaData.splice(j, 1);
+        }
+    }
+
     // find the right meta icon
-    $(unit).find("div.unit-meta-icons").each(function() {
-
-        // get icon title name
-        var icon = $(this)[0].title;
-
+    var metaDataIcons = $(unit).find("div.unit-meta-icons");
+    metaDataIcons.each(function() {
         // remove the right icon from unit
-        if (icon == metaDatum) {
+        if ($(this)[0].title == metaDatum) {
             this.remove();
-
-            // if no more meta icons in unit go back to old unit design
-            if (counter_multiSelectionMetaData == 0) {
-                $(unit).css("padding-bottom", "");
-            }
+            return false;
         }
     });
 
-    var current_unit = getCurrentUnitDataModel();
-    // update JSON structure
-    for (var j=0; j<current_unit["metaData"].length; j++) {
-        if (current_unit["metaData"][j].name == metaDatum) {
-            current_unit["metaData"].splice(j, 1);
-        }
-    }
+    if (metaDataIcons.length == 0)
+        $(unit).css("padding-bottom", "");
 
     // set endpoints on the right place
     inst.repaintEverything();
@@ -319,4 +272,34 @@ function getCurrentUnitDataModel() {
             }
         }
     }*/
+}
+
+
+// build unit DOM
+function buildUnitDOM(uuid, name) {
+
+    var newState = $('<div>')
+        .attr("id", uuid)
+        .addClass('w');
+
+    var title = $('<div>').addClass('title').css("padding", "0px 7px");
+    title.append(name);
+
+    // add div for context information icons
+    var divContextIcons = $("<div>").addClass("unit-icons");
+    // create connection point
+    var ep = $('<div>').addClass('ep');
+
+    window.jsp = inst;
+    //var windows = jsPlumb.getSelector("#stm .w");
+
+    // add elements to unit DOM
+    newState.append(divContextIcons);
+    newState.append(title);
+    newState.append(ep);
+
+    // add unit DOM to state machine
+    $('#stm').append(newState);
+
+    return newState;
 }

@@ -24,7 +24,7 @@ Scenario.prototype.getUnits = function() {
 Scenario.prototype.getUnitByName = function(unitName) {
     for (var i in this._units) {
         var unit = this._units[i];
-        if (unit.name == unitName)
+        if (unit.getName() == unitName)
             return unit;
     }
 };
@@ -32,7 +32,7 @@ Scenario.prototype.getUnitByName = function(unitName) {
 Scenario.prototype.getUnitByUUID = function(uuid) {
     for (var i in this._units) {
         var unit = this._units[i];
-        if (unit.uuid == uuid)
+        if (unit.getUUID() == uuid)
             return unit;
     }
 };
@@ -68,25 +68,3 @@ Scenario.prototype.removeConnection = function(conn) {
     if (index > -1)
         this._connections.splice(index, 1);
 };
-
-
-// TODO: Incorporate the following two functions into scenario model.
-
-function changeScenarioName(oldName, newName) {
-    authorSystemContent.getScenario(oldName).setName(newName);
-}
-
-// TODO: Use unit model for this.
-function addUnitToScenarioModel(scenarioName, uuid) {
-    authorSystemContent.getScenario(scenarioName).addUnit({
-        uuid: uuid,                 // a (hopefully truly) unique id for this unit
-        name:global_currentInputUnitName,            // displayed name
-        description:"",             // description of the unit
-        sat:"all",                  // how much context information have to be satisfied
-        contextInformations:[],     // list of containing context information
-        metaData:[],                // list of containing meta data
-        //connections:[],           // list of connections with other units
-        posX:0,                     // absolute X position in the displayed container
-        posY:0                      // absolute Y position in the displayed container
-    });
-}

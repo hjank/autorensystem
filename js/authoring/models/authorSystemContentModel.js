@@ -39,7 +39,7 @@ AuthorSystemContent.prototype.getScenarios = function() {
 AuthorSystemContent.prototype.getScenario = function(scenarioName) {
     for (var i in this._scenarioList) {
         var scenario = this._scenarioList[i];
-        if (scenario.name == scenarioName)
+        if (scenario.getName() == scenarioName)
             return scenario;
     }
 };
@@ -51,7 +51,7 @@ AuthorSystemContent.prototype.addScenario = function (scenario) {
 AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
     for (var i in this._scenarioList) {
         var scenario = this._scenarioList[i];
-        if (scenario.name == scenarioName)
+        if (scenario.getName() == scenarioName)
             this._scenarioList.splice(i, 1);
     }
 };

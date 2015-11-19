@@ -292,11 +292,11 @@ function deleteSelectedUnitsFromDOM() {
     for (var i=0; i<list_deleteableUnits.length; i++) {
         // get unit id
         var unitID = list_deleteableUnits[i].id;
-
+        var uuidSelector = "[uuid="+unitID+"]";
         // delete all connections
-        inst.detachAllConnections($("#" + unitID));
+        inst.detachAllConnections($(uuidSelector));
 
         // delete unit in canvas
-        $("#" + unitID).remove();
+        $(uuidSelector).remove();
     }
 }
