@@ -50,7 +50,7 @@ function fillContextTab() {
         var selectedInfo = contextList.getItem(j);
 
         // get the corresponding operators to the selected context information
-        var operators = selectedInfo.value.operators;
+        var operators = selectedInfo.getOperators();
 
         // clear selection bar
         $("#selectOperator").empty();
@@ -68,22 +68,25 @@ function fillContextTab() {
         }
 
         // fill input field
-        fillInputField(contextList.getItem(j).value);
+        fillInputField(contextList.getItem(j));
 
         // fill parameter selection bar
-        fillParameterSelection(contextList.getItem(j).parameters);
+        fillParameterSelection(contextList.getItem(j).getParameters());
     });
 }
 
 
 function loadContextTabForUnit(unit) {
+
+    var currentUnitModel = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
     // check how much context information are needed to reach SAT
-    var ciSAT = $(unit).children("div.unit-icons")[0].getAttribute("ci");
-    if (ciSAT == "all") {
+    var sat = currentUnitModel.getSat();
+    if (sat == "all")
         $("#s2id_selectNumberContextInfos").children("a").children("span.select2-chosen").html("Alle");
-    } else if (ciSAT == "one") {
+    else if (sat == "one")
         $("#s2id_selectNumberContextInfos").children("a").children("span.select2-chosen").html("Eine");
-    }
+
 
     // clear multi selection in context info tab
     $("#selectMultiContextInfos").empty();
@@ -97,13 +100,14 @@ function loadContextTabForUnit(unit) {
         escapeMarkup: function(m) {return m;}
     });
 
-    // TODO: Fetch this unit's context info from model, not icons!
-    // get data back in multi selection bar from a past edited learning unit
-    var array_unitIcons = $(unit).find(".unit-icon");
-    for (var n=0; n<array_unitIcons.length; n++) {
+
+    // get data back in multi selection bar from a past editing of this learning unit
+    var currentUnitContextArray = currentUnitModel.getContextData();
+    for (var i in currentUnitContextArray) {
+        var contextID = currentUnitContextArray[i].getID();
         array_multiSelectionContextInfos.push({
-            "id":$(array_unitIcons[n]).children("img")[0].getAttribute("ccID"),
-            "text":$(array_unitIcons[n]).children("img")[0].title
+            "id":contextID,
+            "text":translate_contextInformation(contextID)
         });
     }
     // get data in multi selection bar
@@ -301,8 +305,7 @@ function fillSelectionContextInformation() {
 
         // create option DOM and add the context information
         var option = $("<option>").attr("value", i.toString());
-        option.attr("origin", contextItem.name);     // save original name
-        option.html(translate_contextInformation(contextItem.name));
+        option.html(translate_contextInformation(contextItem.getID()));
 
         // get first of this context info's classes matching one of the global classes
         var classIndex = getFirstMatchingClassIndex(contextItem, contextClasses);
@@ -329,9 +332,9 @@ function fillSelectionContextInformation() {
 // fill input field (value in tab Kontexinformation)
 /**
  * Function gets the selected context information and decides which input field has to be set on GUI.
- * @param {Object} ciValue Contains current context information value details.
+ * @param {Object} ci Contains current context information object.
  * */
-function fillInputField(ciValue) {
+function fillInputField(ci) {
 
     // clear input field caused by removing input field and re-building
     $("#inputContextValue").remove();
@@ -339,11 +342,8 @@ function fillInputField(ciValue) {
         .attr("onkeyup", "getInputContextValue(this)");
     $("#divContextValue").append(inputField);
 
-    // get {type, min, max, default} of the context information
-    var ciAttributes = ciValue.attributes;
-
     // decide which type of input field is needed
-    switch (ciAttributes.type) {
+    switch (ci.getType()) {
 
         case "FLOAT":
         case "INTEGER":
@@ -353,7 +353,7 @@ function fillInputField(ciValue) {
             $("#inputContextValue").css("display", "block");
             $("#selectPossibleValues").css("display", "none");
             $("#s2id_selectPossibleValues").css("display", "none");
-            setMinMaxDefault(ciAttributes, $("#inputContextValue"));
+            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), $("#inputContextValue"));
             break;
 
         case "STRING":
@@ -375,9 +375,10 @@ function fillInputField(ciValue) {
             $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
 
             // fill selection bar
-            for (var i in ciValue.enums) {
+            var enums = ci.getEnums();
+            for (var i in enums) {
                 var option = $("<option>").attr("value", i.toString());
-                option.html(translate_possibleValue(ciValue.enums[i]));
+                option.html(translate_possibleValue(enums[i]));
 
                 $("#selectPossibleValues").append(option);
             }
@@ -421,19 +422,19 @@ function fillParameterSelection(cp) {
     // iterate through all parameters
     for (var i in cp) {
 
+        var thisParam = cp[i];
         // get each parameter's translated name, type, and all its possible values
-        var parameterOriginal = cp[i].id;
+        var parameterOriginal = thisParam.getID();
         var parameterTranslation = translate_parameter(parameterOriginal);
-        var type = cp[i].type;
-        var possibleValues = cp[i].values;
 
-
-        switch (type) {
+        switch (thisParam.getType()) {
 
             // type enum needs a drop down selection for only possible values
             case "ENUM":
-                id = "selectParameter" + i;
-                div = createNamedDOMElement("div", "divParameterSelection"+i)
+                var enums = thisParam.getEnums();
+
+                id = "parameter" + i;
+                div = createNamedDOMElement("div", "divParameter"+i)
                     .css("display", "block")
                     .append(createParameterLabelDOM(id, parameterTranslation));
                 child = createNamedDOMElement("select", id)
@@ -441,11 +442,11 @@ function fillParameterSelection(cp) {
                     .attr("style", "min-width: 235px;");
 
                 // append all possible values
-                for (var j in possibleValues) {
+                for (var j in enums) {
                     child.append(
                         $("<option>")
                             .attr("value", j.toString())
-                            .html(translate_parameterValue(possibleValues[j]))
+                            .html(translate_parameterValue(enums[j]))
                     );
                 }
                 div.append(child);
@@ -457,8 +458,8 @@ function fillParameterSelection(cp) {
             // type float or integer each need an input field and a specific label
             case "INTEGER":
             case "FLOAT":
-                id = "inputContextParameter"+i;
-                div = createNamedDOMElement("div", "divParameterInput"+i)
+                id = "parameter"+i;
+                div = createNamedDOMElement("div", "divParameter"+i)
                     .addClass("divParameterInputs")
                     .css("display", "table-cell")
                     .append(createParameterLabelDOM(id, parameterTranslation));
@@ -466,7 +467,9 @@ function fillParameterSelection(cp) {
                     .addClass("form-control")
                     .attr("type", "number")
                     .attr("onkeyup", "getParameterInput(this,"+i+")");
-                setMinMaxDefault(possibleValues[0], child);
+
+                setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
+
                 div.append(child);
                 divContextParams.append(div);
 
@@ -479,8 +482,8 @@ function fillParameterSelection(cp) {
 
             // type string needs an input field and a specific label
             case "STRING":
-                id = "inputParameterString"+i;
-                div = createNamedDOMElement("div", "divParameterString"+i)
+                id = "parameter"+i;
+                div = createNamedDOMElement("div", "divParameter"+i)
                     .css("display", "block")
                     .append(createParameterLabelDOM(id, parameterTranslation));
                 child = createNamedDOMElement("input", id)
@@ -503,22 +506,15 @@ function fillParameterSelection(cp) {
  * @param {Array} values Contains minimum and maximum values.
  * @param {Object} inputField Contains an input field.
  * */
-function setMinMaxDefault(values, inputField) {
+function setMinMaxDefault(min, max, def, inputField) {
 
-    if (typeof values === "undefined")
-        return;
-
-    var min = (values.min != undefined) ? values.min : false;
-    var max = (values.max != undefined) ? values.max : false;
-    var def = (values.default != undefined) ? values.default : false;
-
-    if (min) {
+    if (min != "") {
         inputField.attr("min", min);
     }
-    if (max) {
+    if (max != "") {
         inputField.attr("max", max);
     }
-    if (def) {
+    if (def != "") {
         inputField.attr("value", def);
     }
 }
@@ -628,7 +624,7 @@ function getColor(cc) {
     switch (cc) {
         case "Lernszenario":
             return "#3287C8";
-        case "Pers�nlich":
+        case "Persönlich":
             return "#AF46C8";
         case "Situationsbezogen":
             return "#91F52D";
@@ -647,7 +643,7 @@ function getClassNameColor(classText) {
     // a little bit cumbersome but slightly easier to maintain
     switch (classText) {
         case "Lernszenario":
-        case "Pers�nlich":
+        case "Persönlich":
         case "Infrastruktur":
         case "Ortung":
             return "white";
@@ -755,7 +751,7 @@ function changeColorMultiContextInfos() {
                 e.stopPropagation();
             });
             $(".select2-search-choice-close").hover(
-                function() {$(this).attr("title", "L�schen")}
+                function() {$(this).attr("title", "Löschen")}
             );
 
             /* end new */
@@ -765,7 +761,7 @@ function changeColorMultiContextInfos() {
                 array_multiSelectionContextInfos[i]["text"] == title) {             // icon
 
                 // get color for first context class
-                var firstClassTranslation = translate_contextClass(contextList.getItem(thisID).classes[0]);
+                var firstClassTranslation = translate_contextClass(contextList.getItem(thisID).getClasses()[0]);
                 var color = getColor(firstClassTranslation);
                 $(this).parent().css("background-color", color);
 
@@ -781,8 +777,9 @@ function changeColorMultiContextInfos() {
 // search for this context info's classes in a list of classes and return first match
 function getFirstMatchingClassIndex(contextItem, contextClasses) {
     var classIndex;
-    for (var k in contextItem.classes) {
-        classIndex = contextClasses.indexOf(contextItem.classes[k]);
+    var classes = contextItem.getClasses();
+    for (var k in classes) {
+        classIndex = contextClasses.indexOf(classes[k]);
         if (classIndex != -1)
             break;
     }

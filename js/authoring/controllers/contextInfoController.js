@@ -10,25 +10,20 @@
  * */
 function checkInformation() {
 
-    var selectedInfo = {};
     var missing_content = ""; // displayed to user if something is missing
 
-    var selectedContextInfo = $("#selectContextInfos").select2("data");
+    var selectedInfoID = $("#selectContextInfos").select2("data");
     var selectedOperator = $("#selectOperator").select2("data");
-
-    var contextInfoInArray;
+    var selectedContextInfo;
 
 
     // check selection bar "Kontextinformationen"
-    if ( selectedContextInfo == null ) {
+    if ( selectedInfoID == null ) {
         // if selection bar context information is empty, concatenate it in missing_content string
         missing_content += " - Kontextinformation\n";
     } else {
-        // update JSON structure
-        contextInfoInArray = contextList.getItem(selectedContextInfo.id);
-        selectedInfo.id = selectedContextInfo.id;
-        selectedInfo.name = contextInfoInArray.name;
-        selectedInfo.text = translate_contextInformation(contextInfoInArray.name);
+        // create a copy of the selected context info's JSON structure
+        selectedContextInfo = $.extend(new ContextInformation(), contextList.getItem(selectedInfoID.id));
     }
 
     /*    // only addable if context info doesn't exist already
@@ -47,118 +42,74 @@ function checkInformation() {
         missing_content += " - Operator\n";
     } else {
         // update JSON structure
-        selectedInfo.operator = contextInfoInArray.value.operators[selectedOperator.id];
+        selectedContextInfo.setOperators(selectedContextInfo.getOperators()[selectedOperator.id]);
     }
 
-    // check input "Wert" is visible AND filled with information
-    if ( $("#inputContextValue")[0].style.display == "block" &&
-        $("#inputContextValue")[0].disabled == false ) {
-
-        // if input field context value is empty, concatenate it in missing_content string
-        if ( $("#inputContextValue")[0].value == "" ) {
-            missing_content += " - Wert\n";
-            $("#inputContextValue").parent().addClass("has-error");
-
-        } else if ($("#inputContextValue").parent().hasClass("has-error")) {
-            $("#inputContextValue").parent().removeClass("has-error");
-        }
-
-        // update JSON structure
-        selectedInfo.value = $("#inputContextValue")[0].value;
-
-        // check if selection bar "Wert" is visible AND filled with information
-    } else if ( $("#selectPossibleValues")[0].style.display == "block" &&
-        $("#selectPossibleValues")[0].disabled != true ) {
-
-        // if selection bar context value is empty, concatenate it in missing_content string
-        if ( $("#selectPossibleValues").select2("data")["text"] == "\r" ) {
-            missing_content += " - Wert\n";
-        }
-
-        // update JSON structure
-        selectedInfo.value = contextInfoInArray.value.enums[$("#selectPossibleValues").select2("data").id];
+    // check and get context value
+    var contextValue;
+    switch(selectedContextInfo.getType()) {
+        case "FLOAT":
+        case "INTEGER":
+        case "STRING":
+            var inputField = $("#inputContextValue");
+            // if input field context value is empty, concatenate it in missing_content string
+            if ( inputField[0].value == "" ) {
+                missing_content += " - Wert\n";
+                inputField.parent().addClass("has-error");
+            } else {
+                inputField.parent().removeClass("has-error");
+                contextValue = inputField[0].value;
+            }
+            break;
+        case "ENUM":
+        case "BOOLEAN":
+            var selected = $("#selectPossibleValues").select2("data");
+            // if selection bar context value is empty, concatenate it in missing_content string
+            if ( selected["text"] == "\r" ) {
+                missing_content += " - Wert\n";
+            }
+            contextValue = selectedContextInfo.getEnums()[selected.id];
+            break;
     }
+    // update JSON structure
+    selectedContextInfo.setInputValue(contextValue);
 
-    // check parameters (if existent)
-    contextInfoInArray.parameters.forEach(checkParameter, selectedInfo);
-
-        // if selection bar parameter is empty, concatenate it in missing_content string
-        if ($("#selectParameter").select2("data")["text"] == "\r") {
-            missing_content += " - " + $("#selectParameter")[0].labels[0].innerHTML + "\n";
+    // check and get parameters (if existent)
+    var selectedInfoParameters = selectedContextInfo.getParameters();
+    for (var i in selectedInfoParameters) {
+        var parameter = selectedInfoParameters[i];
+        var parameterElement = $("#parameter"+i);
+        var parameterDiv = parameterElement.parent();
+        var paramValue;
+        switch (parameter.getType()) {
+            case "FLOAT":
+            case "INTEGER":
+            case "STRING":
+                // if input field is empty, concatenate it in missing_content string
+                if ( parameterElement[0].value == "" ) {
+                    missing_content += " - " + translate_parameter(parameter.getID()) + "\n";
+                    parameterDiv.addClass("has-error");
+                }
+                else {
+                    parameterDiv.removeClass("has-error");
+                    paramValue = parameterElement[0].value;
+                }
+                break;
+            case "ENUM":
+            case "BOOLEAN":
+                var selected = parameterElement.select2("data");
+                // if selection bar parameter is empty, concatenate it in missing_content string
+                if (selected["text"] == "\r") {
+                    missing_content += " - " + translate_parameter(parameter.getID()) + "\n";
+                }
+                else
+                    paramValue = parameter.getEnums()[selected.id];
+                break;
         }
-
-        // TODO: Get selected parameter identifier to get at values!
         // update JSON structure
-        selectedInfo.parameter1 = contextInfoInArray.parameters[0].values[$("#selectParameter").select2("data").id];
-    }
-    // check selection bar "Parameter" is visible
-    if ( $("#divParameterSelection2")[0].style.display == "block") {
-
-        // if selection bar parameter is empty, concatenate it in missing_content string
-        if ($("#selectParameter2").select2("data")["text"] == "\r") {
-            missing_content += " - " + $("#selectParameter2")[0].labels[0].innerHTML + "\n";
-        }
-
-        // update JSON structure
-        selectedInfo.parameter2 = contextInfoInArray.parameters.values[$("#selectParameter2").select2("data").id];
-    }
-    // check input context parameter 1 is visible
-    if ( $("#divParameterInput1")[0].style.display == "table-cell" ) {
-
-        // if input field context parameter is empty, concatenate it in missing_content string
-        if ($("#inputContextParameter1")[0].value == "") {
-            missing_content += " - " + $("#inputContextParameter1")[0].labels[0].innerHTML + "\n";
-            $("#inputContextParameter1").parent().addClass("has-error");
-
-        } else if ($("#inputContextParameter1").parent().hasClass("has-error")) {
-            $("#inputContextParameter1").parent().removeClass("has-error");
-        }
-
-        // update JSON structure
-        selectedInfo.input1 = $("#inputContextParameter1")[0].value;
-    }
-    // check input context parameter 2 is visible
-    if ( $("#divParameterInput2")[0].style.display == "table-cell" ) {
-
-        // if input field context parameter is empty, concatenate it in missing_content string
-        if ($("#inputContextParameter2")[0].value == "") {
-            missing_content += " - " + $("#inputContextParameter2")[0].labels[0].innerHTML + "\n";
-            $("#inputContextParameter2").parent().addClass("has-error");
-
-        } else if ($("#inputContextParameter2").parent().hasClass("has-error")) {
-            $("#inputContextParameter2").parent().removeClass("has-error");
-        }
-
-        // update JSON structure
-        selectedInfo.input2 = $("#inputContextParameter2")[0].value;
-    }
-    // check input context parameter string is visible
-    if ( $("#divParameterString")[0].style.display == "block" ) {
-
-        // if input field context parameter is empty, concatenate it in missing_content string
-        if ($("#inputParameterString")[0].value == "") {
-            missing_content += " - " + $("#inputParameterString")[0].labels[0].innerHTML + "\n";
-            $("#inputParameterString").parent().addClass("has-error");
-
-        } else if ($("#inputParameterString").parent().hasClass("has-error")) {
-            $("#inputParameterString").parent().removeClass("has-error");
-        }
-
-        // update JSON structure
-        selectedInfo.inputString = $("#inputParameterString")[0].value;
+        parameter.setInputValue(paramValue);
     }
 
     // create return array
-    return [missing_content, selectedInfo];
-}
-
-function checkParameter (parameter, index, parameterArray) {
-    var param = {
-        id: parameter.id,
-        type: parameter.type,
-        value: $("#parameter"+index).children()[0] :
-    };
-
-
-    this.parameters.push(param);
+    return [missing_content, selectedContextInfo];
 }

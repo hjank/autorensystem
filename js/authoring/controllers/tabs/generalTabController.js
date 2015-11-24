@@ -36,10 +36,7 @@ $(function() {
  * @param {Object} newState Contains new created learning unit.
  */
 function activateFunctionalities(newState) {
-
-    // get id from new state (unit)
-    var id = newState[0].getAttribute("id");
-    var unit = document.getElementById(id);
+    var unit = newState[0];
 
     // creates variable which decides whether all or one context information have to be satisfied
     // default is all have to be satisfied
@@ -48,60 +45,11 @@ function activateFunctionalities(newState) {
     // get newState id in unit list
     list_units.push(unit);
 
-    var current_unit;
-
-    // triggered if learning unit is clicked
-    $(unit).click(function(event) {
-
-        bool_unitClicked = true;
-        // get name of the unit
-        if ($(unit).children("div").hasClass("title")) {
-            global_currentInputUnitName = this.innerText.replace(/(\r\n|\n|\r)/gm,"");
-        }
-
-        // clear marking from all units
-        clearMarkingFromLearningUnits();
-        // unit is marked --> change color
-        $(unit).css("background", "#16a085");
-        $(unit).css("color", "white");
-        // clear marking from label connections
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
-
-        // show tab content of the current active tab
-        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
-        $(activeTab).fadeIn();
-        $(".tab-Container").show();
-        // hide tab from unit label connection
-        $("#tabUnitLabel").hide();
-
-
-        /* tab "Eigenschaften"*/
-
-        // put name into the input field
-        //var formObject = document.forms["formProperties"];
-        $("#inputUnitName")[0].value = global_currentInputUnitName;
-
-        current_unit = getCurrentUnitDataModel();
-
-        // set description field
-        $("#inputUnitDescription")[0].value = current_unit.getDescription();
-
-        /* tab "Kontextinformation" */
-        loadContextTabForUnit(unit);
-
-        // prevents that underlying container is also clicked (needed for unit marking)
-        event.stopPropagation();
-
-        //console.log(myAuthorSystem);
-        console.log(JSON.stringify(authorSystemContent));
-
-        // set listener for button "Bestätigen" in tab "Kontextinformation"
-        activateContextConfirmation(unit, unitSatisfiesAllContextInfos, current_unit);
-    });
 
     // triggered if one option was selected ("Eine" or "Alle")
     $("#selectNumberContextInfos").select2().on("select2-selecting", function(e) {
+
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
 
         // decides that one of the group of selected context information has to be satisfied (1 == "Eine")
         if (e.val == 1) {
@@ -146,44 +94,6 @@ function activateFunctionalities(newState) {
         }
     });
 
-    // triggered if string is changed in input field in tab "Eigenschaften"
-    $("#inputUnitName").bind("input", function() {
-
-        // store old name
-        var old_name = global_currentInputUnitName;
-
-        // get current input field value
-        global_currentInputUnitName = $(this).val();
-
-        // change unit name if his corresponding input field is changing
-        $(unit).children("div.title")[0].innerText = global_currentInputUnitName;
-        //name = $(unit).children("div.title")[0].innerText;
-
-        // find right scenario in menu bar
-        var scenarioName = $("#lname")[0].innerText;
-        var findScenario = $("span.title").filter(":contains('" + scenarioName + "')");
-        findScenario = findScenario.parent("a").parent("li");
-
-        // change name in menu bar
-        if (findScenario.length != 0) {
-            var findUnit = findScenario.children("ul").children("li").children("a")
-                .children("span").filter(":contains('" + old_name + "')");
-            findUnit[0].innerHTML = global_currentInputUnitName;
-        }
-
-        // update JSON structure
-        current_unit.setName(global_currentInputUnitName);
-
-        // necessary to redraw endpoints
-        inst.repaintEverything();
-
-    });
-
-    // triggered if string is changed in description field in tab "Eigenschaften"
-    $("#inputUnitDescription").bind("input", function() {
-        // update JSON structure with current input field value
-        current_unit.setDescription($(this).val());
-    });
 
     // triggered if an operator was selected in tab "Kontextinformation"
     $("#selectOperator").select2().on("select2-selecting", function(e) {
@@ -235,8 +145,9 @@ function activateFunctionalities(newState) {
             $(unit).css("padding-top", "");
         }
 
+
         // update JSON structure
-        var currentUnitContextList = current_unit.getContextData();
+        var currentUnitContextList = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData();
         for (var i in currentUnitContextList) {
             if (currentUnitContextList[i].name == e.choice.text) {
                 currentUnitContextList.splice(i, 1);
@@ -249,18 +160,9 @@ function activateFunctionalities(newState) {
 
     });
 
-    // triggered if unit was dragged
-    $(unit).on("dragstop", function() {
-        // get new positions (absolute)
-        var top = $(unit)[0].offsetTop;
-        var left = $(unit)[0].offsetLeft;
 
-        // only set if current unit object exists
-        if (current_unit) {
-            current_unit.posX = left;
-            current_unit.posY = top;
-        }
-    });
+
+
 
     // clear marking from existing learning units
     clearMarkingFromLearningUnits();

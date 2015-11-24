@@ -35,6 +35,12 @@ AuthorSystemContent.prototype.getScenarios = function() {
     return this._scenarioList;
 };
 
+AuthorSystemContent.prototype.getUnitByUUID = function(uuid) {
+    var unit;
+    for (var i in this._scenarioList)
+        unit = this._scenarioList[i].getUnitByUUID(uuid);
+    return unit;
+};
 
 AuthorSystemContent.prototype.getScenario = function(scenarioName) {
     for (var i in this._scenarioList) {

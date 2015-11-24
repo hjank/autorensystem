@@ -18,15 +18,15 @@ function createUnit() {
     stateName.keyup(function(e) {
         if (e.keyCode === 13) {
 
-            global_currentInputUnitName = this.value;
+            var unitName = this.value;
             // prevent unnamed units
-            if (global_currentInputUnitName == "") {
+            if (unitName == "") {
                 alert("[Fehler] Bitte geben Sie einen Namen ein.\n");
                 return false;
             }
 
             // set unit name
-            $(this).parent().text(global_currentInputUnitName);
+            $(this).parent().text(unitName);
 
             // set event listeners
             activateFunctionalities(newState);
@@ -40,7 +40,7 @@ function createUnit() {
             // update JSON structure: get new unit in its scenario
             var newUnit = new Unit();
             newUnit.setUUID(uuid);
-            newUnit.setName(global_currentInputUnitName);
+            newUnit.setName(unitName);
             authorSystemContent.getScenario(nameCurrentScenario).addUnit(newUnit);
 
             // hide tabs because all units will be unmarked
@@ -67,7 +67,7 @@ function createUnit() {
  * */
 function loadUnit(unit, j) {
 
-    var newState = buildUnitDOM(unit.getUID(), unit.getName());
+    var newState = buildUnitDOM(unit.getUUID(), unit.getName());
     var divContextIcons = newState.children(".unit-icons")[0];
 
     // get all context information
@@ -123,8 +123,8 @@ function loadUnit(unit, j) {
 
     plumbUnit(newState);
 
-    return newState;
-
+    // set event listeners
+    activateFunctionalities(newState);
 }
 
 // set properties for newly created unit in jsPlumb instance
@@ -185,7 +185,7 @@ function chooseMetaIcon(metaDataName) {
 function addMetaDataToUnit(metaDatum, unit) {
 
     // update JSON structure
-    var current_unit = getCurrentUnitDataModel();
+    var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
     current_unit.addMetaInfo({
         name : metaDatum,
         icon : metaIcon
@@ -223,7 +223,7 @@ function addMetaDataToUnit(metaDatum, unit) {
 function removeMetaDataFromUnit(metaDatum, unit) {
 
     // update JSON structure
-    var current_unit = getCurrentUnitDataModel();
+    var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
     var currentUnitMetaData = current_unit.getMetaData();
     for (var j in currentUnitMetaData) {
         if (currentUnitMetaData[j].name == metaDatum) {
@@ -247,33 +247,6 @@ function removeMetaDataFromUnit(metaDatum, unit) {
     // set endpoints on the right place
     inst.repaintEverything();
 }
-
-// temporary helper function: returns the data model of the currently clicked unit
-function getCurrentUnitDataModel() {
-
-    var currentScenario = authorSystemContent.getScenario($("#lname")[0].innerText);
-    return currentScenario.getUnitByName(global_currentInputUnitName);
-
-/*    // get current unit dictionary if scenario was loaded
-    if (loadedData) {
-        for (var q=0; q<loadedData["units"].length; q++) {
-            if (loadedData["units"][q]["name"] == global_currentInputUnitName) {
-                return loadedData["units"][q];
-            }
-        }
-    }
-    // get current unit dictionary
-    for (var p=0; p<myAuthorSystem.length; p++) {
-        if (myAuthorSystem[p]["name"] == $("#lname")[0].innerText) {
-            for (var q=0; q<myAuthorSystem[p]["units"].length; q++) {
-                if (myAuthorSystem[p]["units"][q]["name"] == global_currentInputUnitName) {
-                    return myAuthorSystem[p]["units"][q];
-                }
-            }
-        }
-    }*/
-}
-
 
 // build unit DOM
 function buildUnitDOM(uuid, name) {

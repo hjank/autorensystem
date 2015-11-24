@@ -27,9 +27,10 @@ function parseContextInfoXML () {
             // parse all needed information from the xml file
             $('information', xml).each(function() {
 
+                var newInfo = new ContextInformation();
 
-                /* get the name of the information */
-                var name = this.getAttribute("id");
+                /* get the ID of the information */
+                var id = this.getAttribute("id");
 
 
                 /* get the context classes from the current information */
@@ -46,12 +47,10 @@ function parseContextInfoXML () {
                 // get border minimum if given, else null
                 // get border maximum if given, else null
                 // get default value if given, else null
-                var contextValueAttributes = {
-                    type:contextValue[0].getAttribute("type"),
-                    min:contextValue[0].getAttribute("min"),
-                    max:contextValue[0].getAttribute("max"),
-                    default:contextValue[0].getAttribute("default")
-                };
+                var type = contextValue[0].getAttribute("type");
+                var min = contextValue[0].getAttribute("min");
+                var max = contextValue[0].getAttribute("max");
+                var def = contextValue[0].getAttribute("default");
 
 
                 // 2. all possible operators
@@ -67,65 +66,59 @@ function parseContextInfoXML () {
                     array_possibleValues.push(this.innerHTML);
                 });
 
-
-                // combine attributes, operators, and possible values in one object
-                var value = {
-                    attributes:contextValueAttributes,
-                    operators:array_operators,
-                    enums:array_possibleValues
-                };
-
-
                 /* get the parameters (if parameter section exists) */
                 var array_parameters = [];
                 // for each parameter
                 $('parameters', this).children("parameter").each(function() {
 
+                    var newParam = new Parameter();
+
                     // get id of parameter
                     var pid = this.getAttribute("id");
 
-                    var array_paramValues = [];
                     // all parameter values
                     var paraValue = $(this).children("parameterValue");
                     paraValue.each(function() {
-                        // get the type of each parameter value
+
+                        // get each parameter' specs
                         var type = this.getAttribute("type");
-                        // different types have different values
-                        switch (type) {
-                            case "ENUM":
-                                // get the only possible values for this parameter
-                                paraValue.children("possibleValues").children("value").each(function() {
-                                    array_paramValues.push(this.innerHTML);
-                                });
-                                break;
-                            case "FLOAT":
-                                // floats have always a minimum and maximum value
-                                array_paramValues.push({
-                                    min:this.getAttribute("min"),
-                                    max:this.getAttribute("max")
-                                });
-                                break;
-                            case "INTEGER":
-                            case "STRING":
-                                break;
+                        var min = this.getAttribute("min");
+                        var max = this.getAttribute("max");
+                        var def = this.getAttribute("default");
+                        var array_paramValues = [];
+
+                        // get enums if given
+                        if (type == "ENUM") {
+                            // get the only possible values for this parameter
+                            paraValue.children("possibleValues").children("value").each(function() {
+                                array_paramValues.push(this.innerHTML);
+                            });
                         }
 
+                        newParam.setID(pid);
+                        newParam.setType(type);
+                        newParam.setMin(min);
+                        newParam.setMax(max);
+                        newParam.setDefault(def);
+                        newParam.setEnums(array_paramValues);
+
                         // push all parameters into an array
-                        array_parameters.push({
-                            id:pid,
-                            type:type,
-                            values:array_paramValues
-                        });
+                        array_parameters.push(newParam);
                     });
                 });
 
+                newInfo.setID(id);
+                newInfo.setClasses(array_classes);
+                newInfo.setType(type);
+                newInfo.setMin(min);
+                newInfo.setMax(max);
+                newInfo.setDefault(def);
+                newInfo.setOperators(array_operators);
+                newInfo.setEnums(array_possibleValues);
+                newInfo.setParameters(array_parameters);
+
                 // gather all information
-                contextInfoList.push({
-                    name:name,
-                    classes:array_classes,
-                    value:value,
-                    parameters:array_parameters
-                });
+                contextInfoList.push(newInfo);
             });
 
             contextList.setItems(contextInfoList);

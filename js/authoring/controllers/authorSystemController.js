@@ -133,11 +133,7 @@ function loadScenario(data) {
     // load units from scenario
     var unitsList = data.getUnits();
     for (var j in unitsList) {
-        var unit = loadUnit(unitsList[j], (j+1).toString());
-
-        // set event listeners
-        // TODO: activateFunctionalities expects a DOM element as parameter!
-        activateFunctionalities(unit);
+        loadUnit(unitsList[j], (j+1).toString());
     }
 
     // set connections

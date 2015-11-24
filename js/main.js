@@ -7,7 +7,7 @@
 var inst;
 var bool_unitClicked = false;
 var list_units = [];
-var global_currentInputUnitName = "";
+var currentUnitUUID = "";
 var global_currentScenarioName = "";
 var contextList = new ContextInfoList();
 // will be deleted once refactoring is complete

@@ -2,7 +2,10 @@
  * Created by Helena on 04.09.2015.
  */
 
+var currentConnectionID;
+
 function initPlumbCanvas() {
+
     inst = jsPlumb.getInstance({
         Endpoint: ["Dot", {radius: 2}],
         HoverPaintStyle: {strokeStyle: "#1e8151", lineWidth: 2 },
@@ -30,6 +33,7 @@ function initPlumbCanvas() {
         return !(con.connection.source.parentElement.id === con.targetId);
     });
 
+
     // triggered if a connection was drawn between to units
     inst.bind("connection", function (con) {
 
@@ -43,9 +47,9 @@ function initPlumbCanvas() {
             if (typeof thisScenario !== "undefined") {
                 // add connection in current scenario's JSON structure
                 thisScenario.addConnection(new Connection(
+                    con.connection.id,
                     con.source.parentElement.id,
                     con.targetId,
-                    con.connection.id,
                     "PRE",
                     "Voraussetzung (PRE)"));
 
@@ -81,64 +85,63 @@ function initPlumbCanvas() {
         }
     });
 
-    var current_labelConnection;
+
     // triggered if connection or label is clicked
     // c = connection element
     // e = event
     inst.bind("click", function (c, e) {
 
         var label = c.getOverlay("label");
+        // update current label
+        currentConnectionID = label.canvas.id;
 
-        // if label was clicked show tab information --> test is obsolete since jsPlumb hands in parameter c : Connection
-        if (label.id == "label") {
+        // test 'if (label.id == "label")' is obsolete since jsPlumb hands in parameter c : Connection
 
-            // get name of source and target unit
-            var sourceUnit = c.source.parentElement.innerText;
-            var targetUnit = c.target.innerText;
+        // get name of source and target unit
+        var sourceUnit = c.source.parentElement.innerText;
+        var targetUnit = c.target.innerText;
 
-            // add names in relations labels
-            $("#preLabelRelations").html(sourceUnit + " ist eine");
-            $("#postLabelRelations").html("f�r " + targetUnit);
+        // add names in relations labels
+        $("#preLabelRelations").html(sourceUnit + " ist eine");
+        $("#postLabelRelations").html("für " + targetUnit);
 
-            // update current label
-            current_labelConnection = label.canvas.id;
+        // clear markings from connection labels
+        $(".aLabel").css("background-color", "");
+        $(".aLabel").css("color", "");
+        // set label connection mark
+        $("#" + currentConnectionID).css("background-color", "#1e8151");
+        $("#" + currentConnectionID).css("color", "white");
 
-            // clear marking from label connections
-            $(".aLabel").css("background-color", "");
-            $(".aLabel").css("color", "");
+        // clear unit marking and hide unit properties
+        $(".w").css("background", "");
+        $(".w").css("color", "");
+        $(".tabContents").hide();
+        $(".tab-Container").hide();
 
-            // set label connection mark
-            $("#" + current_labelConnection).css("background-color", "#1e8151");
-            $("#" + current_labelConnection).css("color", "white");
+        // show relations tab: set label connection property visible
+        $("#tabUnitLabel").css("display", "block");
 
-            // clear unit marking and hide unit properties
-            $(".w").css("background", "");
-            $(".w").css("color", "");
-            $(".tabContents").hide();
-            $(".tab-Container").hide();
+        // show right selection of the current label in selection bar
+        $("#selectRelations").children("option").each(function() {
+            if ( $(this)[0].value.toUpperCase() == label.label ) {
+                $("#selectRelations").select2("data", {
+                    id:$(this)[0].value,
+                    text:$(this)[0].innerHTML
+                });
+            }
+        });
+        // needed to prevent clicking the container as well
+        e.stopPropagation();
 
-            // set label connection property visible
-            $("#tabUnitLabel").css("display", "block");
-
-            // show right selection of the current label in selection bar
-            $("#selectRelations").children("option").each(function() {
-                if ( $(this)[0].value.toUpperCase() == label.label ) {
-                    $("#selectRelations").select2("data", {
-                        id:$(this)[0].value,
-                        text:$(this)[0].innerHTML
-                    });
-                }
-            });
-            // needed to prevent clicking the container as well
-            e.stopPropagation();
-        }
     });
+
+
 
 
     // deletes selected connection
     $("#btnDeleteConnection").on("click", function() {
         // get connection object
-        var con = $("#" + current_labelConnection)[0]._jsPlumb.component;
+        var con = $("#" + currentConnectionID)[0]._jsPlumb.component;
 
         // detach connection
         inst.detach(con);
@@ -149,21 +152,9 @@ function initPlumbCanvas() {
 
         // get current scenario's JSON
         var thisScenario = authorSystemContent.getScenario(currentScenario);
-        var deletableConnection = thisScenario.getConnection(connID);
         // delete connection in JSON structure
-        thisScenario.removeConnection(deletableConnection);
+        thisScenario.removeConnection(thisScenario.getConnection(connID));
 
-   /*     for (var n=0; n<myAuthorSystem.length; n++) {
-            if (myAuthorSystem[n].name == currentScenario) {
-                for (var l=0; l<myAuthorSystem[n]["connections"].length; l++) {
-                    if (myAuthorSystem[n]["connections"][l].connId == connID) {
-                        myAuthorSystem[n]["connections"].splice(l, 1);
-                        break;
-                    }
-                }
-                break;
-            }
-        }*/
         // hide tab after connection was deleted
         $("#tabUnitLabel").hide();
     });
@@ -171,21 +162,21 @@ function initPlumbCanvas() {
 
     // triggered if an option for a label connection was selected
     $("#selectRelations").select2().on("select2-selecting", function(e) {
+
         // set new name on label
-        $("#" + current_labelConnection).html(e.val.toUpperCase());
-        $("#" + current_labelConnection)[0].setAttribute("title", e.choice.text);
+        $("#" + currentConnectionID).html(e.val.toUpperCase());
+        $("#" + currentConnectionID)[0].setAttribute("title", e.choice.text);
 
         // unmark label
-        $("#" + current_labelConnection).css("background-color", "");
-        $("#" + current_labelConnection).css("color", "");
+        $("#" + currentConnectionID).css("background-color", "");
+        $("#" + currentConnectionID).css("color", "");
 
         // hide property in tab
         $("#tabUnitLabel").hide();
 
         // get connection id and scenario name
-        var connID = $("#" + current_labelConnection)[0]._jsPlumb.component.id;
+        var connID = $("#" + currentConnectionID)[0]._jsPlumb.component.id;
         var currentScenario = $("#lname")[0].innerHTML;
-
 
         // get current scenario's JSON
         var thisScenario = authorSystemContent.getScenario(currentScenario);
@@ -193,18 +184,6 @@ function initPlumbCanvas() {
         thisConnection.setLabel(e.val.toUpperCase());
         thisConnection.setTitle(e.choice.text);
 
-    /*    // put label text in JSON structure
-        for (var m=0; m<myAuthorSystem.length; m++) {
-            if (myAuthorSystem[m].name == currentScenario) {
-                for (var p=0; p<myAuthorSystem[m]["connections"].length; p++) {
-                    if (myAuthorSystem[m]["connections"][p].connId == connID) {
-                        myAuthorSystem[m]["connections"][p].connLabel = e.val.toUpperCase();
-                        myAuthorSystem[m]["connections"][p].connTitle = e.choice.text;
-                        break;
-                    }
-                }
-            }
-        }*/
     });
 
 
@@ -236,6 +215,75 @@ function initPlumbCanvas() {
         $("#stm").on("scroll", function() {
             inst.repaintEverything();
         });
+    });
+
+
+    // triggered if learning unit is clicked
+    $("#stm").children("div.w").click(function(event) {
+
+        // update global variable: UUID of the clicked unit
+        currentUnitUUID = $(this)[0].getAttribute("id");
+
+        bool_unitClicked = true;
+
+        // clear marking from all units
+        clearMarkingFromLearningUnits();
+        // unit is marked --> change color
+        $(this).css("background", "#16a085");
+        $(this).css("color", "white");
+        // clear marking from label connections
+        $(".aLabel").css("background-color", "");
+        $(".aLabel").css("color", "");
+
+        // show tab content of the current active tab
+        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
+        $(activeTab).fadeIn();
+        $(".tab-Container").show();
+        // hide tab from unit label connection
+        $("#tabUnitLabel").hide();
+
+
+        /* tab "Eigenschaften"*/
+
+        // get current unit's data model
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
+        // put name into the input field
+        //var formObject = document.forms["formProperties"];
+        $("#inputUnitName")[0].value = current_unit.getName();
+
+        // set description field
+        $("#inputUnitDescription")[0].value = current_unit.getDescription();
+
+        /* tab "Kontextinformation" */
+        loadContextTabForUnit(this);
+
+        // prevents that underlying container is also clicked (needed for unit marking)
+        event.stopPropagation();
+
+        //console.log(myAuthorSystem);
+        console.log(JSON.stringify(authorSystemContent));
+
+        // set listener for button "Bestätigen" in tab "Kontextinformation"
+        activateContextConfirmation($(this), unitSatisfiesAllContextInfos, current_unit);
+    });
+
+
+    // triggered if unit was dragged
+    $("#stm").children("div.w").on("dragstop", function() {
+
+        currentUnitUUID = $(this)[0].getAttribute("id");
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
+        // get new positions (absolute)
+        var top = $(this)[0].offsetTop;
+        var left = $(this)[0].offsetLeft;
+
+        // only set if current unit object exists
+        if (current_unit) {
+            current_unit.posX = left;
+            current_unit.posY = top;
+        }
     });
 
 }

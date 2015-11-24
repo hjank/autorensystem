@@ -76,6 +76,7 @@ function changeScenarioNameInMenu(oldName, newName) {
 
 function addUnitToMenu(nameCurrentScenario) {
 	var liCurrentScenario;
+	var currentUnitName = authorSystemContent.getUnitByUUID(currentUnitUUID).getName();
 
 	// find correct scenario in menu
 	$("span.title").each(function() {
@@ -98,7 +99,7 @@ function addUnitToMenu(nameCurrentScenario) {
 		ulCurrentScenario = liCurrentScenario.children("ul");
 
 		// add unit in menu bar
-		spanNewUnit[0].innerText = global_currentInputUnitName;
+		spanNewUnit[0].innerText = currentUnitName;
 		aNewUnit.append(spanNewUnit);
 		liNewUnit.append(aNewUnit);
 		ulCurrentScenario.append(liNewUnit);
@@ -116,7 +117,7 @@ function addUnitToMenu(nameCurrentScenario) {
 		liCurrentScenario.addClass("has-sub");
 
 		// append content name on DOM
-		spanNewUnit[0].innerText = global_currentInputUnitName;
+		spanNewUnit[0].innerText = currentUnitName;
 		aNewUnit.append(spanNewUnit);
 		liNewUnit.append(aNewUnit);
 		ulCurrentScenario.append(liNewUnit);
