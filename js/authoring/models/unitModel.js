@@ -17,7 +17,7 @@ function Unit() {
     return this;
 }
 
-// getter
+// getters
 Unit.prototype.getName = function() {
     return this._name;
 };
@@ -43,7 +43,7 @@ Unit.prototype.getMetaData = function() {
     return this._metaData;
 };
 
-// setter
+// setters
 Unit.prototype.setName = function(name) {
     this._name = name;
 };
@@ -62,6 +62,8 @@ Unit.prototype.setPosX = function(posX) {
 Unit.prototype.setPosY = function(posY) {
     this._posY = posY;
 };
+
+// adders
 Unit.prototype.addContextInfo = function(ci) {
     this._contextData.push(ci);
 };
@@ -69,6 +71,10 @@ Unit.prototype.addMetaInfo = function(mi) {
     this._metaData.push(mi);
 };
 
+// remover
+Unit.prototype.removeContextInfoByIndex = function(index) {
+    this._contextData.splice(index, 1);
+};
 
 
 /**

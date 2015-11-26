@@ -2,11 +2,227 @@
  * Created by Helena on 06.09.2015.
  */
 
-var counter_multiSelectionContextInfos = 0;
 var array_multiSelectionContextInfos = [];
 
 $(function() {
     $("#btnBackToMainContextInfo").on("click", showMainContextInfo);
+
+
+    // triggered if one option was selected ("Eine" or "Alle")
+    $("#selectNumberContextInfos").select2().on("select2-selecting", function(e) {
+
+        var unit = $("#" + currentUnitUUID)[0];
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+        // default is all have to be satisfied
+        var unitSatisfiesAllContextInfos = current_unit.getSat();
+
+        // decides that one of the group of selected context information has to be satisfied (1 == "Eine")
+        if (e.val == 1) {
+
+            // if a border already exists and is unequal to 1 --> change design
+            if (unitSatisfiesAllContextInfos) {
+                // check if icons exist
+                if (unit.children("div.unit-icons").children("div.unit-icon").length != 0) {
+                    unit.children("div.unit-icons").css("border", "2px dotted #adadad");
+
+                    // check if ci attribute exists and change attribute ci
+                    if (unit.children("div.unit-icons")[0].hasAttribute("ci")) {
+                        unit.children("div.unit-icons").attr("ci", "one");
+                    }
+                }
+            }
+            // false == one has to be satisfied
+            unitSatisfiesAllContextInfos = false;
+
+            // change sat information in current unit
+            current_unit.setSat("one");
+        }
+        // decides that all of the group of selected context information has to be satisfied (0 == "Alle")
+        if (e.val == 0) {
+
+            // if a border already exists and is unequal to 0 --> change design
+            if (!unitSatisfiesAllContextInfos) {
+                if (unit.children("div.unit-icons").children("div.unit-icon").length != 0) {
+                    unit.children("div.unit-icons").css("border", "2px solid #adadad");
+
+                    // check if ci attribute exists and change attribute ci
+                    if (unit.children("div.unit-icons")[0].hasAttribute("ci")) {
+                        unit.children("div.unit-icons").attr("ci", "all");
+                    }
+                }
+            }
+            // true == all have to be satisfied
+            unitSatisfiesAllContextInfos = true;
+
+            // change sat information in current unit
+            current_unit.setSat("all");
+        }
+    });
+
+
+    // TODO: This doesn't seem to work as supposed.
+    // triggered if an operator was selected in tab "Kontextinformation"
+    $("#selectOperator").select2().on("select2-selecting", function(e) {
+        // check string of the operator value
+        if (e.choice.text == "Hat keinen Wert") {
+            // disable input field if operator needs no value
+            if ($("#inputContextValue").css("display") == "block") {
+                $("#inputContextValue").attr("disabled", true);
+            }
+            // disable selection bar if operator needs no value
+            if ($("#selectPossibleValues").css("display") == "block") {
+                $("#selectPossibleValues").attr("disabled", true);
+            }
+            // in both cases enable input/selection if operator needs a value
+        } else {
+            if ($("#inputContextValue").css("display") == "block") {
+                $("#inputContextValue").attr("disabled", false);
+            }
+            if ($("#selectPossibleValues").css("display") == "block") {
+                $("#selectPossibleValues").attr("disabled", false);
+            }
+        }
+    });
+
+
+
+    // triggered if one option in multi selection bar in tab "Kontextinformation" was removed
+    $("#selectMultiContextInfos").select2().on("select2-removed", function(e) {
+
+        var index = e.choice.id;
+        var unit = $("#" + currentUnitUUID)[0];
+
+        // remove this option from array
+        array_multiSelectionContextInfos.splice(index, 1);
+        // update JSON structure
+        authorSystemContent.getUnitByUUID(currentUnitUUID).removeContextInfoByIndex(index);
+
+        // remove icon from learning unit
+        unit.children("div.unit-icons").children("div.unit-icon").each(function() {
+            var iconName = $(this).children("img")[0].title;
+            if (iconName == e.choice.text) {
+                $(this).remove();
+            }
+        });
+
+        // remove border if unit has no icons anymore
+        if (unit.children("div.unit-icons").children("div.unit-icon").length == 0) {
+            unit.children(".unit-icons").css("border", "");
+            unit.children(".unit-icons").css("height", "");
+            unit.children(".unit-icons").css("display", "");
+            unit.css("padding-top", "");
+        }
+
+
+        // set endpoints on the right place
+        inst.repaintEverything();
+
+    });
+
+
+
+    // button "Best�tigen" in tab "Kontextinformation" was clicked
+    $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
+
+        // get current unit's data model
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+        var contextDataCounter = current_unit.getContextData().length;
+        // and the information if "all" or "one" context infos must be satisfied
+        var sat = current_unit.getSat();
+        // get the unit's DOM element
+        var unit = $("#"+currentUnitUUID)[0];
+
+        // check if all needed fields were filled with information
+        var messageDataObject = checkInformation();
+        var missing_content = messageDataObject.errorMessage; // displayed to user if something is missing
+        var selectedInfo = messageDataObject.contextData;
+
+        // if content is missing do not accept adding of the context information
+        if (missing_content == "Error999") {
+            return false;
+
+        } else {
+
+            // if something needed is missing
+            if (!!missing_content) {
+                alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
+                return false;
+
+            } else {
+
+                // push all new information about the context unit in current scenario
+                current_unit.addContextInfo(selectedInfo);
+
+                var selectedInfoID = selectedInfo.getID();
+                var selectedInfoIconID = selectedInfoID + contextDataCounter;
+
+                // create icon DOM
+                var divContextIcon = $("<div>")
+                    .addClass("unit-icon")
+                    .attr("id", selectedInfoIconID + "icon");
+
+                // get right format for icon visualisation in learning unit
+                // case 1: context specific icon
+                // case 2: context class icon (upper class icon, only color)
+                var icon = formatUnitIcons(selectedInfo);
+
+                // add icon and div to unit
+                divContextIcon.append(icon);
+                $(unit).children("div.unit-icons").append(divContextIcon);
+
+                /* design reasons */
+                // all SAT needs solid border
+                if (sat == "all") {
+                    $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
+                    $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
+
+                    // one SAT needs dotted border
+                } else if (sat == "one") {
+                    $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
+                    $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
+                }
+                $(unit).children("div.unit-icons").css("border-radius", "4px");
+                $(unit).css("padding-top", "10px");
+                $(unit).children("div.unit-icons").css("height", "23px");
+                $(unit).children("div.unit-icons").css("display", "inline-block");
+
+                // set endpoints on the right place
+                inst.repaintEverything();
+
+                /* get selected context information name into multi selection bar */
+
+                // get name
+                var contextInfoName = translate_contextInformation(selectedInfoID);
+
+                // change format: add icons to text
+                $("#selectMultiContextInfos").select2({
+                    formatSelection: formatMultiContextInfos,
+                    formatResult: formatMultiContextInfos,
+                    escapeMarkup: function (m) {
+                        return m;
+                    }
+                });
+
+                // get name into multi selection
+                //$("#selectMultiContextInfos").append(option);
+                array_multiSelectionContextInfos.push({id: contextDataCounter, text: contextInfoName});
+                $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
+
+                // change color per option in multi selection bar
+                changeColorMultiContextInfos();
+
+                // show main, hide detail
+                showMainContextInfo();
+
+                // show SAT and multi selection bar
+                $("#mainContextInfoSAT").show();
+                $("#mainContextInfoSelection").show();
+
+                //console.log(myAuthorSystem);
+                //console.log(JSON.stringify(myAuthorSystem));
+            }
+        }
+    });
 });
 
 // if home or confirm button is clicked change view
@@ -106,7 +322,7 @@ function loadContextTabForUnit(unit) {
     for (var i in currentUnitContextArray) {
         var contextID = currentUnitContextArray[i].getID();
         array_multiSelectionContextInfos.push({
-            "id":contextID,
+            "id":i,
             "text":translate_contextInformation(contextID)
         });
     }
@@ -124,127 +340,6 @@ function loadContextTabForUnit(unit) {
 
     // needed to re-color the selections
     changeColorMultiContextInfos();
-}
-
-
-
-// Jobs: - evaluate the selections and inputs
-//       - put context information in multi selection bar
-//       - add icons in current unit
-function activateContextConfirmation(unit, unitSatisfiesAllContextInfos, current_unit) {
-
-    // button "Best�tigen" in tab "Kontextinformation" was clicked
-    $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
-
-        var contextClasses = contextList.getClasses();
-        // check if all needed fields were filled with information
-        var returnArray = checkInformation();
-        var missing_content = returnArray[0]; // displayed to user if something is missing
-        var selectedInfo = returnArray[1];
-
-        // if content is missing do not accept adding of the context information
-        if (missing_content == "Error999") {
-            return false;
-
-        } else {
-
-            // if something needed is missing
-            if (!!missing_content) {
-                alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-                return false;
-
-            } else {
-
-                // push all new information about the context unit in current scenario
-                current_unit["contextInformations"].push(selectedInfo);
-
-                // get corresponding context class
-                var classIndex = getFirstMatchingClassIndex(contextList.getItem(selectedInfo.id), contextClasses);
-                var optgroup = contextClassDictionary[classIndex];
-                // get corresponding context class id
-                var ccID = contextClasses[classIndex];
-
-                // create icon DOM
-                var divContextIcon = $("<div>").addClass("unit-icon").attr("id", ccID + "icon");
-                //var icon = $("<img>").attr("src", "img/context-classes/" + optgroup + ".png");
-                //icon.attr("width", "15").attr("height", "15").attr("title", e.choice.text).attr("ccID", ccID);
-
-                // get right format for icon visualisation in learning unit
-                // case 1: context specific icon
-                // case 2: context class icon (upper class icon, only color)
-                var icon = formatUnitIcons(selectedInfo, optgroup, ccID);
-
-                // TODO: Icons should be fetched on reload, not saved in JSON file
-                /*                    // get icon information in JSON structure
-                 for (var j = 0; j < current_unit["contextInformations"].length; j++) {
-                 if (current_unit["contextInformations"][j].name == contentContextInfo["text"]) {
-                 current_unit["contextInformations"][j].icon = icon;
-                 }
-                 }*/
-
-                // add icon and div to unit
-                divContextIcon.append(icon);
-                $(unit).children("div.unit-icons").append(divContextIcon);
-
-                /* design reasons */
-                // all SAT needs solid border
-                if (unitSatisfiesAllContextInfos) {
-                    $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
-                    $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-
-                    // one SAT needs dotted border
-                } else {
-                    $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
-                    $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
-                }
-                $(unit).children("div.unit-icons").css("border-radius", "4px");
-                $(unit).css("padding-top", "10px");
-                $(unit).children("div.unit-icons").css("height", "23px");
-                $(unit).children("div.unit-icons").css("display", "inline-block");
-
-                // set endpoints on the right place
-                inst.repaintEverything();
-
-                /* get selected context information name into multi selection bar */
-                var id = selectedInfo.id;
-
-                // get name
-                var contextInfoName = selectedInfo.text;
-                var option = $("<option>").attr("value", id.toString()).attr("selected", "selected");
-                option.html(contextInfoName);
-
-                // change format: add icons to text
-                $("#selectMultiContextInfos").select2({
-                    formatSelection: formatMultiContextInfos,
-                    formatResult: formatMultiContextInfos,
-                    escapeMarkup: function (m) {
-                        return m;
-                    }
-                });
-
-                // get name into multi selection
-                //$("#selectMultiContextInfos").append(option);
-                array_multiSelectionContextInfos.push({id: id, text: contextInfoName});
-                $("#selectMultiContextInfos").select2("data", array_multiSelectionContextInfos);
-
-                // change color per option in multi selection bar
-                changeColorMultiContextInfos();
-
-                // increase counter --> needed for continuous ids
-                counter_multiSelectionContextInfos++;
-
-                // show main, hide detail
-                showMainContextInfo();
-
-                // show SAT and multi selection bar
-                $("#mainContextInfoSAT").show();
-                $("#mainContextInfoSelection").show();
-
-                //console.log(myAuthorSystem);
-                //console.log(JSON.stringify(myAuthorSystem));
-            }
-        }
-    });
 }
 
 

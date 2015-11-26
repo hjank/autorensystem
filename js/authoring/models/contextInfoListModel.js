@@ -44,9 +44,7 @@ function ContextInfoList() {
     return this;
 }
 
-ContextInfoList.prototype.init = function () {
-    parseContextInfoXML();
-
+ContextInfoList.prototype.initClasses = function () {
     for (var key in contextClassDictionary)
         this._classes.push(key);
 };

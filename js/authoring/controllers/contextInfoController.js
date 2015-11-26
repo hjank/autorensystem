@@ -111,5 +111,6 @@ function checkInformation() {
     }
 
     // create return array
-    return [missing_content, selectedContextInfo];
+    return {"errorMessage" : missing_content,
+        "contextData" : selectedContextInfo};
 }

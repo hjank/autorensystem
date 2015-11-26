@@ -136,8 +136,6 @@ function initPlumbCanvas() {
     });
 
 
-
-
     // deletes selected connection
     $("#btnDeleteConnection").on("click", function() {
         // get connection object
@@ -210,6 +208,7 @@ function initPlumbCanvas() {
     $('#navadd,#createLearnUnit').click(function(e) {
 
         createUnit();
+        initUnitEventHandlers();
 
         // if in state machine was scrolled, all elements have to be repainted
         $("#stm").on("scroll", function() {
@@ -217,6 +216,9 @@ function initPlumbCanvas() {
         });
     });
 
+}
+
+function initUnitEventHandlers () {
 
     // triggered if learning unit is clicked
     $("#stm").children("div.w").click(function(event) {
@@ -263,9 +265,6 @@ function initPlumbCanvas() {
 
         //console.log(myAuthorSystem);
         console.log(JSON.stringify(authorSystemContent));
-
-        // set listener for button "Bestätigen" in tab "Kontextinformation"
-        activateContextConfirmation($(this), unitSatisfiesAllContextInfos, current_unit);
     });
 
 
@@ -285,7 +284,6 @@ function initPlumbCanvas() {
             current_unit.posY = top;
         }
     });
-
 }
 
 function clearMarkingFromLearningUnits () {

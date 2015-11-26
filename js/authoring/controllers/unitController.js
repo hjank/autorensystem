@@ -5,9 +5,12 @@
 
 function createUnit() {
 
-    /* if loaded sceanrio */
+    // lname := scenario name in navBar
+    var nameCurrentScenario = $("#lname")[0].innerText;
+
     // generate a UUID for this new unit. This will also serve as its A-box identifier.
     var uuid = uuid4();
+    currentUnitUUID = uuid;
     var stateName = $('<input>').attr('type', 'text').css("color", "#34495e");
     // get new unit DOM
     var newState = buildUnitDOM(uuid, stateName);
@@ -28,20 +31,21 @@ function createUnit() {
             // set unit name
             $(this).parent().text(unitName);
 
-            // set event listeners
-            activateFunctionalities(newState);
-
-            // lname := scenario name in navBar
-            var nameCurrentScenario = $("#lname")[0].innerText;
-
-            // add learning unit in menu bar
-            addUnitToMenu(nameCurrentScenario);
 
             // update JSON structure: get new unit in its scenario
             var newUnit = new Unit();
             newUnit.setUUID(uuid);
             newUnit.setName(unitName);
             authorSystemContent.getScenario(nameCurrentScenario).addUnit(newUnit);
+
+            // get newState id in unit list // TODO: check this list
+            list_units.push(currentUnitUUID);
+
+            // clear marking from existing learning units
+            clearMarkingFromLearningUnits();
+
+            // add learning unit in menu bar
+            addUnitToMenu(nameCurrentScenario);
 
             // hide tabs because all units will be unmarked
             $(".tabContents").hide();
@@ -67,16 +71,18 @@ function createUnit() {
  * */
 function loadUnit(unit, j) {
 
-    var newState = buildUnitDOM(unit.getUUID(), unit.getName());
+    currentUnitUUID = unit.getUUID();
+    var newState = buildUnitDOM(currentUnitUUID, unit.getName());
     var divContextIcons = newState.children(".unit-icons")[0];
 
     // get all context information
     var unitContextInfoList = unit.getContextData();
     for (var k in unitContextInfoList) {
+        var contextInfo = unitContextInfoList[k];
         var divContextIcon = $("<div>")
             .addClass("unit-icon")
-            .attr("id", unitContextInfoList[k]["name"] + k + "icon");
-        var icon = unitContextInfoList[k]["icon"];
+            .attr("id", contextInfo.getID() + k + "icon");
+        var icon = formatUnitIcons(contextInfo);
 
         // add icon und div to unit
         divContextIcon.append(icon);
@@ -100,31 +106,19 @@ function loadUnit(unit, j) {
 
     // get all meta data
     var unitMetaData = unit.getMetaData();
-    for (var l in unitMetaData) {
-        var divMetaIcon = $("<div>")
-            .addClass("unit-meta-icons")
-            .attr("id", unit.getName() + l + "metaIcon");
+    for (var i in unitMetaData)
+        addMetaDataToUnit(unitMetaData[i], unit);
 
-        var metaIcon = chooseMetaIcon(unitMetaData[l]["name"]);
-        divMetaIcon.attr("title", unitMetaData[l]["name"]);
-
-        // add meta icon to unit DOM
-        var bMetaIcon = $("<b>").addClass(metaIcon);
-        divMetaIcon.append(bMetaIcon);
-        newState.append(divMetaIcon);
-
-        // change size of learning unit
-        newState.css("padding-bottom", "5px");
-    }
 
     // place unit in state machine
     $(newState).css("top", unit.getPosY() + "px");
     $(newState).css("left", unit.getPosX() + "px");
 
+    // clear marking from existing learning units
+    clearMarkingFromLearningUnits();
+
     plumbUnit(newState);
 
-    // set event listeners
-    activateFunctionalities(newState);
 }
 
 // set properties for newly created unit in jsPlumb instance

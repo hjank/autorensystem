@@ -21,7 +21,8 @@ var loadedData;
 jsPlumb.ready(function () {
 
     // initialize global context list
-    contextList.init();
+    parseContextInfoXML();
+    contextList.initClasses();
     // initialize jsPlumb instance
     initPlumbCanvas();
     // reload data from localStorage

@@ -107,21 +107,24 @@ function formatMultiContextInfos(item) {
 // format icons in units
 /**
  * Function sets format for the context information in the learning units (icon only).
- * @param {Object} item Context information which was selected
- * @param {String} optgroup Contains the context class of the selected context information
- * @param {String} ccID Contains the id from the context information
+ * @param {Object} selectedInfo The selected context information
  * @return {String} specific img DOM if icon available, else context class icon
  * */
-function formatUnitIcons(item, optgroup, ccID) {
+function formatUnitIcons(selectedInfo) {
 
-    // find the right context information
-    for (var key in contextInfoDictionary) {
-        if (contextInfoDictionary[key] == item.text) {
-            return '<img src="' + contextIconSrcDictionary[key] + '" width="15" height="15" title="' +
-                item.text + '" ccID="' + ccID + '">';
-        }
-    }
+    var selectedInfoID = selectedInfo.getID();
+    // get corresponding context class
+    var contextClasses = contextList.getClasses();
+    var classIndex = getFirstMatchingClassIndex(selectedInfo, contextClasses);
+    var classNameTranslation = translate_contextClass(contextClasses[classIndex]);
+
+    return (
+        // find the right context information in icon dictionary
+        '<img src="' + contextIconSrcDictionary[selectedInfoID] + '" width="15" height="15" title="' +
+                translate_contextInformation(selectedInfoID) + '" contextInfoID="' + selectedInfoID + '">'
+        ||
     // no icon was found --> return context class icon
-    return '<img src="img/context-classes/' + optgroup + '.png" width="15" height="15" title="' +
-        item.text + '" ccID="' + ccID + '">';
+    '<img src="img/context-classes/' + classNameTranslation + '.png" width="15" height="15" title="' +
+    translate_contextInformation(selectedInfoID) + '" contextInfoID="' + selectedInfoID + '">'
+    );
 }
