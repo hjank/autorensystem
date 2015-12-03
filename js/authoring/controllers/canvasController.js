@@ -91,96 +91,9 @@ function initPlumbCanvas() {
     // e = event
     inst.bind("click", function (c, e) {
 
-        var label = c.getOverlay("label");
-        // update current label
-        currentConnectionID = label.canvas.id;
-
-        // test 'if (label.id == "label")' is obsolete since jsPlumb hands in parameter c : Connection
-
-        // get name of source and target unit
-        var sourceUnit = c.source.parentElement.innerText;
-        var targetUnit = c.target.innerText;
-
-        // add names in relations labels
-        $("#preLabelRelations").html(sourceUnit + " ist eine");
-        $("#postLabelRelations").html("für " + targetUnit);
-
-        // clear markings from connection labels
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
-        // set label connection mark
-        $("#" + currentConnectionID).css("background-color", "#1e8151");
-        $("#" + currentConnectionID).css("color", "white");
-
-        // clear unit marking and hide unit properties
-        $(".w").css("background", "");
-        $(".w").css("color", "");
-        $(".tabContents").hide();
-        $(".tab-Container").hide();
-
-        // show relations tab: set label connection property visible
-        $("#tabUnitLabel").css("display", "block");
-
-        // show right selection of the current label in selection bar
-        $("#selectRelations").children("option").each(function() {
-            if ( $(this)[0].value.toUpperCase() == label.label ) {
-                $("#selectRelations").select2("data", {
-                    id:$(this)[0].value,
-                    text:$(this)[0].innerHTML
-                });
-            }
-        });
+        fillRelationTab(c);
         // needed to prevent clicking the container as well
         e.stopPropagation();
-
-    });
-
-
-    // deletes selected connection
-    $("#btnDeleteConnection").on("click", function() {
-        // get connection object
-        var con = $("#" + currentConnectionID)[0]._jsPlumb.component;
-
-        // detach connection
-        inst.detach(con);
-
-        // get id and current scenario name
-        var connID = con.id;
-        var currentScenario = $("#lname")[0].innerHTML;
-
-        // get current scenario's JSON
-        var thisScenario = authorSystemContent.getScenario(currentScenario);
-        // delete connection in JSON structure
-        thisScenario.removeConnection(thisScenario.getConnection(connID));
-
-        // hide tab after connection was deleted
-        $("#tabUnitLabel").hide();
-    });
-
-
-    // triggered if an option for a label connection was selected
-    $("#selectRelations").select2().on("select2-selecting", function(e) {
-
-        // set new name on label
-        $("#" + currentConnectionID).html(e.val.toUpperCase());
-        $("#" + currentConnectionID)[0].setAttribute("title", e.choice.text);
-
-        // unmark label
-        $("#" + currentConnectionID).css("background-color", "");
-        $("#" + currentConnectionID).css("color", "");
-
-        // hide property in tab
-        $("#tabUnitLabel").hide();
-
-        // get connection id and scenario name
-        var connID = $("#" + currentConnectionID)[0]._jsPlumb.component.id;
-        var currentScenario = $("#lname")[0].innerHTML;
-
-        // get current scenario's JSON
-        var thisScenario = authorSystemContent.getScenario(currentScenario);
-        var thisConnection = thisScenario.getConnection(connID);
-        thisConnection.setLabel(e.val.toUpperCase());
-        thisConnection.setTitle(e.choice.text);
 
     });
 
@@ -218,78 +131,12 @@ function initPlumbCanvas() {
 
 }
 
-function initUnitEventHandlers () {
 
-    // triggered if learning unit is clicked
-    $("#stm").children("div.w").click(function(event) {
-
-        // update global variable: UUID of the clicked unit
-        currentUnitUUID = $(this)[0].getAttribute("id");
-
-        bool_unitClicked = true;
-
-        // clear marking from all units
-        clearMarkingFromLearningUnits();
-        // unit is marked --> change color
-        $(this).css("background", "#16a085");
-        $(this).css("color", "white");
-        // clear marking from label connections
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
-
-        // show tab content of the current active tab
-        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
-        $(activeTab).fadeIn();
-        $(".tab-Container").show();
-        // hide tab from unit label connection
-        $("#tabUnitLabel").hide();
-
-
-        /* tab "Eigenschaften"*/
-
-        // get current unit's data model
-        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
-
-        // put name into the input field
-        //var formObject = document.forms["formProperties"];
-        $("#inputUnitName")[0].value = current_unit.getName();
-
-        // set description field
-        $("#inputUnitDescription")[0].value = current_unit.getDescription();
-
-        /* tab "Kontextinformation" */
-        loadContextTabForUnit(this);
-
-        // prevents that underlying container is also clicked (needed for unit marking)
-        event.stopPropagation();
-
-        //console.log(myAuthorSystem);
-        console.log(JSON.stringify(authorSystemContent));
-    });
-
-
-    // triggered if unit was dragged
-    $("#stm").children("div.w").on("dragstop", function() {
-
-        currentUnitUUID = $(this)[0].getAttribute("id");
-        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
-
-        // get new positions (absolute)
-        var top = $(this)[0].offsetTop;
-        var left = $(this)[0].offsetLeft;
-
-        // only set if current unit object exists
-        if (current_unit) {
-            current_unit.posX = left;
-            current_unit.posY = top;
-        }
-    });
-}
 
 function clearMarkingFromLearningUnits () {
-    for (var l=0; l<list_units.length; l++) {
-        $(list_units[l]).css("background", "");
-        $(list_units[l]).css("color", "");
+    for (var l in list_units) {
+        $("#"+list_units[l]).css("background", "");
+        $("#"+list_units[l]).css("color", "");
     }
 }
 

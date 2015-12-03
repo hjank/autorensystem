@@ -64,8 +64,11 @@ Unit.prototype.setPosY = function(posY) {
 };
 
 // adders
-Unit.prototype.addContextInfo = function(ci) {
-    this._contextData.push(ci);
+Unit.prototype.addContextInfo = function(ci, index) {
+    if (index)
+        this._contextData[index] = ci;
+    else
+        this._contextData.push(ci);
 };
 Unit.prototype.addMetaInfo = function(mi) {
     this._metaData.push(mi);

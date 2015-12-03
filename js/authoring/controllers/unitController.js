@@ -152,24 +152,75 @@ function plumbUnit(newState) {
     });
 }
 
-function chooseMetaIcon(metaDataName) {
-    switch (translate_metaData(metaDataName)) {
-        case "Bild":
-            return "fui-photo";
-        case "Film":
-            return "fui-video";
-        case "Text":
-            return "fui-document";
-        case "Navigation":
-            return "fui-location";
-        case "Test":
-            return "fui-radio-unchecked";
-        case "Audio":
-            return "fui-volume";
-        case "3D Umgebung":
-            return "fui-windows";
-    }
+
+function initUnitEventHandlers () {
+
+    // triggered if learning unit is clicked
+    $("#stm").children("div.w").click(function(event) {
+
+        // update global variable: UUID of the clicked unit
+        currentUnitUUID = $(this)[0].getAttribute("id");
+
+        bool_unitClicked = true;
+
+        // clear marking from all units
+        clearMarkingFromLearningUnits();
+        // unit is marked --> change color
+        $(this).css("background", "#16a085");
+        $(this).css("color", "white");
+        // clear marking from label connections
+        $(".aLabel").css("background-color", "");
+        $(".aLabel").css("color", "");
+
+        // show tab content of the current active tab
+        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
+        $(activeTab).fadeIn();
+        $(".tab-Container").show();
+        // hide tab from unit label connection
+        $("#tabUnitLabel").hide();
+
+
+        /* tab "Eigenschaften"*/
+
+        // get current unit's data model
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
+        // put name into the input field
+        //var formObject = document.forms["formProperties"];
+        $("#inputUnitName")[0].value = current_unit.getName();
+
+        // set description field
+        $("#inputUnitDescription")[0].value = current_unit.getDescription();
+
+        /* tab "Kontextinformation" */
+        loadContextTabForUnit(this);
+
+        // prevents that underlying container is also clicked (needed for unit marking)
+        event.stopPropagation();
+
+        //console.log(myAuthorSystem);
+        console.log(JSON.stringify(authorSystemContent));
+    });
+
+
+    // triggered if unit was dragged
+    $("#stm").children("div.w").on("dragstop", function() {
+
+        currentUnitUUID = $(this)[0].getAttribute("id");
+        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
+        // get new positions (absolute)
+        var top = $(this)[0].offsetTop;
+        var left = $(this)[0].offsetLeft;
+
+        // only set if current unit object exists
+        if (current_unit) {
+            current_unit.posX = left;
+            current_unit.posY = top;
+        }
+    });
 }
+
 
 /**
  * This function adds the given meta datum to the given unit's DOM element.
