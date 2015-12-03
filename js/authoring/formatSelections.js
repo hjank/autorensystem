@@ -128,3 +128,24 @@ function formatUnitIcons(selectedInfo) {
     translate_contextInformation(selectedInfoID) + '" contextInfoID="' + selectedInfoID + '">'
     );
 }
+
+
+
+function chooseMetaIcon(metaDataName) {
+    switch (translate_metaData(metaDataName)) {
+        case "Bild":
+            return "fui-photo";
+        case "Film":
+            return "fui-video";
+        case "Text":
+            return "fui-document";
+        case "Navigation":
+            return "fui-location";
+        case "Test":
+            return "fui-radio-unchecked";
+        case "Audio":
+            return "fui-volume";
+        case "3D Umgebung":
+            return "fui-windows";
+    }
+}

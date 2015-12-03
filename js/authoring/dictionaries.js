@@ -25,7 +25,7 @@ var contextInfoDictionary = {
     "CI_MICROPHONE_AVAILABLE": "Mikrofon verf�gbar",
     "CI_NEXT_APPOINTMENT": "N�chster Termin",
     "CI_PHOTO_CAMERA_AVAILABLE": "Fotokamera verfügbar",
-    "CI_PRINTER_AVAILABLE": "Drucker verf�gbar",
+    "CI_PRINTER_AVAILABLE": "Drucker verfügbar",
     "CI_TIME_UNTIL_TIMESTAMP": "Zeit bis zum Zeitstempel",
     "CI_USER_AGE": "Alter des Benutzers",
     "CI_USER_CURRENT_LEARNING_STYLE_INPUT": "Momentaner Benutzerlernstil",
@@ -46,13 +46,13 @@ var contextInfoDictionary = {
     "CI_USER_MEANS_OF_TRANSPORTATION": "Transportmittel des Benutzers",
     "CI_USER_MOVEMENT_SPEED": "Fortgebewegungsgeschw. des Benutzers",
     "CI_USER_ROLE": "Benutzerrolle",
-    "CI_VIDEO_CAMERA_AVAILABLE": "Videokamera verf�gbar",
-    "CI_USER_STATE_OF_MIND": "Gem�tszustand des Benutzers"
+    "CI_VIDEO_CAMERA_AVAILABLE": "Videokamera verfügbar",
+    "CI_USER_STATE_OF_MIND": "Gemütszustand des Benutzers"
 };
 
 var contextClassDictionary = {
     "CC_SCENARIO" : "Lernszenario",          // color: #3287C8
-    "CC_PERSONAL" : "Pers�nlich",            // color: #AF46C8
+    "CC_PERSONAL" : "Persönlich",            // color: #AF46C8
     "CC_SITUATIONAL" : "Situationsbezogen",  // color: #91F52D
     "CC_TECHNICAL" : "Infrastruktur",        // color: #969696
     "CC_PHYSICAL" : "Umwelt",                // color: #FADC3C
@@ -64,7 +64,7 @@ var contextOperatorDictionary = {
     "IS" : "ist",
     "IS_NOT" : "ist nicht",
     "NO_VALUE" : "hat keinen Wert",
-    "GREATER_THEN" : "ist gr��er als",
+    "GREATER_THEN" : "ist größer als",
     "LESS_THEN" : "ist kleiner als"
 };
 
