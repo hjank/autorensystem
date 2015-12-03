@@ -9,7 +9,7 @@ function createUnit() {
     var nameCurrentScenario = $("#lname")[0].innerText;
 
     // generate a UUID for this new unit. This will also serve as its A-box identifier.
-    var uuid = uuid4();
+    var uuid = "unit" + uuid4();
     currentUnitUUID = uuid;
     var stateName = $('<input>').attr('type', 'text').css("color", "#34495e");
     // get new unit DOM
