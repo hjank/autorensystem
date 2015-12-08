@@ -67,6 +67,12 @@ ContextInfoList.prototype.getItemByID = function (id) {
             return this._items[i];
 };
 
+ContextInfoList.prototype.getIndexByID = function (id) {
+    for (var index in this._items)
+        if (this._items[index].getID() == id)
+            return index;
+};
+
 ContextInfoList.prototype.getClasses = function () {
     return this._classes;
 };
