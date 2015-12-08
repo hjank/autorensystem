@@ -149,3 +149,44 @@ function chooseMetaIcon(metaDataName) {
             return "fui-windows";
     }
 }
+
+
+
+// get the specific color for each context class
+/**
+ * Function finds specific color of a context class.
+ * @param {String} cc Contains a context class.
+ * @return {String} Returns the specific color.
+ * */
+function getColor(cc) {
+    switch (cc) {
+        case "Lernszenario":
+            return "#3287C8";
+        case "Persönlich":
+            return "#AF46C8";
+        case "Situationsbezogen":
+            return "#91F52D";
+        case "Infrastruktur":
+            return "#969696";
+        case "Umwelt":
+            return "#FADC3C";
+        case "Ortung":
+            return "#F03C32";
+    }
+}
+
+
+// get the color of each context class' label (depending on background color)
+function getClassNameColor(classText) {
+    // a little bit cumbersome but slightly easier to maintain
+    switch (classText) {
+        case "Lernszenario":
+        case "Persönlich":
+        case "Infrastruktur":
+        case "Ortung":
+            return "white";
+        case "Situationsbezogen":
+        case "Umwelt":
+            return "#555555";
+    }
+}
