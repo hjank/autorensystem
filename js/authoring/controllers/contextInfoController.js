@@ -112,16 +112,11 @@ function checkInformation() {
     }
 
     // if content is missing do not accept adding of the context information
-    if (missing_content == "Error999") {
+    if (!!missing_content) {
+        alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
         return false;
     } else {
-        // if something needed is missing
-        if (!!missing_content) {
-            alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-            return false;
-        } else {
-            // return selected context info object
-            return selectedContextInfo;
-        }
+        // return selected context info object
+        return selectedContextInfo;
     }
 }

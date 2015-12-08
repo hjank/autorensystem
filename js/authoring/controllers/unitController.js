@@ -193,7 +193,7 @@ function initUnitEventHandlers () {
         $("#inputUnitDescription")[0].value = current_unit.getDescription();
 
         /* tab "Kontextinformation" */
-        loadContextTabForUnit(this);
+        loadContextTabForUnit();
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();

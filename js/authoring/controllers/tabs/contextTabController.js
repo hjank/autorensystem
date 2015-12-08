@@ -60,11 +60,10 @@ $(function() {
     });
 
 
-    // TODO: This doesn't seem to work as supposed.
     // triggered if an operator was selected in tab "Kontextinformation"
     $("#selectOperator").select2().on("select2-selecting", function(e) {
         // check string of the operator value
-        if (e.choice.text == "Hat keinen Wert") {
+        if (e.choice.id == "NO_VALUE") {
             // disable input field if operator needs no value
             if ($("#inputContextValue").css("display") == "block") {
                 $("#inputContextValue").attr("disabled", true);
@@ -156,41 +155,25 @@ function fillContextTab() {
         });
     });
 
-    /* tab "Kontextinformation" */
+
     // triggered if a context information was selected
     $("#selectContextInfos").select2().on("select2-selecting", function(e) {
         // get index (value) of the selected option
         var j = e.val;
         var selectedInfo = contextList.getItem(j);
 
-        // get the corresponding operators to the selected context information
-        var operators = selectedInfo.getOperators();
-
-        // clear selection bar
-        $("#selectOperator").empty();
-        $("#selectPossibleValues").empty();
-
-        // set empty field in selected start field
-        $("#selectOperator").select2("data", {id:"\r",text:"\r"});
-        $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
-
-        // fill selection bar "Operator"
-        for (var i in operators) {
-            var option = $("<option>").attr("value", i.toString());
-            option.html(translate_operator(operators[i]));
-            $("#selectOperator").append(option);
-        }
+        fillOperatorSelection(selectedInfo);
 
         // fill input field
-        fillInputField(contextList.getItem(j));
+        fillInputField(selectedInfo);
 
         // fill parameter selection bar
-        fillParameterSelection(contextList.getItem(j).getParameters());
+        fillParameterSelection(selectedInfo.getParameters());
     });
 }
 
 
-function loadContextTabForUnit(unit) {
+function loadContextTabForUnit() {
 
     var currentUnitModel = authorSystemContent.getUnitByUUID(currentUnitUUID);
 
@@ -205,6 +188,7 @@ function loadContextTabForUnit(unit) {
     // clear multi selection in context info tab
     var selectMultiContextInfos = $("#selectMultiContextInfos");
     selectMultiContextInfos.empty();
+    selectMultiContextInfos.select2("data", null);
     // change format: add icons to text
     selectMultiContextInfos.select2({
         formatSelection: formatMultiContextInfos,
@@ -225,15 +209,18 @@ function loadContextTabForUnit(unit) {
     // get data in multi selection bar
     selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
 
-
-    // check if multi selection bar is empty
-    if ( jQuery.isEmptyObject($("#selectMultiContextInfos").select2("data")) ) {
+    // check if this unit has at least one context fact
+    if ( array_multiSelectionContextInfos.length < 2) {
         $("#mainContextInfoSAT").hide();
         $("#mainContextInfoSelection").hide();
     } else {
         $("#mainContextInfoSAT").show();
         $("#mainContextInfoSelection").show();
     }
+
+    // re-color each choice and add editing functionality
+    for (var i in array_multiSelectionContextInfos)
+        formatMultiContextInfosElements(i);
 }
 
 
@@ -268,7 +255,6 @@ function showDetailContextInfo(contextDataIndex) {
 
     // fill selection "Kontextinformation"
     fillSelectionContextInformation();
-
 
     // set event listener for "Bestätigen" button in tab "Kontextinformation"
     $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
@@ -323,6 +309,41 @@ function fillSelectionContextInformation() {
     }
 }
 
+// fill operator selection and set choice
+/**
+ * For the given context info object, gets the operator selection filled and set to a previous choice (if in edit mode).
+ * @param {Object} selectedInfo Contains current context information object.
+ * */
+function fillOperatorSelection(selectedInfo) {
+
+    var selectOperatorElement = $("#selectOperator");
+
+    // get the corresponding operators to the selected context information
+    var operators = selectedInfo.getOperators();
+    var chosenOperator = selectedInfo.getChosenOperator();
+
+    // clear selection bar
+    selectOperatorElement.empty();
+
+    // fill selection bar "Operator"
+    for (var i in operators) {
+        var option = $("<option>").attr("value", i.toString());
+        option.html(translate_operator(operators[i]));
+        selectOperatorElement.append(option);
+    }
+
+    if (chosenOperator == "") {
+        // set empty field in selected start field
+        selectOperatorElement.select2("data", {id:"\r",text:"\r"});
+    }
+    else {
+        selectOperatorElement.select2("data", {
+            id:operators.indexOf(chosenOperator),
+            text:translate_operator(chosenOperator)
+        });
+    }
+}
+
 
 // fill input field (value in tab Kontexinformation)
 /**
@@ -331,11 +352,10 @@ function fillSelectionContextInformation() {
  * */
 function fillInputField(ci) {
 
-    // clear input field caused by removing input field and re-building
-    $("#inputContextValue").remove();
-    var inputField = $("<input>").addClass("form-control").attr("id", "inputContextValue")
-        .attr("onkeyup", "getInputContextValue(this)");
-    $("#divContextValue").append(inputField);
+    var chosenValue = ci.getChosenValue();
+
+    var inputContextValueElement = $("#inputContextValue");
+    var selectPossibleValuesElement = $("#selectPossibleValues");
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -343,54 +363,69 @@ function fillInputField(ci) {
         case "FLOAT":
         case "INTEGER":
             // activate and show input field and hide selection bar
-            $("#inputContextValue").attr("disabled", false);
-            $("#inputContextValue").attr("type", "number");
-            $("#inputContextValue").css("display", "block");
-            $("#selectPossibleValues").css("display", "none");
+            inputContextValueElement.attr("disabled", false);
+            inputContextValueElement.attr("type", "number");
+            inputContextValueElement.css("display", "block");
+            selectPossibleValuesElement.css("display", "none");
             $("#s2id_selectPossibleValues").css("display", "none");
-            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), $("#inputContextValue"));
+            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
+
+            // reset the value of this input field to "" or the last saved value (if we are in edit mode)
+            inputContextValueElement[0].value = chosenValue;
             break;
 
         case "STRING":
-            $("#inputContextValue").attr("disabled", false);        // activate input field
-            $("#inputContextValue").attr("type", "text");           // set type to text
-            $("#inputContextValue").css("display", "block");        // make input field visible
-            $("#selectPossibleValues").css("display", "none");      // and selection bar invisible
+            inputContextValueElement.attr("disabled", false);        // activate input field
+            inputContextValueElement.attr("type", "text");           // set type to text
+            inputContextValueElement.css("display", "block");        // make input field visible
+            selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
             $("#s2id_selectPossibleValues").css("display", "none");
-            $("#inputContextValue").attr("maxlength", 40);          // set max length to 40
+            inputContextValueElement.attr("maxlength", 40);          // set max length to 40
+
+            // reset the value of this input field to "" or the last saved value (if we are in edit mode)
+            inputContextValueElement[0].value = chosenValue;
             break;
 
         case "ENUM":
-            $("#inputContextValue").css("display", "none");         // make input field invisible
-            $("#selectPossibleValues").css("display", "block");     // and selection bar visible
+            inputContextValueElement.css("display", "none");         // make input field invisible
+            selectPossibleValuesElement.css("display", "block");     // and selection bar visible
             $("#s2id_selectPossibleValues").css("display", "block");
 
             // clear selection
-            $("#selectPossibleValues").empty();
-            $("#selectPossibleValues").select2("data", {id:"\r",text:"\r"});
+            selectPossibleValuesElement.empty();
 
             // fill selection bar
             var enums = ci.getEnums();
             for (var i in enums) {
                 var option = $("<option>").attr("value", i.toString());
                 option.html(translate_possibleValue(enums[i]));
-
-                $("#selectPossibleValues").append(option);
+                selectPossibleValuesElement.append(option);
+            }
+            // set selection to none or last choice (if we are in edit mode)
+            if (chosenValue == "") {
+                selectPossibleValuesElement.select2("data", {id:"\r",text:"\r"});
+            }
+            else {
+                selectPossibleValuesElement.select2("data", {
+                    id:enums.indexOf(chosenValue),
+                    text:translate_possibleValue(chosenValue)
+                });
             }
             break;
 
         case "BOOLEAN":
-            $("#selectPossibleValues").css("display", "block");  // make selection bar visible
+            // TODO: Prettify this whole Boolean thing: include values in operator, spare value selection.
+            selectPossibleValuesElement.css("display", "block");  // make selection bar visible
             $("#s2id_selectPossibleValues").css("display", "block");
-            $("#inputContextValue").css("display", "none");      // and input field invisible
+            inputContextValueElement.css("display", "none");      // and input field invisible
 
             // get the two possible values true and false in selection bar
             var option0 = $("<option>").attr("value", 0);
             var option1 = $("<option>").attr("value", 1);
             option0.html("falsch");
             option1.html("wahr");
-            $("#selectPossibleValues").append(option1);
-            $("#selectPossibleValues").append(option0);
+            selectPossibleValuesElement.append(option1);
+            selectPossibleValuesElement.append(option0);
 
             break;
     }
@@ -404,11 +439,11 @@ function fillInputField(ci) {
  * */
 function fillParameterSelection(cp) {
 
-    var coordIdentRegex = /CP_.*(LONGITUDE|LATITUDE)/;
-
     var id, div, child;
     var divContextParams = $("#divContextParameter");
+    // in case there are coordinates to be set
     var divMaps = $("#divMaps");
+    var lat, long;
 
     // remove all parameter fields from previous editing (except maps div)
     $("#divMapsTemplate").append(divMaps);
@@ -417,10 +452,11 @@ function fillParameterSelection(cp) {
     // iterate through all parameters
     for (var i in cp) {
 
+        // get each parameter's ID, translated name, and previously chosen value (given we are in edit mode)
         var thisParam = cp[i];
-        // get each parameter's translated name, type, and all its possible values
         var parameterOriginal = thisParam.getID();
         var parameterTranslation = translate_parameter(parameterOriginal);
+        var chosenValue = thisParam.getChosenValue(); // "" if not chosen previously
 
         switch (thisParam.getType()) {
 
@@ -447,7 +483,15 @@ function fillParameterSelection(cp) {
                 div.append(child);
                 divContextParams.append(div);
                 $("#" + id).select2();
-                $("#" + id).select2("data", {id:"\r",text:"\r"});
+                // decision depends on mode we are in: new info --> empty, edit mode --> previous choice
+                if (chosenValue == "")
+                    $("#" + id).select2("data", {id:"\r",text:"\r"});
+                else {
+                    $("#" + id).select2("data", {
+                        id:enums.indexOf(chosenValue),
+                        text:translate_parameterValue(chosenValue)
+                    });
+                }
                 break;
 
             // type float or integer each need an input field and a specific label
@@ -462,16 +506,34 @@ function fillParameterSelection(cp) {
                     .addClass("form-control")
                     .attr("type", "number")
                     .attr("onkeyup", "getParameterInput(this,"+i+")");
-
                 setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
-
+                // if we are in edit mode: previously saved value, else ""
+                child.value = chosenValue;
                 div.append(child);
                 divContextParams.append(div);
 
-                // display google maps if coordinates are expected input
-                if (coordIdentRegex.test(parameterOriginal)) {
-                    divContextParams.append(divMaps);
+                // display google maps if coordinates are the expected input
+                if (/CP_.*LONGITUDE/.test(parameterOriginal)) {
+                    long = chosenValue;
+                }
+                if (/CP_.*LATITUDE/.test(parameterOriginal)) {
+                    lat = chosenValue;
+                }
+                // if lat and long have been set to either "" (new info) or input values (edit info)
+                if (lat != null && long != null) {
+
+                    // put marker where it has been placed before (i.e. we are in edit mode)
+                    if (chosenValue != "") {
+                        var latlng = new google.maps.LatLng(lat, long);
+                        replaceMarker(latlng);
+                        // center the map and set zoom factor
+                        map.setCenter(latlng);
+                        map.setOptions({zoom: 15});
+                    }
+
+                    // in any case where coordinates are expected
                     resizeMap();
+                    divContextParams.append(divMaps);
                 }
                 break;
 
@@ -484,6 +546,8 @@ function fillParameterSelection(cp) {
                 child = createNamedDOMElement("input", id)
                     .addClass("form-control")
                     .attr("type", "text");
+                // if we are in edit mode: previously saved value, else ""
+                child.value = chosenValue;
                 div.append(child);
                 divContextParams.append(div);
                 break;
@@ -525,97 +589,79 @@ function confirmContextInformation(contextDataIndex) {
     // get the unit's DOM element
     var unit = $("#"+currentUnitUUID)[0];
 
-    // check if all needed fields were filled with information
-    var messageDataObject = checkInformation();
-    var missing_content = messageDataObject.errorMessage; // displayed to user if something is missing
-    var selectedInfo = messageDataObject.contextData;
+    // check if all needed fields were filled with information and return selected context
+    var selectedInfo = checkInformation();
 
-    // if content is missing do not accept adding of the context information
-    if (missing_content == "Error999") {
-        return false;
+    // push all new information about the context unit in current scenario
+    current_unit.addContextInfo(selectedInfo, contextDataIndex);
 
-    } else {
+    var selectedInfoID = selectedInfo.getID();
+    var selectedInfoIconID = selectedInfoID + contextDataIndex;
 
-        // if something needed is missing
-        if (!!missing_content) {
-            alert("[Fehler] Bitte setzen Sie Werte in den folgenden Feldern:\n" + missing_content);
-            return false;
+    // create icon DOM
+    var divContextIcon = $("<div>")
+        .addClass("unit-icon")
+        .attr("id", selectedInfoIconID + "icon");
 
-        } else {
+    // get right format for icon visualisation in learning unit
+    // case 1: context specific icon
+    // case 2: context class icon (upper class icon, only color)
+    var icon = formatUnitIcons(selectedInfo);
 
-            // push all new information about the context unit in current scenario
-            current_unit.addContextInfo(selectedInfo, contextDataIndex);
+    // add icon and div to unit
+    divContextIcon.append(icon);
+    $(unit).children("div.unit-icons").append(divContextIcon);
 
-            var selectedInfoID = selectedInfo.getID();
-            var selectedInfoIconID = selectedInfoID + contextDataIndex;
+    /* design reasons */
+    // all SAT needs solid border
+    if (sat == "all") {
+        $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
+        $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
 
-            // create icon DOM
-            var divContextIcon = $("<div>")
-                .addClass("unit-icon")
-                .attr("id", selectedInfoIconID + "icon");
-
-            // get right format for icon visualisation in learning unit
-            // case 1: context specific icon
-            // case 2: context class icon (upper class icon, only color)
-            var icon = formatUnitIcons(selectedInfo);
-
-            // add icon and div to unit
-            divContextIcon.append(icon);
-            $(unit).children("div.unit-icons").append(divContextIcon);
-
-            /* design reasons */
-            // all SAT needs solid border
-            if (sat == "all") {
-                $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
-                $(unit).children("div.unit-icons").attr("ci", "all");      // ci all = all context informations
-
-                // one SAT needs dotted border
-            } else if (sat == "one") {
-                $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
-                $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
-            }
-            $(unit).children("div.unit-icons").css("border-radius", "4px");
-            $(unit).css("padding-top", "10px");
-            $(unit).children("div.unit-icons").css("height", "23px");
-            $(unit).children("div.unit-icons").css("display", "inline-block");
-
-            // set endpoints on the right place
-            inst.repaintEverything();
-
-            /* get selected context information name into multi selection bar */
-
-            // get name
-            var contextInfoName = translate_contextInformation(selectedInfoID);
-
-            // change format: add icons to text
-            var selectMultiContextInfos = $("#selectMultiContextInfos");
-            selectMultiContextInfos.select2({
-                formatSelection: formatMultiContextInfos,
-                formatResult: formatMultiContextInfos,
-                escapeMarkup: function (m) {
-                    return m;
-                }
-            });
-
-            // get name into multi selection
-            //$("#selectMultiContextInfos").append(option);
-            array_multiSelectionContextInfos[contextDataIndex] = {id: selectedInfoID, text: contextInfoName};
-            selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
-
-            // change color per option in multi selection bar
-            formatMultiContextInfosElements();
-
-            // show main, hide detail
-            showMainContextInfo();
-
-            // show SAT and multi selection bar
-            $("#mainContextInfoSAT").show();
-            $("#mainContextInfoSelection").show();
-
-            //console.log(myAuthorSystem);
-            //console.log(JSON.stringify(myAuthorSystem));
-        }
+        // one SAT needs dotted border
+    } else if (sat == "one") {
+        $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
+        $(unit).children("div.unit-icons").attr("ci", "one");      // ci one = one context information
     }
+    $(unit).children("div.unit-icons").css("border-radius", "4px");
+    $(unit).css("padding-top", "10px");
+    $(unit).children("div.unit-icons").css("height", "23px");
+    $(unit).children("div.unit-icons").css("display", "inline-block");
+
+    // set endpoints on the right place
+    inst.repaintEverything();
+
+    /* get selected context information name into multi selection bar */
+
+    // get name
+    var contextInfoName = translate_contextInformation(selectedInfoID);
+
+    // change format: add icons to text
+    var selectMultiContextInfos = $("#selectMultiContextInfos");
+    selectMultiContextInfos.select2({
+        formatSelection: formatMultiContextInfos,
+        formatResult: formatMultiContextInfos,
+        escapeMarkup: function (m) {
+            return m;
+        }
+    });
+
+    // get name into multi selection
+    //$("#selectMultiContextInfos").append(option);
+    array_multiSelectionContextInfos[contextDataIndex] = {id: selectedInfoID, text: contextInfoName};
+    selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
+
+    // change color per option in multi selection bar
+    formatMultiContextInfosElements(contextDataIndex);
+
+    // show main, hide detail
+    showMainContextInfo();
+
+    // show SAT and multi selection bar
+    $("#mainContextInfoSAT").show();
+    $("#mainContextInfoSelection").show();
+
+    console.log(JSON.stringify(authorSystemContent));
 }
 
 
@@ -667,10 +713,12 @@ function getInputContextValue(val) {
  * */
 function getParameterInput(val, num) {
 
+    var parameterElement = $("#parameter" + num)[0];
+
     // reduce too big values to maximum
-    if ( $("#inputContextParameter" + num)[0].hasAttribute("max") ) {
+    if ( parameterElement.hasAttribute("max") ) {
         // get max attribute value
-        var max = $("#inputContextParameter" + num)[0].getAttribute("max");
+        var max = parameterElement.getAttribute("max");
         max = parseInt(max);
         if (val.value > max) {
             val.value = max;
@@ -678,9 +726,9 @@ function getParameterInput(val, num) {
     }
 
     // increase too little values to minimum
-    if ( $("#inputContextParameter" + num)[0].hasAttribute("min") ) {
+    if ( parameterElement.hasAttribute("min") ) {
         // get min attribute value
-        var min = $("#inputContextParameter" + num)[0].getAttribute("min");
+        var min = parameterElement.getAttribute("min");
         min = parseInt(min);
         if (val.value < min) {
             val.value = min;
@@ -688,10 +736,14 @@ function getParameterInput(val, num) {
     }
 
     /* get values from inputs and set the marker on this point in google maps */
+    // TODO: if ... coordinates expected
     var lat, long;
+    var lngInputDiv = $("#divMaps").prev();
+    var latInputDiv = $(lngInputDiv).prev();
+
     // check if latitude is not empty
     if ($("#inputContextParameter1").val()) {
-        lat = $("#inputContextParameter1").val();
+        lat = $(latInputDiv).children("input")[0].value;
     }
 
     // check if longitude is not empty
@@ -706,49 +758,9 @@ function getParameterInput(val, num) {
         // replace old marker and set the new one
         replaceMarker(new_LatLong);
 
-        // conter the map and set zoom factor
+        // center the map and set zoom factor
         map.setCenter(new_LatLong);
         map.setOptions({zoom: 15});
-    }
-}
-
-
-// get the specific color for each context class
-/**
- * Function finds specific color of a context class.
- * @param {String} cc Contains a context class.
- * @return {String} Returns the specific color.
- * */
-function getColor(cc) {
-    switch (cc) {
-        case "Lernszenario":
-            return "#3287C8";
-        case "Persönlich":
-            return "#AF46C8";
-        case "Situationsbezogen":
-            return "#91F52D";
-        case "Infrastruktur":
-            return "#969696";
-        case "Umwelt":
-            return "#FADC3C";
-        case "Ortung":
-            return "#F03C32";
-    }
-}
-
-
-// get the color of each context class' label (depending on background color)
-function getClassNameColor(classText) {
-    // a little bit cumbersome but slightly easier to maintain
-    switch (classText) {
-        case "Lernszenario":
-        case "Persönlich":
-        case "Infrastruktur":
-        case "Ortung":
-            return "white";
-        case "Situationsbezogen":
-        case "Umwelt":
-            return "#555555";
     }
 }
 
@@ -757,79 +769,87 @@ function getClassNameColor(classText) {
 /**
  * Function changes colors of all selected options in multi selection bar context information.
  * */
-function formatMultiContextInfosElements() {
+function formatMultiContextInfosElements(contextDataIndex) {
 
-    for (var itemIndex in array_multiSelectionContextInfos) {
-        var item = array_multiSelectionContextInfos[itemIndex];
+    // get the context item, its ID and translation
+    var item = array_multiSelectionContextInfos[contextDataIndex];
+    var contextInfoID = item.id;
+    var contextInfoTranslation = item.text;
+    // and the containing DOM element
+    var selectSearchChoice = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice")[contextDataIndex];
 
-        // get the item's DOM element
-        var itemDiv = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice > div")[itemIndex];
-        // get the item's context info ID and translation
-        var contextInfoID = item.id;
-        var contextInfoTranslation = item.text;
+    // get color for first known context class
+    var firstClassTranslation = translate_contextClass(contextList.getItemByID(contextInfoID).getClasses()[0]);
 
-        /* new */
-        // add edit icon
-        var edit = $("<a>")
-            .attr("href", "#")
-            .addClass("select2-search-choice-edit")
-            .attr("tabindex", -1)
-            .attr("title", "Bearbeiten")
-            .attr("id", contextInfoID);
-        //var icon = $("<b>").addClass("fui-new edit-ci").attr("style", "padding-right: 10px;");
-        //edit.append(icon);
-        $(itemDiv).parent().append(edit);
-        $(itemDiv).parent().hover(
-            function() {
-                $(itemDiv).css("width", "85px");
-            },
-            function() {
-                var obj = $(itemDiv);
-                setTimeout(function() {
-                    obj.css("width", "");
-                }, 200);
-            }
-        );
+    // set background color, title (for tooltip) and hover event handler
+    $(selectSearchChoice)
+        .css("background-color", getColor(firstClassTranslation))
+        .attr("title", contextInfoTranslation)
+        .hover( function() { $(this).css("width", "85px"); },
+                function() { var obj = $(this); setTimeout( function() { obj.css("width", ""); }, 200 ); })
+    ;
 
-        // add event listeners
-        $(".select2-search-choice-edit").on("click", function(e) {
-            console.log("edit");
+    /* new */
 
-            var something = this;
-            var nameContextInfo = $(itemDiv).parent()[0].title;
+    // add edit icon
+    var edit = createContextInfoEditDOM(contextInfoID);
+    $(selectSearchChoice).append(edit);
 
-            for (var l= 0; l<$("#selectContextInfos")[0].length; l++) {
-                if ( $("#selectContextInfos")[0][l].text == nameContextInfo ) {
-                    $("#selectContextInfos").select2("data", {
-                        id:$("#selectContextInfos")[0][l].id,
-                        text:$("#selectContextInfos")[0][l].text
-                    });
-                    break;
-                }
-            }
+    // add click event handler
+    edit.on("click", function(e) {
+        console.log("edit");
 
-            $("#mainContextInfo").hide();
-            $("#detailContextInfo").show();
+        // get the index of this item in the current unit's context multi selection
+        var itemIndex = $(this).parent().index();
+        // and use it to get at the whole context info data object
+        var thisContextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[itemIndex];
 
-            e.stopPropagation();
-        });
-        $(".select2-search-choice-close").hover(
-            function() {$(itemDiv).attr("title", "Löschen")}
-        );
-        $(".select2-search-choice-close").on("click", function(e) {
-            console.log("delete");
-            e.stopPropagation();
-        });
+        // then reconstruct its values in the context details tab
+        reconstructContextDetailsTab(thisContextInfo);
 
-        /* end new */
+        $("#mainContextInfo").hide();
+        $("#detailContextInfo").show();
 
-        // get color for first context class
-        var firstClassTranslation = translate_contextClass(contextList.getItemByID(contextInfoID).getClasses()[0]);
-        var color = getColor(firstClassTranslation);
-        $(itemDiv).parent().css("background-color", color);
-        // set title --> tooltip if the mouse is on the icon
-        $(itemDiv).parent().attr("title", contextInfoTranslation);
-    }
+        e.stopPropagation();
+    });
+
+    // add event handlers for close "x"
+
+    $(".select2-search-choice-close").hover(
+        function() {$(this).attr("title", "Löschen")}
+    );
+    $(".select2-search-choice-close").on("click", function(e) {
+        console.log("delete");
+        e.stopPropagation();
+    });
+
+    /* end new */
+}
+
+// when edit icon in multi selection was clicked: recall chosen details
+function reconstructContextDetailsTab(contextInfo) {
+
+    var contextID = contextInfo.getID();
+    // 1. the context information type selection:
+    var selectIndex = contextList.getIndexByID(contextID);
+    var selectContextInfos = $("#selectContextInfos");
+    selectContextInfos.select2("data", {
+        id:selectIndex,
+        text:translate_contextInformation(contextID)
+    });
+
+    // 2. the operator selection:
+    var chosenOperator = contextInfo.getChosenOperator();
+    $("#selectOperator").select2("data", {
+        id:contextInfo.getOperators().indexOf(chosenOperator),
+        text:translate_operator(chosenOperator)
+    });
+
+    // 3. the chosen value:
+    fillInputField(contextInfo);
+
+    // 4. the parameter section (if given):
+    fillParameterSelection(contextInfo.getParameters())
 }
 
 // search for this context info's classes in a list of classes and return first match
@@ -845,7 +865,7 @@ function getFirstMatchingClassIndex(contextItem, contextClasses) {
 }
 
 
-/**************************tiny little helper******************************/
+/**************************tiny little helpers******************************/
 
 // create any new DOM element with an ID
 function createNamedDOMElement(elem, id) {
@@ -859,4 +879,13 @@ function createParameterLabelDOM(elem, label) {
         .attr("class", "label-tabs label")
         .attr("for", elem)
         .html(label);
+}
+
+// create a clickable edit icon for context info multi selection
+function createContextInfoEditDOM (contextInfoID) {
+    return $("<a>")
+        .attr("href", "#")
+        .addClass("select2-search-choice-edit")
+        .attr("tabindex", -1)
+        .attr("title", "Bearbeiten");
 }
