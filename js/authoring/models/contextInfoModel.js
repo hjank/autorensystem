@@ -13,8 +13,9 @@ function ContextInformation() {
     this._min = "";
     this._max = "";
     this._default = "";
-    this._inputValue = "";
+    this._chosenValue = "";
     this._operators = [];
+    this._chosenOperator = "";
     this._enums = [];
     this._parameters = [];
 
@@ -46,12 +47,16 @@ ContextInformation.prototype.getDefault = function () {
     return this._default;
 };
 
-ContextInformation.prototype.getInputValue = function () {
-    return this._inputValue;
+ContextInformation.prototype.getChosenValue = function () {
+    return this._chosenValue;
 };
 
 ContextInformation.prototype.getOperators = function () {
     return this._operators;
+};
+
+ContextInformation.prototype.getChosenOperator = function () {
+    return this._chosenOperator;
 };
 
 ContextInformation.prototype.getEnums = function () {
@@ -90,12 +95,16 @@ ContextInformation.prototype.setDefault = function (def) {
         this._default = def;
 };
 
-ContextInformation.prototype.setInputValue = function (value) {
-    this._inputValue = value;
+ContextInformation.prototype.setChosenValue = function (value) {
+    this._chosenValue = value;
 };
 
 ContextInformation.prototype.setOperators = function (operators) {
     this._operators = operators;
+};
+
+ContextInformation.prototype.setChosenOperator = function (operator) {
+    this._chosenOperator = operator;
 };
 
 ContextInformation.prototype.setEnums = function (enums) {

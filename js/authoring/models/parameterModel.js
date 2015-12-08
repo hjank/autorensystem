@@ -9,7 +9,7 @@ function Parameter() {
     this._min = "";
     this._max = "";
     this._default = "";
-    this._inputValue = "";
+    this._chosenValue = "";
     this._enums = [];
 
     return this;
@@ -36,8 +36,8 @@ Parameter.prototype.getDefault = function () {
     return this._default;
 };
 
-Parameter.prototype.getInputValue = function () {
-    return this._inputValue;
+Parameter.prototype.getChosenValue = function () {
+    return this._chosenValue;
 };
 
 Parameter.prototype.getEnums = function () {
@@ -69,8 +69,8 @@ Parameter.prototype.setDefault = function (def) {
         this._default = def;
 };
 
-Parameter.prototype.setInputValue = function (value) {
-    this._inputValue = value;
+Parameter.prototype.setChosenValue = function (value) {
+    this._chosenValue = value;
 };
 
 Parameter.prototype.setEnums = function (enums) {
