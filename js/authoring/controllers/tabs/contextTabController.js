@@ -532,8 +532,8 @@ function fillParameterSelection(cp) {
                     }
 
                     // in any case where coordinates are expected
-                    resizeMap();
                     divContextParams.append(divMaps);
+                    resizeMap();
                 }
                 break;
 

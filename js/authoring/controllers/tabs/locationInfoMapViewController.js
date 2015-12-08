@@ -4,157 +4,19 @@
 
 // google maps and marker
 var map;
+// a marker is registered with the map
 var marker;
+// an array of markers for places searched
+var markers;
+// flat marker image and shadow
+var image;
+var shadow;
+// an input field with search capabilities
+var searchBox;
 
-// flat ui style
-var style = [
-    /*{
-     "stylers": [{
-     "visibility": "off"
-     }]
-     },*/ {
-        "featureType": "road",      // streets are white
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#ffffff"
-        }]
-    }, {
-        "featureType": "road.arterial",     // main streets are yellow
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#fee379"
-        }]
-    }, {
-        "featureType": "road.highway",      // highways are yellow
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#fee379"
-        }]
-    }, {
-        "featureType": "landscape",         // landscape is grey
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#f3f4f4"
-        }]
-    }, {
-        "featureType": "water",             // water is blue
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#7fc8ed"
-        }]
-    }, {
-        "featureType": "road",              // road labels are grey
-        "elementType": "labels.text",
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "weight": 1
-        }, {
-            "color": "#7A7A7A"
-        }]
-    }, {
-        "featureType": "road.arterial",    // road labels are light grey
-        "elementType": "labels.text",
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#545454"
-        }]
-    }, {
-        "featureType": "road.highway",     // road labels are light grey
-        "elementType": "labels.text",
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#545454"
-        }]
-    }, {
-        "featureType": "poi.park",          // parks are light green
-        "elementType": "geometry.fill",
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#83cead"
-        }]
-    }, {
-        "featureType": "water",
-        "elementType": "labels.text",   // water labels are white
-        "stylers": [{
-            "visibility": "on"
-        }, {
-            "color": "#eeeeee"
-        }, {
-            "weight": 1
-        }]
-    }, /*{
-     "featureType": "transit",
-     "elementType": "labels.text",   // transit labels are grey
-     "stylers": [{
-     "visibility": "on"
-     }, {
-     "color": "#B8B8B8"
-     }, {
-     "weight": 1
-     }]
-     },*/ /*{
-     "featureType": "poi",
-     "elementType": "labels.text",   // poi labels are grey
-     "stylers": [{
-     "visibility": "on"
-     }, {
-     "color": "#B8B8B8"
-     }, {
-     "weight": 1
-     }]
-     },*/ /*{
-     "featureType": "landscape",
-     "elementType": "labels.text",   // landscape labels are grey
-     "stylers": [{
-     "visibility": "on"
-     }, {
-     "color": "#B8B8B8"
-     }, {
-     "weight": 1
-     }]
-     },*/ /*{
-     "featureType": "administrative",
-     "elementType": "labels.text",    // administrative labels are grey
-     "stylers": [{
-     "visibility": "on"
-     }, {
-     "color": "#333333"
-     }, {
-     "weight": 1
-     }]
-     },*/ {
-        "featureType": "landscape.man_made",
-        "elementType": "geometry",
-        "stylers": [{
-            "weight": 0.9
-        }, {
-            "visibility": "off"
-        }]
-    }];
-// flat marker image
-var image = {
-    url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/marker.png',
-    scaledSize: new google.maps.Size(20, 40),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(10, 45)
-};
-// flat marker shadow image
-var shadow = {
-        url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/shadow.png',
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(-2, 36)
-    };
 
 $(function(){
+
 
     // resize map due to map opening
     /*function resizeMap() {
@@ -165,7 +27,7 @@ $(function(){
      }*/
 
     // add load and resize event handlers
-    google.maps.event.addDomListener(window, "load", initMap());
+    google.maps.event.addDomListener(window, "load", initMap);
     google.maps.event.addDomListener(window, "resize", resizeMap());
 });
 
@@ -175,12 +37,157 @@ $(function(){
  * */
 function initMap() {
 
+// flat marker image
+    image = {
+        url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/marker.png',
+        scaledSize: new google.maps.Size(20, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(10, 45)
+    };
+// flat marker shadow image
+    shadow = {
+        url: 'https://dl.dropboxusercontent.com/u/814783/fiddle/shadow.png',
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(-2, 36)
+    };
+// flat ui style
+    var style = [
+        /*{
+         "stylers": [{
+         "visibility": "off"
+         }]
+         },*/ {
+            "featureType": "road",      // streets are white
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "road.arterial",     // main streets are yellow
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#fee379"
+            }]
+        }, {
+            "featureType": "road.highway",      // highways are yellow
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#fee379"
+            }]
+        }, {
+            "featureType": "landscape",         // landscape is grey
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#f3f4f4"
+            }]
+        }, {
+            "featureType": "water",             // water is blue
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#7fc8ed"
+            }]
+        }, {
+            "featureType": "road",              // road labels are grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "weight": 1
+            }, {
+                "color": "#7A7A7A"
+            }]
+        }, {
+            "featureType": "road.arterial",    // road labels are light grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#545454"
+            }]
+        }, {
+            "featureType": "road.highway",     // road labels are light grey
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#545454"
+            }]
+        }, {
+            "featureType": "poi.park",          // parks are light green
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#83cead"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "labels.text",   // water labels are white
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#eeeeee"
+            }, {
+                "weight": 1
+            }]
+        }, /*{
+         "featureType": "transit",
+         "elementType": "labels.text",   // transit labels are grey
+         "stylers": [{
+         "visibility": "on"
+         }, {
+         "color": "#B8B8B8"
+         }, {
+         "weight": 1
+         }]
+         },*/ /*{
+         "featureType": "poi",
+         "elementType": "labels.text",   // poi labels are grey
+         "stylers": [{
+         "visibility": "on"
+         }, {
+         "color": "#B8B8B8"
+         }, {
+         "weight": 1
+         }]
+         },*/ /*{
+         "featureType": "landscape",
+         "elementType": "labels.text",   // landscape labels are grey
+         "stylers": [{
+         "visibility": "on"
+         }, {
+         "color": "#B8B8B8"
+         }, {
+         "weight": 1
+         }]
+         },*/ /*{
+         "featureType": "administrative",
+         "elementType": "labels.text",    // administrative labels are grey
+         "stylers": [{
+         "visibility": "on"
+         }, {
+         "color": "#333333"
+         }, {
+         "weight": 1
+         }]
+         },*/ {
+            "featureType": "landscape.man_made",
+            "elementType": "geometry",
+            "stylers": [{
+                "weight": 0.9
+            }, {
+                "visibility": "off"
+            }]
+    }];
+
     var currentLat = '52.3877833';
     var currentLng = '13.0831297';
     var latlng = new google.maps.LatLng(currentLat, currentLng);
-
-    var lngInputDiv = $("#divMaps").prev();
-    var latInputDiv = $(lngInputDiv).prev();
 
     var myOptions = {
         zoom: 15,                                                   // set zoom factor
@@ -217,10 +224,10 @@ function initMap() {
     /* add search box */
 
     // Create the search box and link it to the UI element.
-    var inputElement = $("#pac-input");
+    var inputElement = $("#pac-input")[0];
     // add input to map
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElement);
-    var searchBox = new google.maps.places.SearchBox(inputElement);
+    searchBox = new google.maps.places.SearchBox(inputElement);
     //var autocomplete = new google.maps.places.Autocomplete(inputElement);
 
 
@@ -228,6 +235,11 @@ function initMap() {
 
     // set new marker if user clicked into the map
     google.maps.event.addListener(map, "click", function(e) {
+
+        // get coordinate input DOM elements
+        var lngInputDiv = $("#divMaps").prev();
+        var latInputDiv = $(lngInputDiv).prev();
+
         replaceMarker(e.latLng);
         $(latInputDiv).children("input")[0].value = e.latLng.lat();
         $(lngInputDiv).children("input")[0].value = e.latLng.lng();
@@ -237,13 +249,13 @@ function initMap() {
     // [START region_getplaces]
     // Listen for the event fired when the user selects an item from the
     // pick list. Retrieve the matching places for that item.
-    var markers = [];
+    markers = [];
     google.maps.event.addListener(searchBox, 'places_changed', function() {
         var places = searchBox.getPlaces();
         if (places.length == 0)
             return;
         // get markers for found places and place them on map
-        getPlacesOnMap(places, markers);
+        getPlacesOnMap(places);
     });
     // [END region_getplaces]
 
@@ -259,7 +271,11 @@ function initMap() {
 
 
 // When search box has been used to find a number of places, place markers on (resized) map
-function getPlacesOnMap(places, markers) {
+function getPlacesOnMap(places) {
+
+    // get coordinate input DOM elements
+    var lngInputDiv = $("#divMaps").prev();
+    var latInputDiv = $(lngInputDiv).prev();
 
     // Clear out the old markers (which are registered with map).
     markers.forEach(function(marker) {
@@ -317,6 +333,11 @@ function replaceMarker(location) {
 
     // clean map and delete marker
     marker.setMap(null);
+    // delete markers from last search
+    for (var i in markers) {
+        markers[i].setMap(null);
+    }
+    markers = [];
 
     // set new marker
     marker = new google.maps.Marker({
