@@ -363,24 +363,28 @@ function fillInputField(ci) {
         case "FLOAT":
         case "INTEGER":
             // activate and show input field and hide selection bar
-            inputContextValueElement.attr("disabled", false);
-            inputContextValueElement.attr("type", "number");
-            inputContextValueElement.css("display", "block");
+            inputContextValueElement
+                .attr("disabled", false)
+                .attr("type", "number")
+                .css("display", "block");
+            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
+
             selectPossibleValuesElement.css("display", "none");
             $("#s2id_selectPossibleValues").css("display", "none");
-            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
             break;
 
         case "STRING":
-            inputContextValueElement.attr("disabled", false);        // activate input field
-            inputContextValueElement.attr("type", "text");           // set type to text
-            inputContextValueElement.css("display", "block");        // make input field visible
+            inputContextValueElement
+                .attr("disabled", false)            // activate input field
+                .attr("type", "text")               // set type to text
+                .css("display", "block")           // make input field visible
+                .attr("maxlength", 40);            // set max length to 40
+
             selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
             $("#s2id_selectPossibleValues").css("display", "none");
-            inputContextValueElement.attr("maxlength", 40);          // set max length to 40
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
