@@ -15,9 +15,6 @@ $(function() {
         $("#" + currentConnectionID).css("background-color", "");
         $("#" + currentConnectionID).css("color", "");
 
-        // hide property in tab
-        $("#tabUnitLabel").hide();
-
         // get connection id and scenario name
         var connID = $("#" + currentConnectionID)[0]._jsPlumb.component.id;
         var currentScenario = $("#lname")[0].innerHTML;
@@ -28,6 +25,8 @@ $(function() {
         thisConnection.setLabel(e.val.toUpperCase());
         thisConnection.setTitle(e.choice.text);
 
+        // hide property in tab
+        $("#tabUnitLabel").hide();
     });
 
 

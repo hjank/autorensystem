@@ -115,3 +115,38 @@ ContextInformation.prototype.setParameters = function (parameters) {
     this._parameters = parameters;
 };
 
+
+/***** JSON-LD formatting *****/
+
+ContextInformation.prototype.getJSONLDGraph = function () {
+    if (this._chosenValue == "") return false;
+
+    var graphJSONLD = [];
+
+    // for this context information, create a new JSON-LD named individual object
+    var contextInfoJSONLD = {
+        "@id" : "abox:ContextInfo"+uuid4(),
+        "@type" : [ "kno:ContextInformation", "owl:NamedIndividual" ],
+        "kno:hasCID" : this._id,
+        "kno:hasValue" : formatJSONLDValue(this._type, this._chosenValue),
+        "kno:hasValueOperator" : this._chosenOperator
+    };
+
+    // if this context information has parameters, get their JSON-LD named individual objects
+    var parameterJSONLDArray = [];
+    for (var i in this._parameters) {
+        var parameterJSONLD = this._parameters[i].getJSONLD();
+        // add references to these named individuals to the context information individual
+        parameterJSONLDArray.push( {"@id" : parameterJSONLD["@id"]} );
+        // add each parameter individual to the partial ontology graph
+        graphJSONLD.push(parameterJSONLD);
+    }
+    if (parameterJSONLDArray.length == 1)
+        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterJSONLDArray[0];
+    else if (parameterJSONLDArray.length > 1)
+        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterJSONLDArray;
+
+    graphJSONLD.push(contextInfoJSONLD);
+
+    return graphJSONLD;
+};

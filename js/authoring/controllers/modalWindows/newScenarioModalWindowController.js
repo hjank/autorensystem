@@ -49,7 +49,7 @@ function showNewScenario() {
 /**
  * Function creates a new scenario.
  * It adds the name in the menu bar and in the header above the working place.
- * Is Triggered after clicking save button in modal window scenario creation.
+ * Is Triggered after clicking create button in modal window scenario creation.
  */
 function createScenario() {
     var stateMachineContainerElement = $("#stm");

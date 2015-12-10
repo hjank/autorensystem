@@ -13,6 +13,7 @@ var contextList = new ContextInfoList();
 // will be deleted once refactoring is complete
 //var myAuthorSystem = [];
 var authorSystemContent = new AuthorSystemContent();
+var aBoxJSONLD = new ABoxJSONLD();
 
 // reloading
 var loadedData;

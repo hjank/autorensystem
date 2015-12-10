@@ -60,11 +60,14 @@ function parseContextInfoXML () {
                 });
 
 
-                // 3. all possible values
+                // 3. all possible values (boolean choices are treated as enums)
                 var array_possibleValues = [];
-                contextValue.children("possibleValues").children().each(function() {
-                    array_possibleValues.push(this.innerHTML);
-                });
+                if (type == "BOOLEAN")
+                    array_possibleValues = ["FALSE", "TRUE"];
+                else
+                    contextValue.children("possibleValues").children().each(function() {
+                        array_possibleValues.push(this.innerHTML);
+                    });
 
                 /* get the parameters (if parameter section exists) */
                 var array_parameters = [];

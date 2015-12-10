@@ -19,7 +19,7 @@ function createUnit() {
 
     // if the unit name was written and enter was clicked
     stateName.keyup(function(e) {
-        if (e.keyCode === 13) {
+        if (e.keyCode == 13) {
 
             var unitName = this.value;
             // prevent unnamed units

@@ -87,7 +87,7 @@ $(function() {
 
         // triggered if enter was clicked in input field
         $(inputNameField).keyup(function(e) {
-            if (e.keyCode === 13) {
+            if (e.keyCode == 13) {
 
                 // save name in JSON structure and in GUI
                 saveScenarioName(inputNameField, scenarioName);

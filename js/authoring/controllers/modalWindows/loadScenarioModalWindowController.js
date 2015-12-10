@@ -29,7 +29,7 @@ function showLoadScenario() {
         var option = $("<option>").attr("value", "val" + allScenarios[i].getName());
         option.html(allScenarios[i].getName());
         $("#listLoadScenarios").append(option);
-        if (allScenarios[i].getName() === "Testszenario") {
+        if (allScenarios[i].getName() == "Testszenario") {
             checkName = true;
         }
     }

@@ -22,7 +22,7 @@ $(function() {
 
         // delete element in scenario list
         for (var i = global_dataArrayScenarios.length - 1; i >= 0; i--) {
-            if (global_dataArrayScenarios[i]["id"] === e.val) {
+            if (global_dataArrayScenarios[i]["id"] == e.val) {
                 global_dataArrayScenarios.splice(i,1);
             }
         }
@@ -44,7 +44,7 @@ $(function() {
 
         // delete element in deletion list
         for (var i = global_arrayShowSzenarioDeletion.length - 1; i >= 0; i--) {
-            if (global_arrayShowSzenarioDeletion[i]["id"] === e.val) {
+            if (global_arrayShowSzenarioDeletion[i]["id"] == e.val) {
                 global_arrayShowSzenarioDeletion.splice(i,1);
             }
         }

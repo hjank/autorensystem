@@ -50,7 +50,7 @@ Scenario.prototype.removeUnit = function(unit) {
 Scenario.prototype.getConnection = function(connId) {
     for (var i in this._connections) {
         var conn = this._connections[i];
-        if (conn.getID() === connId)
+        if (conn.getID() == connId)
             return conn;
     }
 };

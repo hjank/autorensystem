@@ -76,3 +76,18 @@ Parameter.prototype.setChosenValue = function (value) {
 Parameter.prototype.setEnums = function (enums) {
     this._enums = enums;
 };
+
+
+
+// JSON-LD formatting
+
+Parameter.prototype.getJSONLD = function () {
+    if (this._chosenValue == "") return false;
+
+    return {
+        "@id" : "abox:Parameter"+uuid4(),
+        "@type" : [ "kno:ContextInformationParameter", "owl:NamedIndividual" ],
+        "kno:hasPID" : this._id,
+        "kno:hasValue" : formatJSONLDValue(this._type, this._chosenValue)
+    };
+};
