@@ -530,9 +530,6 @@ function fillParameterSelection(cp) {
                     if (chosenValue != "") {
                         var latlng = new google.maps.LatLng(lat, long);
                         replaceMarker(latlng);
-                        // center the map and set zoom factor
-                        map.setCenter(latlng);
-                        map.setOptions({zoom: 15});
                     }
 
                     // in any case where coordinates are expected
@@ -741,30 +738,25 @@ function getParameterInput(val, num) {
 
     /* get values from inputs and set the marker on this point in google maps */
     // TODO: if ... coordinates expected
-    var lat, long;
-    var lngInputDiv = $("#divMaps").prev();
-    var latInputDiv = $(lngInputDiv).prev();
+    if ($("#divContextParameter").find("#divMaps").length > 0) {
 
-    // check if latitude is not empty
-    if ($("#inputContextParameter1").val()) {
+        var lat, long;
+        var lngInputDiv = $("#divMaps").prev();
+        var latInputDiv = $(lngInputDiv).prev();
+
+        // check if latitude is not empty
         lat = $(latInputDiv).children("input")[0].value;
-    }
 
-    // check if longitude is not empty
-    if ($("#inputContextParameter2").val()) {
-        long = $("#inputContextParameter2").val();
-    }
+        // check if longitude is not empty
+        long = $(lngInputDiv).children("input")[0].value;
 
-    // only if both inputs have a value set marker
-    if ($("#inputContextParameter1").val() && $("#inputContextParameter2").val()) {
-        var new_LatLong = new google.maps.LatLng(lat, long);
+        // only if both inputs have a value set marker
+        if (lat && long) {
+            var new_LatLong = new google.maps.LatLng(lat, long);
 
-        // replace old marker and set the new one
-        replaceMarker(new_LatLong);
-
-        // center the map and set zoom factor
-        map.setCenter(new_LatLong);
-        map.setOptions({zoom: 15});
+            // replace old marker and set the new one
+            replaceMarker(new_LatLong);
+        }
     }
 }
 

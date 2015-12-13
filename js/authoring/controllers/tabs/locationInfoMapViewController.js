@@ -346,4 +346,8 @@ function replaceMarker(location) {
         icon: image,
         shadow: shadow
     });
+
+    // center the map and set zoom factor
+    map.setCenter(location);
+    map.setOptions({zoom: 15});
 }
