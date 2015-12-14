@@ -3,6 +3,7 @@
  */
 
 var array_multiSelectionContextInfos = [];
+var unitContextIndex = 0;
 
 $(function() {
     $("#btnBackToMainContextInfo").on("click", showMainContextInfo);
@@ -140,10 +141,8 @@ function fillContextTab() {
     $("#btnAddContextInfos").click(function(e) {
 
         // get current unit's number of context information pieces
-        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
-        var contextDataCounter = current_unit.getContextData().length;
-
-        showDetailContextInfo(contextDataCounter);
+        unitContextIndex = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData().length;
+        showDetailContextInfo();
     });
 
     // change color of all context classes if selection bar "Kontextinformation" is opening
@@ -202,7 +201,7 @@ function loadContextTabForUnit() {
     for (var i in currentUnitContextArray) {
         var contextID = currentUnitContextArray[i].getID();
         array_multiSelectionContextInfos.push({
-            "id":contextID,
+            "id":i,
             "text":translate_contextInformation(contextID)
         });
     }
@@ -231,7 +230,7 @@ function loadContextTabForUnit() {
  * Function gets information into the selection bar and input fields.
  * Furthermore hide main part in tab and show details of context information.
  * */
-function showDetailContextInfo(contextDataIndex) {
+function showDetailContextInfo() {
 
     // show detail, hide main
     $("#detailContextInfo").slideDown();
@@ -258,7 +257,7 @@ function showDetailContextInfo(contextDataIndex) {
 
     // set event listener for "Bestätigen" button in tab "Kontextinformation"
     $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
-        confirmContextInformation(contextDataIndex);
+        confirmContextInformation();
     });
 }
 
@@ -581,7 +580,7 @@ function setMinMaxDefault(min, max, def, inputField) {
 
 
 // function gets called when "Bestätigen" button was clicked after context editing
-function confirmContextInformation(contextDataIndex) {
+function confirmContextInformation() {
 
     // get current unit's data model
     var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
@@ -593,11 +592,11 @@ function confirmContextInformation(contextDataIndex) {
     // check if all needed fields were filled with information and return selected context
     var selectedInfo = checkInformation();
 
-    // push all new information about the context unit in current scenario
-    current_unit.addContextInfo(selectedInfo, contextDataIndex);
+    // add the new information to the context list of the currently selected unit
+    current_unit.addContextInfo(selectedInfo, unitContextIndex);
 
     var selectedInfoID = selectedInfo.getID();
-    var selectedInfoIconID = selectedInfoID + contextDataIndex;
+    var selectedInfoIconID = selectedInfoID + unitContextIndex;
 
     // create icon DOM
     var divContextIcon = $("<div>")
@@ -611,7 +610,15 @@ function confirmContextInformation(contextDataIndex) {
 
     // add icon and div to unit
     divContextIcon.append(icon);
-    $(unit).children("div.unit-icons").append(divContextIcon);
+    // if this was the editing of an already asserted context datum, replace the icon
+    if (unitContextIndex < current_unit.getContextData().length-1) {
+        var staleDiv = $(unit).children("div.unit-icons")[unitContextIndex];
+        $(staleDiv).replaceWith(divContextIcon);
+    }
+    // else, if this is a brand-new piece of context information, then simply add the icon
+    else
+        $(unit).children("div.unit-icons").append(divContextIcon);
+
 
     /* design reasons */
     // all SAT needs solid border
@@ -649,11 +656,12 @@ function confirmContextInformation(contextDataIndex) {
 
     // get name into multi selection
     //$("#selectMultiContextInfos").append(option);
-    array_multiSelectionContextInfos[contextDataIndex] = {id: selectedInfoID, text: contextInfoName};
+    array_multiSelectionContextInfos[unitContextIndex] = {id: unitContextIndex, text: contextInfoName};
+    // TODO: This just doesn't work anymore... O:
     selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
 
     // change color per option in multi selection bar
-    formatMultiContextInfosElements(contextDataIndex);
+    formatMultiContextInfosElements();
 
     // show main, hide detail
     showMainContextInfo();
@@ -765,17 +773,17 @@ function getParameterInput(val, num) {
 /**
  * Function changes colors of all selected options in multi selection bar context information.
  * */
-function formatMultiContextInfosElements(contextDataIndex) {
+function formatMultiContextInfosElements() {
 
     // get the context item, its ID and translation
-    var item = array_multiSelectionContextInfos[contextDataIndex];
-    var contextInfoID = item.id;
+    var item = array_multiSelectionContextInfos[unitContextIndex];
+    var contextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[item.id];
     var contextInfoTranslation = item.text;
     // and the containing DOM element
-    var selectSearchChoice = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice")[contextDataIndex];
+    var selectSearchChoice = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice")[unitContextIndex];
 
     // get color for first known context class
-    var firstClassTranslation = translate_contextClass(contextList.getItemByID(contextInfoID).getClasses()[0]);
+    var firstClassTranslation = translate_contextClass(contextInfo.getClasses()[0]);
 
     // set background color, title (for tooltip) and hover event handler
     $(selectSearchChoice)
@@ -788,7 +796,7 @@ function formatMultiContextInfosElements(contextDataIndex) {
     /* new */
 
     // add edit icon
-    var edit = createContextInfoEditDOM(contextInfoID);
+    var edit = createContextInfoEditDOM();
     $(selectSearchChoice).append(edit);
 
     // add click event handler
@@ -796,9 +804,9 @@ function formatMultiContextInfosElements(contextDataIndex) {
         console.log("edit");
 
         // get the index of this item in the current unit's context multi selection
-        var itemIndex = $(this).parent().index();
+        unitContextIndex = $(this).parent().index();
         // and use it to get at the whole context info data object
-        var thisContextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[itemIndex];
+        var thisContextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[unitContextIndex];
 
         // then reconstruct its values in the context details tab
         reconstructContextDetailsTab(thisContextInfo);
@@ -878,7 +886,7 @@ function createParameterLabelDOM(elem, label) {
 }
 
 // create a clickable edit icon for context info multi selection
-function createContextInfoEditDOM (contextInfoID) {
+function createContextInfoEditDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("select2-search-choice-edit")
