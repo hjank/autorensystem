@@ -6,6 +6,7 @@ var array_multiSelectionContextInfos = [];
 var unitContextIndex = 0;
 
 $(function() {
+
     $("#btnBackToMainContextInfo").on("click", showMainContextInfo);
 
 
@@ -23,12 +24,12 @@ $(function() {
             // if a border already exists and is unequal to 1 --> change design
             if (unitSatisfiesAllContextInfos) {
                 // check if icons exist
-                if (unit.children("div.unit-icons").children("div.unit-icon").length != 0) {
-                    unit.children("div.unit-icons").css("border", "2px dotted #adadad");
+                if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
+                    $(unit).children("div.unit-icons").css("border", "2px dotted #adadad");
 
                     // check if ci attribute exists and change attribute ci
-                    if (unit.children("div.unit-icons")[0].hasAttribute("ci")) {
-                        unit.children("div.unit-icons").attr("ci", "one");
+                    if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
+                        $(unit).children("div.unit-icons").attr("ci", "one");
                     }
                 }
             }
@@ -43,12 +44,12 @@ $(function() {
 
             // if a border already exists and is unequal to 0 --> change design
             if (!unitSatisfiesAllContextInfos) {
-                if (unit.children("div.unit-icons").children("div.unit-icon").length != 0) {
-                    unit.children("div.unit-icons").css("border", "2px solid #adadad");
+                if ($(unit).children("div.unit-icons").children("div.unit-icon").length != 0) {
+                    $(unit).children("div.unit-icons").css("border", "2px solid #adadad");
 
                     // check if ci attribute exists and change attribute ci
-                    if (unit.children("div.unit-icons")[0].hasAttribute("ci")) {
-                        unit.children("div.unit-icons").attr("ci", "all");
+                    if ($(unit).children("div.unit-icons")[0].hasAttribute("ci")) {
+                        $(unit).children("div.unit-icons").attr("ci", "all");
                     }
                 }
             }
@@ -102,7 +103,8 @@ $(function() {
         authorSystemContent.getUnitByUUID(currentUnitUUID).removeContextInfoByIndex(index);
 
         // remove icon from learning unit
-        $(unit).children("div.unit-icons").children("div.unit-icon")[index].remove();
+        var removableIconDiv = $(unit).children("div.unit-icons").children("div.unit-icon")[index];
+        removableIconDiv.remove();
 
         // remove border if unit has no icons anymore
         if ($(unit).children("div.unit-icons").children("div.unit-icon").length == 0) {
@@ -118,14 +120,25 @@ $(function() {
     });
 });
 
+
 // if home or confirm button is clicked change view
 /**
  * Function changes view of context information tab from detail view to main view.
  * */
 function showMainContextInfo() {
+
     // show main, hide detail
     $("#mainContextInfo").slideDown();
     $("#detailContextInfo").slideUp();
+
+    // check how many context items this unit has got and render the DOM elements accordingly
+    if (array_multiSelectionContextInfos.length < 1) {
+        $("#mainContextInfoSAT").hide();
+        $("#mainContextInfoSelection").hide();
+    } else {
+        $("#mainContextInfoSAT").show();
+        $("#mainContextInfoSelection").show();
+    }
 }
 
 
@@ -208,18 +221,10 @@ function loadContextTabForUnit() {
     // get data in multi selection bar
     selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
 
-    // check if this unit has at least one context fact
-    if ( array_multiSelectionContextInfos.length < 2) {
-        $("#mainContextInfoSAT").hide();
-        $("#mainContextInfoSelection").hide();
-    } else {
-        $("#mainContextInfoSAT").show();
-        $("#mainContextInfoSelection").show();
-    }
+    showMainContextInfo();
 
     // re-color each choice and add editing functionality
-    for (var i in array_multiSelectionContextInfos)
-        formatMultiContextInfosElements(i);
+    formatMultiContextInfosElements();
 }
 
 
@@ -584,6 +589,8 @@ function confirmContextInformation() {
 
     // get current unit's data model
     var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+    // save this before a new info is added or an old replaced to get icons right
+    var oldContextLength = current_unit.getContextData().length;
     // and the information if "all" or "one" context infos must be satisfied
     var sat = current_unit.getSat();
     // get the unit's DOM element
@@ -611,8 +618,8 @@ function confirmContextInformation() {
     // add icon and div to unit
     divContextIcon.append(icon);
     // if this was the editing of an already asserted context datum, replace the icon
-    if (unitContextIndex < current_unit.getContextData().length-1) {
-        var staleDiv = $(unit).children("div.unit-icons")[unitContextIndex];
+    if (unitContextIndex < oldContextLength) {
+        var staleDiv = $(unit).children("div.unit-icons").children("div.unit-icon")[unitContextIndex];
         $(staleDiv).replaceWith(divContextIcon);
     }
     // else, if this is a brand-new piece of context information, then simply add the icon
@@ -645,8 +652,8 @@ function confirmContextInformation() {
     var contextInfoName = translate_contextInformation(selectedInfoID);
 
     // change format: add icons to text
-    var selectMultiContextInfos = $("#selectMultiContextInfos");
-    selectMultiContextInfos.select2({
+    var selectMultiContextInfos = $("#selectMultiContextInfos")[0];
+    $(selectMultiContextInfos).select2({
         formatSelection: formatMultiContextInfos,
         formatResult: formatMultiContextInfos,
         escapeMarkup: function (m) {
@@ -656,19 +663,15 @@ function confirmContextInformation() {
 
     // get name into multi selection
     //$("#selectMultiContextInfos").append(option);
-    array_multiSelectionContextInfos[unitContextIndex] = {id: unitContextIndex, text: contextInfoName};
+    array_multiSelectionContextInfos[unitContextIndex] = {id: unitContextIndex.toString(), text: contextInfoName};
     // TODO: This just doesn't work anymore... O:
-    selectMultiContextInfos.select2("data", array_multiSelectionContextInfos);
+    $(selectMultiContextInfos).select2("data", array_multiSelectionContextInfos);
 
-    // change color per option in multi selection bar
+    // re-color each choice and add editing functionality
     formatMultiContextInfosElements();
 
     // show main, hide detail
     showMainContextInfo();
-
-    // show SAT and multi selection bar
-    $("#mainContextInfoSAT").show();
-    $("#mainContextInfoSelection").show();
 
     console.log(JSON.stringify(authorSystemContent));
 }
@@ -775,59 +778,62 @@ function getParameterInput(val, num) {
  * */
 function formatMultiContextInfosElements() {
 
-    // get the context item, its ID and translation
-    var item = array_multiSelectionContextInfos[unitContextIndex];
-    var contextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[item.id];
-    var contextInfoTranslation = item.text;
-    // and the containing DOM element
-    var selectSearchChoice = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice")[unitContextIndex];
+    for (var contextIndex in array_multiSelectionContextInfos) {
 
-    // get color for first known context class
-    var firstClassTranslation = translate_contextClass(contextInfo.getClasses()[0]);
+        // get the context item, its ID and translation
+        var item = array_multiSelectionContextInfos[contextIndex];
+        var contextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[item.id];
+        var contextInfoTranslation = item.text;
+        // and the containing DOM element
+        var selectSearchChoice = $("#s2id_selectMultiContextInfos > .select2-choices > .select2-search-choice")[contextIndex];
 
-    // set background color, title (for tooltip) and hover event handler
-    $(selectSearchChoice)
-        .css("background-color", getColor(firstClassTranslation))
-        .attr("title", contextInfoTranslation)
-        .hover( function() { $(this).css("width", "85px"); },
+        // get color for first known context class
+        var firstClassTranslation = translate_contextClass(contextInfo.getClasses()[0]);
+
+        // set background color, title (for tooltip) and hover event handler
+        $(selectSearchChoice)
+            .css("background-color", getColor(firstClassTranslation))
+            .attr("title", contextInfoTranslation)
+            .hover( function() { $(this).css("width", "85px"); },
                 function() { var obj = $(this); setTimeout( function() { obj.css("width", ""); }, 200 ); })
-    ;
+        ;
 
-    /* new */
+        /* new */
 
-    // add edit icon
-    var edit = createContextInfoEditDOM();
-    $(selectSearchChoice).append(edit);
+        // add edit icon
+        var edit = createContextInfoEditDOM();
+        $(selectSearchChoice).append(edit);
 
-    // add click event handler
-    edit.on("click", function(e) {
-        console.log("edit");
+        // add click event handler
+        edit.on("click", function(e) {
+            console.log("edit");
+            e.stopPropagation();
 
-        // get the index of this item in the current unit's context multi selection
-        unitContextIndex = $(this).parent().index();
-        // and use it to get at the whole context info data object
-        var thisContextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[unitContextIndex];
+            // get the index of this item in the current unit's context multi selection
+            unitContextIndex = $(this).parent().index();
+            // and use it to get at the whole context info data object
+            var thisContextInfo = authorSystemContent.getUnitByUUID(currentUnitUUID).getContextData()[unitContextIndex];
 
-        // then reconstruct its values in the context details tab
-        reconstructContextDetailsTab(thisContextInfo);
+            // then reconstruct its values in the context details tab
+            reconstructContextDetailsTab(thisContextInfo);
 
-        $("#mainContextInfo").hide();
-        $("#detailContextInfo").show();
+            $("#mainContextInfo").hide();
+            $("#detailContextInfo").show();
 
-        e.stopPropagation();
-    });
+        });
 
-    // add event handlers for close "x"
+        // add event handlers for close "x"
 
-    $(".select2-search-choice-close").hover(
-        function() {$(this).attr("title", "Löschen")}
-    );
-    $(".select2-search-choice-close").on("click", function(e) {
-        console.log("delete");
-        e.stopPropagation();
-    });
+        $(".select2-search-choice-close").hover(
+            function() {$(this).attr("title", "Löschen")}
+        );
+        $(".select2-search-choice-close").on("click", function(e) {
+            console.log("delete");
+            e.stopPropagation();
+        });
 
-    /* end new */
+        /* end new */
+    }
 }
 
 // when edit icon in multi selection was clicked: recall chosen details

@@ -65,7 +65,7 @@ Unit.prototype.setPosY = function(posY) {
 
 // adders
 Unit.prototype.addContextInfo = function(ci, index) {
-    if (index)
+    if (typeof index != "undefined")
         this._contextData[index] = ci;
     else
         this._contextData.push(ci);
