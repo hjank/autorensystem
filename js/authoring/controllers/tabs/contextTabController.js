@@ -516,7 +516,7 @@ function fillParameterSelection(cp) {
                     .attr("onkeyup", "getParameterInput(this,"+i+")");
                 setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
                 // if we are in edit mode: previously saved value, else ""
-                child.value = chosenValue;
+                child[0].value = chosenValue;
                 div.append(child);
                 divContextParams.append(div);
 
@@ -530,15 +530,16 @@ function fillParameterSelection(cp) {
                 // if lat and long have been set to either "" (new info) or input values (edit info)
                 if (lat != null && long != null) {
 
+                    // put the map in a visible spot and render it correctly (hopefully)
+                    divContextParams.append(divMaps);
+
                     // put marker where it has been placed before (i.e. we are in edit mode)
                     if (chosenValue != "") {
                         var latlng = new google.maps.LatLng(lat, long);
                         replaceMarker(latlng);
-                    }
-
-                    // in any case where coordinates are expected
-                    divContextParams.append(divMaps);
-                    resizeMap();
+                        //resetMapToCenter(latlng);
+                    } else
+                        resizeMap();
                 }
                 break;
 
@@ -552,7 +553,7 @@ function fillParameterSelection(cp) {
                     .addClass("form-control")
                     .attr("type", "text");
                 // if we are in edit mode: previously saved value, else ""
-                child.value = chosenValue;
+                child[0].value = chosenValue;
                 div.append(child);
                 divContextParams.append(div);
                 break;
@@ -767,6 +768,7 @@ function getParameterInput(val, num) {
 
             // replace old marker and set the new one
             replaceMarker(new_LatLong);
+            resetMapToCenter(new_LatLong);
         }
     }
 }
@@ -842,8 +844,7 @@ function reconstructContextDetailsTab(contextInfo) {
     var contextID = contextInfo.getID();
     // 1. the context information type selection:
     var selectIndex = contextList.getIndexByID(contextID);
-    var selectContextInfos = $("#selectContextInfos");
-    selectContextInfos.select2("data", {
+    $("#selectContextInfos").select2("data", {
         id:selectIndex,
         text:translate_contextInformation(contextID)
     });

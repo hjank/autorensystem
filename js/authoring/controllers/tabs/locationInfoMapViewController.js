@@ -28,7 +28,7 @@ $(function(){
 
     // add load and resize event handlers
     google.maps.event.addDomListener(window, "load", initMap);
-    google.maps.event.addDomListener(window, "resize", resizeMap());
+    google.maps.event.addDomListener(window, "resize", resizeMap);
 });
 
 // creates the map
@@ -346,6 +346,10 @@ function replaceMarker(location) {
         icon: image,
         shadow: shadow
     });
+}
+
+// reset center and zoom of the map
+function resetMapToCenter(location) {
 
     // center the map and set zoom factor
     map.setCenter(location);
