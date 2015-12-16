@@ -6,7 +6,7 @@
 function initLoader() {
 
     // after finishing the parsing, elements could be added into tab bar
-    fillContextTab();
+    setContextTabListeners();
     //setScenarios();     // only needed if scenarios already exist at program start
     formatGlobalElements();
 
@@ -34,7 +34,7 @@ function initLoader() {
     // only needed for testing
     if (paramURL == "Testszenario") {
 
-        jQuery.get('Testszenario.json', function (data) {
+        $.get('Testszenario.json', function (data) {
             console.log(data);
             //loadedData = data[0];
             loadedData = data;
@@ -48,9 +48,6 @@ function initLoader() {
             authorSystemContent.removeScenario(loadedData.name);
         });
     }
-
-    // update label
-    setLabelBtnScenarioDeletion();
 }
 
 

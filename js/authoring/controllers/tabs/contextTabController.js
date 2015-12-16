@@ -148,7 +148,7 @@ function showMainContextInfo() {
  * In this listener all selections and input fields were filled.
  * Furthermore the meta data selection bar is also filled with information.
  * */
-function fillContextTab() {
+function setContextTabListeners() {
 
     // triggered if add context info button was clicked
     $("#btnAddContextInfos").click(function(e) {

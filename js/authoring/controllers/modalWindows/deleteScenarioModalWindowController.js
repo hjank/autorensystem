@@ -104,6 +104,9 @@ function setLabelBtnScenarioDeletion() {
  * */
 function showDeleteScenario() {
     showModalWindow($("#modal-delete-szenario"));
+
+    // update label
+    setLabelBtnScenarioDeletion();
 }
 
 /**
