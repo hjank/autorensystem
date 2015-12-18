@@ -52,6 +52,7 @@ function initLoader() {
 
 
 /**
+ * TODO: This whole function needs to be adjusted to changes in "data".
  * Function loads a scenario which contains all units, connections und functions.
  * @param {Object} data Contains all data from a scenario
  * */

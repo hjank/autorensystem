@@ -179,21 +179,23 @@ function initUnitEventHandlers () {
         // hide tab from unit label connection
         $("#tabUnitLabel").hide();
 
-
-        /* tab "Eigenschaften"*/
-
-        // get current unit's data model
+        // get current unit's data model (if existent)
         var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
 
-        // put name into the input field
-        //var formObject = document.forms["formProperties"];
-        $("#inputUnitName")[0].value = current_unit.getName();
+        // make sure this unit has got a name and data model
+        if (current_unit) {
+            /* tab "Eigenschaften"*/
 
-        // set description field
-        $("#inputUnitDescription")[0].value = current_unit.getDescription();
+            // put name into the input field
+            //var formObject = document.forms["formProperties"];
+            $("#inputUnitName")[0].value = current_unit.getName();
 
-        /* tab "Kontextinformation" */
-        loadContextTabForUnit();
+            // set description field
+            $("#inputUnitDescription")[0].value = current_unit.getDescription();
+
+            /* tab "Kontextinformation" */
+            loadContextTabForUnit();
+        }
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
@@ -320,4 +322,17 @@ function buildUnitDOM(uuid, name) {
     $('#stm').append(newState);
 
     return newState;
+}
+
+// remove a unit from canvas, menu and data model + all connections attached to it
+function removeUnitFromScenario(unitUUID, scenarioName) {
+    // get data models of current scenario and unit
+    var currentScenario = authorSystemContent.getScenario(scenarioName);
+    var currentUnit = authorSystemContent.getUnitByUUID(unitUUID);
+
+    // remove current unit from view and model
+    removeUnitFromCanvas(unitUUID);
+    removeUnitFromMenu(scenarioName, currentUnit.getName());
+    currentScenario.removeUnit(currentUnit);
+
 }

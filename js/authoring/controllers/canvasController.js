@@ -16,7 +16,6 @@ function initPlumbCanvas() {
                 length: 14,
                 foldback: 0.8
             } ]
-                //[ "Label", { label: "connecting", id: "label", cssClass: "aLabel" }]
         ],
         Container: "stm"
     });
@@ -46,7 +45,7 @@ function initPlumbCanvas() {
             var thisScenario = authorSystemContent.getScenario(currentScenario);
             if (typeof thisScenario !== "undefined") {
                 // add connection in current scenario's JSON structure
-                thisScenario.addConnection(new Connection(
+                thisScenario.addConnection(new Connection().with(
                     con.connection.id,
                     con.source.parentElement.id,
                     con.targetId,
@@ -62,26 +61,6 @@ function initPlumbCanvas() {
                 $("#" + labelID)[0].setAttribute("title", "Vorausetzung (PRE)");
             }
 
-
-            /*for (var n=0; n<myAuthorSystem.length; n++) {
-                if (myAuthorSystem[n].name == currentScenario) {
-                    myAuthorSystem[n]["connections"].push({
-                        sourceId:con.source.parentElement.id,
-                        targetId:con.targetId,
-                        connId:con.connection.id,
-                        connLabel: "PRE",
-                        connTitle: "Voraussetzung (PRE)"
-                    });
-                    // add label to connection
-                    con.connection.addOverlay([ "Label", { label: "PRE", id: "label", cssClass: "aLabel" }]);
-
-                    // add title to label
-                    var label = con.connection.getOverlay("label");
-                    var labelID = $(label)[0].canvas.id;
-                    $("#" + labelID)[0].setAttribute("title", "Vorausetzung (PRE)");
-                    break;
-                }
-            }*/
         }
     });
 
@@ -140,56 +119,10 @@ function clearMarkingFromLearningUnits () {
     }
 }
 
-// delete current unit + connections in tab "Eigenschaften"
-function deleteUnitFromView(unitName) {
 
-    // get current scenario name
-    var currentScenario = $("#lname")[0].innerHTML;
-
-    // needed to find scenario in menu bar
-    var liCurrentScenario;
-    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
-        if ( $(this)[0].innerHTML == currentScenario ) {
-            liCurrentScenario = $(this).parent("a").parent("li");
-        }
-    });
-    // delete unit in menu bar
-    liCurrentScenario.children("ul").children("li").each(function() {
-        if ($(this).children("a").children("span")[0].innerHTML == unitName) {
-            $(this).remove();
-        }
-    });
-
-    // find right unit and remove it from canvas
-    $("#stm").children("div.w").children("div.title").each(function() {
-        if (this.innerHTML == unitName) {
-            // get unit id
-            var unitID = $(this).parent()[0].getAttribute("id");
-
-            // delete all connections
-            inst.detachAllConnections($("#" + unitID));
-
-            // delete unit
-            $(this).parent().remove();
-        }
-    });
-}
-
-
-// delete one or more units + connections in modal window "Lernszenarien l�schen"
-function deleteSelectedUnitsFromDOM() {
-
-    // get all selected units which should be deleted from multi selection bar
-    var list_deleteableUnits = $("#selectMultiDeleteUnits").select2("data");
-
-    for (var i=0; i<list_deleteableUnits.length; i++) {
-        // get unit id
-        var unitID = list_deleteableUnits[i].id;
-        var uuidSelector = "[uuid="+unitID+"]";
-        // delete all connections
-        inst.detachAllConnections($(uuidSelector));
-
-        // delete unit in canvas
-        $(uuidSelector).remove();
-    }
+// remove unit and all its connections from canvas
+function removeUnitFromCanvas(unitUUID) {
+    // delete all connections
+    inst.empty(unitUUID);
+    inst.remove(unitUUID);
 }

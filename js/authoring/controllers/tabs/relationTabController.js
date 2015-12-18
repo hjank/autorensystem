@@ -42,10 +42,9 @@ $(function() {
         var connID = con.id;
         var currentScenario = $("#lname")[0].innerHTML;
 
-        // get current scenario's JSON
+        // delete connection in current scenario's JSON structure
         var thisScenario = authorSystemContent.getScenario(currentScenario);
-        // delete connection in JSON structure
-        thisScenario.removeConnection(thisScenario.getConnection(connID));
+        thisScenario.removeConnection(connID);
 
         // hide tab after connection was deleted
         $("#tabUnitLabel").hide();

@@ -7,15 +7,30 @@
 // listeners
 $(function() {
 
-    // for button: delete unit = YES
-    $("btnDeleteUnits2").on("click", function() {
-        deleteUnits();
-        // delete one or more units + connections in modal window "Lernszenarien l�schen"
-        deleteSelectedUnitsFromDOM();
+    // for button in modal window "Lernszenarien löschen": delete unit = YES
+    $("#btnDeleteUnits2").on("click", function() {
+
+        // get from multi selection bar all units which shall be deleted
+        var list_deletableUnits = $("#selectMultiDeleteUnits").select2("data");
+        // get selected scenario name
+        var selectedScenarioName = $("#selectScenarioDeleteUnit").select2("data")["text"];
+
+        // for each unit that is to be deleted
+        for (var i in list_deletableUnits) {
+            // get its uuid, name and data model
+            var unitUUID = list_deletableUnits[i].id;
+            // and delete it and its traces
+            removeUnitFromScenario(unitUUID, selectedScenarioName);
+        }
+
+        // all tab content invisible
+        $(".tabContents").hide();
+        $(".tab-Container").hide();
+        $("#tabUnitLabel").hide();
     });
 
     // for button: delete unit = NO
-    $("btnDeleteUnitsNot").on("click", deleteUnitsNot);
+    $("#btnDeleteUnitsNot").on("click", deleteUnitsNot);
 
     // set the trigger for the delete units modal window
     $("#deleteLearnUnit").on("click", showDeleteUnits);
@@ -71,30 +86,6 @@ function showDeleteUnits() {
             selectMultiDeleteUnitsElement.append(option);
         }
 
-      /*  for (var j=0; j<myAuthorSystem.length; j++) {
-            // find right scenario
-            if (myAuthorSystem[j]["name"] == e.choice.text) {
-
-                // get all units
-                var units = $("#stm").children("div.w").children("div.title");
-
-                for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
-                    var option = $("<option>");
-
-                    // get unit id and set value = id
-                    for (var l=0; l<units.length; l++) {
-                        if (myAuthorSystem[j]["units"][k]["name"] == units[l].innerText) {
-                            option.attr('value', $(units[l]).parent()[0].id); // stateX
-                        }
-                    }
-
-                    // set option name and append in multi selection bar
-                    option.html(myAuthorSystem[j]["units"][k]["name"]);
-                    selectScenarioDeleteUnitElement.append(option);
-                }
-            }
-        }
-*/
         // select unit which should be deleted
         selectMultiDeleteUnitsElement.select2().on("select2-selecting", function(e) {
 
@@ -144,67 +135,6 @@ function showDeleteUnitsConfirm() {
  * Function deletes a learning unit from the working place.
  * Triggered in the modal window "confirm unit deletion".
  */
-function deleteUnits(){
-    // get units which should be deleted
-    var list_deletableUnits = $("#selectMultiDeleteUnits").select2("data");
-
-    // get right scenario name
-    var currentScenario = $("#selectScenarioDeleteUnit").select2("data")["text"];
-
-/*    // needed to find scenario in menu bar
-    var liCurrentScenario;
-    $("#menuScenarios").children("li").children("a").children("span.title").each(function() {
-        if ( $(this)[0].innerHTML == currentScenario ) {
-            liCurrentScenario = $(this).parent("a").parent("li");
-        }
-    });*/
-
-    // update gui and JSON structure
-    var selectedScenario = authorSystemContent.getScenario(currentScenario);
-    for (var i in list_deletableUnits) {
-        var unitName = list_deletableUnits[i].text;
-        var deletableUnit = selectedScenario.getUnitByName(unitName);
-        selectedScenario.removeUnit(deletableUnit);
-        removeUnitFromMenu(currentScenario, unitName);
-    }
-
-
- /*   for (var j=0; j<myAuthorSystem.length; j++) {
-        // find right scenario
-        if (myAuthorSystem[j]["name"] == currentScenario) {
-            for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
-
-                // delete all units in deletable list
-                for (var i=0; i<list_deleteableUnits.length; i++) {
-
-                    // Note: unit deletion on working place see statemachine.js
-                    // delete unit in statemaschine
-                    //var unit = list_deleteableUnits[i].id;
-                    //$("#" + unit).remove();
-
-                    // delete unit in JSON structure
-                    if (myAuthorSystem[j]["units"][k]["name"] == list_deleteableUnits[i].text) {
-                        myAuthorSystem[j]["units"].splice(k, 1);
-                    }
-
-                    // delete unit in menu bar
-                    liCurrentScenario.children("ul").children("li").each(function() {
-                        if ($(this).children("a").children("span")[0].innerHTML == list_deleteableUnits[i].text) {
-                            $(this).remove();
-                        }
-                    });
-                }
-
-            }
-        }
-    }*/
-
-    // all tab content invisible
-    $(".tabContents").hide();
-    $(".tab-Container").hide();
-    $("#tabUnitLabel").hide();
-
-}
 
 
 
