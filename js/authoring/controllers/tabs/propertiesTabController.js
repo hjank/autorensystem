@@ -50,11 +50,17 @@ $(function() {
 
     // delete unit after confirming deletion in tab "Eigenschaften"
     $("#btnDeleteUnit").on("click", function() {
-        // get unit name from input field
-        var unitName = $("#inputUnitName")[0].value;
-        deleteUnitFromModel(unitName);
-        deleteUnitFromView(unitName);
+
+        // get current scenario (alas, still very dirty)
+        var currentScenarioName = $("#lname")[0].innerHTML;
+        // and delete unit and all its traces
+        removeUnitFromScenario(currentUnitUUID, currentScenarioName);
+
+        // all tab content invisible
+        $(".tabContents").hide();
+        $(".tab-Container").hide();
     });
+
 
     // set the trigger for if the delete button in tab "Eigenschaften" was clicked
     $("#tabBtnDeleteUnit").on("click", showDeleteUnitConfirm);

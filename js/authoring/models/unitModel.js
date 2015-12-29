@@ -80,44 +80,6 @@ Unit.prototype.removeContextInfoByIndex = function(index) {
 };
 
 
-/**
- * Function deletes selected unit from the working place.
- * */
-function deleteUnitFromModel(unitName) {
-
-    // get current scenario name
-    var currentScenario = $("#lname")[0].innerHTML;
-
-    // update gui
-    var thisScenario = authorSystemContent.getScenario(currentScenario);
-    thisScenario.removeUnit(thisScenario.getUnitByName(unitName));
-
-
-  /*  for (var j=0; j<myAuthorSystem.length; j++) {
-        if (myAuthorSystem[j]["name"] == currentScenario) {
-            for (var k=0; k<myAuthorSystem[j]["units"].length; k++) {
-
-                // Note: unit deletion on working place see statemachine.js
-                /!*$("#stm").children("div.w").children("div.title").each(function() {
-                 if (this.innerHTML == unit) {
-                 $(this).parent().remove();
-                 }
-                 });*!/
-
-                // delete unit in JSON structure
-                if (myAuthorSystem[j]["units"][k]["name"] == unitName) {
-                    myAuthorSystem[j]["units"].splice(k, 1);
-                }
-
-            }
-        }
-    }*/
-
-    // all tab content invisible
-    $(".tabContents").hide();
-    $(".tab-Container").hide();
-}
-
 
 
 /**

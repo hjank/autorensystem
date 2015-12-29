@@ -19,8 +19,13 @@ $(function() {
 // checks if a valid name was entered, and in that case calls scenario creation
 function checkScenarioName(e) {
     if (e.keyCode == 13) {
-        if (!/[A-Z]+[0-9]*/i.test($("#sname").val()))
-            alert("[Fehler] Bitte geben Sie einen g�ltigen Namen ein. Zul�ssig sind Buchstaben und (optional) Zahlen.\n");
+        var newScenarioName = $("#sname").val();
+        // check for valid name
+        if (!/[A-Z]+[0-9]*/i.test(newScenarioName))
+            alert("[Fehler] Bitte geben Sie einen gültigen Namen ein. Zulässig sind Buchstaben und (optional) Zahlen.\n");
+        // check if name is already given
+        if (authorSystemContent.getScenario(newScenarioName))
+            alert("[Fehler] Es gibt bereits ein Szenario mit diesem Namen. Bitte wählen Sie einen anderen.");
         createScenario();
         $('#modal-new-szenario').modal('hide');
         return (e.target.id != "sname");
@@ -34,6 +39,7 @@ function checkScenarioName(e) {
 function showNewScenario() {
     var newScenarioElement = $("#modal-new-szenario");
 
+    // keeps the page from reloading on enter
     newScenarioElement.submit(function(e){
         e.preventDefault();
     });

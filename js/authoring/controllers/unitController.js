@@ -56,10 +56,8 @@ function createUnit() {
         // --> prevent the wrong placement of the dots
         if (nameSet) {
             plumbUnit(newState);
-
             // set event handler listening for click
             initUnitClickEventHandler();
-
             nameSet = false;
         }
     });
@@ -122,8 +120,7 @@ function loadUnit(unit, j) {
     clearMarkingFromLearningUnits();
 
     plumbUnit(newState);
-
-    // set event handlers listening for click and drag
+    // set event handler listening for click
     initUnitClickEventHandler();
 
 }
@@ -202,21 +199,23 @@ function initUnitClickEventHandler () {
         // hide tab from unit label connection
         $("#tabUnitLabel").hide();
 
-
-        /* tab "Eigenschaften"*/
-
-        // get current unit's data model
+        // get current unit's data model (if existent)
         var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
 
-        // put name into the input field
-        //var formObject = document.forms["formProperties"];
-        $("#inputUnitName")[0].value = current_unit.getName();
+        // make sure this unit has got a name and data model
+        if (current_unit) {
+            /* tab "Eigenschaften"*/
 
-        // set description field
-        $("#inputUnitDescription")[0].value = current_unit.getDescription();
+            // put name into the input field
+            //var formObject = document.forms["formProperties"];
+            $("#inputUnitName")[0].value = current_unit.getName();
 
-        /* tab "Kontextinformation" */
-        loadContextTabForUnit();
+            // set description field
+            $("#inputUnitDescription")[0].value = current_unit.getDescription();
+
+            /* tab "Kontextinformation" */
+            loadContextTabForUnit();
+        }
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
@@ -224,7 +223,6 @@ function initUnitClickEventHandler () {
         //console.log(myAuthorSystem);
         console.log(JSON.stringify(authorSystemContent));
     });
-
 }
 
 
@@ -328,6 +326,19 @@ function buildUnitDOM(uuid, name) {
     return newState;
 }
 
+// remove a unit from canvas, menu and data model + all connections attached to it
+function removeUnitFromScenario(unitUUID, scenarioName) {
+    // get data models of current scenario and unit
+    var currentScenario = authorSystemContent.getScenario(scenarioName);
+    var currentUnit = authorSystemContent.getUnitByUUID(unitUUID);
+
+    // remove current unit from view and model
+    removeUnitFromCanvas(unitUUID);
+    removeUnitFromMenu(scenarioName, currentUnit.getName());
+    currentScenario.removeUnit(currentUnit);
+
+}
+
 
 
 /**
@@ -341,7 +352,8 @@ function lightboxUnit(unitUUID) {
     $("#container").css({
         "background-color": "black",
         "opacity": ".6",
-        "z-index": "1"});
+        "z-index": "1"
+    });
 
     $("#" + unitUUID).css("background", "white").css("color", "black").css("z-index", "2");
 }

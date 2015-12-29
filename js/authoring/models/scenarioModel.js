@@ -43,8 +43,16 @@ Scenario.prototype.addUnit = function(unit) {
 
 Scenario.prototype.removeUnit = function(unit) {
     var index = this._units.indexOf(unit);
-    if (index > -1)
+    if (index > -1) {
+        // first, remove connections attached to that unit
+        for (var i in this._connections) {
+            var conn = this._connections[i];
+            if (conn.connectsUnit(unit.getUUID()))
+                this.removeConnection(conn.getID());
+        }
+        // then, remove the unit
         this._units.splice(index, 1);
+    }
 };
 
 Scenario.prototype.getConnection = function(connId) {
@@ -63,8 +71,10 @@ Scenario.prototype.addConnection = function(conn) {
     this._connections.push(conn);
 };
 
-Scenario.prototype.removeConnection = function(conn) {
-    var index = this._connections.indexOf(conn);
-    if (index > -1)
-        this._connections.splice(index, 1);
+Scenario.prototype.removeConnection = function(connId) {
+    for (var i in this._connections) {
+        var conn = this._connections[i];
+        if (conn.getID() == connId)
+            this._connections.splice(i, 1);
+    }
 };

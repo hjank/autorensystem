@@ -13,7 +13,7 @@ function Connection() {
     return this;
 }
 
-Connection.prototype.constructor = function(id, sourceId, targetId, label, title) {
+Connection.prototype.with = function(id, sourceId, targetId, label, title) {
     this._ID = id;
     this._sourceId = sourceId;
     this._targetId = targetId;
@@ -55,4 +55,9 @@ Connection.prototype.setLabel = function(label) {
 };
 Connection.prototype.setTitle = function(title) {
     return this._title = title;
+};
+
+// check if given unit is connected by this connection
+Connection.prototype.connectsUnit = function(unitUUID) {
+    return (this._sourceId == unitUUID || this._targetId == unitUUID);
 };
