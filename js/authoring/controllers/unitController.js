@@ -56,6 +56,10 @@ function createUnit() {
         // --> prevent the wrong placement of the dots
         if (nameSet) {
             plumbUnit(newState);
+
+            // set event handler listening for click
+            initUnitClickEventHandler();
+
             nameSet = false;
         }
     });
@@ -119,6 +123,9 @@ function loadUnit(unit, j) {
 
     plumbUnit(newState);
 
+    // set event handlers listening for click and drag
+    initUnitClickEventHandler();
+
 }
 
 // set properties for newly created unit in jsPlumb instance
@@ -128,7 +135,23 @@ function plumbUnit(newState) {
     // make the unit draggable
     inst.draggable(newState, {
         //containment: 'parent'
-        containment: '.body'
+        containment: '.body',
+        // triggered if unit was dragged
+        stop: function(event) {
+            currentUnitUUID = event.el.id;
+            var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+            var unitElement = $("#" + currentUnitUUID)[0];
+
+            // get new positions (absolute)
+            var top = unitElement.offsetTop;
+            var left = unitElement.offsetLeft;
+
+            // only set if current unit object exists
+            if (current_unit) {
+                current_unit.posX = left;
+                current_unit.posY = top;
+            }
+        }
     });
 
     // set target point
@@ -153,7 +176,7 @@ function plumbUnit(newState) {
 }
 
 
-function initUnitEventHandlers () {
+function initUnitClickEventHandler () {
 
     // triggered if learning unit is clicked
     $("#stm").children("div.w").click(function(event) {
@@ -202,23 +225,6 @@ function initUnitEventHandlers () {
         console.log(JSON.stringify(authorSystemContent));
     });
 
-
-    // triggered if unit was dragged
-    $("#stm").children("div.w").on("dragstop", function() {
-
-        currentUnitUUID = $(this)[0].getAttribute("id");
-        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
-
-        // get new positions (absolute)
-        var top = $(this)[0].offsetTop;
-        var left = $(this)[0].offsetLeft;
-
-        // only set if current unit object exists
-        if (current_unit) {
-            current_unit.posX = left;
-            current_unit.posY = top;
-        }
-    });
 }
 
 
@@ -320,4 +326,22 @@ function buildUnitDOM(uuid, name) {
     $('#stm').append(newState);
 
     return newState;
+}
+
+
+
+/**
+ * This function highlights the given unit element by using a lightbox.
+ * The background is dimmed with the unit "lifted" on top of it in a light color.
+ *
+ * @param unitUUID The ID of the DOM Element representing the selected unit.
+ */
+function lightboxUnit(unitUUID) {
+
+    $("#container").css({
+        "background-color": "black",
+        "opacity": ".6",
+        "z-index": "1"});
+
+    $("#" + unitUUID).css("background", "white").css("color", "black").css("z-index", "2");
 }

@@ -118,17 +118,12 @@ function initPlumbCanvas() {
 
 
     // triggered if add unit (plus icon) or create new unit in navigation bar was clicked
-    $('#navadd,#createLearnUnit').click(function(e) {
+    $('#navadd,#createLearnUnit').click(createUnit);
 
-        createUnit();
-        initUnitEventHandlers();
-
-        // if in state machine was scrolled, all elements have to be repainted
-        $("#stm").on("scroll", function() {
-            inst.repaintEverything();
-        });
+    // if in state machine was scrolled, all elements have to be repainted
+    $("#stm").on("scroll", function() {
+        inst.repaintEverything();
     });
-
 }
 
 
