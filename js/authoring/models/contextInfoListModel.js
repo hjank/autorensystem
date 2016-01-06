@@ -44,6 +44,26 @@ function ContextInfoList() {
     return this;
 }
 
+// generates and adds a new items list from a list of JSON objects duck-typable as ContextInformation
+ContextInfoList.prototype.fromJSON = function (data) {
+    for (var i in data) {
+        // "cast" the context items to ContextInformation and remove previously entered values
+        var contextItem = new ContextInformation().fromJSON(data[i]);
+        contextItem.setChosenValue("");
+        contextItem.setChosenOperator("");
+
+        // "cast" the item's parameters to Parameter and remove previously entered values
+        var parameters = [], tempParams = contextItem.getParameters();
+        for (var ip in tempParams) {
+            var param = new Parameter().fromJSON(tempParams[ip]);
+            param.setChosenValue("");
+            parameters.push(param);
+        }
+        contextItem.setParameters(parameters);
+        this._items.push(contextItem);
+    }
+};
+
 ContextInfoList.prototype.initClasses = function () {
     for (var key in contextClassDictionary)
         this._classes.push(key);
@@ -51,6 +71,10 @@ ContextInfoList.prototype.initClasses = function () {
 
 ContextInfoList.prototype.setItems = function (items) {
     this._items = items;
+};
+
+ContextInfoList.prototype.addItem = function (item) {
+    this._items.push(item);
 };
 
 ContextInfoList.prototype.getItems = function () {

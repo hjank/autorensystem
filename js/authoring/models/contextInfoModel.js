@@ -2,9 +2,7 @@
  * Created by Helena on 04.09.2015.
  */
 
-
-
-// the list of all available context information data types
+// the data structure of a context item
 function ContextInformation() {
 
     this._id = "";
@@ -13,14 +11,21 @@ function ContextInformation() {
     this._min = "";
     this._max = "";
     this._default = "";
-    this._chosenValue = "";
+    this._chosenValue = ""; // set by the author in unit editing
     this._operators = [];
-    this._chosenOperator = "";
+    this._chosenOperator = "";  // set by the author in unit editing
     this._enums = [];
     this._parameters = [];
 
     return this;
 }
+
+// support "casting" a duck-typed JSON object to ContextInformation
+ContextInformation.prototype.fromJSON = function(item) {
+    for (i in item)
+        this[i] = item[i];
+    return this;
+};
 
 // getters
 ContextInformation.prototype.getID = function () {

@@ -62,3 +62,19 @@ AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
             this._scenarioList.splice(i, 1);
     }
 };
+
+AuthorSystemContent.prototype.getContextInformation = function() {
+    var contextList = [];
+    for (var i in this._scenarioList) {
+        var unitList = this._scenarioList[i].getUnits();
+        for (var j in unitList) {
+            var unitContext = unitList[j].getContextData();
+            for (var k in unitContext) {
+                var contextItem = unitContext[k];
+                if (contextList.indexOf(contextItem) == -1)
+                    contextList.push(contextItem);
+            }
+        }
+    }
+    return contextList;
+};

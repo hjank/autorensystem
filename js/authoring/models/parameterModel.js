@@ -15,6 +15,13 @@ function Parameter() {
     return this;
 }
 
+// support "casting" a duck-typed JSON object to Parameter
+Parameter.prototype.fromJSON = function(item) {
+    for (i in item) this[i] = item[i];
+
+    return this;
+};
+
 // getters
 Parameter.prototype.getID = function () {
     return this._id;
