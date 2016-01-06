@@ -28,14 +28,4 @@ jsPlumb.ready(function () {
     initPlumbCanvas();
     // reload data from localStorage
     initLoader();
-
-    $("#navHeadStatistic").on("click", function() {
-        var obj = authorSystemContent.getContextInformation();
-        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
-
-        var a = $("#downloadContextData > a")[0];
-        a.href = 'data:' + data;
-        a.download = 'data.json';
-    });
-
 });

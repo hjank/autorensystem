@@ -47,20 +47,8 @@ function ContextInfoList() {
 // generates and adds a new items list from a list of JSON objects duck-typable as ContextInformation
 ContextInfoList.prototype.fromJSON = function (data) {
     for (var i in data) {
-        // "cast" the context items to ContextInformation and remove previously entered values
-        var contextItem = new ContextInformation().fromJSON(data[i]);
-        contextItem.setChosenValue("");
-        contextItem.setChosenOperator("");
-
-        // "cast" the item's parameters to Parameter and remove previously entered values
-        var parameters = [], tempParams = contextItem.getParameters();
-        for (var ip in tempParams) {
-            var param = new Parameter().fromJSON(tempParams[ip]);
-            param.setChosenValue("");
-            parameters.push(param);
-        }
-        contextItem.setParameters(parameters);
-        this._items.push(contextItem);
+        // "cast" the context items to ContextInformation (incl. Parameter)
+        this._items.push(new ContextInformation().fromJSON(data[i]));
     }
 };
 
@@ -76,6 +64,14 @@ ContextInfoList.prototype.setItems = function (items) {
 ContextInfoList.prototype.addItem = function (item) {
     this._items.push(item);
 };
+
+// if list contains context items with chosen values, remove these (i.e. reset to "")
+ContextInfoList.prototype.resetAllContextValues = function() {
+    for (var i in this._items) this._items[i].resetAllValues();
+};
+
+
+// getter
 
 ContextInfoList.prototype.getItems = function () {
     return this._items;

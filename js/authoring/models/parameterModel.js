@@ -18,7 +18,6 @@ function Parameter() {
 // support "casting" a duck-typed JSON object to Parameter
 Parameter.prototype.fromJSON = function(item) {
     for (i in item) this[i] = item[i];
-
     return this;
 };
 
@@ -84,6 +83,9 @@ Parameter.prototype.setEnums = function (enums) {
     this._enums = enums;
 };
 
+Parameter.prototype.resetValue = function () {
+    this._chosenValue = "";
+};
 
 
 // JSON-LD formatting

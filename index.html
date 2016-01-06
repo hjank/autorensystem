@@ -48,6 +48,8 @@
         <script type="text/javascript" src="js/authoring/controllers/navBarController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/sliderController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/unitController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/simulator/simulationController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/simulator/timelineController.js"></script>
 
         <!-- tab controllers -->
         <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
@@ -95,6 +97,7 @@
 
         <link rel="stylesheet" href="css/tabs.css">
         <link rel="stylesheet" href="css/navigation.css">
+        <link rel="stylesheet" href="css/timeline.css">
 
 
         <!-- google maps api -->
@@ -123,8 +126,8 @@
                             <ul class="dropdown-menu">
                                 <li id="showNewScenario"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
                                 <li id="deleteScenario"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
-                                <li id="loadScenario"><a href="#">Laden <b class="fui-upload3" style="float: right"></b></a></li>
-                                <li id="saveScenario"><a download="szenario.json">Speichern <b class="fui-download3" style="float: right"></b></a></li>
+                                <li id="loadScenario"><a href="#">Laden <b class="fui-upload" style="float: right"></b></a></li>
+                                <li id="saveScenario"><a download="szenario.json">Speichern <b class="fui-export" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -137,9 +140,12 @@
                         <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
                         <!--<li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>-->
                         <li class="dropdown">
-                            <a id="navHeadStatistic" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-folder-download"></b> Statistiken</a>
+                            <a id="contextSimulation" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-play"></b> Kontextsimulation <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li id="downloadContextData"><a href="#">Herunterladen <b class="fui-download3" style="float: right"></b></a></li>
+                                <li id="createSimulation"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="openSimulation"><a href="#">Öffnen <b class="fui-folder-open" style="float: right"></b></a></li>
+                                <li id="deleteSimulation"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="importSimulation"><a href="#">Importieren <b class="fui-upload" style="float: right"></b></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -200,6 +206,9 @@
 
             <!-- Property area -->
             <div class="properties">
+
+                <div id="simulatorContainer"></div>
+
 
                 <!-- tabs header-->
                 <div class="tab-Container">

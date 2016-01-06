@@ -22,8 +22,17 @@ function ContextInformation() {
 
 // support "casting" a duck-typed JSON object to ContextInformation
 ContextInformation.prototype.fromJSON = function(item) {
-    for (i in item)
-        this[i] = item[i];
+    // copy all values (shallow copy)
+    for (i in item) this[i] = item[i];
+
+    // "cast" parameters to type Parameter (deep copy)
+    var parameters = [], tempParams = this._parameters;
+    for (var ip in tempParams) {
+        var param = new Parameter().fromJSON(tempParams[ip]);
+        parameters.push(param);
+    }
+    this._parameters = parameters;
+
     return this;
 };
 
@@ -118,6 +127,14 @@ ContextInformation.prototype.setEnums = function (enums) {
 
 ContextInformation.prototype.setParameters = function (parameters) {
     this._parameters = parameters;
+};
+
+// reset all chosen values
+ContextInformation.prototype.resetAllValues = function() {
+    this._chosenOperator = "";
+    this._chosenValue = "";
+    for (var i in this._parameters)
+        this._parameters[i].resetValue();
 };
 
 

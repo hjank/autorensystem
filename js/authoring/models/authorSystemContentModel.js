@@ -63,18 +63,23 @@ AuthorSystemContent.prototype.removeScenario = function(scenarioName) {
     }
 };
 
+// returns a list of all context items added in all scenarios, chosen values reset to ""
 AuthorSystemContent.prototype.getContextInformation = function() {
     var contextList = [];
     for (var i in this._scenarioList) {
-        var unitList = this._scenarioList[i].getUnits();
-        for (var j in unitList) {
-            var unitContext = unitList[j].getContextData();
-            for (var k in unitContext) {
-                var contextItem = unitContext[k];
-                if (contextList.indexOf(contextItem) == -1)
-                    contextList.push(contextItem);
-            }
-        }
+        var scenarioContext = this._scenarioList[i].getScenarioContext();
+        for (var j in scenarioContext)
+            contextList.push(scenarioContext[j]);
     }
     return contextList;
+};
+
+/**
+ * Same as in scenarioModel, only for whole content (i.e. all scenarios).
+ * @returns {boolean} true if any conntext has been added, else false.
+ */
+AuthorSystemContent.prototype.hasContext = function() {
+    for (var i in this._scenarioList)
+        if (this._scenarioList[i].hasContext()) return true;
+    return false;
 };

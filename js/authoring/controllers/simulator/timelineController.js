@@ -13,50 +13,23 @@ var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
 var horizontalBorderPx = 2; // a marked cell's top and bottom border sum in px
 var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 
-/**
- * Initialize timeline
- */
-$(function() {
-
-    // get the list of all contextInformation items that were added in the author system
-    var contextList = new ContextInfoList();
-    $.get("data.json", function(data) {
-        // and convert all items to their proper model type: ContextInformation (incl. Parameter)
-        contextList.fromJSON(data);
-
-        // create a column for each ContextInformation object
-        createColumns(contextList.getItems());
-
-        // set event handlers for these generated cells
-        setCellEventHandlers();
-    });
-
-});
-
 
 /**
  * Create one column per (unique) context item
  * @param contextList An array containing all context items (incl. duplicates) added in the author system
  */
-function createColumns(contextList) {
-    // functions as a set of unique context item IDs
-    var itemIDList = [];
-    // iterate through all context items
-    for (var i in contextList) {
-        var contextItemID = contextList[i].getID();
+function createColumns(contextListLength) {
+    // in case no context has been added to any unit in the scenario yet
+    if (contextListLength == 0 || typeof contextListLength == "undefined")
+        contextListLength = 5;
 
-        // ensure IDs are unique (no duplicates)
-        if (itemIDList.indexOf(contextItemID) == -1) {
-            itemIDList.push(contextItemID);
+    for (var i = 0; i < contextListLength; i++) {
 
-            // add one column for each unique item
-            $(".timelineStep").each(function() {
-                var newCell = $("<td>")
-                    .addClass("timelineCell")
-                    .attr("contextID", contextItemID);
-                $(this).append(newCell);
-            });
-        }
+        // add one column for each context item
+        $(".timelineStep").each(function() {
+            var newCell = $("<td>").addClass("timelineCell");
+            $(this).append(newCell);
+        });
     }
 }
 
@@ -83,8 +56,8 @@ function _mousedown(event) {
 
     yOnMousedown = event.pageY;
     xOnMousedown = event.pageX;
-    xFirstCellLeft = $(this).position().left;
-    yFirstCellTop = $(this).position().top;
+    xFirstCellLeft = $(this).offset().left;
+    yFirstCellTop = $(this).offset().top;
 }
 
 /**
@@ -114,18 +87,19 @@ function _mouseup(event) {
     // if the mouse has been down, and is now released
     if (down) {
         // get height of marked area
-        var height = _getHeight();
+        var height = _getHeight(event);
 
         // prevent erroneous behavior when cursor is dragged beyond top
         if (event.pageY > yFirstCellTop) {
 
             // create and add the draggable, resizable information container
             var eventDiv = _createEventDiv(height);
-            var popoverDiv = _createPopover();
+            //var popoverDiv = _createPopover();
 
             // TODO: just a mock-up for now, will be replaced by formatting in author system
             var contextColor = "#"+((1<<24)*Math.random()|0).toString(16);
-            eventDiv.css("background-color", contextColor);
+            eventDiv.css("background-color", contextColor)
+                .css("z-index", 1000);
 
             // add new div to timeline
             $("#timelineContainer").append(eventDiv);
@@ -207,9 +181,9 @@ function _createPopover () {
 function _mark(event) {
 
     $('.timelineCell').each(function () {
-        var top = $(this).position().top;
+        var top = $(this).offset().top;
         var bottom = top + $(this).height()+horizontalBorderPx;
-        var left = $(this).position().left;
+        var left = $(this).offset().left;
         var right = left + $(this).width()+verticalBorderPx;
 
         if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right)
@@ -238,7 +212,7 @@ function _unmark() {
  * @private
  */
 function _bottom(element){
-    return $(element).position().top + $(element).height()+horizontalBorderPx;
+    return $(element).offset().top + $(element).height()+horizontalBorderPx;
 }
 
 /**
@@ -246,7 +220,7 @@ function _bottom(element){
  * @returns {number} The height of the selected, i.e. marked area in px
  * @private
  */
-function _getHeight() {
+function _getHeight(event) {
     // if a single cell was clicked, without dragging, mark it (to access it afterwards)
     if (!dragging)
         _mark(event);

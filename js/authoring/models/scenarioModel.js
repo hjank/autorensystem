@@ -78,3 +78,40 @@ Scenario.prototype.removeConnection = function(connId) {
             this._connections.splice(i, 1);
     }
 };
+
+
+/**
+ * Goes through all units of this scenario and gets (copies of) their associated context information items.
+ * Chosen values will be reset to "".
+ *
+ * @returns {Array} A list of all context items relevant to this scenario.
+ */
+Scenario.prototype.getScenarioContext = function() {
+    var contextList = [];
+    // for each unit ...
+    for (var i in this._units) {
+        // ... get its associated context items
+        var unitContext = this._units[i].getContextData();
+        for (var j in unitContext) {
+            // make a deep copy of each
+            var contextItem = new ContextInformation().fromJSON(unitContext[j]);
+            // reset chosen values
+            contextItem.resetAllValues();
+
+            // and add it to return list, avoiding unnecessary duplicates
+            if (contextList.indexOf(contextItem) == -1)
+                contextList.push(contextItem);
+        }
+    }
+    return contextList;
+};
+
+/**
+ * Find out if any context was added to any of the units in this scenario.
+ * @returns {boolean} true if there is context, else false.
+ */
+Scenario.prototype.hasContext = function() {
+    for (var i in this._units)
+        if (this._units[i].getContextData().length != 0) return true;
+    return false;
+};
