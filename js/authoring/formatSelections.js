@@ -40,7 +40,7 @@ var contextIconSrcDictionary = {
     "CI_PHOTO_CAMERA_AVAILABLE" : "img/icons-context-information/ci-technical-photo-camera-available.png",
     "CI_PRINTER_AVAILABLE" : "img/icons-context-information/ci-technical-printer-available.png",
     "CI_VIDEO_CAMERA_AVAILABLE" : "img/icons-context-information/ci-technical-video-camera-available.png",
-    //missing but important" : battery status
+    //TODO: missing but important : battery status
 
     // physical (Umwelt)
     "CI_CURRENT_AIR_PRESSURE" : "img/icons-context-information/ci-physical-air-pressure2.png",
