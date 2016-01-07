@@ -49,8 +49,6 @@
         <script type="text/javascript" src="js/authoring/controllers/saveScenarioController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/sliderController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/unitController.js"></script>
-        <script type="text/javascript" src="js/authoring/controllers/simulator/simulationController.js"></script>
-        <script type="text/javascript" src="js/authoring/controllers/simulator/timelineController.js"></script>
 
         <!-- tab controllers -->
         <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
@@ -98,7 +96,6 @@
 
         <link rel="stylesheet" href="css/tabs.css">
         <link rel="stylesheet" href="css/navigation.css">
-        <link rel="stylesheet" href="css/timeline.css">
 
 
         <!-- google maps api -->
@@ -140,15 +137,6 @@
                         </li>
                         <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
                         <!--<li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>-->
-                        <li class="dropdown">
-                            <a id="contextSimulation" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-play"></b> Kontextsimulation <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li id="createSimulation"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
-                                <li id="openSimulation"><a href="#">Öffnen <b class="fui-folder-open" style="float: right"></b></a></li>
-                                <li id="deleteSimulation"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
-                                <li id="importSimulation"><a href="#">Importieren <b class="fui-upload" style="float: right"></b></a></li>
-                            </ul>
-                        </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -207,9 +195,6 @@
 
             <!-- Property area -->
             <div class="properties">
-
-                <div id="simulatorContainer"></div>
-
 
                 <!-- tabs header-->
                 <div class="tab-Container">
