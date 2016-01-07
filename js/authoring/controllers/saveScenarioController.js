@@ -21,13 +21,6 @@ function showSaveScenario() {
     // find current scenario in all scenarios
     json = JSON.stringify(authorSystemContent.getScenario(currentScenario));
 
-    /*for (var i=0; i<myAuthorSystem.length; i++) {
-        if (myAuthorSystem[i].name == currentScenario) {
-            json = JSON.stringify(myAuthorSystem[i]);
-            break;
-        }
-    }*/
-
     // set blob with JSON data
     var data = new Blob([json], {type: "text/json;charset=utf8"});
 

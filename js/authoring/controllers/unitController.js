@@ -145,8 +145,8 @@ function plumbUnit(newState) {
 
             // only set if current unit object exists
             if (current_unit) {
-                current_unit.posX = left;
-                current_unit.posY = top;
+                current_unit.setPosX(left);
+                current_unit.setPosY(top);
             }
         }
     });
