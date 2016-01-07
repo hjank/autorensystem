@@ -80,18 +80,51 @@ Unit.prototype.removeContextInfoByIndex = function(index) {
 };
 
 
-
+/***** JSON-LD formatting *****/
 
 /**
- * The following function and comment are taken from:
- * https://github.com/University-of-Potsdam-MM/UP.App/blob/bdcd669ae4a75e4666b4bf7c0750a94262e9d5c1/www/js/lib/utils.js
- * (courtesy of Alexander Kiy)
- *
- * Generates a uuid v4. Code is taken from broofas answer in http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+ * Produce a sub-graph for this unit (array of JSON-LD objects) to be added to JSON-LD
+ * NOTE: Metadata are not yet included in JSON-LD since a matching of this._metadata and T-Box predicates is needed first.
+ * @returns {Array} A sub-graph (array)
  */
-var uuid4 = function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-    });
+Unit.prototype.getJSONLDGraph = function () {
+    // the sub-graph to be returned
+    var graphJSONLD = [];
+
+    // for this unit, create a new JSON-LD named individual object
+    var unitJSONLD = {
+        "@id" : "abox:Unit"+uuid4(),
+        "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
+        "kno:hasLID" : this._uuid,
+        "kno:hasLogicalOperator" : (this._sat == "all") ? "AND" : "OR",
+        // TODO: all relations!!
+        "kno:hasPrerequisite" : [ ]
+        // TODO: metadata according to T-Box
+    };
+
+    // if this unit has context information , get their JSON-LD named individual objects
+    var contextReferenceJSONLDList = [];
+    for (var i in this._contextData) {
+        // get a JSON-LD-containing object for each context item
+        var contextJSONLD = this._contextData[i].getJSONLD();
+
+        // add references to these named JSON-LD individuals to the unit individual
+        contextReferenceJSONLDList.push( {"@id" : contextJSONLD.contextInfoJSONLD["@id"]} );
+
+        // add the context info JSON-LD individual to the partial ontology graph
+        graphJSONLD.push(contextJSONLD.contextInfoJSONLD);
+        // add each parameter JSON-LD individual to the partial ontology graph
+        for (var j in contextJSONLD.parameterJSONLD)
+            graphJSONLD.push(contextJSONLD.parameterJSONLD[j]);
+    }
+    // add context reference(s) to unit JSON-LD individual, if existent
+    if (contextReferenceJSONLDList.length == 1)
+        unitJSONLD["kno:hasMeasurableContextInformation"] = contextReferenceJSONLDList[0];
+    else if (contextReferenceJSONLDList.length > 1)
+        unitJSONLD["kno:hasMeasurableContextInformation"] = contextReferenceJSONLDList;
+
+    // add the unit's JSON-LD individual
+    graphJSONLD.push(unitJSONLD);
+
+    return graphJSONLD;
 };

@@ -7,11 +7,12 @@
 // formatted and validated with the help of: http://json-ld.org/playground/
 function ABoxJSONLD() {
 
-    // just a placeholder 
+    // a little template for the graph (see below)
     this._typeId = {"@type": "@id"};
 
-    // define the ontology's namespace which will remain just like this
+    // the actual A-Box
     this._jsonLD = {
+        // define the ontology's namespace which will remain just like this
         "@context": {
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -130,6 +131,7 @@ function ABoxJSONLD() {
                 "@type": "rdfs:Literal"
             }
         },
+        // and the actual content (a list of all JSON-LD individuals)
         "@graph": [
             {
                 "@id": "http://motivate-project.de/ontology/abox.owl",
@@ -141,6 +143,12 @@ function ABoxJSONLD() {
 
     return this;
 }
+
+// getters
+
+ABoxJSONLD.prototype.getABoxJSONLD = function() {
+    return this._jsonLD;
+};
 
 ABoxJSONLD.prototype.getContext = function () {
     return this._jsonLD["@context"];
@@ -161,6 +169,7 @@ ABoxJSONLD.prototype.containsIndividual = function (namedIndividualJSONLD) {
     for (var i in graph) {
         var individual = graph[i];
 
+        // make sure both have the same keys
         if (Object.keys(individual) != Object.keys(namedIndividualJSONLD))
             continue;
 

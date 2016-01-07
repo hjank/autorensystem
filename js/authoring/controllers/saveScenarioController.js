@@ -11,18 +11,22 @@ $(function() {
  * Function saves current open scenario as a JSON file.
  */
 function showSaveScenario() {
-    var saveScenarioElement = $("#saveScenario");
 
     // get current scenario name
     var currentScenario = $("#lname")[0].innerHTML;
-    var json;
+    if (currentScenario == "") {
+        alert("Sie müssen erst ein Szenario erstellen, bevor Sie es speichern können.");
+        return false;
+    }
+
     var jsonFile = null;
 
     // find current scenario in all scenarios
-    json = JSON.stringify(authorSystemContent.getScenario(currentScenario));
+    var json = authorSystemContent.getScenario(currentScenario);
+    var jsonLD = JSON.stringify(json ? json.getABoxJSONLD() : {});
 
     // set blob with JSON data
-    var data = new Blob([json], {type: "text/json;charset=utf8"});
+    var data = new Blob([jsonLD], {type: "text/json;charset=utf8"});
 
     // if file will be replaced by another one --> avoid memory leak
     if (jsonFile !== null) {
@@ -31,11 +35,12 @@ function showSaveScenario() {
     // set JSON file
     jsonFile = window.URL.createObjectURL(data);
 
+    var saveScenarioElement = $("#saveScenario");
     // change file name to current scenario name
     saveScenarioElement.children("a")[0].download = currentScenario + ".json";
-
     // add link and open download view
     saveScenarioElement.children("a")[0].href = jsonFile;
+
 
     // show json in new window
     /*var url = "data:text/json;charset=utf8," + encodeURIComponent(JSON.stringify(myAuthorSystem));

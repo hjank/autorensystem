@@ -140,10 +140,8 @@ ContextInformation.prototype.resetAllValues = function() {
 
 /***** JSON-LD formatting *****/
 
-ContextInformation.prototype.getJSONLDGraph = function () {
+ContextInformation.prototype.getJSONLD = function () {
     if (this._chosenValue == "") return false;
-
-    var graphJSONLD = [];
 
     // for this context information, create a new JSON-LD named individual object
     var contextInfoJSONLD = {
@@ -155,20 +153,22 @@ ContextInformation.prototype.getJSONLDGraph = function () {
     };
 
     // if this context information has parameters, get their JSON-LD named individual objects
-    var parameterJSONLDArray = [];
+    var parameterJSONLDList = [];
+    var parameterReferenceJSONLDList = [];
     for (var i in this._parameters) {
         var parameterJSONLD = this._parameters[i].getJSONLD();
         // add references to these named individuals to the context information individual
-        parameterJSONLDArray.push( {"@id" : parameterJSONLD["@id"]} );
+        parameterReferenceJSONLDList.push( {"@id" : parameterJSONLD["@id"]} );
         // add each parameter individual to the partial ontology graph
-        graphJSONLD.push(parameterJSONLD);
+        parameterJSONLDList.push(parameterJSONLD);
     }
-    if (parameterJSONLDArray.length == 1)
-        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterJSONLDArray[0];
-    else if (parameterJSONLDArray.length > 1)
-        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterJSONLDArray;
+    if (parameterReferenceJSONLDList.length == 1)
+        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterReferenceJSONLDList[0];
+    else if (parameterReferenceJSONLDList.length > 1)
+        contextInfoJSONLD["kno:hasContextInformationParameter"] = parameterReferenceJSONLDList;
 
-    graphJSONLD.push(contextInfoJSONLD);
-
-    return graphJSONLD;
+    return {
+        contextInfoJSONLD : contextInfoJSONLD,
+        parameterJSONLD : parameterJSONLDList
+    }
 };

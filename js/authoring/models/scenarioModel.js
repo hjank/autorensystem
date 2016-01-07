@@ -79,7 +79,6 @@ Scenario.prototype.removeConnection = function(connId) {
     }
 };
 
-
 /**
  * Goes through all units of this scenario and gets (copies of) their associated context information items.
  * Chosen values will be reset to "".
@@ -114,4 +113,29 @@ Scenario.prototype.hasContext = function() {
     for (var i in this._units)
         if (this._units[i].getContextData().length != 0) return true;
     return false;
+};
+
+
+/************* JSON-LD formatting *************/
+
+/**
+ * Create an A-Box in JSON-LD for this scenario.
+ * @returns {ABoxJSONLD} The A-Box.
+ */
+Scenario.prototype.getABoxJSONLD = function() {
+    var aBoxJSONLD = new ABoxJSONLD();
+
+    // for each unit ...
+    for (var i in this._units) {
+        // ... get its JSON-LD (a list of JSON-LD named individuals)
+        var unitJSONLDGraph = this._units[i].getJSONLDGraph();
+        // ... add all unique items (individuals) in this list to A-Box graph
+        for (var j in unitJSONLDGraph) {
+            var unitJSONLD = unitJSONLDGraph[j];
+            // prevent unnecessary duplicates
+            if (!aBoxJSONLD.containsIndividual(unitJSONLD))
+                aBoxJSONLD.addToGraph(unitJSONLD);
+        }
+    }
+    return aBoxJSONLD.getABoxJSONLD();
 };
