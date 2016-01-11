@@ -3,6 +3,7 @@
  */
 
 var currentConnectionID;
+var connectionIsClicked = false;
 
 function initPlumbCanvas() {
 
@@ -34,7 +35,8 @@ function initPlumbCanvas() {
 
 
     // triggered if a connection was drawn between to units
-    inst.bind("connection", function (con) {
+    inst.bind("connection", function (con, e) {
+        e.stopPropagation();
 
         // only use if scenario name is set (don't access at loading scenario)
         if ( $("#lname")[0].innerHTML.length != 0 ) {
@@ -59,8 +61,9 @@ function initPlumbCanvas() {
                 var label = con.connection.getOverlay("label");
                 var labelID = $(label)[0].canvas.id;
                 $("#" + labelID)[0].setAttribute("title", "Vorausetzung (PRE)");
-            }
 
+                activateConnection(con.connection);
+            }
         }
     });
 
@@ -69,8 +72,7 @@ function initPlumbCanvas() {
     // c = connection element
     // e = event
     inst.bind("click", function (c, e) {
-
-        fillRelationTab(c);
+        activateConnection(c);
         // needed to prevent clicking the container as well
         e.stopPropagation();
 
@@ -79,20 +81,20 @@ function initPlumbCanvas() {
 
     // triggered if unit container, i.e. canvas is clicked
     $("#container").on("click", function() {
+        if (connectionIsClicked)
+            return false;
 
         // clear marking from existing learning units
         clearMarkingFromLearningUnits();
+        // clear marking from label connections
+        clearMarkingFromConnections();
 
         bool_unitClicked = false;
-
-        // clear marking from label connections
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
+        connectionIsClicked = false;
 
         // all tab content invisible
-        $(".tabContents").hide();
-        $(".tab-Container").hide();
-        $("#tabUnitLabel").hide();
+        showScenarioTab();
+
     });
 
 
@@ -105,13 +107,20 @@ function initPlumbCanvas() {
     });
 }
 
-
+function activateConnection(conn) {
+    // for tab bar
+    connectionIsClicked = true;
+    bool_unitClicked = false;
+    fillRelationTab(conn);
+}
 
 function clearMarkingFromLearningUnits () {
-    for (var l in list_units) {
-        $("#"+list_units[l]).css("background", "");
-        $("#"+list_units[l]).css("color", "");
-    }
+    $("#stm").children("div.w").css("background", "").css("color", "");
+}
+
+function clearMarkingFromConnections () {
+    // clear marking from label connections
+    $(".aLabel").css("background-color", "").css("color", "");
 }
 
 

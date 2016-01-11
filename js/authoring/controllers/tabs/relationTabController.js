@@ -14,6 +14,7 @@ $(function() {
         // unmark label
         $("#" + currentConnectionID).css("background-color", "");
         $("#" + currentConnectionID).css("color", "");
+        connectionIsClicked = false;
 
         // get connection id and scenario name
         var connID = $("#" + currentConnectionID)[0]._jsPlumb.component.id;
@@ -25,8 +26,6 @@ $(function() {
         thisConnection.setLabel(e.val.toUpperCase());
         thisConnection.setTitle(e.choice.text);
 
-        // hide property in tab
-        $("#tabUnitLabel").hide();
     });
 
 
@@ -46,10 +45,12 @@ $(function() {
         var thisScenario = authorSystemContent.getScenario(currentScenario);
         thisScenario.removeConnection(connID);
 
-        // hide tab after connection was deleted
-        $("#tabUnitLabel").hide();
+        // hide relation tab after connection was deleted
+        deactivateAllTabs();
+        connectionIsClicked = false;
     });
 });
+
 
 function fillRelationTab(connection) {
 
@@ -68,20 +69,16 @@ function fillRelationTab(connection) {
     $("#postLabelRelations").html("für " + targetUnit);
 
     // clear markings from connection labels
-    $(".aLabel").css("background-color", "");
-    $(".aLabel").css("color", "");
+    clearMarkingFromConnections();
     // set label connection mark
     $("#" + currentConnectionID).css("background-color", "#1e8151");
     $("#" + currentConnectionID).css("color", "white");
 
-    // clear unit marking and hide unit properties
-    $(".w").css("background", "");
-    $(".w").css("color", "");
-    $(".tabContents").hide();
-    $(".tab-Container").hide();
+    // clear unit marking
+    clearMarkingFromLearningUnits();
 
     // show relations tab: set label connection property visible
-    $("#tabUnitLabel").css("display", "block");
+    showRelationTab();
 
     // show right selection of the current label in selection bar
     $("#selectRelations").children("option").each(function() {

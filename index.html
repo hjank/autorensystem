@@ -19,8 +19,8 @@
         <!-- general javascript scripts -->
         <!--<script src="//code.jquery.com/jquery-2.0.3.js"></script>-->
         <!--<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>-->
-        <script type="text/javascript" src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.min.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.custom/external/jquery/jquery-2.1.4.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
         <!--<script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"/>-->
         <script type="text/javascript" src="js/vendor/jsPlumb-1.7.10.js"></script>
@@ -52,8 +52,8 @@
         <script type="text/javascript" src="js/authoring/controllers/unitController.js"></script>
 
         <!-- tab controllers -->
+        <script type="text/javascript" src="js/authoring/controllers/tabs/tabBarController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
-        <script type="text/javascript" src="js/authoring/controllers/tabs/generalTabController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/locationInfoMapViewController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/propertiesTabController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/relationTabController.js"></script>
@@ -121,7 +121,7 @@
                     <ul class="nav navbar-nav">
                         <!--<li class="active"><a href="#">Home</a></li>-->
                         <li class="dropdown">
-                            <a id="navbarScenario" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-credit-card"></b> Szenario <b class="caret"></b></a>
+                            <a id="navbarScenario" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-window"></b> Szenario <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li id="showNewScenario"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
                                 <li id="deleteScenario"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
@@ -198,17 +198,21 @@
             <div class="properties">
 
                 <!-- tabs header-->
-                <div class="tab-Container">
+                <div class="tabBar">
                     <ul>
-                        <li><a id="firstTab" href="#tab1" title="Eigenschaften" class="fui-gear"></a> </li>
-                        <li><a href="#tab2" title="Kontextinformationen">K</a></li>
-                        <li><a href="#tab3" title="Metadaten">M</a></li>
+                        <li><a href="#tab0" title="Szenario" class="active scenarioTab fui-window"></a></li>
+                        <li><a href="#tab1" title="Lerneinheit" class="unitTab fui-new"></a></li>
+                        <li><a href="#tab2" title="Metadaten" class="unitTab">M</a></li>
+                        <li><a href="#tab3" title="Kontextinformationen" class="unitTab">K</a></li>
+                        <li><a href="#tab4" title="Relation" class="relationTab">R</a></li>
+                        <li><a href="#tab5" title="Simulator" class="simulatorTab fui-play2"></a></li>
                     </ul>
                 </div>
 
                 <!-- content of the tabs -->
                 <div class="tabDetails">
-                    <div id="tab1" class="tabContents">
+                    <div id="tab0" class="tabContents scenarioTab"></div>
+                    <div id="tab1" class="tabContents unitTab">
                         <div id="formProperties">
                             <div>
                                 <label for="inputUnitName" class="label-tabs label">Name</label>
@@ -225,7 +229,31 @@
                             </div>
                         </div>
                     </div>
-                    <div id="tab2" class="tabContents">
+                    <div id="tab2" class="tabContents unitTab">
+                        <form>
+                            <div>
+                                <div style="padding-bottom: 20px">
+                                    <label class="label-tabs label">Gewählt</label>
+                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label-tabs label">Auswahl Metadaten</label>
+                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                                        <option disabled selected>METADATEN</option>
+                                        <!--<option value="0">Bild</option>
+                                        <option value="1">Film</option>
+                                        <option value="2">Text</option>
+                                        <option value="3">Navigation</option>
+                                        <option value="4">Test</option>
+                                        <option value="5">Audio</option>-->
+                                    </select>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div id="tab3" class="tabContents unitTab">
                         <form id="formContextInformation">
                             <div id="mainContextInfo">
                                 <div id="mainContextInfoSAT">
@@ -289,56 +317,29 @@
                             </div>
                         </form>
                     </div>
-                    <div id="tab3" class="tabContents">
-                        <form>
-                            <div>
-                                <div style="padding-bottom: 20px">
-                                    <label class="label-tabs label">Gewählt</label>
-                                    <select id="selectMultiMetaData" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
-                                    </select>
-                                </div>
+                    <!-- content of label relations -->
+                    <div id="tab4" class="tabContents relationTab">
+                        <div id="divSelectRelations">
+                            <div id="tabRelationBody">
+                                <p id="preLabelRelations" class="label-tabs label">Ist eine</p>
+                                <select id="selectRelations" class="form-control select select-primary select-block mbl">
+                                    <option value="pre">Voraussetzung (PRE)</option>
+                                    <option value="alt">Alternative (ALT)</option>
+                                    <option value="bas">Grundlage (BAS)</option>
+                                    <option value="ref">Referenz (REF)</option>
+                                    <option value="ext">Erweiterung (EXT)</option>
+                                    <option value="hlp">Hilfe (HLP)</option>
+                                </select>
+                                <p id="postLabelRelations" class="label-tabs label">Für</p>
                                 <div>
-                                    <label class="label-tabs label">Auswahl Metadaten</label>
-                                    <select id="selectMetaData" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
-                                        <option disabled selected>METADATEN</option>
-                                        <!--<option value="0">Bild</option>
-                                        <option value="1">Film</option>
-                                        <option value="2">Text</option>
-                                        <option value="3">Navigation</option>
-                                        <option value="4">Test</option>
-                                        <option value="5">Audio</option>-->
-                                    </select>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-
-                <!-- content of label relations -->
-                <div id="tabUnitLabel" class="tabRelation">
-                    <div id="divSelectRelations">
-                        <div id="tabRelationHead">
-                            <a title="Relation der Lerneinheiten">Relation</a>
-                        </div>
-                        <div id="tabRelationBody">
-                            <p id="preLabelRelations" class="label-tabs label">Ist eine</p>
-                            <select id="selectRelations" class="form-control select select-primary select-block mbl">
-                                <option value="pre">Voraussetzung (PRE)</option>
-                                <option value="alt">Alternative (ALT)</option>
-                                <option value="bas">Grundlage (BAS)</option>
-                                <option value="ref">Referenz (REF)</option>
-                                <option value="ext">Erweiterung (EXT)</option>
-                                <option value="hlp">Hilfe (HLP)</option>
-                            </select>
-                            <p id="postLabelRelations" class="label-tabs label">Für</p>
-                            <div>
-                                <div id="tabBtnDeleteConnection" class="btn btn-danger">
-                                    <b class="fui-trash" ></b>Verbindung löschen
+                                    <div id="tabBtnDeleteConnection" class="btn btn-danger">
+                                        <b class="fui-trash" ></b>Verbindung löschen
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div id="tab5" class="tabContents simulatorTab"></div>
                 </div>
 
             </div>

@@ -22,11 +22,6 @@ $(function() {
             // and delete it and its traces
             removeUnitFromScenario(unitUUID, selectedScenarioName);
         }
-
-        // all tab content invisible
-        $(".tabContents").hide();
-        $(".tab-Container").hide();
-        $("#tabUnitLabel").hide();
     });
 
     // for button: delete unit = NO

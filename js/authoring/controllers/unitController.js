@@ -5,6 +5,9 @@
 
 function createUnit() {
 
+    // hide tabs because all units will be unmarked
+    deactivateAllTabs();
+
     // lname := scenario name in navBar
     var nameCurrentScenario = $("#lname")[0].innerText;
 
@@ -15,10 +18,9 @@ function createUnit() {
     // get new unit DOM
     var newState = buildUnitDOM(uuid, stateName);
 
-    var nameSet = false;
-
-    // if the unit name was written and enter was clicked
+    // if the unit name was written and enter was pressed
     stateName.keyup(function(e) {
+
         if (e.keyCode == 13) {
 
             var unitName = this.value;
@@ -31,15 +33,11 @@ function createUnit() {
             // set unit name
             $(this).parent().text(unitName);
 
-
             // update JSON structure: get new unit in its scenario
             var newUnit = new Unit();
             newUnit.setUUID(uuid);
             newUnit.setName(unitName);
             authorSystemContent.getScenario(nameCurrentScenario).addUnit(newUnit);
-
-            // get newState id in unit list // TODO: check this list
-            list_units.push(currentUnitUUID);
 
             // clear marking from existing learning units
             clearMarkingFromLearningUnits();
@@ -47,18 +45,15 @@ function createUnit() {
             // add learning unit in menu bar
             addUnitToMenu(nameCurrentScenario);
 
-            // hide tabs because all units will be unmarked
-            $(".tabContents").hide();
-            nameSet = true;
-        }
+            // show first unit tab
+            lastOpenedUnitTab = null;
+            activateUnit(newState);
 
-        // to set the source and target points, it is necessary to wait until the name was entered
-        // --> prevent the wrong placement of the dots
-        if (nameSet) {
+            // to set the source and target points, it is necessary to wait until the name was entered
+            // --> prevent the wrong placement of the dots
             plumbUnit(newState);
             // set event handler listening for click
             initUnitClickEventHandler();
-            nameSet = false;
         }
     });
     // set focus on input field
@@ -173,6 +168,10 @@ function plumbUnit(newState) {
 }
 
 
+/**
+ * Sets click event handler for every newly created unit.
+ * NOTE: Event handler cannot be set at document load, because units do not exist then.
+ */
 function initUnitClickEventHandler () {
 
     // triggered if learning unit is clicked
@@ -181,41 +180,8 @@ function initUnitClickEventHandler () {
         // update global variable: UUID of the clicked unit
         currentUnitUUID = $(this)[0].getAttribute("id");
 
-        bool_unitClicked = true;
-
-        // clear marking from all units
-        clearMarkingFromLearningUnits();
-        // unit is marked --> change color
-        $(this).css("background", "#16a085");
-        $(this).css("color", "white");
-        // clear marking from label connections
-        $(".aLabel").css("background-color", "");
-        $(".aLabel").css("color", "");
-
-        // show tab content of the current active tab
-        var activeTab = $(".tab-Container > ul > li").children("a.active").attr("href");
-        $(activeTab).fadeIn();
-        $(".tab-Container").show();
-        // hide tab from unit label connection
-        $("#tabUnitLabel").hide();
-
-        // get current unit's data model (if existent)
-        var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
-
-        // make sure this unit has got a name and data model
-        if (current_unit) {
-            /* tab "Eigenschaften"*/
-
-            // put name into the input field
-            //var formObject = document.forms["formProperties"];
-            $("#inputUnitName")[0].value = current_unit.getName();
-
-            // set description field
-            $("#inputUnitDescription")[0].value = current_unit.getDescription();
-
-            /* tab "Kontextinformation" */
-            loadContextTabForUnit();
-        }
+        // highlight unit and load its data for tabs
+        activateUnit(this);
 
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
@@ -223,6 +189,32 @@ function initUnitClickEventHandler () {
         //console.log(myAuthorSystem);
         console.log(JSON.stringify(authorSystemContent));
     });
+}
+
+/**
+ * Highlights unit and loads its tab contents.
+ * Called when unit is clicked or created.
+ */
+function activateUnit(unit) {
+
+    // clear marking from all units
+    clearMarkingFromLearningUnits();
+    // unit is marked --> change color
+    $(unit).css("background", "#16a085");
+    $(unit).css("color", "white");
+
+    // clear marking from label connections
+    clearMarkingFromConnections();
+    connectionIsClicked = false;
+    bool_unitClicked = true;
+
+    /* tab "Eigenschaften"*/
+    fillUnitPropertiesTab();
+    /* tab "Kontextinformation" */
+    loadContextTabForUnit();
+
+    // show tab content of the currently active tab
+    showUnitTab();
 }
 
 
@@ -337,6 +329,8 @@ function removeUnitFromScenario(unitUUID, scenarioName) {
     removeUnitFromMenu(scenarioName, currentUnit.getName());
     currentScenario.removeUnit(currentUnit);
 
+    // hide tab content and un-select all tabs in right panel
+    deactivateAllTabs();
 }
 
 

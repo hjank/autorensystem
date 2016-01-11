@@ -665,7 +665,6 @@ function confirmContextInformation() {
     // get name into multi selection
     //$("#selectMultiContextInfos").append(option);
     array_multiSelectionContextInfos[unitContextIndex] = {id: unitContextIndex.toString(), text: contextInfoName};
-    // TODO: This just doesn't work anymore... O:
     $(selectMultiContextInfos).select2("data", array_multiSelectionContextInfos);
 
     // re-color each choice and add editing functionality

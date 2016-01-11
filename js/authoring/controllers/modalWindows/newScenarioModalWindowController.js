@@ -100,6 +100,8 @@ function createScenario() {
     // activate learning unit dropdown menu (big navigation bar)
     learningUnitDropdownMenuElement.css("pointer-events", "");
     learningUnitDropdownMenuElement.css("color", "");
+
+    showScenarioTab();
 }
 
 /**

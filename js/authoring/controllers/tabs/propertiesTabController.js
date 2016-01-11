@@ -57,14 +57,29 @@ $(function() {
         removeUnitFromScenario(currentUnitUUID, currentScenarioName);
 
         // all tab content invisible
-        $(".tabContents").hide();
-        $(".tab-Container").hide();
+        deactivateAllTabs();
     });
 
 
     // set the trigger for if the delete button in tab "Eigenschaften" was clicked
     $("#tabBtnDeleteUnit").on("click", showDeleteUnitConfirm);
 });
+
+
+/**
+ * Prepare property tab content for clicked unit.
+ */
+function fillUnitPropertiesTab() {
+    // get current unit's data model (if existent)
+    var current_unit = authorSystemContent.getUnitByUUID(currentUnitUUID);
+
+    // put name into the input field
+    //var formObject = document.forms["formProperties"];
+    $("#inputUnitName")[0].value = current_unit.getName();
+    // set description field
+    $("#inputUnitDescription")[0].value = current_unit.getDescription();
+}
+
 
 /**
  * Function shows delete unit confirmation modal window.

@@ -148,8 +148,8 @@ textarea {
     width: 275px;
     overflow-y: auto;
     overflow-x: hidden;
+    background: #eee;
 }
-
 
 body {
     font-family: sans-serif;
@@ -286,10 +286,6 @@ ul#navbar-right {
 
 .content {
     background: #ffffff;
-}
-
-.properties {
-    background: #eee;
 }
 
 #tabs > ul {

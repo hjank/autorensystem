@@ -1,9 +1,9 @@
-.tab-Container{
+.tabBar {
     position:relative;
     width: inherit;
     height: 30px;
 }
-.tab-Container ul{
+.tabBar ul{
     overflow:hidden;
     height: 30px;
     z-index:100;
@@ -13,12 +13,12 @@
     width: inherit;
     text-align: center;
 }
-.tab-Container li{
+.tabBar li{
     float:left;
     list-style:none;
-    width: 33.33%;
+    width: 16.666%;
 }
-.tab-Container li a{
+.tabBar li a{
     background:#ccc;
     border-right:0;
     color:#666;
@@ -29,10 +29,10 @@
     text-decoration:none;
     text-transform:uppercase;
 }
-.tab-Container li a:hover{
+.tabBar li a:hover{
     background:#ddd;
 }
-.tab-Container li a.active{
+.tabBar li a.active{
     background: #48c9b0;
     border-right:0;
     color: #ffffff;
@@ -149,21 +149,6 @@
     font-weight: 300;
 }
 /* end google search box */
-
-.tabRelation {
-    display: none;
-}
-#tabRelationHead {
-    height: 30px;
-    text-align: center;
-    background: #48c9b0;
-}
-#tabRelationHead a {
-    color: #ffffff;
-}
-#tabRelationBody {
-    padding: 20px;
-}
 
 #preLabelRelations {
     font-size: 18px;

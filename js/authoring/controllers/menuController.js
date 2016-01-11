@@ -16,6 +16,7 @@ $(function() {
 			element.siblings('li').find('li').removeClass('open');
 			element.siblings('li').find('ul').slideUp();
 		}
+		showScenarioTab();
 	});
 
 	$('#cssmenu>ul>li.has-sub>a').append('<span class="holder"></span>');
