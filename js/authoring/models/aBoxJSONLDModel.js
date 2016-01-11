@@ -147,6 +147,8 @@ function ABoxJSONLD() {
 // getters
 
 ABoxJSONLD.prototype.getABoxJSONLD = function() {
+    // undo workaround from previous authorSystemContent JSON download
+    replaceScenarioNamesWithReferences();
     return this._jsonLD;
 };
 
@@ -187,7 +189,12 @@ ABoxJSONLD.prototype.containsIndividual = function (namedIndividualJSONLD) {
 };
 
 
-/*********** helper function used by ContextInformationModel and ParameterModel ************/
+/** helper function used by ContextInformationModel and ParameterModel
+ *
+ * @param type
+ * @param chosenValue
+ * @returns {*}
+ */
 
 function formatJSONLDValue (type, chosenValue) {
     var jsonLD;
@@ -215,4 +222,18 @@ function formatJSONLDValue (type, chosenValue) {
         jsonLD["@value"] = chosenValue.toLowerCase();
 
     return (jsonLD || chosenValue);
+}
+
+
+/** Undo replaceScenarioReferencesWithNames() before JSON-LD export
+ *
+ */
+function replaceScenarioNamesWithReferences () {
+    var scenarios = authorSystemContent.getScenarios();
+    for (var i in scenarios) {
+        var units = scenarios[i].getUnits();
+        for (var j in units) {
+            units[j].setScenarioReference(scenarios[i]);
+        }
+    }
 }

@@ -22,7 +22,7 @@ $(function() {
 
         // get current scenario's JSON
         var thisScenario = authorSystemContent.getScenario(currentScenario);
-        var thisConnection = thisScenario.getConnection(connID);
+        var thisConnection = thisScenario.getConnectionByID(connID);
         thisConnection.setLabel(e.val.toUpperCase());
         thisConnection.setTitle(e.choice.text);
 

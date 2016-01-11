@@ -61,3 +61,11 @@ Connection.prototype.setTitle = function(title) {
 Connection.prototype.connectsUnit = function(unitUUID) {
     return (this._sourceId == unitUUID || this._targetId == unitUUID);
 };
+// check if given unit is the source of this connection
+Connection.prototype.hasSource = function(unitUUID) {
+    return (this._sourceId == unitUUID);
+};
+// check if given unit is the target of this connection
+Connection.prototype.hasTarget = function(unitUUID) {
+    return (this._targetId == unitUUID);
+};

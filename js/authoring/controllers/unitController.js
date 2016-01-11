@@ -34,10 +34,12 @@ function createUnit() {
             $(this).parent().text(unitName);
 
             // update JSON structure: get new unit in its scenario
+            var scenarioObject = authorSystemContent.getScenario(nameCurrentScenario);
             var newUnit = new Unit();
             newUnit.setUUID(uuid);
             newUnit.setName(unitName);
-            authorSystemContent.getScenario(nameCurrentScenario).addUnit(newUnit);
+            newUnit.setScenarioReference(scenarioObject);
+            scenarioObject.addUnit(newUnit);
 
             // clear marking from existing learning units
             clearMarkingFromLearningUnits();

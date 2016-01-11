@@ -159,6 +159,15 @@ var metaDataDictionary = {
     "MD_3D_ENVIRONMENT" : "3D Umgebung"
 };
 
+var relationDictionary = {
+    "PRE" : "Prerequisite",
+    "ALT" : "Alternative",
+    "BAS" : "Basis",
+    "REF" : "Reference",
+    "EXT" : "Extension",
+    "HLP" : "Help"
+};
+
 /**
  * Functions translate context information into german.
  * @param {String} ci Contains a context information name
@@ -220,4 +229,12 @@ function translate_parameterValue(pv) {
 
 function translate_metaData(md) {
     return metaDataDictionary[md]
+}
+
+function translate_relationLabelForward(label) {
+    return "kno:has"+relationDictionary[label];
+}
+
+function translate_relationLabelBackward(label) {
+    return "kno:is"+relationDictionary[label]+"Of";
 }

@@ -23,7 +23,7 @@ function checkInformation() {
         missing_content += " - Kontextinformation\n";
     } else {
         // create a copy of the selected context info's JSON structure
-        selectedContextInfo = $.extend(new ContextInformation(), contextList.getItem(selectedInfoID.id));
+        selectedContextInfo = $.extend(true, new ContextInformation(), contextList.getItem(selectedInfoID.id));
 
 
         /*    // only addable if context info doesn't exist already
@@ -76,8 +76,9 @@ function checkInformation() {
 
         // check and get parameters (if existent)
         var selectedInfoParameters = selectedContextInfo.getParameters();
+        var chosenParameterList = [];
         for (var i in selectedInfoParameters) {
-            var parameter = selectedInfoParameters[i];
+            var parameter = $.extend(true, new Parameter(), selectedInfoParameters[i]);
             var parameterElement = $("#parameter"+i);
             var parameterDiv = parameterElement.parent();
             var paramValue;
@@ -108,7 +109,10 @@ function checkInformation() {
             }
             // update JSON structure
             parameter.setChosenValue(paramValue);
+            chosenParameterList.push(parameter);
         }
+        // replace context info's (inherited) parameters with chosen
+        selectedContextInfo.setParameters(chosenParameterList);
     }
 
     // if content is missing do not accept adding of the context information

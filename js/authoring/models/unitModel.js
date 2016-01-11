@@ -13,6 +13,7 @@ function Unit() {
     this._metaData = [];            // list containing meta data
     this._posX = 0;                 // absolute X position in the displayed container
     this._posY = 0;                 // absolute Y position in the displayed container
+    this._scenario = {};            // a reference to the scenario this unit belongs to (needed to get at connections)
 
     return this;
 }
@@ -42,6 +43,9 @@ Unit.prototype.getContextData = function() {
 Unit.prototype.getMetaData = function() {
     return this._metaData;
 };
+Unit.prototype.getScenario = function() {
+    return this._scenario;
+};
 
 // setters
 Unit.prototype.setName = function(name) {
@@ -61,6 +65,9 @@ Unit.prototype.setPosX = function(posX) {
 };
 Unit.prototype.setPosY = function(posY) {
     this._posY = posY;
+};
+Unit.prototype.setScenarioReference = function(scenario) {
+    this._scenario = scenario;
 };
 
 // adders
@@ -93,14 +100,13 @@ Unit.prototype.getJSONLDGraph = function () {
 
     // for this unit, create a new JSON-LD named individual object
     var unitJSONLD = {
-        "@id" : "abox:Unit"+uuid4(),
+        "@id" : "abox:"+this._uuid,
         "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
         "kno:hasLID" : this._uuid,
-        "kno:hasLogicalOperator" : (this._sat == "all") ? "AND" : "OR",
-        "kno:hasPrerequisite" : [ ]
+        "kno:hasLogicalOperator" : (this._sat == "all") ? "AND" : "OR"
     };
 
-    // if this unit has context information , get their JSON-LD named individual objects
+    // if this unit has context information, get JSON-LD named individual objects for context items (incl. parameters)
     var contextReferenceJSONLDList = [];
     for (var i in this._contextData) {
         // get a JSON-LD-containing object for each context item
@@ -126,7 +132,20 @@ Unit.prototype.getJSONLDGraph = function () {
     // NOTE: There are no metadata yet. In case there will be - TODO: metadata must match with T-Box!
     for (var m in this._metaData)
         unitJSONLD["kno:hasMetaData"] = this._metaData[m];
-    
+
+    // relations
+    var connections = this._scenario.getConnections();
+    for (var c in connections) {
+        var connection = connections[c];
+
+        // if this unit is the source of a connection, add statement "[unit] kno:has... [target]"
+        if (connection.hasSource(this._uuid))
+            unitJSONLD[translate_relationLabelForward(connection.getLabel())] = "abox:"+connection.getTargetId();
+
+        // if this unit is the target of a connection, add statement "[unit] kno:is...Of [source]"
+        if (connection.hasTarget(this._uuid))
+            unitJSONLD[translate_relationLabelBackward(connection.getLabel())] = "abox:"+connection.getSourceId();
+    }
 
     // add the unit's JSON-LD individual
     graphJSONLD.push(unitJSONLD);

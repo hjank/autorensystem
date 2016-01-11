@@ -4,7 +4,9 @@
 
 $(function() {
     // sets the trigger for if save scenario was clicked
-    $("#saveScenario").on("click", showSaveScenario);
+    $("#saveScenario").on("click", function() {
+        showSaveScenario();
+    });
 });
 
 /**
@@ -21,12 +23,15 @@ function showSaveScenario() {
 
     var jsonFile = null;
 
+    // workaround
+    replaceScenarioReferencesWithNames();
+
     // find current scenario in all scenarios
     var json = authorSystemContent.getScenario(currentScenario);
-    var jsonLD = JSON.stringify(json ? json.getABoxJSONLD() : {});
+    //var jsonLD = JSON.stringify(json ? json.getABoxJSONLD() : {});
 
     // set blob with JSON data
-    var data = new Blob([jsonLD], {type: "text/json;charset=utf8"});
+    var data = new Blob([json], {type: "text/json;charset=utf8"});
 
     // if file will be replaced by another one --> avoid memory leak
     if (jsonFile !== null) {
@@ -46,4 +51,16 @@ function showSaveScenario() {
     /*var url = "data:text/json;charset=utf8," + encodeURIComponent(JSON.stringify(myAuthorSystem));
      window.open(url, "_blank");
      window.focus();*/
+
+}
+
+// circular structures cannot be converted to string, thus replace scenario reference in unit (for now)
+function replaceScenarioReferencesWithNames () {
+    var scenarios = authorSystemContent.getScenarios();
+    for (var i in scenarios) {
+        var units = scenarios[i].getUnits();
+        for (var j in units) {
+            units[j].setScenarioReference(scenarios[i].getName());
+        }
+    }
 }
