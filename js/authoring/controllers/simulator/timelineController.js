@@ -40,9 +40,9 @@ function createColumns(contextInfoList) {
  */
 function setCellEventHandlers() {
 
-    $(".timelineCell").on("mousedown", _mousedown);
-    $(document).mousemove(_mousemove);
-    $(document).mouseup(_mouseup);
+    $(".timelineCell").on("mousedown", _handleMousedown);
+    $(document).mousemove(_handleMousemove);
+    $(document).mouseup(_handleMouseup);
 
    // $(".timelineCellOccupied").on("click", _mouseenter);
 }
@@ -55,7 +55,7 @@ function setCellEventHandlers() {
  * @param event
  * @private
  */
-function _mousedown(event) {
+function _handleMousedown(event) {
     down = true;
 
     yOnMousedown = event.pageY;
@@ -70,7 +70,7 @@ function _mousedown(event) {
  * @param event The mousemove event. Not restricted to cells because cursor may leave the table.
  * @private
  */
-function _mousemove(event) {
+function _handleMousemove(event) {
     event.preventDefault();
 
     if (down) {
@@ -85,7 +85,7 @@ function _mousemove(event) {
  * @param event The mouseup event. Can occur anywhere in the document.
  * @private
  */
-function _mouseup(event) {
+function _handleMouseup(event) {
     event.preventDefault();
 
     // if the mouse has been down, and is now released (could there be any other case, actually?)
@@ -94,60 +94,15 @@ function _mouseup(event) {
         if (!dragging)
             _mark(event);
 
-        _createNewEvent();
+        createNewEvent();
     }
 
     down = false;
     dragging = false;
 
-
-
     $(".closePopover").on("click", function(){
         $(this).parent().parent().popover("hide");
     });
-}
-
-
-/**
- * 1. Change class of selected cells from marked to occupied.
- * 2. Create a popover for adding/editing/deleting a context "event"
- *
- * @private
- */
-function _createNewEvent () {
-    // keep track of selected cells
-    var markedCells = $('.timelineCellMarked');
-    // editor popover will be attached to first cell
-    var startCell = $(markedCells).first();
-    // count how many cells have been selected
-    var occupiedCount = $(markedCells).length;
-
-    // remove old, add new class
-    $('.timelineCellMarked').each(function() {
-        $(this).removeClass('timelineCellMarked');
-        $(this).addClass('timelineCellOccupied');
-    });
-
-    // create a context editor popover for each selected cell
-    $(markedCells).popover({
-        container: 'body',
-        content: "test",
-        html: true,
-        placement: "auto bottom",
-        template: '<div class="popover" role="tooltip">' +
-        '<div class="arrow"></div>' +
-        '<h3 class="popover-title"></h3>' +
-        '<div class="popover-content"></div>' +
-        '</div>',
-        title: function(){
-            return "Kontextinformation " + '<button class="closePopover">X</button>';},
-        viewport: "#tab5"
-    });
-
-    // if no dragging happened, click event will be fired and opens popover (or closes open popover)
-    if (dragging && occupiedCount > 1)
-        $(startCell).popover("show");
-
 }
 
 

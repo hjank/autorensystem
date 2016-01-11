@@ -62,6 +62,9 @@ function loadScenario() {
     var selectedScenario = $("#s2id_listLoadScenarios")[0].innerText.slice(0, -1);
 
     var thisScenario = authorSystemContent.getScenario(selectedScenario);
+
+    // avoid error message due to circular structure
+    replaceScenarioReferencesWithNames();
     localStorage.setItem("saveData", JSON.stringify(thisScenario));
     // add name in URL
     $(location).attr("href", "?" + selectedScenario);

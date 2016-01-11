@@ -8,6 +8,10 @@
  */
 function initTimeline() {
 
+    showSimulatorTab();
+
+
+
     // event handler listening for click on "Kontextsimulation" in horizontal menu (top)
     // TODO: Consider switching between scenarios!
 

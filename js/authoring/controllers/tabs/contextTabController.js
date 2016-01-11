@@ -673,6 +673,8 @@ function confirmContextInformation() {
     // show main, hide detail
     showMainContextInfo();
 
+    // avoid error message due to circular structure
+    replaceScenarioReferencesWithNames();
     console.log(JSON.stringify(authorSystemContent));
 }
 
@@ -748,7 +750,7 @@ function getParameterInput(val, num) {
     }
 
     /* get values from inputs and set the marker on this point in google maps */
-    // TODO: if ... coordinates expected
+    // TODO: if ... coordinates expected (instead of viewport check)
     if ($("#divContextParameter").find("#divMaps").length > 0) {
 
         var lat, long;
