@@ -51,6 +51,12 @@
         <script type="text/javascript" src="js/authoring/controllers/sliderController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/unitController.js"></script>
 
+        <!-- simulator -->
+        <script type="text/javascript" src="js/authoring/controllers/simulator/timelineController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/simulator/simulatorController.js"></script>
+
+
+
         <!-- tab controllers -->
         <script type="text/javascript" src="js/authoring/controllers/tabs/tabBarController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
@@ -97,6 +103,7 @@
 
         <link rel="stylesheet" href="css/tabs.css">
         <link rel="stylesheet" href="css/navigation.css">
+        <link rel="stylesheet" href="css/timeline.css">
 
 
         <!-- google maps api -->
@@ -134,6 +141,15 @@
                             <ul class="dropdown-menu">
                                 <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
                                 <li id="deleteLearnUnit"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="contextSimulation" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-play2"></b> Kontextsimulation <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="createSimulation"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="openSimulation"><a href="#">Öffnen <b class="fui-folder-open" style="float: right"></b></a></li>
+                                <li id="deleteSimulation"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="importSimulation"><a href="#">Importieren <b class="fui-upload" style="float: right"></b></a></li>
                             </ul>
                         </li>
                         <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->

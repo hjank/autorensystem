@@ -4,9 +4,7 @@
 
 $(function() {
     // sets the trigger for if save scenario was clicked
-    $("#saveScenario").on("click", function() {
-        showSaveScenario();
-    });
+    $("#saveScenario").on("click", showSaveScenario);
 });
 
 /**

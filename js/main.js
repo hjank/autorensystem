@@ -23,4 +23,6 @@ jsPlumb.ready(function () {
     initPlumbCanvas();
     // reload data from localStorage
     initLoader();
+    // init timeline in simulator
+    initTimeline();
 });
