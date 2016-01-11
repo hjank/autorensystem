@@ -85,7 +85,7 @@ Unit.prototype.removeContextInfoByIndex = function(index) {
 /**
  * Produce a sub-graph for this unit (array of JSON-LD objects) to be added to JSON-LD
  * NOTE: Metadata are not yet included in JSON-LD since a matching of this._metadata and T-Box predicates is needed first.
- * @returns {Array} A sub-graph (array)
+ * @returns {Array} A sub-graph (array) containing one named JSON-LD individuals for: unit, contextInfos, parameters.
  */
 Unit.prototype.getJSONLDGraph = function () {
     // the sub-graph to be returned
@@ -97,9 +97,7 @@ Unit.prototype.getJSONLDGraph = function () {
         "@type" : [ "kno:LearningUnit", "owl:NamedIndividual" ],
         "kno:hasLID" : this._uuid,
         "kno:hasLogicalOperator" : (this._sat == "all") ? "AND" : "OR",
-        // TODO: all relations!!
         "kno:hasPrerequisite" : [ ]
-        // TODO: metadata according to T-Box
     };
 
     // if this unit has context information , get their JSON-LD named individual objects
@@ -122,6 +120,13 @@ Unit.prototype.getJSONLDGraph = function () {
         unitJSONLD["kno:hasMeasurableContextInformation"] = contextReferenceJSONLDList[0];
     else if (contextReferenceJSONLDList.length > 1)
         unitJSONLD["kno:hasMeasurableContextInformation"] = contextReferenceJSONLDList;
+
+
+    // metadata - only high-level placeholder at this point.
+    // NOTE: There are no metadata yet. In case there will be - TODO: metadata must match with T-Box!
+    for (var m in this._metaData)
+        unitJSONLD["kno:hasMetaData"] = this._metaData[m];
+    
 
     // add the unit's JSON-LD individual
     graphJSONLD.push(unitJSONLD);
