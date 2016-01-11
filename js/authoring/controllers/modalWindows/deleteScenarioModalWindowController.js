@@ -159,6 +159,13 @@ function deleteScenarios() {
     global_arrayShowSzenarioDeletion = [];
     $("#choiceDeletionScenarios > select").empty();
     $("#choiceDeletionScenarios > select").select2("val", "");
+
+    // if no scenarios left, deactivate learning unit drop down menu in navbar
+    if(authorSystemContent.getScenarios().length == 0)
+        $("#navbarLearningUnit").css({
+                "pointer-events": "none",
+                "color": "#aaa"}
+        );
 }
 
 /**
