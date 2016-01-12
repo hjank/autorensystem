@@ -72,15 +72,14 @@ function initPlumbCanvas() {
     // c = connection element
     // e = event
     inst.bind("click", function (c, e) {
-        activateConnection(c);
         // needed to prevent clicking the container as well
         e.stopPropagation();
-
+        activateConnection(c);
     });
 
 
     // triggered if unit container, i.e. canvas is clicked
-    $("#container").on("click", function() {
+    $("#container").on("click", function(event) {
         if (connectionIsClicked)
             return false;
 

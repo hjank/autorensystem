@@ -81,8 +81,10 @@ function fillRelationTab(connection) {
     showRelationTab();
 
     // show right selection of the current label in selection bar
+    var thisScenario = authorSystemContent.getScenario($("#lname")[0].innerHTML);
+    var thisConnection = thisScenario.getConnectionByID(connection.connection.id);
     $("#selectRelations").children("option").each(function() {
-        if ( $(this)[0].value.toUpperCase() == label.label ) {
+        if ( $(this)[0].value.toUpperCase() == thisConnection.getLabel().toLowerCase() ) {
             $("#selectRelations").select2("data", {
                 id:$(this)[0].value,
                 text:$(this)[0].innerHTML
