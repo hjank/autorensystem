@@ -675,11 +675,7 @@ function confirmContextInformation() {
     // show main, hide detail
     showMainContextInfo();
 
-<<<<<<< HEAD
-    // avoid error message due to circular structure
-=======
     // workaround to avoid error message due to circular structure
->>>>>>> 1cb758c32b6cdc9b0f505a0f84a68c00b4886f20
     replaceScenarioReferencesWithNames();
     console.log(JSON.stringify(authorSystemContent));
 }
