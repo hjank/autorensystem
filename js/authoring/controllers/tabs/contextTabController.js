@@ -599,6 +599,8 @@ function confirmContextInformation() {
 
     // check if all needed fields were filled with information and return selected context
     var selectedInfo = checkInformation();
+    // abort if error occurred
+    if (!selectedInfo) return false;
 
     // add the new information to the context list of the currently selected unit
     current_unit.addContextInfo(selectedInfo, unitContextIndex);
@@ -673,6 +675,8 @@ function confirmContextInformation() {
     // show main, hide detail
     showMainContextInfo();
 
+    // workaround to avoid error message due to circular structure
+    replaceScenarioReferencesWithNames();
     console.log(JSON.stringify(authorSystemContent));
 }
 

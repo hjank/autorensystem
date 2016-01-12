@@ -27,7 +27,7 @@ function showSaveScenario() {
     replaceScenarioReferencesWithNames();
 
     // find current scenario in all scenarios
-    var json = authorSystemContent.getScenario(currentScenario);
+    var json = JSON.stringify(authorSystemContent.getScenario(currentScenario));
     //var jsonLD = JSON.stringify(json ? json.getABoxJSONLD() : {});
 
     // set blob with JSON data

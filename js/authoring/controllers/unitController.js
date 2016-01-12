@@ -188,7 +188,8 @@ function initUnitClickEventHandler () {
         // prevents that underlying container is also clicked (needed for unit marking)
         event.stopPropagation();
 
-        //console.log(myAuthorSystem);
+        // workaround to avoid error message due to circular structure
+        replaceScenarioReferencesWithNames();
         console.log(JSON.stringify(authorSystemContent));
     });
 }
