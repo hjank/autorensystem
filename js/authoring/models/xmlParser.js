@@ -31,7 +31,7 @@ function parseContextInfoXML () {
 
                 /* get the ID of the information */
                 var id = this.getAttribute("id");
-
+                var multiple = this.hasAttribute("multiplicity");
 
                 /* get the context classes from the current information */
                 var array_classes = [];
@@ -111,6 +111,7 @@ function parseContextInfoXML () {
                 });
 
                 newInfo.setID(id);
+                newInfo.setMultiplicity(multiple);
                 newInfo.setClasses(array_classes);
                 newInfo.setType(type);
                 newInfo.setMin(min);

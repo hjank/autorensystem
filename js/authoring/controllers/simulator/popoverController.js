@@ -29,10 +29,7 @@ function createNewEvent () {
     // create a context editor popover for each selected cell
     $(markedCells).popover({
         container: 'body',
-        content: function() {
-            //loadPopoverContent(contextInfoID);
-            return $("<select>");
-        },
+        content: generatePopoverContent(contextInfoID),
         html: true,
         placement: "auto bottom",
         template: '<div class="popover" role="tooltip">' +
@@ -40,8 +37,7 @@ function createNewEvent () {
         '<h3 class="popover-title"></h3>' +
         '<div class="popover-content"></div>' +
         '</div>',
-        title: function(){
-            return translate_contextInformation(contextInfoID) + '   <a href="#" title="Schließen" class="closePopover">X</a>';},
+        title: generatePopoverTitle(contextInfoID),
         viewport: "#tab5"
     });
 
@@ -52,6 +48,11 @@ function createNewEvent () {
 
 
 
-function loadPopoverContent (contextInfoID) {
-    return contextInfoID;
+function generatePopoverContent (contextInfoID) {
+    return createNamedDOMElement("select", "simulatedOperatorSelect");
+}
+
+function generatePopoverTitle (contextInfoID) {
+    return translate_contextInformation(contextInfoID)
+        + '   <a href="#" title="Schließen" class="closePopover">X</a>';
 }

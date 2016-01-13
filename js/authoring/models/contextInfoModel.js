@@ -6,6 +6,7 @@
 function ContextInformation() {
 
     this._id = "";
+    this._multiplicity = false;
     this._classes = [];
     this._type = "";
     this._min = "";
@@ -39,6 +40,10 @@ ContextInformation.prototype.fromJSON = function(item) {
 // getters
 ContextInformation.prototype.getID = function () {
     return this._id;
+};
+
+ContextInformation.prototype.getMultiplicity = function () {
+    return this._multiplicity;
 };
 
 ContextInformation.prototype.getClasses = function () {
@@ -84,6 +89,10 @@ ContextInformation.prototype.getParameters = function () {
 // setters
 ContextInformation.prototype.setID = function (id) {
     this._id = id;
+};
+
+ContextInformation.prototype.setMultiplicity = function (multiple) {
+    this._multiplicity = multiple;
 };
 
 ContextInformation.prototype.setClasses = function (classes) {

@@ -3,32 +3,42 @@
  */
 
 
+// set the list of context items to be modelled for simulation
+var simulatedContextList = new ContextInfoList();
+
+
 /**
  * Initialize timeline
  */
 function initTimeline() {
 
     showSimulatorTab();
-
-
-
-    // event handler listening for click on "Kontextsimulation" in horizontal menu (top)
     // TODO: Consider switching between scenarios!
 
-    var currentScenarioName = $("#lname")[0].innerHTML;
-    var scenarioContextList;
-
-    if (currentScenarioName) {
-        // get a list of all context information items added in this scenario, with chosen values reset to ""
-        scenarioContextList = authorSystemContent.getScenario(currentScenarioName).getScenarioContext();
-    }
-
     // init the simulation editor timeline
+    // 1. fetch and append html
     $.get( "simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
+        // 2. get relevant context - default: scenario context
+        simulatedContextList.initClasses();
+        simulatedContextList.setItems(contextList.getItemsOfClass("CC_SCENARIO"));
+        
+        var currentScenarioName = $("#lname")[0].innerHTML;
+        if (currentScenarioName) {
+            // get a list of all context information items added in this scenario
+            authorSystemContent.getScenario(currentScenarioName).getScenarioContext().forEach(
+                function() {
+                    for (var i in simulatedContextList.getItems()) {
+                        if (!simulatedContextList.getItemByID(this.getID()))
+                            simulatedContextList.addItem(this);
+                    }
+                }
+            );
+        }
+
         // create a column for each ContextInformation object
-        createColumns(scenarioContextList);
+        createColumns();
 
         // set event handlers for these generated cells
         setCellEventHandlers();

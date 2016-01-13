@@ -18,22 +18,3 @@ var uuid4 = function() {
     });
 };
 
-
-/**
- * Group context items by their first class.
- *
- * @param contextList
- * @returns {{}} A map with classes as keys and arrays of context items als values.
- */
-function getContextInfosMappedToFirstClass(contextList) {
-    var contextMap = {};
-
-    for (var i in contextList) {
-        var contextItem = contextList[i];
-        var firstClass = contextItem.getClasses()[0];
-        if (typeof contextMap[firstClass] == "undefined")
-            contextMap[firstClass] = [contextItem];
-        else contextMap[firstClass].push(contextItem);
-    }
-    return contextMap;
-}

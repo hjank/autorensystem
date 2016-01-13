@@ -16,30 +16,23 @@ var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 
 /**
  * Create one column per (unique) context item
- * @param contextInfoList An array containing all context items (incl. duplicates) added in the author system
  */
-function createColumns(contextInfoList) {
-    // in case no context has been added to any unit in the scenario yet
-    if (typeof contextInfoList == "undefined")
-        contextInfoList = contextList.getItems();
+function createColumns() {
 
-    var contextClassMap = getContextInfosMappedToFirstClass(contextInfoList);
+    for (var i in simulatedContextList.getItems()) {
+        var contextInfo = simulatedContextList.getItem(i);
 
-    for (var i in contextClassMap)
-        for (var j in contextClassMap[i]) {
-            var contextInfo = contextClassMap[i][j];
+        $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
 
-            $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
-
-            // add one column for each context item
-            $(".timelineStep").each(function() {
-                var newCell = $("<td>").addClass("timelineCell")
-                    .attr("contextInfo", contextInfo.getID())
-                    .attr("contextClass", contextInfo.getClasses()[0])
-                    .css("background-color", getBackgroundColorForContextColumn(contextInfo));
-                $(this).append(newCell);
-            });
-        }
+        // add one column for each context item
+        $(".timelineStep").each(function() {
+            var newCell = $("<td>").addClass("timelineCell")
+                .attr("contextInfo", contextInfo.getID())
+                .attr("contextClass", contextInfo.getClasses()[0])
+                .css("background-color", getBackgroundColorForContextColumn(contextInfo));
+            $(this).append(newCell);
+        });
+    }
 }
 
 
