@@ -23,15 +23,23 @@ function createColumns(contextInfoList) {
     if (typeof contextInfoList == "undefined")
         contextInfoList = contextList.getItems();
 
-    for (var i in contextInfoList) {
-        $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfoList[i])));
+    var contextClassMap = getContextInfosMappedToFirstClass(contextInfoList);
 
-        // add one column for each context item
-        $(".timelineStep").each(function() {
-            var newCell = $("<td>").addClass("timelineCell");
-            $(this).append(newCell);
-        });
-    }
+    for (var i in contextClassMap)
+        for (var j in contextClassMap[i]) {
+            var contextInfo = contextClassMap[i][j];
+
+            $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
+
+            // add one column for each context item
+            $(".timelineStep").each(function() {
+                var newCell = $("<td>").addClass("timelineCell")
+                    .attr("contextInfo", contextInfo.getID())
+                    .attr("contextClass", contextInfo.getClasses()[0])
+                    .css("background-color", getBackgroundColorForContextColumn(contextInfo));
+                $(this).append(newCell);
+            });
+        }
 }
 
 
@@ -120,8 +128,10 @@ function _mark(event) {
         var left = $(this).offset().left;
         var right = left + $(this).width()+verticalBorderPx;
 
-        if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right)
-            $(this).addClass( 'timelineCellMarked' );
+        if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right) {
+            $(this).addClass( 'timelineCellMarked' )
+                .css("background-color", getColor(translate_contextClass($(this).attr("contextClass"))));
+        }
         else
             $(this).removeClass( 'timelineCellMarked' );
     });

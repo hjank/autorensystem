@@ -17,16 +17,22 @@ function createNewEvent () {
     // count how many cells have been selected
     var occupiedCount = $(markedCells).length;
 
+    var contextInfoID = $(startCell).attr("contextInfo");
+
     // remove old, add new class
     $('.timelineCellMarked').each(function() {
         $(this).removeClass('timelineCellMarked');
-        $(this).addClass('timelineCellOccupied');
+        $(this).addClass('timelineCellOccupied')
+            .css("border-top", "1px solid " + getColor(translate_contextClass($(this).attr("contextClass"))));
     });
 
     // create a context editor popover for each selected cell
     $(markedCells).popover({
         container: 'body',
-        content: loadPopoverContent,
+        content: function() {
+            //loadPopoverContent(contextInfoID);
+            return $("<select>");
+        },
         html: true,
         placement: "auto bottom",
         template: '<div class="popover" role="tooltip">' +
@@ -35,7 +41,7 @@ function createNewEvent () {
         '<div class="popover-content"></div>' +
         '</div>',
         title: function(){
-            return "Kontextinformation   " + '<a href="#" class="closePopover">X</a>';},
+            return translate_contextInformation(contextInfoID) + '   <a href="#" title="Schließen" class="closePopover">X</a>';},
         viewport: "#tab5"
     });
 
@@ -46,6 +52,6 @@ function createNewEvent () {
 
 
 
-function loadPopoverContent () {
-    showDetailContextInfo();
+function loadPopoverContent (contextInfoID) {
+    return contextInfoID;
 }
