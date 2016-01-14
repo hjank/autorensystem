@@ -49,7 +49,9 @@ function createNewEvent () {
 
 
 function generatePopoverContent (contextInfoID) {
-    return createNamedDOMElement("select", "simulatedOperatorSelect");
+    var simulatedOperatorSelectElement = createNamedDOMElement("select", "simulatedOperatorSelect");
+    fillOperatorSelection(simulatedContextList.getItemByID(contextInfoID), simulatedOperatorSelectElement);
+    return simulatedOperatorSelectElement.select2();
 }
 
 function generatePopoverTitle (contextInfoID) {

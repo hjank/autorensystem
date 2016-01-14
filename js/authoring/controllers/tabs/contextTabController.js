@@ -174,7 +174,8 @@ function setContextTabListeners() {
         var j = e.val;
         var selectedInfo = contextList.getItem(j);
 
-        fillOperatorSelection(selectedInfo);
+        var selectOperatorElement = $("#selectOperator");
+        fillOperatorSelection(selectedInfo, selectOperatorElement);
 
         // fill input field
         fillInputField(selectedInfo);
@@ -318,9 +319,7 @@ function fillSelectionContextInformation() {
  * For the given context info object, gets the operator selection filled and set to a previous choice (if in edit mode).
  * @param {Object} selectedInfo Contains current context information object.
  * */
-function fillOperatorSelection(selectedInfo) {
-
-    var selectOperatorElement = $("#selectOperator");
+function fillOperatorSelection(selectedInfo, selectOperatorElement) {
 
     // get the corresponding operators to the selected context information
     var operators = selectedInfo.getOperators();
