@@ -45,7 +45,6 @@ function setCellEventHandlers() {
     $(document).mousemove(_handleMousemove);
     $(document).mouseup(_handleMouseup);
 
-   // $(".timelineCellOccupied").on("click", _mouseenter);
 }
 
 
@@ -87,7 +86,9 @@ function _handleMousemove(event) {
  * @private
  */
 function _handleMouseup(event) {
-    event.preventDefault();
+    //event.preventDefault();
+
+    var contextInfoID;
 
     // if the mouse has been down, and is now released (could there be any other case, actually?)
     if (down) {

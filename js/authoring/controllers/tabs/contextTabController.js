@@ -174,8 +174,7 @@ function setContextTabListeners() {
         var j = e.val;
         var selectedInfo = contextList.getItem(j);
 
-        var selectOperatorElement = $("#selectOperator");
-        fillOperatorSelection(selectedInfo, selectOperatorElement);
+        fillOperatorSelection(selectedInfo, $("#selectOperator"));
 
         // fill input field
         fillInputField(selectedInfo);
@@ -353,12 +352,13 @@ function fillOperatorSelection(selectedInfo, selectOperatorElement) {
  * Function gets the selected context information and decides which input field has to be set on GUI.
  * @param {Object} ci Contains current context information object.
  * */
-function fillInputField(ci) {
+function fillInputField(ci, popover) {
 
     var chosenValue = ci.getChosenValue();
 
-    var inputContextValueElement = $("#inputContextValue");
-    var selectPossibleValuesElement = $("#selectPossibleValues");
+    var inputContextValueElement = popover ? $("#popoverInput") : $("#inputContextValue");
+    var selectPossibleValuesElement = popover ? $("#popoverSelect") : $("#selectPossibleValues");
+    var select2PossibleValuesElement = popover ? $("#s2id_popoverSelect") : $("#s2id_selectPossibleValues");
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -373,7 +373,7 @@ function fillInputField(ci) {
             setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
             selectPossibleValuesElement.css("display", "none");
-            $("#s2id_selectPossibleValues").css("display", "none");
+            select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
@@ -387,7 +387,7 @@ function fillInputField(ci) {
                 .attr("maxlength", 40);            // set max length to 40
 
             selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
-            $("#s2id_selectPossibleValues").css("display", "none");
+            select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
@@ -396,7 +396,7 @@ function fillInputField(ci) {
         case "ENUM":
             inputContextValueElement.css("display", "none");         // make input field invisible
             selectPossibleValuesElement.css("display", "block");     // and selection bar visible
-            $("#s2id_selectPossibleValues").css("display", "block");
+            select2PossibleValuesElement.css("display", "block");
 
             // clear selection
             selectPossibleValuesElement.empty();
@@ -423,7 +423,7 @@ function fillInputField(ci) {
         case "BOOLEAN":
             // TODO: Prettify this whole Boolean thing: include values in operator, spare value selection.
             selectPossibleValuesElement.css("display", "block");  // make selection bar visible
-            $("#s2id_selectPossibleValues").css("display", "block");
+            select2PossibleValuesElement.css("display", "block");
             inputContextValueElement.css("display", "none");      // and input field invisible
 
             // get the two possible values true and false in selection bar

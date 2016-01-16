@@ -50,7 +50,7 @@ function ContextInfoList() {
 ContextInfoList.prototype.fromJSON = function (data) {
     for (var i in data) {
         // "cast" the context items to ContextInformation (incl. Parameter)
-        this._items.push(new ContextInformation().fromJSON(data[i]));
+        this.addItem(new ContextInformation().fromJSON(data[i]));
     }
 };
 
