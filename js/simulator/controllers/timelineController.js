@@ -15,12 +15,37 @@ var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 
 
 /**
+ * Initialize timeline
+ */
+function initTimeline(simulation) {
+
+    var timeline = new Timeline();
+    timeline.setSimulation(simulation);
+
+    // init the simulation editor timeline
+    // 1. fetch and append html
+    $.get( "js/simulator/view/simulator.html", function( data ) {
+        $( "#tab5" ).html( data );
+
+        // create a column for each ContextInformation object
+        createColumns(timeline);
+
+        // set event handlers for these generated cells
+        setCellEventHandlers(timeline);
+
+    });
+}
+
+/**
  * Create one column per (unique) context item
  */
-function createColumns() {
+function createColumns(timeline) {
+
+    var simulatedContextList = timeline.getSimulation().getSimulatedContextList();
 
     for (var i in simulatedContextList.getItems()) {
         var contextInfo = simulatedContextList.getItem(i);
+        timeline.addColumn(new SimulationColumn())
 
         $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
 
@@ -39,11 +64,13 @@ function createColumns() {
 /** *
  * Sets handlers for mouse events on table cells and on document, consequently
  */
-function setCellEventHandlers() {
+function setCellEventHandlers(timeline) {
 
     $(".timelineCell").on("mousedown", _handleMousedown);
     $(document).mousemove(_handleMousemove);
-    $(document).mouseup(_handleMouseup);
+    $(document).mouseup(function (event) {
+        _handleMouseup(event, timeline);
+    });
 
 }
 
@@ -85,10 +112,7 @@ function _handleMousemove(event) {
  * @param event The mouseup event. Can occur anywhere in the document.
  * @private
  */
-function _handleMouseup(event) {
-    //event.preventDefault();
-
-    var contextInfoID;
+function _handleMouseup(event, timeline) {
 
     // if the mouse has been down, and is now released (could there be any other case, actually?)
     if (down) {
@@ -96,7 +120,7 @@ function _handleMouseup(event) {
         if (!dragging)
             _mark(event);
 
-        createNewEvent();
+        createNewEvent(timeline);
     }
 
     down = false;

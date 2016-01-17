@@ -3,15 +3,15 @@
  */
 
 
-
 /**
  * 1. Change class of selected cells from marked to occupied.
  * 2. Create a popover for adding/editing/deleting a context "event"
  *
  */
-function createNewEvent () {
+function createNewEvent (timeline) {
 
     var contextEvent = new ContextEvent();
+    timeline.addEvent(contextEvent);
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
@@ -48,6 +48,9 @@ function createNewEvent () {
     // if no dragging happened, click event will be fired and opens popover (or closes open popover)
     if (dragging && occupiedCount > 1)
         $(startCell).popover("show");
+
+
+    setPopoverEventHandlers();
 }
 
 
@@ -89,10 +92,6 @@ function generatePopoverContent (contextInfoID) {
     //fillInputField();
 
 
-    $(document).on('inserted.bs.popover', function () {
-        console.log("yay!");
-    });
-
     return simulatedContextInfoMenuContainer;
 }
 
@@ -104,4 +103,15 @@ function generatePopoverContent (contextInfoID) {
 function generatePopoverTitle (contextInfoID) {
     return translate_contextInformation(contextInfoID)
         + '   <a href="#" title="Schließen" class="closePopover" style="float: right">X</a>';
+}
+
+
+function setPopoverEventHandlers() {
+
+    $(document).on('inserted.bs.popover', function () {
+        console.log("yay!");
+    });
+
+
+    $(document).not(".popover").click()
 }

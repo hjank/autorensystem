@@ -15,14 +15,18 @@ var loadedData;
 
 // if jsPlumb is ready (wrapper for jQuery.ready which means DOM is fully loaded)
 jsPlumb.ready(function () {
-
     // initialize global context list
-    contextList.initClasses();
-    parseContextInfoXML();
+    getContextInfoList(false); // false = not from URL, but from local server
+});
+
+/**
+ * This callback gets called once the contextInfoList has been loaded.
+ */
+function contextInfoListLoadedCallback () {
     // initialize jsPlumb instance
     initPlumbCanvas();
     // reload data from localStorage
     initLoader();
     // init simulator
     initSimulator();
-});
+}

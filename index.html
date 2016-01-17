@@ -70,23 +70,24 @@
         <script type="text/javascript" src="js/authoring/controllers/modalWindows/newScenarioModalWindowController.js"></script>
         <script type="text/javascript" src="js/authoring/controllers/modalWindows/profileModalWindowController.js"></script>
 
+        <!-- single entry point -->
+        <script type="text/javascript" src="js/main.js"></script>
 
 
 
         <!-- simulator -->
+        <link rel="stylesheet" href="js/simulator/view/simulator.css">
         <link rel="stylesheet" href="js/simulator/view/timeline.css">
         <script type="text/javascript" src="js/simulator/controllers/popoverController.js"></script>
         <script type="text/javascript" src="js/simulator/controllers/timelineStyling.js"></script>
         <script type="text/javascript" src="js/simulator/controllers/timelineController.js"></script>
         <script type="text/javascript" src="js/simulator/controllers/simulatorController.js"></script>
-        <script type="text/javascript" src="js/simulator/models/contextEventModel.js"></script>
-        <script type="text/javascript" src="js/simulator/models/timelineModel.js"></script>
-        <script type="text/javascript" src="js/simulator/models/simulationStepModel.js"></script>
         <script type="text/javascript" src="js/simulator/models/simulationModel.js"></script>
+        <script type="text/javascript" src="js/simulator/models/simulationStepModel.js"></script>
+        <script type="text/javascript" src="js/simulator/models/timelineModel.js"></script>
+        <script type="text/javascript" src="js/simulator/models/contextEventModel.js"></script>
 
 
-        <!-- single entry point -->
-        <script type="text/javascript" src="js/main.js"></script>
 
 
         <!-- Menu bar -->
@@ -190,7 +191,7 @@
                     <ul class="navbar" id="navbar-left-little">
                         <!--<li id="navmenu" title="Show/Hide Menu" style="cursor: pointer"><span style="margin:auto">&#9776</span></li>-->
                         <li id="navmenu" title="Zeige/Verstecke Struktur">
-                            <a href="#" class="fui-arrow-left" style="padding: 0 9px; "></a>
+                            <a href="#" class="fui-circle-left" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
                     <ul class="navbar" id="navbar-right-little">
@@ -198,7 +199,7 @@
                             <span class="fui-plus"></span>
                         </li>
                         <li id="navtab" title="Zeige/Verstecke Eigenschaften">
-                            <a href="#" class="fui-arrow-right" style="padding: 0 9px; "></a>
+                            <a href="#" class="fui-circle-right" style="padding: 0 9px; "></a>
                         </li>
                     </ul>
                     <span style="text-align: center">

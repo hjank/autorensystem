@@ -6,8 +6,10 @@
 function Timeline () {
 
     this._simulation = {};
+
     this._steps = [];
     this._columns = [];
+
     this._events = [];
 
     return this;
@@ -18,6 +20,11 @@ Timeline.prototype.getSimulation = function () {
 };
 Timeline.prototype.getSteps = function () {
     return this._steps;
+};
+Timeline.prototype.getSelectedStep = function () {
+    for (var i in this._steps)
+        if (this._steps[i].getIsSelected())
+            return this._steps[i];
 };
 Timeline.prototype.getColumns = function () {
     return this._columns;
@@ -44,6 +51,11 @@ Timeline.prototype.addColumn = function (col) {
 Timeline.prototype.setEvents = function (events) {
     this._events = events;
 };
-Timeline.prototype.addStep = function (event) {
+Timeline.prototype.addEvent = function (event) {
     this._events.push(event);
+};
+Timeline.prototype.removeEvent = function (eventUUID) {
+    for (var i in this._events)
+        if (this._events[i].getUUID() == eventUUID)
+            this._events.splice(i, 1);
 };

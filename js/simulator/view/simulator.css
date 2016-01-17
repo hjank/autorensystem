@@ -1,0 +1,19 @@
+#tab5 {
+    padding: 10px;
+    width: 100%;
+}
+
+div#simulatorContainer {
+    width: 100%;
+}
+
+div#playbackControls {
+    margin-top: 20px;
+}
+
+div#playbackControls > div {
+     width: 100%;
+}
+
+div#playbackControls > div > div {
+}
