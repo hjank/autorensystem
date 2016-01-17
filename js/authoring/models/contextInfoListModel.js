@@ -42,6 +42,8 @@ function ContextInfoList() {
     this._classes = [];
     // all context items mapped to their first class
     this._contextMap = {};
+    // set all available classes
+    this.initClasses();
 
     return this;
 }

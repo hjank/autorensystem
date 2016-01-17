@@ -6,7 +6,7 @@
 function ContextEvent () {
     this._uuid = "event"+uuid4();
     this._simulation = {};
-    this._contextInfoID = "";
+    this._contextInfo = {};
     this._column = 0;
     this._start = 0;
     this._end = 0;
@@ -21,8 +21,8 @@ ContextEvent.prototype.getUUID = function () {
 ContextEvent.prototype.getSimulation = function () {
     return this._simulation;
 };
-ContextEvent.prototype.getContextInfoID = function () {
-    return this._contextInfoID;
+ContextEvent.prototype.getContextInfo = function () {
+    return this._contextInfo;
 };
 ContextEvent.prototype.getColumn = function () {
     return this._column;
@@ -43,8 +43,8 @@ ContextEvent.prototype.setUUID = function (uuid) {
 ContextEvent.prototype.setSimulation = function (simulation) {
     this._simulation = simulation;
 };
-ContextEvent.prototype.setContextInfoID = function (contextInfoID) {
-    this._contextInfoID = contextInfoID;
+ContextEvent.prototype.setContextInfo = function (contextInfo) {
+    this._contextInfo = contextInfo;
 };
 ContextEvent.prototype.setColumn = function (column) {
     this._column = column;
@@ -61,7 +61,7 @@ ContextEvent.prototype.setVisibility = function (visibility) {
 
 ContextEvent.prototype.getCopy = function () {
     var newEvent = new ContextEvent();
-    newEvent.setContextInfoID(this._contextInfoID);
+    newEvent.setContextInfo(this._contextInfo);
     newEvent.setStart(this._start);
     newEvent.setEnd(this._end);
     newEvent.setSimulation(this._simulation);

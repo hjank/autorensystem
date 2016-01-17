@@ -1,11 +1,23 @@
-<div id="timelineContainer">
-    <table id="timelineTable" class="ui-widget">
-        <thead>
+<div id="simulatorContainer">
+
+    <div id="simulatorHeader">
+        <div id="simulationTitle">
+            Unbenannte Simulation
+            <div id="btnSimulatorOptions" class="btn btn-default btn-xs fui-document" title="Eigenschaften" style="float: right"></div>
+        </div>
+
+        <div id="btnSimulatorInfo" class="btn btn-info btn-xs fui-info" title="Was kann ich hier tun?"></div>
+
+    </div>
+
+    <div id="timelineContainer" align="center">
+        <table id="timelineTable">
+            <thead>
             <tr class="timelineHeader">
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr class="timelineStep">
                 <td class="timelineStepLabel">1</td>
             </tr>
@@ -27,6 +39,17 @@
             <tr class="timelineStep">
                 <td class="timelineStepLabel">7</td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="playbackControls">
+        <div align="center">
+            <div id="btnPlay" class="btn btn-embossed fui-play" title="Simulation starten"></div>
+            <div id="btnSlower" class="btn btn-embossed fui-backward2" title="halbe Geschwindigkeit"></div>
+            <div id="btnFaster" class="btn btn-embossed fui-forward3"  title="doppelte Geschwindigkeit"></div>
+            <div id="btnStop" class="btn btn-embossed fui-stop2" title="halbe Geschwindigkeit"></div>
+
+        </div>
+    </div>
 </div>

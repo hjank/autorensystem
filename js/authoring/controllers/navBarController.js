@@ -28,7 +28,7 @@ $(function() {
     // toggle menu bar
     navMenuElement.on("click",function() {
         $( "#cssmenu" ).toggle("slide");
-        $(this).find("a").toggleClass("fui-arrow-left fui-arrow-right");
+        $(this).find("a").toggleClass("fui-circle-left fui-circle-right");
     });
 
     // add learning unit hover --> change color
@@ -61,7 +61,7 @@ $(function() {
     // toggle tab bar
     $("#navtab").on("click",function() {
         $( ".properties" ).toggle("slide");
-        $("#navtab a").toggleClass("fui-arrow-right fui-arrow-left");
+        $("#navtab a").toggleClass("fui-circle-right fui-circle-left");
     });
 
     // change scenario name
