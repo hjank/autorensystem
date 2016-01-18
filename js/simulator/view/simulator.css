@@ -7,6 +7,19 @@ div#simulatorContainer {
     width: 100%;
 }
 
+div#simulatorHeader {
+    padding: 10px;
+}
+
+div#simulatorHeader {
+    margin-bottom: 20px;
+}
+
+div#simulationTitle {
+    max-width: 50%;
+    overflow: visible;
+}
+
 div#playbackControls {
     margin-top: 20px;
 }
