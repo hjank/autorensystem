@@ -21,6 +21,9 @@ Timeline.prototype.getSimulation = function () {
 Timeline.prototype.getSteps = function () {
     return this._steps;
 };
+Timeline.prototype.getStepsFromTo = function (start, end) {
+    return this._steps.slice(start, end+1);
+};
 Timeline.prototype.getSelectedStep = function () {
     for (var i in this._steps)
         if (this._steps[i].getIsSelected())
@@ -32,6 +35,16 @@ Timeline.prototype.getColumns = function () {
 Timeline.prototype.getEvents = function () {
     return this._events;
 };
+Timeline.prototype.getEventAt = function(row, col) {
+    return this._steps[row].getEventAt(col);
+};
+Timeline.prototype.getStepEvents = function(row) {
+    return this._steps[row].getEvents();
+};
+Timeline.prototype.getColumnEvents = function(col) {
+    return this._columns[col].getEvents();
+};
+
 
 Timeline.prototype.setSimulation = function (simulation) {
     this._simulation = simulation;
@@ -49,13 +62,32 @@ Timeline.prototype.addColumn = function (col) {
     this._columns.push(col);
 };
 Timeline.prototype.setEvents = function (events) {
-    this._events = events;
+    var self = this;
+    events.forEach(function (item) {self.addEvent(item);});
 };
 Timeline.prototype.addEvent = function (event) {
     this._events.push(event);
+    var self = this;
+    var col = event.getColumn();
+    this.getStepsFromTo(event.getStart(), event.getEnd()).forEach(function(item) {
+        item.addEvent(event);
+        self._columns[col].addEvent(event);
+    });
 };
 Timeline.prototype.removeEvent = function (eventUUID) {
     for (var i in this._events)
         if (this._events[i].getUUID() == eventUUID)
             this._events.splice(i, 1);
+    _removeEvent(eventUUID, this._steps);
+    _removeEvent(eventUUID, this._columns);
+
+};
+
+function _removeEvent (eventUUID, list) {
+    for (var i in list) {
+        var eventList = list[i].getEvents();
+        for (var k in eventList)
+            if (eventList[k].getUUID() == eventUUID)
+                eventList.splice(k, 1);
+    }
 };

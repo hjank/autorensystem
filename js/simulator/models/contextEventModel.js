@@ -3,14 +3,14 @@
  */
 
 
-function ContextEvent () {
+function ContextEvent (simulation, contextInfo, column, start, end, visible) {
     this._uuid = "event"+uuid4();
-    this._simulation = {};
-    this._contextInfo = {};
-    this._column = 0;
-    this._start = 0;
-    this._end = 0;
-    this._visibility = true;
+    this._simulation = simulation || {};
+    this._contextInfo = contextInfo || {};
+    this._column = column || 0;
+    this._start = start || 0;
+    this._end = end || 0;
+    this._visible = (typeof visible == "undefined") ? true : visible;
 
     return this;
 }
@@ -34,7 +34,7 @@ ContextEvent.prototype.getEnd = function () {
     return this._end;
 };
 ContextEvent.prototype.getVisibility = function () {
-    return this._visibility;
+    return this._visible;
 };
 
 ContextEvent.prototype.setUUID = function (uuid) {
@@ -55,17 +55,10 @@ ContextEvent.prototype.setStart = function (start) {
 ContextEvent.prototype.setEnd = function (end) {
     this._end = end;
 };
-ContextEvent.prototype.setVisibility = function (visibility) {
-    this._visibility = visibility;
+ContextEvent.prototype.setVisibility = function (visible) {
+    this._visible = visible;
 };
 
 ContextEvent.prototype.getCopy = function () {
-    var newEvent = new ContextEvent();
-    newEvent.setContextInfo(this._contextInfo);
-    newEvent.setStart(this._start);
-    newEvent.setEnd(this._end);
-    newEvent.setSimulation(this._simulation);
-    newEvent.setVisibility(this._visibility);
-
-    return newEvent;
+    return new ContextEvent(this._simulation, this._contextInfo, this._column, this._start, this._end, this._visible);
 };

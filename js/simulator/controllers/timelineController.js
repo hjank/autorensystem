@@ -45,16 +45,30 @@ function createColumns(timeline) {
 
     for (var i in simulatedContextList.getItems()) {
         var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumn(new SimulationColumn())
+        timeline.addColumn(new SimulationColumn(i, contextInfo, [], timeline.getSimulation()));
 
         $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
 
+
         // add one column for each context item
+        var steps = timeline.getSteps();
         $(".timelineStep").each(function() {
+            var index = $(this).index();
+            if (!steps[index])
+                timeline.addStep(new SimulationStep(index, [], timeline.getSimulation(), false));
+
+
             var newCell = $("<td>").addClass("timelineCell")
                 .attr("contextInfo", contextInfo.getID())
                 .attr("contextClass", contextInfo.getClasses()[0])
-                .css("background-color", getBackgroundColorForContextColumn(contextInfo));
+                .css("background-color", getBackgroundColorForContextColumn(contextInfo))
+                .tooltip({
+                    animation: false,
+                    container: "body",
+                    placement: "auto left",
+                    title: "kein Wert",
+                    viewport: "#timelineContainer"
+                });
             $(this).append(newCell);
         });
     }
@@ -123,12 +137,10 @@ function _handleMouseup(event, timeline) {
         createNewEvent(timeline);
     }
 
+    $(document).trigger("inserted.bs.popover");
+
     down = false;
     dragging = false;
-
-    $(".closePopover").on("click", function(){
-        $(this).parent().parent().popover("hide");
-    });
 }
 
 

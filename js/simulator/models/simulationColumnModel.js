@@ -22,8 +22,10 @@ SimulationColumn.prototype.getContextInfo = function() {
 SimulationColumn.prototype.getEvents = function() {
     return this._events;
 };
-SimulationColumn.prototype.getEventAt = function(pos) {
-    return this._events[pos];
+SimulationColumn.prototype.getEventAt = function(row) {
+    for (var i in this._events)
+        if (this._events[i].getStart() <= row && this._events[i].getEnd() >= row)
+            return this._events[i];
 };
 SimulationColumn.prototype.getSimulation = function() {
     return this._simulation;
@@ -39,8 +41,8 @@ SimulationColumn.prototype.setContextInfo = function(contextInfo) {
 SimulationColumn.prototype.setEvents = function(events) {
     this._events = events;
 };
-SimulationColumn.prototype.setEventAt = function(event, pos) {
-    this._events[pos] = event;
+SimulationColumn.prototype.addEvent = function(event) {
+    this._events.push(event);
 };
 SimulationColumn.prototype.setSimulation = function(simulation) {
     this._simulation = simulation;
