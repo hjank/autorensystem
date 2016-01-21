@@ -58,14 +58,13 @@ function createColumns(timeline) {
                 timeline.addStep(new SimulationStep(index, [], timeline.getSimulation(), false));
 
 
-            var newCell = $("<td>").addClass("timelineCell")
-                .attr("contextInfo", contextInfo.getID())
+            var newCell = $("<td>").addClass("timelineCell timelineCellEmpty")
                 .attr("contextClass", contextInfo.getClasses()[0])
-                .css("background-color", getBackgroundColorForContextColumn(contextInfo))
                 .tooltip({
                     animation: false,
                     container: "body",
                     placement: "auto left",
+                    selector: ".timelineCellEmpty",
                     title: "kein Wert",
                     viewport: "#timelineContainer"
                 });
