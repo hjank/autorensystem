@@ -23,60 +23,71 @@ function createNewEvent (timeline) {
     var column = timeline.getColumns()[colID];
     var contextInfo = column.getContextInfo();
 
-    timeline.addEvent(
-        new ContextEvent(timeline.getSimulation(), contextInfo, colID, firstStepID, firstStepID+occupiedCount-1, true)
-    );
+    var contextEvent = new ContextEvent(timeline.getSimulation(),
+        contextInfo,
+        colID,
+        firstStepID,
+        firstStepID+occupiedCount-1,
+        true);
+    timeline.addEvent(contextEvent);
 
 
-    // remove old, add new class
-    $('.timelineCellMarked').each(function() {
-        $(this).removeClass('timelineCellMarked');
-        $(this).addClass('timelineCellOccupied')
-            .css("border-style", "none solid none");
-    });
-
+    hideAllPopovers();
 
     // create a context editor popover for each selected cell
-    $(markedCells).popover({
-        container: 'body',
-        content: generatePopoverContent(contextInfo),
-        html: true,
-        placement: "auto top",
-        template: '<div class="popover" role="tooltip">' +
-        '<div class="arrow"></div>' +
-        '<h3 class="popover-title"></h3>' +
-        '<div class="popover-content"></div>' +
-        '</div>',
-        title: generatePopoverTitle(contextInfo),
-        viewport: "#timelineContainer"
-    })
+    $(markedCells)
+        .popover({
+            container: "#tab5",
+            content: generatePopoverContent(contextEvent),
+            html: true,
+            placement: "auto top",
+            selector: markedCells,
+            template: '<div class="popover" role="tooltip">' +
+            '<div class="arrow"></div>' +
+            '<h3 class="popover-title"></h3>' +
+            '<div class="popover-content"></div>' +
+            '</div>',
+            title: generatePopoverTitle(contextInfo),
+            viewport: "#timelineContainer"
+        })
+        .on("shown.bs.popover", function(){
+            setPopoverEventHandlers(this);
+            if (!$(this).hasClass("timelineCellOccupied")) $("select").select2();
+        })
+        .on("hide.bs.popover", function() {
+            unmarkAllCells();
+        })
         .tooltip("destroy");
 
 
     // if no dragging happened, click event will be fired and opens popover (or closes open popover)
-    if (dragging && occupiedCount > 1)
+    if (dragging && occupiedCount > 1) {
         $(startCell).popover("show");
+    }
 
-    setPopoverEventHandlers(markedCells);
 }
 
 
 /**
  * Generate the content of the newly created popover, i.e. operator, value and parameter selection.
- * @param contextInfo
+ * @param contextEvent
  */
-function generatePopoverContent (contextInfo) {
-    var simulatedContextInfoMenuContainer = createNamedDOMElement("div", "simulatedContextInfoMenu");
-    var simulatedOperatorSelectElement = createNamedDOMElement("select", "simulatedOperatorSelect")
+function generatePopoverContent (contextEvent) {
+
+    var contextInfo = contextEvent.getContextInfo();
+    var eventUUID = contextEvent.getUUID();
+
+    var simulatedContextInfoMenuContainer = createNamedDOMElement("div", "simulatedContextInfoMenu"+eventUUID);
+    var simulatedOperatorSelectElement = createNamedDOMElement("select", "simulatedOperatorSelect"+eventUUID)
         .addClass("form-control select select-primary select-block mbl")
         .css("display", "block")
         .css("min-width", "235px")
         .css("margin-bottom", "10px")
         .select2("data", {id:"\r",text:"\r"});
-    var simulatedValueInput = createNamedDOMElement("input", "popoverInput")
+    var simulatedValueInput = createNamedDOMElement("input", "popoverInput"+eventUUID)
         .addClass("form-control")
         .css("margin-bottom", "10px");
-    var simulatedValueSelect = createNamedDOMElement("select", "popoverSelect")
+    var simulatedValueSelect = createNamedDOMElement("select", "popoverSelect"+eventUUID)
         .addClass("form-control select select-primary select-block mbl")
         .css("display", "block")
         .css("min-width", "235px")
@@ -84,8 +95,8 @@ function generatePopoverContent (contextInfo) {
         .css("margin-bottom", "10px")
         .select2()
         .select2("data", {id:"\r",text:"\r"});
-    var confirmButton = createNamedDOMElement("div", "btnConfirmContextEvent")
-        .addClass("btn btn-info")
+    var confirmButton = createNamedDOMElement("div", "btnPopoverConfirm"+eventUUID)
+        .addClass("btn btn-info confirmPopover")
         .css("float", "center")
         .html("<b class='fui-check-circle'></b>Bestätigen</div>");
 
@@ -107,32 +118,41 @@ function generatePopoverContent (contextInfo) {
  * @returns {string}
  */
 function generatePopoverTitle (contextInfo) {
-    return translate_contextInformation(contextInfo.getID())
-        + '   <a href="#" title="Schließen" class="closePopover" style="float: right">X</a>';
+    return (translate_contextInformation(contextInfo.getID())
+        + '<a href="#" title="Schließen" class="closePopover" style="float: right">X</a>');
 }
 
 
-function setPopoverEventHandlers(markedCells) {
 
-    $(document).on("inserted.bs.popover", function() {
+function hideAllPopovers() {
+    $(".popover").hide();
+}
 
-        var startCell = $(markedCells).first();
-        var lastCell = $(markedCells).last();
-        $(startCell).css("border-top", "solid");
-        $(lastCell).css("border-bottom", "solid");
 
-        $("#simulatedOperatorSelect").select2();
+function setPopoverEventHandlers(cell) {
 
-        $(".closePopover").on("click", function(){
-            $(this).parent().parent().popover("hide");
+    var confirmed = false;
 
-            //if ()
-            $("[aria-describedby="+ $(this).parent().parent().attr("id") +"]").removeClass("timelineCellOccupied").css("background-color", "white");
-        });
+    $(".closePopover").on("click", function(){
+        $(cell).popover("hide");
 
-        $(".timelineCell").on("click", ":not(.timelineCellOccupied)", function() {
-            $(".timelineCellOccupied").popover("hide");
-        });
+        if ( !($(this).hasClass("timelineCellOccupied") || confirmed) ) {
+            $(cell).popover("destroy");
+        }
 
     });
+
+    $(".confirmPopover").on("click", function(){
+        confirmed = true;
+
+        // add new class
+        $(".timelineCellMarked").each(function() {
+            $(this).addClass('timelineCellOccupied')
+        });
+
+        // triggers unmarking of all cells
+        $(cell).popover("hide");
+
+    });
+
 }

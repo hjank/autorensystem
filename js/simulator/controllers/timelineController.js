@@ -97,6 +97,8 @@ function setCellEventHandlers(timeline) {
  * @private
  */
 function _handleMousedown(event) {
+    if ($(event.target).hasClass("timelineCellOccupied")) return;
+
     down = true;
 
     yOnMousedown = event.pageY;
@@ -137,8 +139,6 @@ function _handleMouseup(event, timeline) {
         createNewEvent(timeline);
     }
 
-    $(document).trigger("inserted.bs.popover");
-
     down = false;
     dragging = false;
 }
@@ -167,14 +167,28 @@ function _mark(event) {
     });
 }
 
-/**
- * Removes the markup from all cells.
- *
- * @private
- */
-function _unmark() {
-    $('.timelineCell').each(function () {
-        $(this).removeClass( 'timelineCellMarked' );
+
+function unmarkAllCells() {
+    var markedCells = $(".timelineCellMarked");
+    var countMarked = markedCells.length;
+
+    $(markedCells).each(function (index) {
+        $(this).removeClass("timelineCellMarked");
+
+        // after confirming popover input
+        if ($(this).hasClass("timelineCellOccupied")) {
+            // first cell
+            if (index == 0)
+                $(this).css("border-top", "solid");
+            // last cell
+            if (index == countMarked-1)
+                $(this).css("border-bottom", "solid");
+            else
+                $(this).css("border-style", "none solid none");
+        }
+        // closing popover without input + confirm, i.e. aborting
+        else
+            $(this).css("background-color", "");
     });
 }
 
