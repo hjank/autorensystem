@@ -29,10 +29,22 @@ function createNewEvent (timeline) {
         firstStepID,
         firstStepID+occupiedCount-1,
         true);
+    contextEvent.render(createNewPopover);
+
     timeline.addEvent(contextEvent);
 
+}
+
+function createNewPopover(contextEvent) {
 
     hideAllPopovers();
+
+    // keep track of selected cells
+    var markedCells = $('.timelineCellMarked');
+    // editor popover will be attached to first cell
+    var startCell = $(markedCells).first();
+    // count how many cells have been selected
+    var occupiedCount = $(markedCells).length;
 
     // create a context editor popover for each selected cell
     $(markedCells)
@@ -47,7 +59,7 @@ function createNewEvent (timeline) {
             '<h3 class="popover-title"></h3>' +
             '<div class="popover-content"></div>' +
             '</div>',
-            title: generatePopoverTitle(contextInfo),
+            title: generatePopoverTitle(contextEvent.getContextInfo()),
             viewport: "#timelineContainer"
         })
         .on("shown.bs.popover", function(){
@@ -64,9 +76,7 @@ function createNewEvent (timeline) {
     if (dragging && occupiedCount > 1) {
         $(startCell).popover("show");
     }
-
 }
-
 
 /**
  * Generate the content of the newly created popover, i.e. operator, value and parameter selection.
@@ -136,6 +146,7 @@ function setPopoverEventHandlers(cell) {
     $(".closePopover").on("click", function(){
         $(cell).popover("hide");
 
+        // closing popover without input + confirm, i.e. aborting event creation
         if ( !($(this).hasClass("timelineCellOccupied") || confirmed) ) {
             $(cell).popover("destroy");
         }
@@ -147,7 +158,7 @@ function setPopoverEventHandlers(cell) {
 
         // add new class
         $(".timelineCellMarked").each(function() {
-            $(this).addClass('timelineCellOccupied')
+            $(this).addClass('timelineCellOccupied');
         });
 
         // triggers unmarking of all cells

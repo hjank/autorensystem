@@ -9,24 +9,30 @@ div#simulatorContainer {
 
 div#simulatorHeader {
     padding: 10px;
-}
-
-div#simulatorHeader {
     margin-bottom: 20px;
+    background-color: white;
 }
 
 div#simulationTitle {
     max-width: 50%;
     overflow: visible;
+    display: inline;
 }
 
-div#playbackControls {
+
+div#simulationToolbar {
+    width: 100%;
     margin-top: 20px;
+    border-top: solid 1px;
+    display: inline-block;
 }
-
-div#playbackControls > div {
-     width: 100%;
+div#simulationToolbar span {
+    margin: 5px;
+    padding: 5px;
 }
-
-div#playbackControls > div > div {
+span#playbackControls div.btn {
+    background-color: white;
+}
+span#playbackControls div.btn:hover {
+    background-color: #bbbbbb;
 }

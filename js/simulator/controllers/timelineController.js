@@ -27,6 +27,8 @@ function initTimeline(simulation) {
     $.get( "js/simulator/view/simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
+        createSteps(20);
+
         // create a column for each ContextInformation object
         createColumns(timeline);
 
@@ -34,6 +36,24 @@ function initTimeline(simulation) {
         setCellEventHandlers(timeline);
 
     });
+}
+
+
+function createSteps(number) {
+    var timelineBodyElement = $("#timelineTable > tbody");
+
+    for (var i = 1; i <= number; i++) {
+
+
+
+        $(timelineBodyElement).append(
+            $("<tr>").addClass("timelineStep").append(
+                $("<td>").addClass("timelineStepLabel").append(
+                    $("<div>").addClass("timelineStepLabelText").html(i.toString())
+                )
+            )
+        );
+    }
 }
 
 /**
@@ -45,7 +65,7 @@ function createColumns(timeline) {
 
     for (var i in simulatedContextList.getItems()) {
         var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumn(new SimulationColumn(i, contextInfo, [], timeline.getSimulation()));
+        timeline.addColumn(new TimelineColumn(i, contextInfo, [] /*, timeline.getSimulation()*/));
 
         $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
 
@@ -55,16 +75,16 @@ function createColumns(timeline) {
         $(".timelineStep").each(function() {
             var index = $(this).index();
             if (!steps[index])
-                timeline.addStep(new SimulationStep(index, [], timeline.getSimulation(), false));
+                timeline.addStep(new TimelineStep(index, [], /*timeline.getSimulation(),*/ false));
 
 
-            var newCell = $("<td>").addClass("timelineCell timelineCellEmpty")
+            var newCell = $("<td>").addClass("timelineCell")
                 .attr("contextClass", contextInfo.getClasses()[0])
                 .tooltip({
                     animation: false,
                     container: "body",
                     placement: "auto left",
-                    selector: ".timelineCellEmpty",
+                    selector: ".timelineCell",
                     title: "kein Wert",
                     viewport: "#timelineContainer"
                 });
@@ -158,8 +178,8 @@ function _mark(event) {
         var right = left + $(this).width()+verticalBorderPx;
 
         if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right) {
-            $(this).addClass( 'timelineCellMarked' )
-                .css("background-color", getColor(translate_contextClass($(this).attr("contextClass"))));
+            $(this).addClass( 'timelineCellMarked' );
+                //.css("background-color", getColor(translate_contextClass($(this).attr("contextClass"))));
         }
         else
             $(this).removeClass( 'timelineCellMarked' );
@@ -182,12 +202,7 @@ function unmarkAllCells() {
             // last cell
             if (index == countMarked-1)
                 $(this).css("border-bottom", "solid");
-            else
-                $(this).css("border-style", "none solid none");
         }
-        // closing popover without input + confirm, i.e. aborting
-        else
-            $(this).css("background-color", "");
     });
 }
 

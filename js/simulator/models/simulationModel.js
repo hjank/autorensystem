@@ -2,7 +2,6 @@
  * Created by Helena on 15.01.2016.
  */
 
-const STOPPED = 0, STARTED = 1, PAUSED = 2;
 
 function Simulation () {
 
@@ -10,11 +9,12 @@ function Simulation () {
     this._description = "";
 
     this._playBackSpeed = 3000; // default speed = 3 seconds per step
-    this._status = STOPPED;
+    this._isRunning = false;
 
     this._scenario = {};
-
     this._simulatedContextList = new ContextInfoList();
+
+    this._timeline = {};
 
     return this;
 }
@@ -52,12 +52,17 @@ Simulation.prototype.setScenario = function (scenario) {
 };
 
 
-Simulation.prototype.start = function () {
-    this._status = STARTED;
+Simulation.prototype.start = function (callback) {
+    this._isRunning = true;
+
 
     // TODO: 1. generate rules --> 2. start adaptation engine
 };
 
-Simulation.prototype.restart = function () {
-    this._
+Simulation.prototype.pause = function (callback) {
+    this._isRunning = false;
+};
+
+Simulation.prototype.restart = function (callback) {
+    this._isRunning = true;
 };

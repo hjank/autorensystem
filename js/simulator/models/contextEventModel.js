@@ -62,3 +62,7 @@ ContextEvent.prototype.setVisibility = function (visible) {
 ContextEvent.prototype.getCopy = function () {
     return new ContextEvent(this._simulation, this._contextInfo, this._column, this._start, this._end, this._visible);
 };
+
+ContextEvent.prototype.render = function (callback) {
+    (typeof callback == "function" && callback(this));
+};

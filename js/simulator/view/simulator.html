@@ -1,17 +1,19 @@
 <div id="simulatorContainer">
 
     <div id="simulatorHeader">
-
-        <div id="btnSimulatorInfo" class="btn btn-info btn-xs fui-info" title="Was kann ich hier tun?" style="float: right"></div>
-
-        <hr>
-
-        <div id="simulationTitle" style="display: inline"><b>Unbenannte Simulation</b>
-            <div id="btnSimulatorDescription" class="btn btn-default btn-xs fui-document" title="Beschreibung" style="float: right"></div>
-
+        <div id="simulationTitle">Unbenannte Sim
+            <span id="btnSimulatorDescription" class="btn btn-xs fui-document" title="Beschreibung"></span>
         </div>
+    </div>
 
-
+    <div id="simulationToolbar" align="center">
+        <span id="playbackControls">
+            <div id="btnSlower" class="btn btn-sm fui-backward2" title="halbe Geschwindigkeit"></div>
+            <div id="btnPlay" class="btn btn-sm fui-play" title="Simulation starten"></div>
+            <div id="btnFaster" class="btn btn-sm fui-forward3"  title="doppelte Geschwindigkeit"></div>
+            <div id="btnSimulatorOptions" class="btn btn-sm fui-gear" title="Optionen"></div>
+        </span>
+        <span id="btnSimulatorInfo" class="btn fui-info" data-toggle="tooltip" data-placement="bottom" title="Erste Schritte"></span>
     </div>
 
     <div id="timelineContainer" align="center">
@@ -21,40 +23,8 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">1</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">2</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">3</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">4</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">5</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">6</td>
-            </tr>
-            <tr class="timelineStep">
-                <td class="timelineStepLabel">7</td>
-            </tr>
-            </tbody>
+            <tbody></tbody>
         </table>
-    </div>
-
-    <div id="playbackControls">
-        <div align="center">
-            <div id="btnSlower" class="btn btn-embossed fui-backward2" title="halbe Geschwindigkeit"></div>
-            <div id="btnPlay" class="btn btn-embossed fui-play" title="Simulation starten"></div>
-            <div id="btnFaster" class="btn btn-embossed fui-forward3"  title="doppelte Geschwindigkeit"></div>
-            <div id="btnSimulatorOptions" class="btn btn-info fui-gear" title="Optionen"></div>
-
-        </div>
     </div>
 
 

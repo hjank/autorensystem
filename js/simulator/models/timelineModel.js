@@ -3,14 +3,14 @@
  */
 
 
-function Timeline () {
+function Timeline (simulation, steps, columns, events) {
 
-    this._simulation = {};
+    this._simulation = simulation || {};
 
-    this._steps = [];
-    this._columns = [];
+    this._steps = steps || [];
+    this._columns = columns || [];
 
-    this._events = [];
+    this._events = events || [];
 
     return this;
 }
@@ -82,6 +82,10 @@ Timeline.prototype.removeEvent = function (eventUUID) {
     _removeEvent(eventUUID, this._columns);
 
 };
+Timeline.prototype.render = function (callback) {
+    (typeof callback == "function" && callback(this));
+};
+
 
 function _removeEvent (eventUUID, list) {
     for (var i in list) {
