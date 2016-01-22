@@ -1,6 +1,6 @@
-#tab5 {
-    padding: 10px;
+div#tab5 {
     width: 100%;
+    padding: 0px;
 }
 
 div#simulatorContainer {
@@ -10,7 +10,8 @@ div#simulatorContainer {
 div#simulatorHeader {
     padding: 10px;
     margin-bottom: 20px;
-    background-color: white;
+    border-bottom: solid 1px;
+    text-align: center;
 }
 
 div#simulationTitle {
@@ -19,11 +20,9 @@ div#simulationTitle {
     display: inline;
 }
 
-
 div#simulationToolbar {
     width: 100%;
     margin-top: 20px;
-    border-top: solid 1px;
     display: inline-block;
 }
 div#simulationToolbar span {

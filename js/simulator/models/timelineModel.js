@@ -3,9 +3,7 @@
  */
 
 
-function Timeline (simulation, steps, columns, events) {
-
-    this._simulation = simulation || {};
+function Timeline (steps, columns, events) {
 
     this._steps = steps || [];
     this._columns = columns || [];
@@ -31,6 +29,11 @@ Timeline.prototype.getSelectedStep = function () {
 };
 Timeline.prototype.getColumns = function () {
     return this._columns;
+};
+Timeline.prototype.getColumn = function (id) {
+    for (var i in this._columns)
+        if (this._columns[i].getID() == id)
+            return this._columns[i];
 };
 Timeline.prototype.getEvents = function () {
     return this._events;

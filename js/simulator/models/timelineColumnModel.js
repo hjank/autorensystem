@@ -3,12 +3,11 @@
  */
 
 
-function TimelineColumn (id, contextInfo, events/*, timeline*/) {
+function TimelineColumn (id, contextInfo, events) {
 
     this._id = id || 0; // corresponds with position in timeline
     this._contextInfo = contextInfo || {};
     this._events = events || [];
-    //this._timeline = timeline || {};
 
     return this;
 }

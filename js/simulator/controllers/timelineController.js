@@ -6,7 +6,7 @@
  *
  */
 
-
+var numberOfSteps = 20;
 var down, dragging, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
 var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
@@ -19,32 +19,33 @@ var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
  */
 function initTimeline(simulation) {
 
-    var timeline = new Timeline();
-    timeline.setSimulation(simulation);
+    simulation.setTimeline(new Timeline());
 
     // init the simulation editor timeline
     // 1. fetch and append html
     $.get( "js/simulator/view/simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
-        createSteps(20);
+        createSteps(simulation);
 
         // create a column for each ContextInformation object
-        createColumns(timeline);
+        createColumns(simulation);
 
         // set event handlers for these generated cells
-        setCellEventHandlers(timeline);
+        setCellEventHandlers(simulation);
 
     });
 }
 
 
-function createSteps(number) {
+function createSteps(simulation) {
+
+    var timeline = simulation.getTimeline();
     var timelineBodyElement = $("#timelineTable > tbody");
 
-    for (var i = 1; i <= number; i++) {
+    for (var i = 1; i <= numberOfSteps; i++) {
 
-
+        timeline.addStep(new TimelineStep(i-1, [], false));
 
         $(timelineBodyElement).append(
             $("<tr>").addClass("timelineStep").append(
@@ -59,26 +60,25 @@ function createSteps(number) {
 /**
  * Create one column per (unique) context item
  */
-function createColumns(timeline) {
+function createColumns(simulation) {
 
-    var simulatedContextList = timeline.getSimulation().getSimulatedContextList();
+    var simulatedContextList = simulation.getSimulatedContextList();
+    var timeline = simulation.getTimeline();
 
     for (var i in simulatedContextList.getItems()) {
+
         var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumn(new TimelineColumn(i, contextInfo, [] /*, timeline.getSimulation()*/));
+        timeline.addColumn(new TimelineColumn(i, contextInfo, []));
+
+        /*** view ***/
 
         $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
 
-
         // add one column for each context item
-        var steps = timeline.getSteps();
         $(".timelineStep").each(function() {
-            var index = $(this).index();
-            if (!steps[index])
-                timeline.addStep(new TimelineStep(index, [], /*timeline.getSimulation(),*/ false));
 
-
-            var newCell = $("<td>").addClass("timelineCell")
+            $(this).append($("<td>")
+                .addClass("timelineCell")
                 .attr("contextClass", contextInfo.getClasses()[0])
                 .tooltip({
                     animation: false,
@@ -87,8 +87,8 @@ function createColumns(timeline) {
                     selector: ".timelineCell",
                     title: "kein Wert",
                     viewport: "#timelineContainer"
-                });
-            $(this).append(newCell);
+                })
+            );
         });
     }
 }
@@ -97,12 +97,12 @@ function createColumns(timeline) {
 /** *
  * Sets handlers for mouse events on table cells and on document, consequently
  */
-function setCellEventHandlers(timeline) {
+function setCellEventHandlers(simulation) {
 
     $(".timelineCell").on("mousedown", _handleMousedown);
     $(document).mousemove(_handleMousemove);
     $(document).mouseup(function (event) {
-        _handleMouseup(event, timeline);
+        _handleMouseup(event, simulation);
     });
 
 }
@@ -147,7 +147,7 @@ function _handleMousemove(event) {
  * @param event The mouseup event. Can occur anywhere in the document.
  * @private
  */
-function _handleMouseup(event, timeline) {
+function _handleMouseup(event, simulation) {
 
     // if the mouse has been down, and is now released (could there be any other case, actually?)
     if (down) {
@@ -155,7 +155,7 @@ function _handleMouseup(event, timeline) {
         if (!dragging)
             _mark(event);
 
-        createNewEvent(timeline);
+        createNewEvent(simulation);
     }
 
     down = false;

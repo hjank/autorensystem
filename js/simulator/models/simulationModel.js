@@ -37,6 +37,9 @@ Simulation.prototype.getScenario = function () {
 Simulation.prototype.getSimulatedContextList = function () {
     return this._simulatedContextList;
 };
+Simulation.prototype.getTimeline = function() {
+    return this._timeline;
+};
 
 Simulation.prototype.setTitle = function (title) {
     this._title = title;
@@ -50,6 +53,10 @@ Simulation.prototype.setPlayBackSpeed = function (speed) {
 Simulation.prototype.setScenario = function (scenario) {
     this._scenario = scenario;
 };
+Simulation.prototype.setTimeline = function (timeline) {
+    this._timeline = timeline;
+};
+
 
 
 Simulation.prototype.start = function (callback) {

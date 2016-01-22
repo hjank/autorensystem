@@ -8,7 +8,7 @@
  * 2. Create a popover for adding/editing/deleting a context "event"
  *
  */
-function createNewEvent (timeline) {
+function createNewEvent (simulation) {
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
@@ -20,18 +20,14 @@ function createNewEvent (timeline) {
     var firstStepID = $(startCell).parent().index();
     var colID = $(startCell).parent().children(".timelineCell").index(startCell);
 
+    var timeline = simulation.getTimeline();
     var column = timeline.getColumns()[colID];
     var contextInfo = column.getContextInfo();
 
-    var contextEvent = new ContextEvent(timeline.getSimulation(),
-        contextInfo,
-        colID,
-        firstStepID,
-        firstStepID+occupiedCount-1,
-        true);
-    contextEvent.render(createNewPopover);
-
+    var contextEvent = new ContextEvent(contextInfo, colID, firstStepID, firstStepID+occupiedCount-1, true);
     timeline.addEvent(contextEvent);
+
+    contextEvent.render(createNewPopover);
 
 }
 

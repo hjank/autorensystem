@@ -2,16 +2,26 @@ div#timelineContainer {
     position: relative;
     left: 0px;
     width: 100%;
-    height: 100%;
+    height: 70%;
     overflow: auto;
     margin-top: 20px;
+    background-color: grey;
+}
+
+table#timelineTable,
+table#timelineTable tbody,
+table#timelineTable tr,
+table#timelineTable td {
+    margin: 0px;
+    padding: 0px;
+    height: inherit;
 }
 
 table#timelineTable {
-    position: inherit;
     top: 0px;
-    left: 0px;
     width: 100%;
+    height: 100%;
+    padding: 10px;
 }
 
 table#timelineTable text {
@@ -23,15 +33,6 @@ table#timelineTable text {
 
 table#timelineTable .timelineHeader th {
     text-align: center;
-}
-
-table#timelineTable,
-table#timelineTable tbody,
-table#timelineTable tr,
-table#timelineTable td {
-    margin: 0px;
-    padding: 0px;
-    height: inherit;
 }
 
 table#timelineTable .timelineStep {

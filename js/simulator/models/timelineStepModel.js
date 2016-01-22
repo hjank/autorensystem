@@ -3,11 +3,10 @@
  */
 
 
-function TimelineStep (id, events, /*timeline,*/ isSelected) {
+function TimelineStep (id, events, isSelected) {
 
     this._id = id || 0;  // corresponds with position in timeline
     this._events = events || [];
-    //this._timeline = timeline || {};
     this._isSelected = (typeof isSelected == "undefined") ? true : isSelected;
 
     return this;
