@@ -52,3 +52,6 @@ TimelineStep.prototype.setTimeline = function(timeline) {
 TimelineStep.prototype.setIsSelected = function (selected) {
     this._isSelected = selected;
 };
+TimelineStep.prototype.render = function (callback) {
+    (typeof callback == "function" && callback(this));
+};

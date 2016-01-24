@@ -1,20 +1,15 @@
 <div id="simulatorContainer">
 
     <div id="simulatorHeader">
-        <div id="simulationTitle">Unbenannte Sim
-            <span id="btnSimulatorDescription" class="btn btn-xs fui-document" title="Beschreibung"></span>
+        <div id="simulatorInfo">
+            <span id="btnSimulatorInfo" class="btn btn-info btn-sm fui-info" title="Erste Schritte"></span>
+        </div>
+        <div id="simulationTitle">
+            <span>Unbenannte Simulation</span>
+            <span id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Beschreibung"></span>
         </div>
     </div>
 
-    <div id="simulationToolbar" align="center">
-        <span id="playbackControls">
-            <div id="btnSlower" class="btn btn-sm fui-backward2" title="halbe Geschwindigkeit"></div>
-            <div id="btnPlay" class="btn btn-sm fui-play" title="Simulation starten"></div>
-            <div id="btnFaster" class="btn btn-sm fui-forward3"  title="doppelte Geschwindigkeit"></div>
-            <div id="btnSimulatorOptions" class="btn btn-sm fui-gear" title="Optionen"></div>
-        </span>
-        <span id="btnSimulatorInfo" class="btn fui-info" data-toggle="tooltip" data-placement="bottom" title="Erste Schritte"></span>
-    </div>
 
     <div id="timelineContainer" align="center">
         <table id="timelineTable">
@@ -27,7 +22,18 @@
         </table>
     </div>
 
-
-    <div id="simulatorFooter">
+    <div id="simulationToolbar" align="center">
+        <span id="playbackControls">
+            <div id="btnSlower" class="btn btn-sm fui-backward2" title="halbe Geschwindigkeit"></div>
+            <div id="btnPlay" class="btn btn-sm fui-play" title="Simulation starten"></div>
+            <div id="btnFaster" class="btn btn-sm fui-forward3"  title="doppelte Geschwindigkeit"></div>
+        </span>
+        <span>
+            <div id="btnSimulatorOptions" class="btn btn-sm fui-gear" title="Optionen"></div>
+        </span>
     </div>
+
+<!--
+    <div id="simulatorFooter">
+    </div>-->
 </div>

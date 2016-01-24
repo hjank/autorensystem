@@ -46,3 +46,6 @@ TimelineColumn.prototype.addEvent = function(event) {
 TimelineColumn.prototype.setTimeline = function(timeline) {
     this._timeline = timeline;
 };
+TimelineColumn.prototype.render = function (callback) {
+    (typeof callback == "function" && callback(this));
+};

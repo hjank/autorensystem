@@ -1,37 +1,70 @@
 div#tab5 {
     width: 100%;
+    height: 100%;
     padding: 0px;
 }
 
 div#simulatorContainer {
     width: 100%;
+    height: 100%;
 }
 
 div#simulatorHeader {
+    height: 25%;
     padding: 10px;
-    margin-bottom: 20px;
-    border-bottom: solid 1px;
+}
+
+div#simulatorHeader #simulatorInfo {
+    padding-bottom: 20px;
+}
+
+div#simulatorHeader div#simulationTitle {
+    overflow: visible;
+    display: inline;
     text-align: center;
 }
 
-div#simulationTitle {
-    max-width: 50%;
-    overflow: visible;
-    display: inline;
+div#simulatorHeader div#simulationTitle span#btnSimulatorDescription {
+    float: right;
+}
+div#simulatorHeader div#simulationTitle span#btnSimulatorDescription:hover {
+    background-color: #cccccc;
+    color: white;
+}
+
+div#timelineContainer {
+    width: 100%;
+    height: 70%;
+    overflow: auto;
+    padding: 10px 10px 20px;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    background-color: white;
 }
 
 div#simulationToolbar {
     width: 100%;
+    height: 5%;
     margin-top: 20px;
     display: inline-block;
-}
-div#simulationToolbar span {
-    margin: 5px;
     padding: 5px;
 }
-span#playbackControls div.btn {
-    background-color: white;
+
+div#simulationToolbar span {
+    margin: 5px;
 }
-span#playbackControls div.btn:hover {
-    background-color: #bbbbbb;
+
+div#simulationToolbar span#playbackControls div.btn {
+    background-color: white;
+    border: 1px solid grey;
+}
+div#simulationToolbar span#playbackControls div.btn:hover {
+    background-color: #cccccc;
+}
+div#simulationToolbar #btnSimulatorOptions {
+    background-color: grey;
+    color: white;
+}
+div#simulationToolbar #btnSimulatorOptions.btn:hover {
+    background-color: #cccccc;
 }

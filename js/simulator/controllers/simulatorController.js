@@ -19,14 +19,12 @@ function initSimulator() {
         simulation.setScenario(currentScenario);
 
         // get a list of all context information items added in this scenario
-        currentScenario.getScenarioContext().forEach(
-            function() {
-                for (var i in simulatedContextList.getItems()) {
-                    if (!simulatedContextList.getItemByID(this.getID()))
-                        simulatedContextList.addItem(this);
-                }
+        currentScenario.getScenarioContext().forEach(function(item) {
+            for (var i in simulatedContextList.getItems()) {
+                if (!simulatedContextList.getItemByID(item.getID()))
+                    simulatedContextList.addItem(new ContextInformation().fromJSON(item));
             }
-        );
+        });
     }
 
     showSimulatorTab();

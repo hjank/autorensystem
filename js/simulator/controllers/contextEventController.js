@@ -9,6 +9,7 @@
  *
  */
 function createNewEvent (simulation) {
+    var timeline = simulation.getTimeline();
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
@@ -16,39 +17,36 @@ function createNewEvent (simulation) {
     var startCell = $(markedCells).first();
     // count how many cells have been selected
     var occupiedCount = $(markedCells).length;
-
     var firstStepID = $(startCell).parent().index();
-    var colID = $(startCell).parent().children(".timelineCell").index(startCell);
 
-    var timeline = simulation.getTimeline();
+    var colID = $(startCell).parent().children(".timelineCell").index(startCell);
     var column = timeline.getColumns()[colID];
     var contextInfo = column.getContextInfo();
 
     var contextEvent = new ContextEvent(contextInfo, colID, firstStepID, firstStepID+occupiedCount-1, true);
     timeline.addEvent(contextEvent);
 
-    contextEvent.render(createNewPopover);
-
+    timeline.render(createNewPopover);
 }
 
-function createNewPopover(contextEvent) {
-
+function createNewPopover(timeline) {
     hideAllPopovers();
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
-    // editor popover will be attached to first cell
-    var startCell = $(markedCells).first();
-    // count how many cells have been selected
-    var occupiedCount = $(markedCells).length;
 
-    // create a context editor popover for each selected cell
+    var startCell = $(markedCells).first();
+    var firstStepID = $(startCell).parent().index();
+    var colID = $(startCell).parent().children(".timelineCell").index(startCell);
+    var contextEvent = timeline.getEventAt(firstStepID, colID);
+
+        // create a context editor popover for each selected cell
     $(markedCells)
         .popover({
             container: "#tab5",
             content: generatePopoverContent(contextEvent),
             html: true,
-            placement: "auto top",
+            placement: "auto bottom",
             selector: markedCells,
             template: '<div class="popover" role="tooltip">' +
             '<div class="arrow"></div>' +
@@ -59,8 +57,11 @@ function createNewPopover(contextEvent) {
             viewport: "#timelineContainer"
         })
         .on("shown.bs.popover", function(){
-            setPopoverEventHandlers(this);
-            if (!$(this).hasClass("timelineCellOccupied")) $("select").select2();
+            if (!$(this).hasClass("timelineCellOccupied")) {
+                var popoverHeight = $(".popover").css("height");
+                $("select").select2();
+            }
+            setPopoverEventHandlers(this, timeline, contextEvent);
         })
         .on("hide.bs.popover", function() {
             unmarkAllCells();
@@ -69,8 +70,9 @@ function createNewPopover(contextEvent) {
 
 
     // if no dragging happened, click event will be fired and opens popover (or closes open popover)
-    if (dragging && occupiedCount > 1) {
-        $(startCell).popover("show");
+    if (dragging && $(markedCells).length > 1) {
+        // editor popover will be attached to first cell
+        $(markedCells).first().popover("show");
     }
 }
 
@@ -135,16 +137,18 @@ function hideAllPopovers() {
 }
 
 
-function setPopoverEventHandlers(cell) {
+function setPopoverEventHandlers(startCell, timeline, contextEvent) {
 
     var confirmed = false;
 
     $(".closePopover").on("click", function(){
-        $(cell).popover("hide");
+        $(startCell).popover("hide");
 
         // closing popover without input + confirm, i.e. aborting event creation
         if ( !($(this).hasClass("timelineCellOccupied") || confirmed) ) {
-            $(cell).popover("destroy");
+            timeline.removeEvent(contextEvent);
+
+            $(startCell).popover("destroy");
         }
 
     });
@@ -152,14 +156,35 @@ function setPopoverEventHandlers(cell) {
     $(".confirmPopover").on("click", function(){
         confirmed = true;
 
+        var markedCells = $(".timelineCellMarked");
         // add new class
-        $(".timelineCellMarked").each(function() {
-            $(this).addClass('timelineCellOccupied');
-        });
-
+        $(markedCells).addClass('timelineCellOccupied');
+        drawTopBottomBorders(markedCells);
         // triggers unmarking of all cells
-        $(cell).popover("hide");
-
+        $(startCell).popover("hide");
     });
+}
 
+function createContextEventDeleteDOM () {
+    return $("<a>")
+        .attr("href", "#")
+        .addClass("fui-trash")
+        .attr("tabindex", -1)
+        .attr("title", "Löschen");
+}
+
+function createContextEventCopyDOM () {
+    return $("<a>")
+        .attr("href", "#")
+        .addClass("fui-copy")
+        .attr("tabindex", -1)
+        .attr("title", "Duplizieren");
+}
+
+function createContextEventHideDOM () {
+    return $("<a>")
+        .attr("href", "#")
+        .addClass("fui-eye-blocked")
+        .attr("tabindex", -1)
+        .attr("title", "Ausblenden");
 }

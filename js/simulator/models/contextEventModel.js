@@ -3,9 +3,8 @@
  */
 
 
-function ContextEvent (/*simulation,*/ contextInfo, column, start, end, visible) {
+function ContextEvent (contextInfo, column, start, end, visible) {
     this._uuid = "event"+uuid4();
-    //this._simulation = simulation || {};
     this._contextInfo = contextInfo || {};
     this._column = column || 0;
     this._start = start || 0;

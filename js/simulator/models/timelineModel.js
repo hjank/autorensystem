@@ -78,6 +78,9 @@ Timeline.prototype.addEvent = function (event) {
     });
 };
 Timeline.prototype.removeEvent = function (eventUUID) {
+    if (typeof eventUUID == "object" && eventUUID.constructor == ContextEvent)
+        eventUUID = eventUUID.getUUID();
+
     for (var i in this._events)
         if (this._events[i].getUUID() == eventUUID)
             this._events.splice(i, 1);

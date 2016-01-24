@@ -84,7 +84,6 @@ function createColumns(simulation) {
                     animation: false,
                     container: "body",
                     placement: "auto left",
-                    selector: ".timelineCell",
                     title: "kein Wert",
                     viewport: "#timelineContainer"
                 })
@@ -188,23 +187,18 @@ function _mark(event) {
 
 
 function unmarkAllCells() {
-    var markedCells = $(".timelineCellMarked");
-    var countMarked = markedCells.length;
-
-    $(markedCells).each(function (index) {
-        $(this).removeClass("timelineCellMarked");
-
-        // after confirming popover input
-        if ($(this).hasClass("timelineCellOccupied")) {
-            // first cell
-            if (index == 0)
-                $(this).css("border-top", "solid");
-            // last cell
-            if (index == countMarked-1)
-                $(this).css("border-bottom", "solid");
-        }
-    });
+    $(".timelineCellMarked").removeClass("timelineCellMarked");
 }
+
+function drawTopBottomBorders (cells) {
+    var firstCell = $(cells).first();
+    var lastCell = $(cells).last();
+
+    $(firstCell).css("border-top", "1px solid");
+    $(lastCell).css("border-bottom", "solid");
+}
+
+
 
 /**
  * Returns the Y coordinate of the element's bottom.
