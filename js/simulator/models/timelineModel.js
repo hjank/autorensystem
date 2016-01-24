@@ -3,101 +3,90 @@
  */
 
 
-function Timeline (steps, columns, events) {
+function Timeline (matrix, contextMap, selectedStep) {
 
-    this._steps = steps || [];
-    this._columns = columns || [];
-
-    this._events = events || [];
+    this._eventMatrix = matrix || [];
+    this._columnContextMap = contextMap || [];
+    this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : 0;
 
     return this;
 }
 
-Timeline.prototype.getSimulation = function () {
-    return this._simulation;
-};
-Timeline.prototype.getSteps = function () {
-    return this._steps;
-};
-Timeline.prototype.getStepsFromTo = function (start, end) {
-    return this._steps.slice(start, end+1);
-};
-Timeline.prototype.getSelectedStep = function () {
-    for (var i in this._steps)
-        if (this._steps[i].getIsSelected())
-            return this._steps[i];
-};
-Timeline.prototype.getColumns = function () {
-    return this._columns;
-};
-Timeline.prototype.getColumn = function (id) {
-    for (var i in this._columns)
-        if (this._columns[i].getID() == id)
-            return this._columns[i];
-};
-Timeline.prototype.getEvents = function () {
-    return this._events;
-};
-Timeline.prototype.getEventAt = function(row, col) {
-    return this._steps[row].getEventAt(col);
-};
-Timeline.prototype.getStepEvents = function(row) {
-    return this._steps[row].getEvents();
-};
-Timeline.prototype.getColumnEvents = function(col) {
-    return this._columns[col].getEvents();
-};
 
 
-Timeline.prototype.setSimulation = function (simulation) {
-    this._simulation = simulation;
+Timeline.prototype.getStepEvents = function(start, end) {
+    // default: return events of *one* step only
+    if (!end) end = start;
+    return this._eventMatrix.slice(start, end+1);
 };
-Timeline.prototype.setSteps = function (steps) {
-    this._steps = steps;
-};
-Timeline.prototype.addStep = function (step) {
-    this._steps.push(step);
-};
-Timeline.prototype.setColumns = function (columns) {
-    this._columns = columns;
-};
-Timeline.prototype.addColumn = function (col) {
-    this._columns.push(col);
-};
-Timeline.prototype.setEvents = function (events) {
-    var self = this;
-    events.forEach(function (item) {self.addEvent(item);});
-};
-Timeline.prototype.addEvent = function (event) {
-    this._events.push(event);
-    var self = this;
-    var col = event.getColumn();
-    this.getStepsFromTo(event.getStart(), event.getEnd()).forEach(function(item) {
-        item.addEvent(event);
-        self._columns[col].addEvent(event);
+Timeline.prototype.getColumnEvents = function(start, end) {
+    // default: return events of *one* column only
+    if (!end) end = start;
+    var colEvents = [];
+    return this._eventMatrix.forEach(function (row, index) {
+        colEvents.concat(row.slice(start, end+1));
     });
 };
+Timeline.prototype.getColumnContext = function(col) {
+    return this._columnContextMap[col];
+};
+Timeline.prototype.getSelectedStep = function () {
+    return this._selectedStep;
+};
+Timeline.prototype.getSelectedStepEvents = function () {
+    return this._eventMatrix[this._selectedStep];
+};
+
+Timeline.prototype.getEventAt = function(row, col) {
+    return this._eventMatrix[row][col];
+};
+
+
+
+Timeline.prototype.setEventMatrix = function (matrix) {
+    this._eventMatrix = matrix;
+};
+Timeline.prototype.setColumnContextMap = function (map) {
+    this._columnContextMap = map;
+};
+Timeline.prototype.setSelectedStep = function (selectedStep) {
+    this._selectedStep = selectedStep;
+};
+
+
+Timeline.prototype.addStep = function () {
+    this._eventMatrix.push(new Array(this._columnContextMap.length)
+        .fill({})
+    );
+};
+Timeline.prototype.addColumnToMatrix = function () {
+    this._eventMatrix.forEach(function(row){
+        row.push({});
+    });
+};
+Timeline.prototype.addContextColumn = function(index, contextInfo) {
+    this._columnContextMap[index] = contextInfo;
+};
+
+Timeline.prototype.addEvent = function (event) {
+    this.getStepEvents(event.getStart(), event.getEnd()).forEach(function(step){
+        step[[event.getColumn()]] = event;
+    })
+};
+
 Timeline.prototype.removeEvent = function (eventUUID) {
     if (typeof eventUUID == "object" && eventUUID.constructor == ContextEvent)
         eventUUID = eventUUID.getUUID();
 
-    for (var i in this._events)
-        if (this._events[i].getUUID() == eventUUID)
-            this._events.splice(i, 1);
-    _removeEvent(eventUUID, this._steps);
-    _removeEvent(eventUUID, this._columns);
-
+    this._eventMatrix.forEach(function(row){
+        for (var i in row) {
+            if (row[i].constructor == ContextEvent && row[i].getUUID() == eventUUID)
+                row.splice(i, 1);
+        }
+    });
 };
+
+
 Timeline.prototype.render = function (callback) {
     (typeof callback == "function" && callback(this));
-};
-
-
-function _removeEvent (eventUUID, list) {
-    for (var i in list) {
-        var eventList = list[i].getEvents();
-        for (var k in eventList)
-            if (eventList[k].getUUID() == eventUUID)
-                eventList.splice(k, 1);
-    }
 };

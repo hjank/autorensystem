@@ -40,10 +40,11 @@ table#timelineTable td.timelineStepLabel div {
     font-size: small;
     text-align: center;
     vertical-align: middle;
+    overflow: hidden;
 }
 
-table#timelineTable tr:first-of-type .timelineStepLabel,
-table#timelineTable tr:last-of-type .timelineStepLabel {
+table#timelineTable tr:first-of-type td.timelineStepLabel,
+table#timelineTable tr:last-of-type td.timelineStepLabel {
     border-style: none;
 }
 

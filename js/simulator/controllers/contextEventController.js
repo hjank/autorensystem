@@ -8,8 +8,7 @@
  * 2. Create a popover for adding/editing/deleting a context "event"
  *
  */
-function createNewEvent (simulation) {
-    var timeline = simulation.getTimeline();
+function createNewContextEvent (simulation) {
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
@@ -18,10 +17,11 @@ function createNewEvent (simulation) {
     // count how many cells have been selected
     var occupiedCount = $(markedCells).length;
     var firstStepID = $(startCell).parent().index();
-
     var colID = $(startCell).parent().children(".timelineCell").index(startCell);
-    var column = timeline.getColumns()[colID];
-    var contextInfo = column.getContextInfo();
+
+
+    var timeline = simulation.getTimeline();
+    var contextInfo = timeline.getColumnContext(colID);
 
     var contextEvent = new ContextEvent(contextInfo, colID, firstStepID, firstStepID+occupiedCount-1, true);
     timeline.addEvent(contextEvent);
@@ -30,11 +30,9 @@ function createNewEvent (simulation) {
 }
 
 function createNewPopover(timeline) {
-    hideAllPopovers();
 
     // keep track of selected cells
     var markedCells = $('.timelineCellMarked');
-
     var startCell = $(markedCells).first();
     var firstStepID = $(startCell).parent().index();
     var colID = $(startCell).parent().children(".timelineCell").index(startCell);
@@ -101,8 +99,8 @@ function generatePopoverContent (contextEvent) {
         .css("min-width", "235px")
         .css("display", "none")
         .css("margin-bottom", "10px")
-        .select2()
         .select2("data", {id:"\r",text:"\r"});
+    var simulatedParameterDiv = createNamedDOMElement("div", "popoverParameters"+eventUUID);
     var confirmButton = createNamedDOMElement("div", "btnPopoverConfirm"+eventUUID)
         .addClass("btn btn-info confirmPopover")
         .css("float", "center")
@@ -111,10 +109,12 @@ function generatePopoverContent (contextEvent) {
     simulatedContextInfoMenuContainer.append(simulatedOperatorSelectElement);
     simulatedContextInfoMenuContainer.append(simulatedValueInput);
     simulatedContextInfoMenuContainer.append(simulatedValueSelect);
+    simulatedContextInfoMenuContainer.append(simulatedParameterDiv);
     simulatedContextInfoMenuContainer.append(confirmButton);
 
     fillOperatorSelection(contextInfo, simulatedOperatorSelectElement);
-    //fillInputField();
+    //fillInputField(contextInfo);
+    fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
 
     return simulatedContextInfoMenuContainer;

@@ -45,7 +45,7 @@ function createSteps(simulation) {
 
     for (var i = 1; i <= numberOfSteps; i++) {
 
-        timeline.addStep(new TimelineStep(i-1, [], false));
+        timeline.addStep();
 
         $(timelineBodyElement).append(
             $("<tr>").addClass("timelineStep").append(
@@ -68,7 +68,8 @@ function createColumns(simulation) {
     for (var i in simulatedContextList.getItems()) {
 
         var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumn(new TimelineColumn(i, contextInfo, []));
+        timeline.addColumnToMatrix();
+        timeline.addContextColumn(i, contextInfo);
 
         /*** view ***/
 
@@ -148,13 +149,14 @@ function _handleMousemove(event) {
  */
 function _handleMouseup(event, simulation) {
 
-    // if the mouse has been down, and is now released (could there be any other case, actually?)
+    // if the mouse has been down on an empty cell
     if (down) {
         // if a single cell was clicked, without dragging, mark it (for subsequent access)
         if (!dragging)
             _mark(event);
 
-        createNewEvent(simulation);
+        hideAllPopovers();
+        createNewContextEvent(simulation);
     }
 
     down = false;

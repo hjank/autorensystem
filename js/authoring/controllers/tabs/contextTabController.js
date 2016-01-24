@@ -180,7 +180,7 @@ function setContextTabListeners() {
         fillInputField(selectedInfo);
 
         // fill parameter selection bar
-        fillParameterSelection(selectedInfo.getParameters());
+        fillParameterSelection(selectedInfo.getParameters(), $("#divContextParameter"));
     });
 }
 
@@ -352,13 +352,13 @@ function fillOperatorSelection(selectedInfo, selectOperatorElement) {
  * Function gets the selected context information and decides which input field has to be set on GUI.
  * @param {Object} ci Contains current context information object.
  * */
-function fillInputField(ci, popover) {
+function fillInputField(ci) {
 
     var chosenValue = ci.getChosenValue();
 
-    var inputContextValueElement = popover ? $("#popoverInput") : $("#inputContextValue");
-    var selectPossibleValuesElement = popover ? $("#popoverSelect") : $("#selectPossibleValues");
-    var select2PossibleValuesElement = popover ? $("#s2id_popoverSelect") : $("#s2id_selectPossibleValues");
+    var inputContextValueElement = $("#inputContextValue");
+    var selectPossibleValuesElement = $("#selectPossibleValues");
+    var select2PossibleValuesElement = $("#s2id_selectPossibleValues");
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -373,7 +373,7 @@ function fillInputField(ci, popover) {
             setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
             selectPossibleValuesElement.css("display", "none");
-            select2PossibleValuesElement.css("display", "none");
+            //select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
@@ -387,7 +387,7 @@ function fillInputField(ci, popover) {
                 .attr("maxlength", 40);            // set max length to 40
 
             selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
-            select2PossibleValuesElement.css("display", "none");
+            //select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement[0].value = chosenValue;
@@ -396,7 +396,7 @@ function fillInputField(ci, popover) {
         case "ENUM":
             inputContextValueElement.css("display", "none");         // make input field invisible
             selectPossibleValuesElement.css("display", "block");     // and selection bar visible
-            select2PossibleValuesElement.css("display", "block");
+            //select2PossibleValuesElement.css("display", "block");
 
             // clear selection
             selectPossibleValuesElement.empty();
@@ -423,7 +423,7 @@ function fillInputField(ci, popover) {
         case "BOOLEAN":
             // TODO: Prettify this whole Boolean thing: include values in operator, spare value selection.
             selectPossibleValuesElement.css("display", "block");  // make selection bar visible
-            select2PossibleValuesElement.css("display", "block");
+            //select2PossibleValuesElement.css("display", "block");
             inputContextValueElement.css("display", "none");      // and input field invisible
 
             // get the two possible values true and false in selection bar
@@ -444,10 +444,9 @@ function fillInputField(ci, popover) {
  * Function show all needed input fields and selection bar for the selected context information.
  * @param {Object} cp Contains all existing context parameter.
  * */
-function fillParameterSelection(cp) {
+function fillParameterSelection(cp, divContextParams) {
 
     var id, div, child;
-    var divContextParams = $("#divContextParameter");
     // in case there are coordinates to be set
     var divMaps = $("#divMaps");
     var lat, long;
@@ -862,7 +861,7 @@ function reconstructContextDetailsTab(contextInfo) {
     fillInputField(contextInfo);
 
     // 4. the parameter section (if given):
-    fillParameterSelection(contextInfo.getParameters())
+    fillParameterSelection(contextInfo.getParameters(), $("#divContextParameter"));
 }
 
 // search for this context info's classes in a list of classes and return first match
