@@ -174,13 +174,13 @@ function setContextTabListeners() {
         var j = e.val;
         var selectedInfo = contextList.getItem(j);
 
-        fillOperatorSelection(selectedInfo, $("#selectOperator"));
+        fillOperatorSelection(selectedInfo);
 
         // fill input field
         fillInputField(selectedInfo);
 
         // fill parameter selection bar
-        fillParameterSelection(selectedInfo.getParameters(), $("#divContextParameter"));
+        fillParameterSelection(selectedInfo.getParameters());
     });
 }
 
@@ -254,7 +254,6 @@ function showDetailContextInfo() {
     $("#selectOperator").css("display", "none");
     $("#inputContextValue").css("display", "none");
     $("#selectPossibleValues").css("display", "none");
-    $("#s2id_selectPossibleValues").css("display", "none");
     $("#divContextParameter").css("display", "none");
 
     // fill selection "Kontextinformation"
@@ -319,18 +318,27 @@ function fillSelectionContextInformation() {
  * @param {Object} selectedInfo Contains current context information object.
  * */
 function fillOperatorSelection(selectedInfo, selectOperatorElement) {
-
     // get the corresponding operators to the selected context information
     var operators = selectedInfo.getOperators();
     var chosenOperator = selectedInfo.getChosenOperator();
 
+    var isPopover = false;
+    if (selectOperatorElement)
+        isPopover = true;
+    else
+        selectOperatorElement = $("#selectOperator");
+
     // clear selection bar
-    selectOperatorElement.empty();
+    cleanSection(selectOperatorElement);
+    selectOperatorElement.select2();
 
     // fill selection bar "Operator"
     for (var i in operators) {
+        var operator = operators[i];
+        if (isPopover && (operator == "NO_VALUE"))
+            continue;
         var option = $("<option>").attr("value", i.toString());
-        option.html(translate_operator(operators[i]));
+        option.html(translate_operator(operator));
         selectOperatorElement.append(option);
     }
 
@@ -352,13 +360,15 @@ function fillOperatorSelection(selectedInfo, selectOperatorElement) {
  * Function gets the selected context information and decides which input field has to be set on GUI.
  * @param {Object} ci Contains current context information object.
  * */
-function fillInputField(ci) {
+function fillInputField(ci, inputContextValueElement, selectPossibleValuesElement) {
 
     var chosenValue = ci.getChosenValue();
 
-    var inputContextValueElement = $("#inputContextValue");
-    var selectPossibleValuesElement = $("#selectPossibleValues");
-    var select2PossibleValuesElement = $("#s2id_selectPossibleValues");
+    var inputContextValueElement = inputContextValueElement || $("#inputContextValue");
+    var selectPossibleValuesElement = selectPossibleValuesElement || $("#selectPossibleValues");
+    // clear selection
+    selectPossibleValuesElement.empty();
+    selectPossibleValuesElement.select2("destroy");
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -373,10 +383,9 @@ function fillInputField(ci) {
             setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
             selectPossibleValuesElement.css("display", "none");
-            //select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
-            inputContextValueElement[0].value = chosenValue;
+            inputContextValueElement.val(chosenValue);
             break;
 
         case "STRING":
@@ -387,19 +396,15 @@ function fillInputField(ci) {
                 .attr("maxlength", 40);            // set max length to 40
 
             selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
-            //select2PossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
-            inputContextValueElement[0].value = chosenValue;
+            inputContextValueElement.val(chosenValue);
             break;
 
         case "ENUM":
             inputContextValueElement.css("display", "none");         // make input field invisible
             selectPossibleValuesElement.css("display", "block");     // and selection bar visible
-            //select2PossibleValuesElement.css("display", "block");
-
-            // clear selection
-            selectPossibleValuesElement.empty();
+            selectPossibleValuesElement.select2();
 
             // fill selection bar
             var enums = ci.getEnums();
@@ -408,6 +413,8 @@ function fillInputField(ci) {
                 option.html(translate_possibleValue(enums[i]));
                 selectPossibleValuesElement.append(option);
             }
+
+
             // set selection to none or last choice (if we are in edit mode)
             if (chosenValue == "") {
                 selectPossibleValuesElement.select2("data", {id:"\r",text:"\r"});
@@ -422,9 +429,9 @@ function fillInputField(ci) {
 
         case "BOOLEAN":
             // TODO: Prettify this whole Boolean thing: include values in operator, spare value selection.
-            selectPossibleValuesElement.css("display", "block");  // make selection bar visible
-            //select2PossibleValuesElement.css("display", "block");
             inputContextValueElement.css("display", "none");      // and input field invisible
+            selectPossibleValuesElement.css("display", "block");  // make selection bar visible
+            selectPossibleValuesElement.select2();
 
             // get the two possible values true and false in selection bar
             var option0 = $("<option>").attr("value", 0);
@@ -445,15 +452,17 @@ function fillInputField(ci) {
  * @param {Object} cp Contains all existing context parameter.
  * */
 function fillParameterSelection(cp, divContextParams) {
+    divContextParams = divContextParams || $("#divContextParameter");
 
     var id, div, child;
     // in case there are coordinates to be set
     var divMaps = $("#divMaps");
+    var coordsExpected = false;
     var lat, long;
 
     // remove all parameter fields from previous editing (except maps div)
     $("#divMapsTemplate").append(divMaps);
-    cleanSection("#divContextParameter");
+    divContextParams.empty();
 
     // iterate through all parameters
     for (var i in cp) {
@@ -503,6 +512,16 @@ function fillParameterSelection(cp, divContextParams) {
             // type float or integer each need an input field and a specific label
             case "INTEGER":
             case "FLOAT":
+                // if coordinates are expected, set lat and long to either "" (new info) or previously input values
+                if (/CP_.*LONGITUDE/.test(parameterOriginal)) {
+                    long = chosenValue;
+                    coordsExpected = true;
+                }
+                if (/CP_.*LATITUDE/.test(parameterOriginal)) {
+                    lat = chosenValue;
+                    coordsExpected = true;
+                }
+
                 id = "parameter"+i;
                 div = createNamedDOMElement("div", "divParameter"+i)
                     .addClass("divParameterInputs")
@@ -511,22 +530,17 @@ function fillParameterSelection(cp, divContextParams) {
                 child = createNamedDOMElement("input", id)
                     .addClass("form-control")
                     .attr("type", "number")
-                    .attr("onkeyup", "getParameterInput(this,"+i+")");
+                    .on("keyup", function (event) {
+                        getParameterInput(event, coordsExpected);
+                    });
                 setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
                 // if we are in edit mode: previously saved value, else ""
-                child[0].value = chosenValue;
+                child.val(chosenValue);
                 div.append(child);
                 divContextParams.append(div);
 
-                // display google maps if coordinates are the expected input
-                if (/CP_.*LONGITUDE/.test(parameterOriginal)) {
-                    long = chosenValue;
-                }
-                if (/CP_.*LATITUDE/.test(parameterOriginal)) {
-                    lat = chosenValue;
-                }
-                // if lat and long have been set to either "" (new info) or input values (edit info)
-                if (lat != null && long != null) {
+                // display google maps if both lat and long have been set
+                if (typeof lat != "undefined" && typeof long != "undefined") {
 
                     // put the map in a visible spot and render it correctly (hopefully)
                     divContextParams.append(divMaps);
@@ -551,7 +565,7 @@ function fillParameterSelection(cp, divContextParams) {
                     .addClass("form-control")
                     .attr("type", "text");
                 // if we are in edit mode: previously saved value, else ""
-                child[0].value = chosenValue;
+                child.val(chosenValue);
                 div.append(child);
                 divContextParams.append(div);
                 break;
@@ -684,12 +698,15 @@ function confirmContextInformation() {
  * Function evaluate the input value and sets too big values to maximum and too small values to minimum.
  * @param {Object} val Contains the current value of the context value input field.
  * */
-function getInputContextValue(val) {
+function getInputContextValue(event) {
+
+    var inputContextValueElement = event.target;
+    var val = $(inputContextValueElement).val();
 
     // reduce to big values to maximum
-    if ( $("#inputContextValue")[0].hasAttribute("max") ) {
+    if ( $(inputContextValueElement).hasAttribute("max") ) {
         // get max attribute value
-        var max = $("#inputContextValue")[0].getAttribute("max");
+        var max = $(inputContextValueElement).getAttribute("max");
         max = parseInt(max);
         if (val.value > max) {
             val.value = max;
@@ -697,9 +714,9 @@ function getInputContextValue(val) {
     }
 
     // increase to little values to minimum
-    if ( $("#inputContextValue")[0].hasAttribute("min") ) {
+    if ( $(inputContextValueElement).hasAttribute("min") ) {
         // get min attribute value
-        var min = $("#inputContextValue")[0].getAttribute("min");
+        var min = $(inputContextValueElement).getAttribute("min");
         min = parseInt(min);
         if (val.value < min) {
             val.value = min;
@@ -724,10 +741,12 @@ function getInputContextValue(val) {
  * Set marker on Google Maps if two input fields and the map are available.
  * @param {Object} val Contains current input field content.
  * @param {int} num Contains the specific input id number.
+ * @param {Boolean} coord True if coordinates are expected as input.
  * */
-function getParameterInput(val, num) {
+function getParameterInput(event, coord) {
 
-    var parameterElement = $("#parameter" + num)[0];
+    var parameterElement = event.target;
+    var val = $(parameterElement).val();
 
     // reduce too big values to maximum
     if ( parameterElement.hasAttribute("max") ) {
@@ -750,8 +769,7 @@ function getParameterInput(val, num) {
     }
 
     /* get values from inputs and set the marker on this point in google maps */
-    // TODO: if ... coordinates expected (instead of viewport check)
-    if ($("#divContextParameter").find("#divMaps").length > 0) {
+    if (coord) {
 
         var lat, long;
         var lngInputDiv = $("#divMaps").prev();
@@ -861,7 +879,7 @@ function reconstructContextDetailsTab(contextInfo) {
     fillInputField(contextInfo);
 
     // 4. the parameter section (if given):
-    fillParameterSelection(contextInfo.getParameters(), $("#divContextParameter"));
+    fillParameterSelection(contextInfo.getParameters());
 }
 
 // search for this context info's classes in a list of classes and return first match

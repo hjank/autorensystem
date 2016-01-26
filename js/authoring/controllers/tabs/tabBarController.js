@@ -101,9 +101,9 @@ function _showActiveTabContent(tab) {
 }
 
 
-// cleans selection bars
-/**
- * Function cleans a selection bar.
+ /**
+ * Function clears a selection bar.
+  *
  * @param {String} s Contains a selection bar id.
  * */
 function cleanSection(s) {

@@ -9,7 +9,7 @@ function initSimulator() {
     var simulatedContextList = simulation.getSimulatedContextList();
 
     // get relevant context - default: scenario context
-    simulatedContextList.fromJSON(contextList.getItemsOfClass("CC_SCENARIO").concat(contextList.getItemsOfClass("CC_SITUATIONAL")));
+    simulatedContextList.fromJSON(contextList.getItems());
     simulatedContextList.resetAllContextValues();
 
     var currentScenarioName = $("#lname")[0].innerHTML;

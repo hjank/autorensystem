@@ -1,0 +1,17 @@
+div#popoverContentTemplate {
+    display: none;
+}
+
+div[id^=simulatedContextInfoMenu] select {
+    display: block;
+    min-width: 235px;
+    margin-bottom: 10px;
+}
+
+div[id^=simulatedContextInfoMenu] input {
+    margin-bottom: 10px;
+}
+
+div[id^=simulatedContextInfoMenu] div.confirmPopover {
+    align-self: center;
+}

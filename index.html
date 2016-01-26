@@ -78,6 +78,8 @@
         <!-- simulator -->
         <link rel="stylesheet" href="js/simulator/view/simulator.css">
         <link rel="stylesheet" href="js/simulator/view/timeline.css">
+        <link rel="stylesheet" href="js/simulator/view/popover.css">
+
         <script type="text/javascript" src="js/simulator/controllers/contextEventController.js"></script>
         <script type="text/javascript" src="js/simulator/controllers/timelineStyling.js"></script>
         <script type="text/javascript" src="js/simulator/controllers/timelineController.js"></script>
@@ -310,14 +312,14 @@
                                     <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                     </select>
                                 </div>
-                                <div>
+                                <div id="divContextOperator">
                                     <!--<label class="label-tabs label" for="selectOperator">Operator</label>-->
                                     <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
                                     </select>
                                 </div>
                                 <div id="divContextValue">
                                     <!--<label class="label-tabs label" for="inputContextValue">Wert</label>-->
-                                    <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue(this)">
+                                    <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue">
                                     <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 235px; display: none">
                                     </select>
                                 </div>

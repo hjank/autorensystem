@@ -10,8 +10,8 @@ var numberOfSteps = 20;
 var down, dragging, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
 var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
-var horizontalBorderPx = 2; // a marked cell's top and bottom border sum in px
-var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
+var horizontalBorderPx = 1; // a marked cell's top and bottom border sum in px
+var verticalBorderPx = 2;  // a marked cell's left and right border sum in px
 
 
 /**
@@ -73,19 +73,25 @@ function createColumns(simulation) {
 
         /*** view ***/
 
-        $(".timelineHeader").append($("<th>").html(formatUnitIcons(contextInfo)));
+        $(".timelineHeader").append($("<th>")
+            .html(formatUnitIcons(contextInfo))
+            .tooltip({
+                animation: false,
+                container: "#tab5",
+                placement: "auto left",
+                viewport: "#timelineContainer"
+            }));
 
         // add one column for each context item
         $(".timelineStep").each(function() {
-
             $(this).append($("<td>")
                 .addClass("timelineCell")
                 .attr("contextClass", contextInfo.getClasses()[0])
                 .tooltip({
                     animation: false,
-                    container: "body",
+                    container: "#tab5",
                     placement: "auto left",
-                    title: "kein Wert",
+                    title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
                     viewport: "#timelineContainer"
                 })
             );
@@ -180,7 +186,6 @@ function _mark(event) {
 
         if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right) {
             $(this).addClass( 'timelineCellMarked' );
-                //.css("background-color", getColor(translate_contextClass($(this).attr("contextClass"))));
         }
         else
             $(this).removeClass( 'timelineCellMarked' );

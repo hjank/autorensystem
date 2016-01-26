@@ -55,10 +55,6 @@ function createNewPopover(timeline) {
             viewport: "#timelineContainer"
         })
         .on("shown.bs.popover", function(){
-            if (!$(this).hasClass("timelineCellOccupied")) {
-                var popoverHeight = $(".popover").css("height");
-                $("select").select2();
-            }
             setPopoverEventHandlers(this, timeline, contextEvent);
         })
         .on("hide.bs.popover", function() {
@@ -79,46 +75,30 @@ function createNewPopover(timeline) {
  * @param contextEvent
  */
 function generatePopoverContent (contextEvent) {
-
     var contextInfo = contextEvent.getContextInfo();
     var eventUUID = contextEvent.getUUID();
 
-    var simulatedContextInfoMenuContainer = createNamedDOMElement("div", "simulatedContextInfoMenu"+eventUUID);
-    var simulatedOperatorSelectElement = createNamedDOMElement("select", "simulatedOperatorSelect"+eventUUID)
-        .addClass("form-control select select-primary select-block mbl")
-        .css("display", "block")
-        .css("min-width", "235px")
-        .css("margin-bottom", "10px")
-        .select2("data", {id:"\r",text:"\r"});
-    var simulatedValueInput = createNamedDOMElement("input", "popoverInput"+eventUUID)
-        .addClass("form-control")
-        .css("margin-bottom", "10px");
-    var simulatedValueSelect = createNamedDOMElement("select", "popoverSelect"+eventUUID)
-        .addClass("form-control select select-primary select-block mbl")
-        .css("display", "block")
-        .css("min-width", "235px")
-        .css("display", "none")
-        .css("margin-bottom", "10px")
-        .select2("data", {id:"\r",text:"\r"});
-    var simulatedParameterDiv = createNamedDOMElement("div", "popoverParameters"+eventUUID);
-    var confirmButton = createNamedDOMElement("div", "btnPopoverConfirm"+eventUUID)
-        .addClass("btn btn-info confirmPopover")
-        .css("float", "center")
-        .html("<b class='fui-check-circle'></b>Bestätigen</div>");
+    var simulatedContextInfoMenuElement = $("#simulatedContextInfoMenu");
+    var popoverTemplate = $(simulatedContextInfoMenuElement).clone();
+    var simulatedOperatorSelectElement = $("#popoverOperatorSelect");
+    var simulatedValueInput = $("#popoverValueInput");
+    var simulatedValueSelect = $("#popoverValueSelect");
+    var simulatedParameterDiv = $("#popoverParameters");
 
-    simulatedContextInfoMenuContainer.append(simulatedOperatorSelectElement);
-    simulatedContextInfoMenuContainer.append(simulatedValueInput);
-    simulatedContextInfoMenuContainer.append(simulatedValueSelect);
-    simulatedContextInfoMenuContainer.append(simulatedParameterDiv);
-    simulatedContextInfoMenuContainer.append(confirmButton);
+    $(simulatedContextInfoMenuElement).find("*").each(function() {
+        var id = $(this).attr("id");
+        if (id) $(this).attr("id", id + "_" + eventUUID);
+    });
+    $(simulatedContextInfoMenuElement).attr("id", "simulatedContextInfoMenu_"+eventUUID);
 
     fillOperatorSelection(contextInfo, simulatedOperatorSelectElement);
-    //fillInputField(contextInfo);
+    fillInputField(contextInfo, simulatedValueInput, simulatedValueSelect);
     fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
-
-    return simulatedContextInfoMenuContainer;
+    $("#popoverContentTemplate").append(popoverTemplate);
+    return simulatedContextInfoMenuElement;
 }
+
 
 /**
  * Generate the popover's title: the context info's name and an "X" for closing the popover.
@@ -145,7 +125,7 @@ function setPopoverEventHandlers(startCell, timeline, contextEvent) {
         $(startCell).popover("hide");
 
         // closing popover without input + confirm, i.e. aborting event creation
-        if ( !($(this).hasClass("timelineCellOccupied") || confirmed) ) {
+        if (!( $(startCell).hasClass("timelineCellOccupied") || confirmed )) {
             timeline.removeEvent(contextEvent);
 
             $(startCell).popover("destroy");
