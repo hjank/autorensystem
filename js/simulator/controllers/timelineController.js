@@ -130,6 +130,8 @@ function _handleMousedown(event) {
     xOnMousedown = event.pageX;
     xFirstCellLeft = $(this).offset().left;
     yFirstCellTop = $(this).offset().top;
+
+    hideAllPopovers();
 }
 
 /**
@@ -157,11 +159,10 @@ function _handleMouseup(event, simulation) {
 
     // if the mouse has been down on an empty cell
     if (down) {
+
         // if a single cell was clicked, without dragging, mark it (for subsequent access)
         if (!dragging)
             _mark(event);
-
-        hideAllPopovers();
         createNewContextEvent(simulation);
     }
 
@@ -202,7 +203,8 @@ function drawTopBottomBorders (cells) {
     var lastCell = $(cells).last();
 
     $(firstCell).css("border-top", "1px solid");
-    $(lastCell).css("border-bottom", "solid");
+    $(lastCell).css("border-bottom", "1px solid");
+    $(lastCell).append($("<div>").addClass("occupiedResizeHandle"));
 }
 
 

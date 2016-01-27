@@ -5,6 +5,7 @@ table#timelineTable td {
     margin: 0px;
     padding: 0px;
     height: inherit;
+    border-collapse: collapse;
 }
 
 table#timelineTable {
@@ -19,11 +20,11 @@ table#timelineTable text {
     margin: 0px;
 }
 
-table#timelineTable .timelineHeader th {
+table#timelineTable tr.timelineHeader th {
     text-align: center;
 }
 
-table#timelineTable .timelineStep {
+table#timelineTable tr.timelineStep {
     height: 30px;
 }
 
@@ -48,71 +49,88 @@ table#timelineTable tr:last-of-type td.timelineStepLabel {
     border-style: none;
 }
 
-table#timelineTable .timelineStep > .timelineCell {
+table#timelineTable tr.timelineStep > td.timelineCell {
     width: 30px;
     min-width: 30px;
+    border-top: 1px solid;
     border-bottom: 1px solid;
+    border-left: 2px solid;
     border-right: 2px solid;
     cursor: copy;
 }
 
 
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_SCENARIO] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_SCENARIO] {
     background-color: #d6e8f5;
 }
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_PERSONAL] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_PERSONAL] {
     background-color: #eed8f3;
 }
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_SITUATIONAL] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_SITUATIONAL] {
     background-color: #e6fdce;
 }
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_TECHNICAL] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_TECHNICAL] {
     background-color: #e6e6e6;
 }
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_PHYSICAL] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_PHYSICAL] {
     background-color: #fef6cd;
 }
-table#timelineTable .timelineStep > .timelineCell[contextClass=CC_LOCATION] {
+table#timelineTable tr.timelineStep > td.timelineCell[contextClass=CC_LOCATION] {
     background-color: #fbd2d0;
 }
 
 
 
-table#timelineTable .timelineStep > .timelineCellOccupied {
+table#timelineTable tr.timelineStep > td.timelineCellOccupied {
     width: inherit;
     height: inherit;
     position: relative;
-    border-style: none solid none;
+    border-top: none;
+    border-bottom: none;
+    border-left: 2px solid;
+    border-right: 2px solid;
     cursor: pointer;
 }
 
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_SCENARIO],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_SCENARIO] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_SCENARIO],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_SCENARIO] {
     background-color: #3287C8;
 }
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_PERSONAL],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_PERSONAL] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_PERSONAL],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_PERSONAL] {
     background-color: #AF46C8;
 }
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_SITUATIONAL],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_SITUATIONAL] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_SITUATIONAL],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_SITUATIONAL] {
     background-color: #91F52D;
 }
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_TECHNICAL],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_TECHNICAL] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_TECHNICAL],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_TECHNICAL] {
     background-color: #969696;
 }
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_PHYSICAL],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_PHYSICAL] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_PHYSICAL],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_PHYSICAL] {
     background-color: #FADC3C;
 }
-table#timelineTable .timelineStep > .timelineCellMarked[contextClass=CC_LOCATION],
-table#timelineTable .timelineStep > .timelineCellOccupied[contextClass=CC_LOCATION] {
+table#timelineTable tr.timelineStep > td.timelineCellMarked[contextClass=CC_LOCATION],
+table#timelineTable tr.timelineStep > td.timelineCellOccupied[contextClass=CC_LOCATION] {
     background-color: #F03C32;
 }
 
+table#timelineTable tr.timelineStep > td.timelineCellOccupied div.occupiedResizeHandle {
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    bottom: 0px;
+    display: block;
+    cursor: s-resize;
+}
+table#timelineTable tr.timelineStep > td.timelineCellOccupied div.occupiedResizeHandle:hover {
+     border-bottom: double;
+ }
 
-table#timelineTable .timelineStep > .timelineCellOccupied::after {
+
+/*table#timelineTable tr.timelineStep > td.timelineCellOccupied:last-of-type::after {
     content: "";
     background: inherit;
     width: 100%;
@@ -121,7 +139,8 @@ table#timelineTable .timelineStep > .timelineCellOccupied::after {
     bottom: -2px;
     display: block;
     cursor: s-resize;
-}
+    border-bottom: 1px solid;
+}*/
 
 
 /*** the following is legacy ***/

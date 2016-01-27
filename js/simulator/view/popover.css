@@ -1,14 +1,15 @@
+div.popover h3.popover-title div a.closePopover {
+    float: right;
+}
+
 div#popoverContentTemplate {
     display: none;
 }
 
-div[id^=simulatedContextInfoMenu] select {
+div[id^=simulatedContextInfoMenu] select,
+div[id^=simulatedContextInfoMenu] input {
     display: block;
     min-width: 235px;
-    margin-bottom: 10px;
-}
-
-div[id^=simulatedContextInfoMenu] input {
     margin-bottom: 10px;
 }
 

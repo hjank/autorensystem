@@ -364,11 +364,15 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
 
     var chosenValue = ci.getChosenValue();
 
-    var inputContextValueElement = inputContextValueElement || $("#inputContextValue");
-    var selectPossibleValuesElement = selectPossibleValuesElement || $("#selectPossibleValues");
-    // clear selection
-    selectPossibleValuesElement.empty();
-    selectPossibleValuesElement.select2("destroy");
+    var isPopover = false;
+    if (inputContextValueElement && selectPossibleValuesElement) isPopover = true;
+    else {
+        inputContextValueElement = $("#inputContextValue");
+        selectPossibleValuesElement = $("#selectPossibleValues");
+        // clear selection
+        selectPossibleValuesElement.empty();
+        selectPossibleValuesElement.select2("destroy");
+    }
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -382,7 +386,8 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
                 .css("display", "block");
             setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
-            selectPossibleValuesElement.css("display", "none");
+            if (isPopover) selectPossibleValuesElement.remove();
+            else selectPossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement.val(chosenValue);
@@ -395,7 +400,9 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
                 .css("display", "block")           // make input field visible
                 .attr("maxlength", 40);            // set max length to 40
 
-            selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
+
+            if (isPopover) selectPossibleValuesElement.remove();
+            else selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement.val(chosenValue);

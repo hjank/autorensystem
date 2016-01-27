@@ -54,10 +54,13 @@ function createNewPopover(timeline) {
             title: generatePopoverTitle(contextEvent.getContextInfo()),
             viewport: "#timelineContainer"
         })
-        .on("shown.bs.popover", function(){
+        .on("shown.bs.popover", function(event){
+            $(".popover select").select2();
             setPopoverEventHandlers(this, timeline, contextEvent);
+            event.stopPropagation();
         })
         .on("hide.bs.popover", function() {
+            $(".popover select").select2("destroy");
             unmarkAllCells();
         })
         .tooltip("destroy");
@@ -96,6 +99,7 @@ function generatePopoverContent (contextEvent) {
     fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
     $("#popoverContentTemplate").append(popoverTemplate);
+
     return simulatedContextInfoMenuElement;
 }
 
@@ -106,8 +110,11 @@ function generatePopoverContent (contextEvent) {
  * @returns {string}
  */
 function generatePopoverTitle (contextInfo) {
-    return (translate_contextInformation(contextInfo.getID())
-        + '<a href="#" title="Schließen" class="closePopover" style="float: right">X</a>');
+    var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
+    var closeX = $('<a href="#" title="Schließen" class="closePopover">X</a>');
+    popoverTitle.append(closeX);
+
+    return popoverTitle;
 }
 
 
@@ -116,32 +123,38 @@ function hideAllPopovers() {
     $(".popover").hide();
 }
 
-
+var lastCell;
 function setPopoverEventHandlers(startCell, timeline, contextEvent) {
 
-    var confirmed = false;
+    lastCell = startCell;
 
-    $(".closePopover").on("click", function(){
+    $(".closePopover").on("click", function(event){
+        startCell = lastCell;
+
         $(startCell).popover("hide");
 
         // closing popover without input + confirm, i.e. aborting event creation
-        if (!( $(startCell).hasClass("timelineCellOccupied") || confirmed )) {
+        if (! $(startCell).hasClass("timelineCellOccupied")) {
             timeline.removeEvent(contextEvent);
 
             $(startCell).popover("destroy");
         }
 
+        event.stopPropagation();
     });
 
-    $(".confirmPopover").on("click", function(){
-        confirmed = true;
+    $(".confirmPopover").on("click", function(event){
+        startCell = lastCell;
 
-        var markedCells = $(".timelineCellMarked");
-        // add new class
-        $(markedCells).addClass('timelineCellOccupied');
-        drawTopBottomBorders(markedCells);
+        if ($(startCell).hasClass("timelineCellMarked")) {
+            // add new class and style
+            drawTopBottomBorders($(".timelineCellMarked").addClass('timelineCellOccupied'));
+        }
+
         // triggers unmarking of all cells
         $(startCell).popover("hide");
+
+        event.stopPropagation();
     });
 }
 
