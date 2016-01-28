@@ -28,20 +28,19 @@ table#timelineTable tr.timelineStep {
     height: 30px;
 }
 
-table#timelineTable td.timelineStepLabel {
+table#timelineTable td.timelineStepLabel,
+table#timelineTable th.timelineStepLabel {
     height: inherit;
-    width: 8px;
+    width: auto;
     border-style: solid none;
 }
 
 table#timelineTable td.timelineStepLabel div {
     margin: 0px;
     padding: 0px;
-    width: 8px;
     font-size: small;
     text-align: center;
     vertical-align: middle;
-    overflow: hidden;
 }
 
 table#timelineTable tr:first-of-type td.timelineStepLabel,
