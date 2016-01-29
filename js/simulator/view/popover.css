@@ -1,4 +1,4 @@
-div.popover h3.popover-title div a.closePopover {
+div.popover h3.popover-title div a.close-popover {
     float: right;
 }
 
@@ -13,6 +13,6 @@ div[id^=simulatedContextInfoMenu] input {
     margin-bottom: 10px;
 }
 
-div[id^=simulatedContextInfoMenu] div.confirmPopover {
+div[id^=simulatedContextInfoMenu] div.confirm-popover {
     align-self: center;
 }

@@ -36,11 +36,15 @@ Timeline.prototype.getSelectedStep = function () {
 Timeline.prototype.getSelectedStepEvents = function () {
     return this._eventMatrix[this._selectedStep];
 };
-
 Timeline.prototype.getEventAt = function(row, col) {
     return this._eventMatrix[row][col];
 };
-
+Timeline.prototype.getEventByUUID = function(eventUUID) {
+    for (var rowID in this._eventMatrix)
+        for (var colID in this._eventMatrix[rowID])
+            if (this._eventMatrix[rowID][colID].getUUID() == eventUUID)
+                return this._eventMatrix[rowID][colID];
+};
 
 
 Timeline.prototype.setEventMatrix = function (matrix) {
@@ -59,18 +63,25 @@ Timeline.prototype.addStep = function () {
         .fill({})
     );
 };
-Timeline.prototype.addColumnToMatrix = function () {
+
+Timeline.prototype.addColumn = function(contextInfo, index) {
+    this._addColumnToMatrix(index);
+    this._addContextColumn(contextInfo, index);
+};
+Timeline.prototype._addColumnToMatrix = function (index) {
     this._eventMatrix.forEach(function(row){
-        row.push({});
+        if (typeof index != "undefined") row.splice(index, 0, {});
+        else row.push({});
     });
 };
-Timeline.prototype.addContextColumn = function(index, contextInfo) {
-    this._columnContextMap[index] = contextInfo;
+Timeline.prototype._addContextColumn = function(contextInfo, index) {
+    if (typeof index != "undefined") this._columnContextMap[index] = contextInfo;
+    else this._columnContextMap.push(contextInfo);
 };
 
 Timeline.prototype.addEvent = function (event) {
     this.getStepEvents(event.getStart(), event.getEnd()).forEach(function(step){
-        step[[event.getColumn()]] = event;
+        step[event.getColumn()] = event;
     })
 };
 
@@ -81,12 +92,12 @@ Timeline.prototype.removeEvent = function (eventUUID) {
     this._eventMatrix.forEach(function(row){
         for (var i in row) {
             if (row[i].constructor == ContextEvent && row[i].getUUID() == eventUUID)
-                row.splice(i, 1);
+                row[i] = {};
         }
     });
 };
 
 
-Timeline.prototype.render = function (callback) {
-    (typeof callback == "function" && callback(this));
+Timeline.prototype.render = function (callback, arg) {
+    (typeof callback == "function" && callback(this, arg));
 };

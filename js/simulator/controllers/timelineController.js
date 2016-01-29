@@ -10,8 +10,8 @@ var numberOfSteps = 20;
 var down, dragging, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
 var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
-var horizontalBorderPx = 1; // a marked cell's top and bottom border sum in px
-var verticalBorderPx = 2;  // a marked cell's left and right border sum in px
+var horizontalBorderPx = 2; // a marked cell's top and bottom border sum in px
+var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 
 
 /**
@@ -21,20 +21,14 @@ function initTimeline(simulation) {
 
     simulation.setTimeline(new Timeline());
 
-    // init the simulation editor timeline
-    // 1. fetch and append html
-    $.get( "js/simulator/view/simulator.html", function( data ) {
-        $( "#tab5" ).html( data );
+    simulation = createSteps(simulation);
 
-        createSteps(simulation);
+    // create a column for each ContextInformation object
+    simulation = createColumns(simulation);
 
-        // create a column for each ContextInformation object
-        createColumns(simulation);
+    // set event handlers for these generated cells
+    setCellEventHandlers(simulation);
 
-        // set event handlers for these generated cells
-        setCellEventHandlers(simulation);
-
-    });
 }
 
 
@@ -48,13 +42,14 @@ function createSteps(simulation) {
         timeline.addStep();
 
         $(timelineBodyElement).append(
-            $("<tr>").addClass("timelineStep").append(
-                $("<td>").addClass("timelineStepLabel").append(
-                    $("<div>").addClass("timelineStepLabelText").html(i.toString())
-                )
+            $("<tr>").addClass("timeline-step").append(
+                $("<td>").addClass("timeline-step-label").html(i.toString())
             )
         );
     }
+
+    simulation.setTimeline(timeline);
+    return simulation;
 }
 
 /**
@@ -66,51 +61,53 @@ function createColumns(simulation) {
     var timeline = simulation.getTimeline();
 
     for (var i in simulatedContextList.getItems()) {
-
         var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumnToMatrix();
-        timeline.addContextColumn(i, contextInfo);
+        timeline.addColumn(contextInfo, i);
 
-        /*** view ***/
+        createColumnForContextInfo(contextInfo);
+    }
 
-        $(".timelineHeader").append($("<th>")
-            .html(formatUnitIcons(contextInfo))
+    return simulation;
+}
+
+
+function createColumnForContextInfo(contextInfo) {
+
+    /*** view ***/
+
+    $(".timeline-header").append($("<th>")
+        .html(formatUnitIcons(contextInfo))
+        .tooltip({
+            animation: false,
+            container: "#tab5",
+            placement: "auto left",
+            viewport: "#timelineContainer"
+        }));
+
+    // add one column for each context item
+    $(".timeline-step").each(function() {
+        $(this).append($("<td>")
+            .addClass("timeline-cell")
+            .attr("contextClass", contextInfo.getClasses()[0])
             .tooltip({
                 animation: false,
                 container: "#tab5",
-                placement: "auto left",
+                placement: "auto top",
+                title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
                 viewport: "#timelineContainer"
-            }));
-
-        // add one column for each context item
-        $(".timelineStep").each(function() {
-            $(this).append($("<td>")
-                .addClass("timelineCell")
-                .attr("contextClass", contextInfo.getClasses()[0])
-                .tooltip({
-                    animation: false,
-                    container: "#tab5",
-                    placement: "auto left",
-                    title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
-                    viewport: "#timelineContainer"
-                })
-            );
-        });
-    }
+            })
+        );
+    });
 }
-
 
 /** *
  * Sets handlers for mouse events on table cells and on document, consequently
  */
 function setCellEventHandlers(simulation) {
 
-    $(".timelineCell").on("mousedown", _handleMousedown);
-    $(document).mousemove(_handleMousemove);
-    $(document).mouseup(function (event) {
-        _handleMouseup(event, simulation);
-    });
-
+    $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
+    $(document).on("mousemove", _handleMousemove);
+    $(document).on("mouseup", null, simulation, _handleMouseup);
 }
 
 
@@ -122,7 +119,9 @@ function setCellEventHandlers(simulation) {
  * @private
  */
 function _handleMousedown(event) {
-    if ($(event.target).hasClass("timelineCellOccupied")) return;
+    hideAllPopovers(event.data.getTimeline());
+
+    if ($(event.target).hasClass("timeline-cell-occupied")) return;
 
     down = true;
 
@@ -131,7 +130,6 @@ function _handleMousedown(event) {
     xFirstCellLeft = $(this).offset().left;
     yFirstCellTop = $(this).offset().top;
 
-    hideAllPopovers();
 }
 
 /**
@@ -155,7 +153,7 @@ function _handleMousemove(event) {
  * @param event The mouseup event. Can occur anywhere in the document.
  * @private
  */
-function _handleMouseup(event, simulation) {
+function _handleMouseup(event) {
 
     // if the mouse has been down on an empty cell
     if (down) {
@@ -163,7 +161,8 @@ function _handleMouseup(event, simulation) {
         // if a single cell was clicked, without dragging, mark it (for subsequent access)
         if (!dragging)
             _mark(event);
-        createNewContextEvent(simulation);
+
+        createNewContextEvent(event.data);
     }
 
     down = false;
@@ -179,23 +178,31 @@ function _handleMouseup(event, simulation) {
  */
 function _mark(event) {
 
-    $('.timelineCell').each(function () {
+    $(".timeline-cell").each(function () {
         var top = $(this).offset().top;
         var bottom = top + $(this).height()+horizontalBorderPx;
         var left = $(this).offset().left;
         var right = left + $(this).width()+verticalBorderPx;
 
         if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right) {
-            $(this).addClass( 'timelineCellMarked' );
+            $(this).addClass( "timeline-cell-marked" );
         }
         else
-            $(this).removeClass( 'timelineCellMarked' );
+            $(this).removeClass( "timeline-cell-marked" );
     });
 }
 
 
+
+function getColIDOfCell(cell) {
+    return $(cell).parent().children(".timeline-cell").index(cell);
+}
+function getRowIDOfCell(cell) {
+    return $(cell).parent().index();
+}
+
 function unmarkAllCells() {
-    $(".timelineCellMarked").removeClass("timelineCellMarked");
+    $(".timeline-cell-marked").removeClass("timeline-cell-marked");
 }
 
 function drawTopBottomBorders (cells) {
@@ -204,39 +211,5 @@ function drawTopBottomBorders (cells) {
 
     $(firstCell).css("border-top", "1px solid");
     $(lastCell).css("border-bottom", "1px solid");
-    $(lastCell).append($("<div>").addClass("occupiedResizeHandle"));
-}
-
-
-
-/**
- * Returns the Y coordinate of the element's bottom.
- *
- * @param element The DOM element whose bottom is searched.
- * @returns {*} A number representing the y coordinate (in px).
- * @private
- */
-function _bottom(element){
-    return $(element).offset().top + $(element).height()+horizontalBorderPx;
-}
-
-/**
- *
- * @returns {number} The height of the selected, i.e. marked area in px
- * @private
- */
-function _getHeight(event) {
-    // if a single cell was clicked, without dragging, mark it (to access it afterwards)
-    if (!dragging)
-        _mark(event);
-
-    // get the y coordinate of the lowest selected cell's bottom
-    var yEnd = 0;
-    $('.timelineCellMarked').each(function() {
-        var y = _bottom(this);
-        yEnd = y > yEnd ? y : yEnd;
-    });
-
-    // calculate the distance between start and end y coordinates, i.e. height of the marked area
-    return yEnd - yFirstCellTop;
+    $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
 }

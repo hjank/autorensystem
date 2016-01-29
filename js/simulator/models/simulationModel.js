@@ -5,7 +5,7 @@
 
 function Simulation () {
 
-    this._title = "";
+    this._title = "Unbenannt";
     this._description = "";
 
     this._playBackSpeed = 3000; // default speed = 3 seconds per step
@@ -57,6 +57,10 @@ Simulation.prototype.setTimeline = function (timeline) {
     this._timeline = timeline;
 };
 
+Simulation.prototype.addContextItem = function (contextInfo) {
+    this._simulatedContextList.addItem(contextInfo);
+    this._timeline.addColumn(contextInfo);
+};
 
 
 Simulation.prototype.start = function (callback) {

@@ -11,34 +11,31 @@
 function createNewContextEvent (simulation) {
 
     // keep track of selected cells
-    var markedCells = $('.timelineCellMarked');
+    var markedCells = $(".timeline-cell-marked");
     // editor popover will be attached to first cell
     var startCell = $(markedCells).first();
-    // count how many cells have been selected
-    var occupiedCount = $(markedCells).length;
-    var firstStepID = $(startCell).parent().index();
-    var colID = $(startCell).parent().children(".timelineCell").index(startCell);
-
+    var firstStepID = getRowIDOfCell(startCell);
+    var colID = getColIDOfCell(startCell);
 
     var timeline = simulation.getTimeline();
-    var contextInfo = timeline.getColumnContext(colID);
-
-    var contextEvent = new ContextEvent(contextInfo, colID, firstStepID, firstStepID+occupiedCount-1, true);
+    var contextEvent = new ContextEvent(
+        timeline.getColumnContext(colID),
+        colID,
+        firstStepID,
+        firstStepID + $(markedCells).length - 1,
+        true
+    );
     timeline.addEvent(contextEvent);
-
-    timeline.render(createNewPopover);
+    timeline.render(createNewPopover, contextEvent);
 }
 
-function createNewPopover(timeline) {
+
+function createNewPopover(timeline, contextEvent) {
 
     // keep track of selected cells
-    var markedCells = $('.timelineCellMarked');
-    var startCell = $(markedCells).first();
-    var firstStepID = $(startCell).parent().index();
-    var colID = $(startCell).parent().children(".timelineCell").index(startCell);
-    var contextEvent = timeline.getEventAt(firstStepID, colID);
+    var markedCells = $(".timeline-cell-marked");
 
-        // create a context editor popover for each selected cell
+    // create a context editor popover for each selected cell
     $(markedCells)
         .popover({
             container: "#tab5",
@@ -73,6 +70,21 @@ function createNewPopover(timeline) {
     }
 }
 
+
+/**
+ * Generate the popover's title: the context info's name and an "X" for closing the popover.
+ * @param contextInfo
+ * @returns {string}
+ */
+function generatePopoverTitle (contextInfo) {
+    var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
+    var closeX = $('<a href="#" title="Schließen" class="close-popover">X</a>');
+    popoverTitle.append(closeX);
+
+    return popoverTitle;
+}
+
+
 /**
  * Generate the content of the newly created popover, i.e. operator, value and parameter selection.
  * @param contextEvent
@@ -95,7 +107,7 @@ function generatePopoverContent (contextEvent) {
     $(simulatedContextInfoMenuElement).attr("id", "simulatedContextInfoMenu_"+eventUUID);
 
     fillOperatorSelection(contextInfo, simulatedOperatorSelectElement);
-    fillInputField(contextInfo, simulatedValueInput, simulatedValueSelect);
+    fillPopoverContextValue(contextInfo, simulatedValueInput, simulatedValueSelect);
     fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
     $("#popoverContentTemplate").append(popoverTemplate);
@@ -104,23 +116,67 @@ function generatePopoverContent (contextEvent) {
 }
 
 
-/**
- * Generate the popover's title: the context info's name and an "X" for closing the popover.
- * @param contextInfo
- * @returns {string}
- */
-function generatePopoverTitle (contextInfo) {
-    var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
-    var closeX = $('<a href="#" title="Schließen" class="closePopover">X</a>');
-    popoverTitle.append(closeX);
+function fillPopoverContextValue(ci, inputContextValueElement, selectPossibleValuesElement) {
 
-    return popoverTitle;
+    switch (ci.getType()) {
+
+        case "FLOAT":
+        case "INTEGER":
+            selectPossibleValuesElement.remove();
+            inputContextValueElement.attr("type", "number");
+            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
+
+            break;
+
+        case "STRING":
+            selectPossibleValuesElement.remove();
+            inputContextValueElement.attr("type", "text");
+
+            break;
+
+        case "ENUM":
+            inputContextValueElement.css("display", "none");         // make input field invisible
+
+            // fill selection bar
+            var enums = ci.getEnums();
+            for (var i in enums) {
+                var option = $("<option>").attr("value", i.toString());
+                option.html(translate_possibleValue(enums[i]));
+                selectPossibleValuesElement.append(option);
+            }
+            //selectPossibleValuesElement.select2("data", {id:"\r",text:"\r"});
+
+            break;
+
+        case "BOOLEAN":
+            inputContextValueElement.css("display", "none");      // and input field invisible
+
+            // get the two possible values true and false in selection bar
+            var option0 = $("<option>").attr("value", 0);
+            var option1 = $("<option>").attr("value", 1);
+            option0.html("falsch");
+            option1.html("wahr");
+            selectPossibleValuesElement.append(option1);
+            selectPossibleValuesElement.append(option0);
+
+            break;
+    }
 }
 
 
-
-function hideAllPopovers() {
+function hideAllPopovers(timeline) {
     $(".popover").hide();
+
+    // remove all non-confirmed events
+    var markedCells = $(".timeline-cell-marked");
+    if ($(markedCells).length != 0) {
+        var startCell = $(markedCells).first();
+
+        var contextEvent = timeline.getEventAt(getRowIDOfCell(startCell), getColIDOfCell(startCell));
+        timeline.removeEvent(contextEvent);
+
+        $(markedCells).popover("destroy");
+    }
 }
 
 var lastCell;
@@ -128,13 +184,13 @@ function setPopoverEventHandlers(startCell, timeline, contextEvent) {
 
     lastCell = startCell;
 
-    $(".closePopover").on("click", function(event){
+    $(".close-popover").on("click", function(event){
         startCell = lastCell;
 
         $(startCell).popover("hide");
 
         // closing popover without input + confirm, i.e. aborting event creation
-        if (! $(startCell).hasClass("timelineCellOccupied")) {
+        if (! $(startCell).hasClass("timeline-cell-occupied")) {
             timeline.removeEvent(contextEvent);
 
             $(startCell).popover("destroy");
@@ -143,12 +199,12 @@ function setPopoverEventHandlers(startCell, timeline, contextEvent) {
         event.stopPropagation();
     });
 
-    $(".confirmPopover").on("click", function(event){
+    $(".confirm-popover").on("click", function(event){
         startCell = lastCell;
 
-        if ($(startCell).hasClass("timelineCellMarked")) {
+        if ($(startCell).hasClass("timeline-cell-marked")) {
             // add new class and style
-            drawTopBottomBorders($(".timelineCellMarked").addClass('timelineCellOccupied'));
+            drawTopBottomBorders($(".timeline-cell-marked").addClass("timeline-cell-occupied"));
         }
 
         // triggers unmarking of all cells

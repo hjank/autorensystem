@@ -260,8 +260,9 @@ function showDetailContextInfo() {
     fillSelectionContextInformation();
 
     // set event listener for "Bestätigen" button in tab "Kontextinformation"
-    $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function() {
+    $("#btnConfirmContextInfo, #btnConfirmContextInfoSmall").on("click", function(event) {
         confirmContextInformation();
+        event.stopPropagation();
     });
 }
 
@@ -360,19 +361,15 @@ function fillOperatorSelection(selectedInfo, selectOperatorElement) {
  * Function gets the selected context information and decides which input field has to be set on GUI.
  * @param {Object} ci Contains current context information object.
  * */
-function fillInputField(ci, inputContextValueElement, selectPossibleValuesElement) {
+function fillInputField(ci) {
 
     var chosenValue = ci.getChosenValue();
 
-    var isPopover = false;
-    if (inputContextValueElement && selectPossibleValuesElement) isPopover = true;
-    else {
-        inputContextValueElement = $("#inputContextValue");
-        selectPossibleValuesElement = $("#selectPossibleValues");
-        // clear selection
-        selectPossibleValuesElement.empty();
-        selectPossibleValuesElement.select2("destroy");
-    }
+    var inputContextValueElement = $("#inputContextValue");
+    var selectPossibleValuesElement = $("#selectPossibleValues");
+    // clear selection
+    selectPossibleValuesElement.empty();
+    selectPossibleValuesElement.select2("destroy");
 
     // decide which type of input field is needed
     switch (ci.getType()) {
@@ -386,8 +383,7 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
                 .css("display", "block");
             setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
-            if (isPopover) selectPossibleValuesElement.remove();
-            else selectPossibleValuesElement.css("display", "none");
+            selectPossibleValuesElement.css("display", "none");
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement.val(chosenValue);
@@ -401,8 +397,7 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
                 .attr("maxlength", 40);            // set max length to 40
 
 
-            if (isPopover) selectPossibleValuesElement.remove();
-            else selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
+            selectPossibleValuesElement.css("display", "none");      // and selection bar invisible
 
             // reset the value of this input field to "" or the last saved value (if we are in edit mode)
             inputContextValueElement.val(chosenValue);
@@ -447,6 +442,17 @@ function fillInputField(ci, inputContextValueElement, selectPossibleValuesElemen
             option1.html("wahr");
             selectPossibleValuesElement.append(option1);
             selectPossibleValuesElement.append(option0);
+
+            // set selection to none or last choice (if we are in edit mode)
+            if (chosenValue == "") {
+                selectPossibleValuesElement.select2("data", {id:"\r",text:"\r"});
+            }
+            else {
+                selectPossibleValuesElement.select2("data", {
+                    id:enums.indexOf(chosenValue),
+                    text:translate_possibleValue(chosenValue)
+                });
+            }
 
             break;
     }

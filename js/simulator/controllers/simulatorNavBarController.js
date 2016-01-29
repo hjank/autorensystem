@@ -5,5 +5,6 @@
 
 function handleSimulatorNavBarMenuEvents() {
 
-    $("#contextSimulation").on("click", initSimulator);
+    initSimulator();
+    //$("#contextSimulation").on("click", initSimulator);
 }

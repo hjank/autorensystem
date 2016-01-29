@@ -3,9 +3,10 @@
     <div id="simulatorHeader">
         <div id="simulatorInfo">
             <span id="btnSimulatorInfo" class="btn btn-info btn-sm fui-info" title="Erste Schritte"></span>
+            <span id="simulatorInfoText"></span>
         </div>
         <div id="simulationTitle">
-            <span>Unbenannte Simulation</span>
+            <span></span>
             <span id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Beschreibung"></span>
         </div>
     </div>
@@ -14,8 +15,8 @@
     <div id="timelineContainer" align="center">
         <table id="timelineTable">
             <thead>
-            <tr class="timelineHeader">
-                <th class="timelineStepLabel"></th>
+            <tr class="timeline-header">
+                <th class="timeline-step-label"></th>
             </tr>
             </thead>
             <tbody></tbody>
@@ -42,11 +43,11 @@
 
     <div id="simulatedContextInfoMenu">
         <select id="popoverOperatorSelect" class="form-control select select-primary select-block mbl"></select>
-        <input id="popoverValueInput" class="form-control">
+        <input id="popoverValueInput" class="form-control" maxlength="40">
         <select id="popoverValueSelect" class="form-control select select-primary select-block mbl"></select>
         <div id="popoverParameters"></div>
 
-        <div id="btnPopoverConfirm" class="btn btn-info confirmPopover">
+        <div id="btnPopoverConfirm" class="btn btn-info confirm-popover">
             <b class='fui-check-circle'></b>Bestätigen
         </div>
     </div>

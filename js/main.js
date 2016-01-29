@@ -28,6 +28,6 @@ function contextInfoListLoadedCallback () {
     // reload data from localStorage
     initLoader();
     // init simulator
-    //initSimulator();
-    handleSimulatorNavBarMenuEvents();
+    initSimulator();
+    //handleSimulatorNavBarMenuEvents();
 }

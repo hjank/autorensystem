@@ -97,6 +97,7 @@ function _showActiveTabContent(tab) {
         lastOpenedUnitTab = tab;
         if (!bool_unitClicked) return false;
     }
+    if ($(tab).hasClass("simulatorTab")) updateSimulator();
     $($(tab).attr("href")).show();
 }
 
