@@ -56,6 +56,13 @@ Timeline.prototype.setColumnContextMap = function (map) {
 Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
 };
+Timeline.prototype.incrementSelectedStep = function () {
+    this._selectedStep++;
+};
+Timeline.prototype.decrementSelectedStep = function () {
+    this._selectedStep--;
+};
+
 
 
 Timeline.prototype.addStep = function () {

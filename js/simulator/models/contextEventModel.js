@@ -32,7 +32,7 @@ ContextEvent.prototype.getStart = function () {
 ContextEvent.prototype.getEnd = function () {
     return this._end;
 };
-ContextEvent.prototype.getVisibility = function () {
+ContextEvent.prototype.isVisible = function () {
     return this._visible;
 };
 

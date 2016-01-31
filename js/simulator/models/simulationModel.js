@@ -8,13 +8,14 @@ function Simulation () {
     this._title = "Unbenannt";
     this._description = "";
 
-    this._playBackSpeed = 3000; // default speed = 3 seconds per step
-    this._isRunning = false;
-
     this._scenario = {};
     this._simulatedContextList = new ContextInfoList();
 
     this._timeline = {};
+
+    this._playBackSpeed = 3000; // default speed = 3 seconds per step
+    this._iteration = null;
+    this._adaptationEngine = {};
 
     return this;
 }
@@ -63,17 +64,73 @@ Simulation.prototype.addContextItem = function (contextInfo) {
 };
 
 
-Simulation.prototype.start = function (callback) {
-    this._isRunning = true;
 
 
-    // TODO: 1. generate rules --> 2. start adaptation engine
+
+Simulation.prototype.start = function (timelineCallback, canvasCallback) {
+
+    this._timeline.setSelectedStep(0);
+
+    /* TODO: 1. export(...); // generate rules
+       TODO: 2. include AE and $.get(...) rules (see there)
+       TODO: !!important!! ContextInformation will have to be renamed --> conflicting with contactJS!
+     */
+
+    this._adaptationEngine = new AdaptationEngine(rules, true);
+
+    this._adaptationEngine.setSelectLearningUnitCallback(function(id, contextInformation) {
+        console.log("<select id='"+id+"'>");
+        for(var index in contextInformation) {
+            console.log(contextInformation[index]);
+        }
+        console.log("</select>");
+
+        // TODO: Highlight unit with selected ID!
+        canvasCallback(id);
+    });
+
+    this.run(timelineCallback);
+
 };
 
-Simulation.prototype.pause = function (callback) {
-    this._isRunning = false;
+Simulation.prototype.run = function (timelineCallback) {
+
+    this._run(timelineCallback);
+    this._iteration = setInterval(function() { this._run(timelineCallback); }, this._playBackSpeed);
 };
 
-Simulation.prototype.restart = function (callback) {
-    this._isRunning = true;
+Simulation.prototype._run = function (timelineCallback) {
+
+    // TODO: mark or highlight selected step in timeline
+    timelineCallback(this._timeline.getSelectedStep());
+
+    this._timeline.getSelectedStepEvents().forEach( function(colEntry) {
+        if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
+            var contextInfo = colEntry.getContextInfo();
+            var contextInfoParameters = [];
+            contextInfo.getParameters().forEach(function (parameter) {
+                contextInfoParameters.push([parameter.getID(), parameter.getType(), parameter.getChosenValue()]);
+            });
+
+            this._adaptationEngine.addContextInformation({
+                name: contextInfo.getID(),
+                type: contextInfo.getType(),
+                parameterList: contextInfoParameters,
+                value: contextInfo.getChosenValue()
+            }, contextInfo.getMultiplicity());
+        }
+    });
+
+    // adapt and apply callbacks
+    this._adaptationEngine.startRuleMatching(this._playBackSpeed);
+    // stop immediately after because of internal interval
+    this._adaptationEngine.stopRuleMatching();
+
+    // go to next simulation step
+    this._timeline.incrementSelectedStep();
+};
+
+
+Simulation.prototype.stop = function (callback) {
+    clearInterval(this._iteration);
 };

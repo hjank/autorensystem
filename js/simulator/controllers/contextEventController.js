@@ -54,22 +54,6 @@ function createNewPopover(timeline, contextEvent) {
         .on("shown.bs.popover", function(event){
             reconstructPopoverContent(this, timeline, contextEvent);
             repositionPopover(this);
-            function repositionPopover(cell) {
-                var cellTop = $(cell).position().top;
-                var cellBottom = cellTop + $(cell).height();
-                var popoverHeight = $(".popover").height();
-                var newPositionTop = cellTop - popoverHeight - 11;
-                var newPositionBottom = cellBottom + popoverHeight + 11;
-
-                var newPosition = "";
-                if (newPositionTop > $("#tab5").offset().top)
-                    newPosition = newPositionTop;
-                else if (newPositionBottom < $("#tab5").height()) {
-                    newPosition = cellBottom + 11;
-                    $(".popover .arrow").hide();
-                }
-                $(".popover").css("top", newPosition);
-            }
             event.stopPropagation();
         })
         .on("hide.bs.popover", function() {
@@ -91,6 +75,7 @@ function createNewPopover(timeline, contextEvent) {
 }
 
 
+
 /**
  * Generate the popover's title: the context info's name and an "X" for closing the popover.
  * @param contextInfo
@@ -106,7 +91,7 @@ function generatePopoverTitle (contextInfo) {
 
 
 /**
- * Generate the content of the newly created popover, i.e. operator, value and parameter selection.
+ * Generate the content of the newly created popover, i.e. value and parameter selection.
  * @param contextEvent
  */
 function generatePopoverContent (contextEvent) {
@@ -126,12 +111,10 @@ function reconstructPopoverContent(startCell, timeline, contextEvent) {
 
     var contextInfo = contextEvent.getContextInfo();
 
-    var simulatedOperatorSelectElement = $(".popover div.popover-context-info > select.popover-operator");
     var simulatedValueInput = $(".popover div.popover-context-info > input.popover-value");
     var simulatedValueSelect = $(".popover div.popover-context-info > select.popover-value");
     var simulatedParameterDiv = $(".popover div.popover-context-info > div.popover-parameters");
 
-    fillOperatorSelection(contextInfo, simulatedOperatorSelectElement);
     fillPopoverContextValue(contextInfo, simulatedValueInput, simulatedValueSelect);
     fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
@@ -140,6 +123,23 @@ function reconstructPopoverContent(startCell, timeline, contextEvent) {
     setPopoverEventHandlers(timeline, contextEvent);
 }
 
+
+function repositionPopover(cell) {
+    var cellTop = $(cell).position().top;
+    var cellBottom = cellTop + $(cell).height();
+    var popoverHeight = $(".popover").height();
+    var newPositionTop = cellTop - popoverHeight - 11;
+    var newPositionBottom = cellBottom + popoverHeight + 11;
+
+    var newPosition = "";
+    if (newPositionTop > $("#tab5").offset().top)
+        newPosition = newPositionTop;
+    else if (newPositionBottom < $("#tab5").height()) {
+        newPosition = cellBottom + 11;
+        $(".popover .arrow").hide();
+    }
+    $(".popover").css("top", newPosition);
+}
 
 function fillPopoverContextValue(ci, inputContextValueElement, selectPossibleValuesElement) {
 
@@ -219,8 +219,6 @@ function setPopoverEventHandlers(timeline, contextEvent) {
 
 
 function confirmPopoverContent(contextInfo) {
-    var operatorID = $(".select.popover-operator").select2("data").id;
-    //contextInfo.setChosenOperator();
 
     var inputValue = $("input.popover-value").val();
     var selectedValueID = $(".select.popover-value").select2("data").id;
