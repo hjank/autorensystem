@@ -39,33 +39,38 @@ table#timelineTable th.timeline-step-label {
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell {
-    width: 30px;
-    min-width: 30px;
+    min-width: 50px;
     border-top: 1px solid;
     border-bottom: 1px solid;
     border-left: 2px solid;
     border-right: 2px solid;
     cursor: copy;
+    opacity: 0.2;
 }
 
 
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SCENARIO] {
-    background-color: #d6e8f5;
+    background-color: #3287C8;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PERSONAL] {
-    background-color: #eed8f3;
+    background-color: #AF46C8;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SITUATIONAL] {
-    background-color: #e6fdce;
+    background-color: #91F52D;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_TECHNICAL] {
-    background-color: #e6e6e6;
+    background-color: #969696;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PHYSICAL] {
-    background-color: #fef6cd;
+    background-color: #FADC3C;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION] {
-    background-color: #fbd2d0;
+    background-color: #F03C32;
+}
+
+table#timelineTable tr.timeline-step > td.timeline-cell-marked,
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
+    opacity: 1;
 }
 
 
@@ -80,30 +85,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     cursor: pointer;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_SCENARIO],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_SCENARIO] {
-    background-color: #3287C8;
-}
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_PERSONAL],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_PERSONAL] {
-    background-color: #AF46C8;
-}
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_SITUATIONAL],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_SITUATIONAL] {
-    background-color: #91F52D;
-}
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_TECHNICAL],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_TECHNICAL] {
-    background-color: #969696;
-}
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_PHYSICAL],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_PHYSICAL] {
-    background-color: #FADC3C;
-}
-table#timelineTable tr.timeline-step > td.timeline-cell-marked[contextClass=CC_LOCATION],
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied[contextClass=CC_LOCATION] {
-    background-color: #F03C32;
-}
+
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle {
     width: 100%;

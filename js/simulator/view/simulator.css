@@ -10,22 +10,24 @@ div#simulatorContainer {
 }
 
 div#simulatorHeader {
-    height: 25%;
     padding: 10px;
 }
 
-div#simulatorHeader #simulatorInfo {
+div#simulatorHeader div#simulatorInfo {
     padding-bottom: 20px;
 }
 
 div#simulatorHeader div#simulationTitle {
     overflow: visible;
-    display: inline;
     text-align: center;
 }
 
-div#simulatorHeader div#simulationTitle span#btnSimulatorDescription {
-    float: right;
+div#simulatorHeader div#simulationTitle span#simulationName {
+    cursor: default;
+}
+
+div#simulatorHeader div#simulationTitle span {
+    text-align: center;
 }
 div#simulatorHeader div#simulationTitle span#btnSimulatorDescription:hover {
     background-color: #cccccc;
@@ -44,8 +46,9 @@ div#timelineContainer {
 
 div#simulationToolbar {
     width: 100%;
-    height: 5%;
+    height: 50px;
     margin-top: 20px;
+    margin-bottom: 20px;
     display: inline-block;
     padding: 5px;
 }

@@ -41,7 +41,7 @@ function createNewPopover(timeline, contextEvent) {
             container: "#tab5",
             content: generatePopoverContent(contextEvent),
             html: true,
-            placement: "auto bottom",
+            placement: "auto top",
             selector: markedCells,
             template: '<div class="popover" role="tooltip">' +
             '<div class="arrow"></div>' +
@@ -52,12 +52,32 @@ function createNewPopover(timeline, contextEvent) {
             viewport: "#timelineContainer"
         })
         .on("shown.bs.popover", function(event){
-            $(".popover select").select2();
-            setPopoverEventHandlers(this, timeline, contextEvent);
+            reconstructPopoverContent(this, timeline, contextEvent);
+            repositionPopover(this);
+            function repositionPopover(cell) {
+                var cellTop = $(cell).position().top;
+                var cellBottom = cellTop + $(cell).height();
+                var popoverHeight = $(".popover").height();
+                var newPositionTop = cellTop - popoverHeight - 11;
+                var newPositionBottom = cellBottom + popoverHeight + 11;
+
+                var newPosition = "";
+                if (newPositionTop > $("#tab5").offset().top)
+                    newPosition = newPositionTop;
+                else if (newPositionBottom < $("#tab5").height()) {
+                    newPosition = cellBottom + 11;
+                    $(".popover .arrow").hide();
+                }
+                $(".popover").css("top", newPosition);
+            }
             event.stopPropagation();
         })
         .on("hide.bs.popover", function() {
+            // rescue google maps
+            $("#divMapsTemplate").append($("#divMaps"));
+            // remove select2 markup
             $(".popover select").select2("destroy");
+            // remove class "timeline-cell-marked" from all cells
             unmarkAllCells();
         })
         .tooltip("destroy");
@@ -78,7 +98,7 @@ function createNewPopover(timeline, contextEvent) {
  */
 function generatePopoverTitle (contextInfo) {
     var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
-    var closeX = $('<a href="#" title="Schließen" class="close-popover">X</a>');
+    var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>');
     popoverTitle.append(closeX);
 
     return popoverTitle;
@@ -90,29 +110,34 @@ function generatePopoverTitle (contextInfo) {
  * @param contextEvent
  */
 function generatePopoverContent (contextEvent) {
-    var contextInfo = contextEvent.getContextInfo();
-    var eventUUID = contextEvent.getUUID();
 
-    var simulatedContextInfoMenuElement = $("#simulatedContextInfoMenu");
+    var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
+
     var popoverTemplate = $(simulatedContextInfoMenuElement).clone();
-    var simulatedOperatorSelectElement = $("#popoverOperatorSelect");
-    var simulatedValueInput = $("#popoverValueInput");
-    var simulatedValueSelect = $("#popoverValueSelect");
-    var simulatedParameterDiv = $("#popoverParameters");
+    $("#popoverContentTemplate").append(popoverTemplate);
 
-    $(simulatedContextInfoMenuElement).find("*").each(function() {
-        var id = $(this).attr("id");
-        if (id) $(this).attr("id", id + "_" + eventUUID);
-    });
-    $(simulatedContextInfoMenuElement).attr("id", "simulatedContextInfoMenu_"+eventUUID);
+    return simulatedContextInfoMenuElement;
+}
+
+
+var lastCell;
+function reconstructPopoverContent(startCell, timeline, contextEvent) {
+    lastCell = startCell;
+
+    var contextInfo = contextEvent.getContextInfo();
+
+    var simulatedOperatorSelectElement = $(".popover div.popover-context-info > select.popover-operator");
+    var simulatedValueInput = $(".popover div.popover-context-info > input.popover-value");
+    var simulatedValueSelect = $(".popover div.popover-context-info > select.popover-value");
+    var simulatedParameterDiv = $(".popover div.popover-context-info > div.popover-parameters");
 
     fillOperatorSelection(contextInfo, simulatedOperatorSelectElement);
     fillPopoverContextValue(contextInfo, simulatedValueInput, simulatedValueSelect);
     fillParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
-    $("#popoverContentTemplate").append(popoverTemplate);
+    $(".popover select").select2();
 
-    return simulatedContextInfoMenuElement;
+    setPopoverEventHandlers(timeline, contextEvent);
 }
 
 
@@ -144,7 +169,6 @@ function fillPopoverContextValue(ci, inputContextValueElement, selectPossibleVal
                 option.html(translate_possibleValue(enums[i]));
                 selectPossibleValuesElement.append(option);
             }
-            //selectPossibleValuesElement.select2("data", {id:"\r",text:"\r"});
 
             break;
 
@@ -164,7 +188,51 @@ function fillPopoverContextValue(ci, inputContextValueElement, selectPossibleVal
 }
 
 
+function setPopoverEventHandlers(timeline, contextEvent) {
+
+    $(".popover-close").on("click", function(event){
+        $(lastCell).popover("hide");
+
+        // closing popover without input + confirm, i.e. aborting event creation
+        if (! $(lastCell).hasClass("timeline-cell-occupied")) {
+            timeline.removeEvent(contextEvent);
+
+            $(lastCell).popover("destroy");
+        }
+        event.stopPropagation();
+    });
+
+    $(".popover-confirm").on("click", function(event){
+        confirmPopoverContent(contextEvent.getContextInfo());
+
+        if ($(lastCell).hasClass("timeline-cell-marked")) {
+            // add new class and style
+            drawTopBottomBorders($(".timeline-cell-marked").addClass("timeline-cell-occupied"));
+        }
+
+        // triggers unmarking of all cells
+        $(lastCell).popover("hide");
+
+        event.stopPropagation();
+    });
+}
+
+
+function confirmPopoverContent(contextInfo) {
+    var operatorID = $(".select.popover-operator").select2("data").id;
+    //contextInfo.setChosenOperator();
+
+    var inputValue = $("input.popover-value").val();
+    var selectedValueID = $(".select.popover-value").select2("data").id;
+
+    //contextInfo.setChosenValue(inputValue || selectedValueID);
+
+    //TODO: parameters
+}
+
+
 function hideAllPopovers(timeline) {
+
     $(".popover").hide();
 
     // remove all non-confirmed events
@@ -179,40 +247,7 @@ function hideAllPopovers(timeline) {
     }
 }
 
-var lastCell;
-function setPopoverEventHandlers(startCell, timeline, contextEvent) {
 
-    lastCell = startCell;
-
-    $(".close-popover").on("click", function(event){
-        startCell = lastCell;
-
-        $(startCell).popover("hide");
-
-        // closing popover without input + confirm, i.e. aborting event creation
-        if (! $(startCell).hasClass("timeline-cell-occupied")) {
-            timeline.removeEvent(contextEvent);
-
-            $(startCell).popover("destroy");
-        }
-
-        event.stopPropagation();
-    });
-
-    $(".confirm-popover").on("click", function(event){
-        startCell = lastCell;
-
-        if ($(startCell).hasClass("timeline-cell-marked")) {
-            // add new class and style
-            drawTopBottomBorders($(".timeline-cell-marked").addClass("timeline-cell-occupied"));
-        }
-
-        // triggers unmarking of all cells
-        $(startCell).popover("hide");
-
-        event.stopPropagation();
-    });
-}
 
 function createContextEventDeleteDOM () {
     return $("<a>")

@@ -183,7 +183,8 @@ function initMap() {
             }, {
                 "visibility": "off"
             }]
-    }];
+    }
+    ];
 
     var currentLat = '52.3877833';
     var currentLng = '13.0831297';
@@ -224,7 +225,7 @@ function initMap() {
     /* add search box */
 
     // Create the search box and link it to the UI element.
-    var inputElement = $("#pac-input")[0];
+    var inputElement = $(".pac-input")[0];
     // add input to map
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElement);
     searchBox = new google.maps.places.SearchBox(inputElement);

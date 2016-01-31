@@ -1,18 +1,27 @@
-div.popover h3.popover-title div a.close-popover {
-    float: right;
-}
-
 div#popoverContentTemplate {
     display: none;
 }
 
-div[id^=simulatedContextInfoMenu] select,
-div[id^=simulatedContextInfoMenu] input {
+div.popover h3.popover-title div a.popover-close {
+    float: right;
+}
+
+div.popover-context-info {
+    text-align: center;
+}
+
+div.popover-context-info > * {
+    text-align: left;
+}
+
+div.popover-context-info input.popover-value,
+div.popover-context-info .select,
+div.popover-context-info div.popover-parameters {
     display: block;
     min-width: 235px;
     margin-bottom: 10px;
 }
 
-div[id^=simulatedContextInfoMenu] div.confirm-popover {
-    align-self: center;
+div.popover-context-info div.btn.popover-confirm {
+    margin: 5px;
 }

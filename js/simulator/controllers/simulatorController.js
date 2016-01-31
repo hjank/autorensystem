@@ -15,6 +15,10 @@ function initSimulator() {
     //simulatedContextList.fromJSON(contextList.getItemsOfClass("CC_SCENARIO"));
     simulatedContextList.addItem(new ContextInformation()
         .fromJSON(contextList.getItemByID("CI_FINISHED_LEARNING_UNIT")));
+    simulatedContextList.addItem(new ContextInformation()
+        .fromJSON(contextList.getItemByID("CI_USER_DESTINATION")));
+    simulatedContextList.addItem(new ContextInformation()
+        .fromJSON(contextList.getItemByID("CI_USER_DID_PERFORM_ACTION")));
     simulatedContextList.resetAllContextValues();
 
     simulations.push(simulation);
@@ -27,7 +31,7 @@ function initSimulator() {
         $("#simulationTitle > span")[0].innerText = simulation.getTitle();
 
         initTimeline(simulation);
-        
+
         setSimulationEventHandlers();
         showSimulatorTab();
     });
@@ -66,7 +70,23 @@ function updateSimulator(simulation) {
 
 function setSimulationEventHandlers() {
 
-    $("#btnSimulatorInfo").on("click", showInfo);
+    $("#simulatorContainer .btn").tooltip();
+
+    //$("#btnSimulatorInfo").on("click", showInfo);
+    $("#btnSimulatorInfo")
+        .popover({
+            container: "#tab5",
+            content: "Hier können Sie das Verhalten der Lernanwendung simulieren. Dazu modellieren Sie den Kontext des Lernszenarios.",
+            //html: true,
+            placement: "auto top",
+            template: '<div class="popover" role="tooltip">' +
+            '<div class="arrow"></div>' +
+            '<h3 class="popover-title"></h3>' +
+            '<div class="popover-content"></div>' +
+            '</div>',
+            title: "",
+            viewport: "#simulatorHeader"
+        })
 }
 
 function showInfo() {

@@ -343,15 +343,15 @@ function fillOperatorSelection(selectedInfo, selectOperatorElement) {
         selectOperatorElement.append(option);
     }
 
-    if (chosenOperator == "") {
-        // set empty field in selected start field
-        selectOperatorElement.select2("data", {id:"\r",text:"\r"});
-    }
-    else {
+    if (chosenOperator != "") {
         selectOperatorElement.select2("data", {
             id:operators.indexOf(chosenOperator),
             text:translate_operator(chosenOperator)
         });
+    }
+    else if (!isPopover) {
+        // set empty field in selected start field
+        selectOperatorElement.select2("data", {id:"\r",text:"\r"});
     }
 }
 
@@ -537,7 +537,7 @@ function fillParameterSelection(cp, divContextParams) {
 
                 id = "parameter"+i;
                 div = createNamedDOMElement("div", "divParameter"+i)
-                    .addClass("divParameterInputs")
+                    .addClass("parameter-input")
                     .css("display", "table-cell")
                     .append(createParameterLabelDOM(id, parameterTranslation));
                 child = createNamedDOMElement("input", id)
@@ -546,7 +546,9 @@ function fillParameterSelection(cp, divContextParams) {
                     .on("keyup", function (event) {
                         getParameterInput(event, coordsExpected);
                     });
+
                 setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
+
                 // if we are in edit mode: previously saved value, else ""
                 child.val(chosenValue);
                 div.append(child);

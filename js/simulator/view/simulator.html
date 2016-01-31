@@ -6,8 +6,8 @@
             <span id="simulatorInfoText"></span>
         </div>
         <div id="simulationTitle">
-            <span></span>
-            <span id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Beschreibung"></span>
+            <span id="simulationName"></span>
+            <span id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Name und Beschreibung ändern"></span>
         </div>
     </div>
 
@@ -25,9 +25,9 @@
 
     <div id="simulationToolbar" align="center">
         <span id="playbackControls">
-            <div id="btnSlower" class="btn btn-sm fui-backward2" title="halbe Geschwindigkeit"></div>
+            <div id="btnSlower" class="btn btn-sm fui-backward2" title="Schritt zurück"></div>
             <div id="btnPlay" class="btn btn-sm fui-play" title="Simulation starten"></div>
-            <div id="btnFaster" class="btn btn-sm fui-forward3"  title="doppelte Geschwindigkeit"></div>
+            <div id="btnFaster" class="btn btn-sm fui-forward3"  title="Schritt vor"></div>
         </span>
         <span>
             <div id="btnSimulatorOptions" class="btn btn-sm fui-gear" title="Optionen"></div>
@@ -41,13 +41,13 @@
 
 <div id="popoverContentTemplate">
 
-    <div id="simulatedContextInfoMenu">
-        <select id="popoverOperatorSelect" class="form-control select select-primary select-block mbl"></select>
-        <input id="popoverValueInput" class="form-control" maxlength="40">
-        <select id="popoverValueSelect" class="form-control select select-primary select-block mbl"></select>
-        <div id="popoverParameters"></div>
+    <div class="popover-context-info">
+        <select class="popover-operator select form-control select-primary select-block mbl"></select>
+        <input class="popover-value form-control" maxlength="40">
+        <select class="popover-value select form-control select-primary select-block mbl"></select>
+        <div class="popover-parameters"></div>
 
-        <div id="btnPopoverConfirm" class="btn btn-info confirm-popover">
+        <div class="popover-confirm btn btn-info">
             <b class='fui-check-circle'></b>Bestätigen
         </div>
     </div>

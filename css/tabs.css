@@ -39,6 +39,7 @@
 }
 .tabDetails{
     background:#eee;
+    height: 100%;
 }
 .tabContents{
     padding:20px;
@@ -102,12 +103,11 @@
     display: none;
 }
 
-
-.divParameterInputs {
+.parameter-input {
     display: table-cell;
     padding-right: 10px;
 }
-.divParameterInputs > input{
+.parameter-input > input {
     width: 107px;
     margin-right: 10px;
 }
@@ -125,7 +125,7 @@
     height: 32px;
     outline: none;
 }
-#pac-input {
+.pac-input {
     background-color: #fff;
     font-size: 15px;
     font-weight: 300;
@@ -133,7 +133,7 @@
     text-overflow: ellipsis;
     width: 84%;
 }
-#pac-input:focus {
+.pac-input:focus {
     border-color: #4d90fe;
 }
 .pac-container {
