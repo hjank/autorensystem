@@ -82,7 +82,7 @@ Timeline.prototype._addColumnToMatrix = function (index) {
     });
 };
 Timeline.prototype._addContextColumn = function(contextInfo, index) {
-    if (typeof index != "undefined") this._columnContextMap[index] = contextInfo;
+    if (typeof index != "undefined") this._columnContextMap.splice(index, 0, contextInfo);
     else this._columnContextMap.push(contextInfo);
 };
 

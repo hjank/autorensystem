@@ -20,6 +20,7 @@ function initSimulator() {
     simulatedContextList.addItem(new ContextInformation()
         .fromJSON(contextList.getItemByID("CI_USER_DID_PERFORM_ACTION")));
     simulatedContextList.resetAllContextValues();
+    simulatedContextList.setItems(simulatedContextList.getContextItemsSortedByClass());
 
     simulations.push(simulation);
 
@@ -58,9 +59,9 @@ function updateSimulator(simulation) {
             for (var i in simulatedContextList.getItems()) {
                 if (!simulatedContextList.getItemByID(item.getID())) {
                     var contextInfo = new ContextInformation().fromJSON(item);
-                    simulation.addContextItem(contextInfo);
+                    var index = simulation.addContextItem(contextInfo);
 
-                    createColumnForContextInfo(contextInfo);
+                    createColumnForContextInfo(contextInfo, index);
                 }
             }
         });

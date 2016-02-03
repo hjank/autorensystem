@@ -60,7 +60,11 @@ Simulation.prototype.setTimeline = function (timeline) {
 
 Simulation.prototype.addContextItem = function (contextInfo) {
     this._simulatedContextList.addItem(contextInfo);
-    this._timeline.addColumn(contextInfo);
+
+    //var index = this._simulatedContextList.getContextItemsSortedByClass().indexOf(contextInfo);
+    this._timeline.addColumn(contextInfo/*, index*/);
+
+    //return index;
 };
 
 

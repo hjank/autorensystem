@@ -6,7 +6,7 @@
  *
  */
 
-var numberOfSteps = 200;
+var numberOfSteps = 20;
 var down, dragging, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
 var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
@@ -71,7 +71,7 @@ function createColumns(simulation) {
 }
 
 
-function createColumnForContextInfo(contextInfo) {
+function createColumnForContextInfo(contextInfo, index) {
 
     /*** view ***/
 

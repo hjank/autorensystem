@@ -18,7 +18,13 @@ div.popover-context-info input.popover-value,
 div.popover-context-info .select,
 div.popover-context-info div.popover-parameters {
     display: block;
-    min-width: 235px;
+    width: 235px;
+    margin-bottom: 10px;
+}
+
+.popover-parameter {
+    display: block;
+    width: 235px;
     margin-bottom: 10px;
 }
 
