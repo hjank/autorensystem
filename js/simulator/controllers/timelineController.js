@@ -205,11 +205,10 @@ function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
 }
 
-function drawTopBottomBorders (cells) {
-    var firstCell = $(cells).first();
-    var lastCell = $(cells).last();
+function addOccupiedMarkup (cells) {
+    cells.addClass("timeline-cell-occupied");
 
-    $(firstCell).css("border-top", "1px solid");
-    $(lastCell).css("border-bottom", "1px solid");
-    $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
+    $(cells).first().css("border-top", "1px solid");
+    $(cells).last().css("border-bottom", "1px solid")
+        .append($("<div>").addClass("occupied-resize-handle"));
 }

@@ -32,8 +32,9 @@ function createNewContextEvent (simulation) {
 
 function createNewPopover(timeline, contextEvent) {
 
-    // keep track of selected cells
-    var markedCells = $(".timeline-cell-marked");
+    var markedCells = [];
+    for (var step = contextEvent.getStart(); step <= contextEvent.getEnd(); step++)
+        markedCells.push($("#timelineTable").find(".timeline-step").eq(step).children(".timeline-cell").eq(contextEvent.getColumn()));
 
     // create a context editor popover for each selected cell
     $(markedCells)
@@ -51,29 +52,33 @@ function createNewPopover(timeline, contextEvent) {
             title: generatePopoverTitle(contextEvent.getContextInfo()),
             viewport: "#timelineContainer"
         })
-        .on("shown.bs.popover", function(event){
-            reconstructPopoverContent(this, timeline, contextEvent);
-            repositionPopover(this);
-            event.stopPropagation();
-        })
-        .on("hide.bs.popover", function() {
-            // rescue google maps
-            $("#divMapsTemplate").append($("#divMaps"));
-            // remove select2 markup
-            $(".popover select").select2("destroy");
-            // remove class "timeline-cell-marked" from all cells
-            unmarkAllCells();
-        })
         .tooltip("destroy");
 
+    markedCells.forEach(function(cell){
+        cell.on("shown.bs.popover", function(event){
+            reconstructPopoverContent(this, timeline, contextEvent);
+            repositionPopover(this);
+        }).on("hide.bs.popover", function() {
+            removeEventMarkup();
+        });
+    });
 
     // if no dragging happened, click event will be fired and opens popover (or closes open popover)
-    if (dragging && $(markedCells).length > 1) {
+    if ($(markedCells).length > 1) {
         // editor popover will be attached to first cell
         $(markedCells).first().popover("show");
     }
 }
 
+
+function removeEventMarkup() {
+    // rescue google maps
+    $("#divMapsTemplate").append($("#divMaps"));
+    // remove select2 markup
+    $(".popover select").select2("destroy");
+    // remove class "timeline-cell-marked" from all cells
+    unmarkAllCells();
+}
 
 
 /**
@@ -293,15 +298,8 @@ function fillPopoverParameterSelection(cp, divContextParams) {
 function setPopoverEventHandlers(timeline, contextEvent) {
 
     $(".popover-close").on("click", function(event){
-        $(lastCell).popover("hide");
-
         // closing popover without input + confirm, i.e. aborting event creation
-        if (! $(lastCell).hasClass("timeline-cell-occupied")) {
-            timeline.removeEvent(contextEvent);
-
-            $(lastCell).popover("destroy");
-        }
-        event.stopPropagation();
+        hideAllPopovers(timeline);
     });
 
     $(".popover-confirm").on("click", function(event){
@@ -309,13 +307,11 @@ function setPopoverEventHandlers(timeline, contextEvent) {
 
         if ($(lastCell).hasClass("timeline-cell-marked")) {
             // add new class and style
-            drawTopBottomBorders($(".timeline-cell-marked").addClass("timeline-cell-occupied"));
+            addOccupiedMarkup($(".timeline-cell-marked"));
         }
 
         // triggers unmarking of all cells
         $(lastCell).popover("hide");
-
-        event.stopPropagation();
     });
 }
 
@@ -343,6 +339,7 @@ function confirmPopoverContent(contextInfo) {
 
 function hideAllPopovers(timeline) {
 
+    // triggers "hide.bs.popover" event handled by removing all markup
     $(".popover").hide();
 
     // remove all non-confirmed events
