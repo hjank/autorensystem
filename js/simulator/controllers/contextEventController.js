@@ -26,11 +26,11 @@ function createNewContextEvent (simulation) {
         true
     );
     timeline.addEvent(contextEvent);
-    timeline.render(createNewPopover, contextEvent);
+    contextEvent.render(createNewPopover, simulation);
 }
 
 
-function createNewPopover(timeline, contextEvent) {
+function createNewPopover(contextEvent, simulation) {
 
     var markedCells = [];
     for (var step = contextEvent.getStart(); step <= contextEvent.getEnd(); step++)
@@ -56,7 +56,7 @@ function createNewPopover(timeline, contextEvent) {
 
     markedCells.forEach(function(cell){
         cell.on("shown.bs.popover", function(event){
-            reconstructPopoverContent(this, timeline, contextEvent);
+            reconstructPopoverContent(this, simulation, contextEvent);
             repositionPopover(this);
         }).on("hide.bs.popover", function() {
             removeEventMarkup();
@@ -111,7 +111,7 @@ function generatePopoverContent (contextEvent) {
 
 
 var lastCell;
-function reconstructPopoverContent(startCell, timeline, contextEvent) {
+function reconstructPopoverContent(startCell, simulation, contextEvent) {
     lastCell = startCell;
 
     var contextInfo = contextEvent.getContextInfo();
@@ -120,12 +120,12 @@ function reconstructPopoverContent(startCell, timeline, contextEvent) {
     var simulatedValueSelect = $(".popover div.popover-context-info > select.popover-value");
     var simulatedParameterDiv = $(".popover div.popover-context-info > div.popover-parameters");
 
-    fillPopoverContextValue(contextInfo, simulatedValueInput, simulatedValueSelect);
+    fillPopoverContextValue(contextInfo, simulation.getScenario(), simulatedValueInput, simulatedValueSelect);
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
     $(".popover select").select2();
 
-    setPopoverEventHandlers(timeline, contextEvent);
+    setPopoverEventHandlers(simulation, contextEvent);
 }
 
 function repositionPopover(cell) {
@@ -145,7 +145,22 @@ function repositionPopover(cell) {
     $(".popover").css("top", newPosition);
 }
 
-function fillPopoverContextValue(ci, inputContextValueElement, selectPossibleValuesElement) {
+function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectPossibleValuesElement) {
+
+    selectPossibleValuesElement.empty();
+
+    // if a unit is expected as value (a unit's UUID, that is, which will be entered on confirm)
+    if (ci.getID().indexOf("LEARNING_UNIT") != -1) {
+        inputContextValueElement.css("display", "none"); // make input field invisible
+
+        // add all units of the current scenario
+        scenario.getUnits().forEach(function (unit, index) {
+            selectPossibleValuesElement.append($("<option>")
+                .attr("value", index.toString())
+                .html(unit.getName()));
+        });
+        return;
+    }
 
     switch (ci.getType()) {
 
@@ -295,15 +310,15 @@ function fillPopoverParameterSelection(cp, divContextParams) {
     }
 }
 
-function setPopoverEventHandlers(timeline, contextEvent) {
+function setPopoverEventHandlers(simulation, contextEvent) {
 
     $(".popover-close").on("click", function(event){
         // closing popover without input + confirm, i.e. aborting event creation
-        hideAllPopovers(timeline);
+        hideAllPopovers(simulation.getTimeline());
     });
 
     $(".popover-confirm").on("click", function(event){
-        confirmPopoverContent(contextEvent.getContextInfo());
+        confirmPopoverContent(contextEvent.getContextInfo(), simulation.getScenario());
 
         if ($(lastCell).hasClass("timeline-cell-marked")) {
             // add new class and style
@@ -316,11 +331,12 @@ function setPopoverEventHandlers(timeline, contextEvent) {
 }
 
 
-function confirmPopoverContent(contextInfo) {
+function confirmPopoverContent(contextInfo, scenario) {
 
     var inputValue = $(".popover input.popover-value").val();
     var selectedValueID = $(".popover .select.popover-value").select2("val");
-    if (typeof selectedValueID != "undefined") inputValue = contextInfo.getEnums()[selectedValueID];
+    if (typeof selectedValueID != "undefined")
+        inputValue = contextInfo.getEnums()[selectedValueID] || scenario.getUnits()[selectedValueID].getUUID();
 
     contextInfo.setChosenValue(inputValue);
 
@@ -360,22 +376,22 @@ function createContextEventDeleteDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-trash")
-        .attr("tabindex", -1)
-        .attr("title", "Löschen");
+        .attr("title", "Löschen")
+        .tooltip();
 }
 
 function createContextEventCopyDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-copy")
-        .attr("tabindex", -1)
-        .attr("title", "Duplizieren");
+        .attr("title", "Duplizieren")
+        .tooltip();
 }
 
 function createContextEventHideDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-eye-blocked")
-        .attr("tabindex", -1)
-        .attr("title", "Ausblenden");
+        .attr("title", "Ausblenden")
+        .tooltip();
 }

@@ -208,7 +208,18 @@ function unmarkAllCells() {
 function addOccupiedMarkup (cells) {
     cells.addClass("timeline-cell-occupied");
 
-    $(cells).first().css("border-top", "1px solid");
+    var firstCell = $(cells).first().css("border-top", "1px solid");
+
+   /* var quickEdit = $("<a>").attr("href","#").addClass("fui-gear")
+        .on("click", function(event) {event.stopPropagation();});
+    firstCell.append(quickEdit);
+    quickEdit.popover({
+        content: createContextEventCopyDOM,
+        placement: "auto top",
+        selector: firstCell,
+        viewport: "#timelineTable"
+    });*/
+
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));
 }

@@ -85,7 +85,18 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     cursor: pointer;
 }
 
-
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a {
+    color: gray;
+    position: absolute;
+    top: 0px;
+    display: block;/*
+    padding: 2px;
+    width: 5px;
+    height: 5px;*/
+}
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a:hover {
+    color: #cccccc;
+}
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle {
     width: 100%;
