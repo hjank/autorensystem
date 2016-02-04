@@ -13,18 +13,26 @@ function Timeline (matrix, contextMap, selectedStep) {
 }
 
 
-
+Timeline.prototype.getAllEvents = function() {
+    var colEvents = [];
+    return this._eventMatrix.map(function (row) {
+        colEvents = colEvents.concat(row);
+    });
+};
 Timeline.prototype.getStepEvents = function(start, end) {
     // default: return events of *one* step only
     if (!end) end = start;
     return this._eventMatrix.slice(start, end+1);
 };
+Timeline.prototype.getSelectedStepEvents = function () {
+    return this._eventMatrix[this._selectedStep];
+};
 Timeline.prototype.getColumnEvents = function(start, end) {
     // default: return events of *one* column only
     if (!end) end = start;
     var colEvents = [];
-    return this._eventMatrix.forEach(function (row, index) {
-        colEvents.concat(row.slice(start, end+1));
+    return this._eventMatrix.map(function (row) {
+        colEvents = colEvents.concat(row.slice(start, end+1));
     });
 };
 Timeline.prototype.getColumnContext = function(col) {
@@ -32,9 +40,6 @@ Timeline.prototype.getColumnContext = function(col) {
 };
 Timeline.prototype.getSelectedStep = function () {
     return this._selectedStep;
-};
-Timeline.prototype.getSelectedStepEvents = function () {
-    return this._eventMatrix[this._selectedStep];
 };
 Timeline.prototype.getEventAt = function(row, col) {
     return this._eventMatrix[row][col];
