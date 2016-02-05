@@ -110,6 +110,14 @@ Timeline.prototype.removeEvent = function (eventUUID) {
 };
 
 
+
 Timeline.prototype.render = function (callback, arg) {
     (typeof callback == "function" && callback(this, arg));
+
+    var self = this;
+    $("#timelineTable tbody tr.timeline-step").each(function(step){
+        if (step == self._selectedStep)
+            $(this).addClass("selected-step");
+        else $(this).removeClass("selected-step");
+    });
 };

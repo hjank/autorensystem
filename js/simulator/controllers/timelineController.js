@@ -21,10 +21,10 @@ function initTimeline(simulation) {
 
     simulation.setTimeline(new Timeline());
 
-    simulation = createSteps(simulation);
+    createSteps(simulation);
 
     // create a column for each ContextInformation object
-    simulation = createColumns(simulation);
+    createColumns(simulation);
 
     // set event handlers for these generated cells
     setCellEventHandlers(simulation);
@@ -48,8 +48,7 @@ function createSteps(simulation) {
         );
     }
 
-    simulation.setTimeline(timeline);
-    return simulation;
+    timeline.render();
 }
 
 /**
@@ -64,14 +63,12 @@ function createColumns(simulation) {
         var contextInfo = simulatedContextList.getItem(i);
         timeline.addColumn(contextInfo, i);
 
-        createColumnForContextInfo(contextInfo);
+        addColumnForContextInfo(contextInfo);
     }
-
-    return simulation;
 }
 
 
-function createColumnForContextInfo(contextInfo, index) {
+function addColumnForContextInfo(contextInfo) {
 
     /*** view ***/
 

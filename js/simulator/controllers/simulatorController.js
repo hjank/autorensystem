@@ -61,7 +61,7 @@ function updateSimulator(simulation) {
                     var contextInfo = new ContextInformation().fromJSON(item);
                     var index = simulation.addContextItem(contextInfo);
 
-                    createColumnForContextInfo(contextInfo, index);
+                    addColumnForContextInfo(contextInfo, index);
                 }
             }
         });
@@ -71,7 +71,7 @@ function updateSimulator(simulation) {
 
 function setSimulationEventHandlers() {
 
-    $("#simulatorContainer .btn").tooltip();
+    $("#simulatorContainer *").tooltip();
 
     //$("#btnSimulatorInfo").on("click", showInfo);
     $("#btnSimulatorInfo")

@@ -22,6 +22,15 @@ table#timelineTable tr.timeline-step {
     height: 30px;
 }
 
+table#timelineTable tr.timeline-step.selected-step {
+    background: #1fcdd9;
+    border: solid 1px;
+}
+
+table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
+    text-emphasis: circle;
+}
+
 table#timelineTable .timeline-step-label {
     height: inherit;
     width: 10px;

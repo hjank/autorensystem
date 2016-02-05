@@ -40,7 +40,7 @@ function createNewPopover(contextEvent, simulation) {
     $(markedCells)
         .popover({
             container: "#tab5",
-            content: generatePopoverContent(contextEvent),
+            content: generatePopoverContent(),
             html: true,
             placement: "auto top",
             selector: markedCells,
@@ -99,7 +99,7 @@ function generatePopoverTitle (contextInfo) {
  * Generate the content of the newly created popover, i.e. value and parameter selection.
  * @param contextEvent
  */
-function generatePopoverContent (contextEvent) {
+function generatePopoverContent () {
 
     var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
 
@@ -145,12 +145,16 @@ function repositionPopover(cell) {
     $(".popover").css("top", newPosition);
 }
 
+function expectsLearningUnit(contextInfo) {
+    return (contextInfo.getID().indexOf("LEARNING_UNIT") != -1);
+}
+
 function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectPossibleValuesElement) {
 
     selectPossibleValuesElement.empty();
 
     // if a unit is expected as value (a unit's UUID, that is, which will be entered on confirm)
-    if (ci.getID().indexOf("LEARNING_UNIT") != -1) {
+    if (expectsLearningUnit(ci) && scenario.constructor == Scenario) {
         inputContextValueElement.css("display", "none"); // make input field invisible
 
         // add all units of the current scenario
@@ -312,13 +316,19 @@ function fillPopoverParameterSelection(cp, divContextParams) {
 
 function setPopoverEventHandlers(simulation, contextEvent) {
 
-    $(".popover-close").on("click", function(event){
+    $(".popover .popover-close").on("click", function(event){
         // closing popover without input + confirm, i.e. aborting event creation
         hideAllPopovers(simulation.getTimeline());
+
+        event.stopPropagation();
     });
 
-    $(".popover-confirm").on("click", function(event){
-        confirmPopoverContent(contextEvent.getContextInfo(), simulation.getScenario());
+    $(".popover .popover-confirm").on("click", function(event){
+
+        if (!confirmPopoverContent(contextEvent.getContextInfo(), simulation.getScenario())) {
+            alert("Bitte geben Sie einen Wert und Parameter an.");
+            return;
+        }
 
         if ($(lastCell).hasClass("timeline-cell-marked")) {
             // add new class and style
@@ -333,22 +343,46 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
 function confirmPopoverContent(contextInfo, scenario) {
 
-    var inputValue = $(".popover input.popover-value").val();
+    var inputElement = $(".popover input.popover-value");
+    var inputValue = $(inputElement).val();
     var selectedValueID = $(".popover .select.popover-value").select2("val");
-    if (typeof selectedValueID != "undefined")
-        inputValue = contextInfo.getEnums()[selectedValueID] || scenario.getUnits()[selectedValueID].getUUID();
 
-    contextInfo.setChosenValue(inputValue);
+    // case value is one of ENUM or LEARNING_UNIT
+    if (typeof selectedValueID != "undefined") {
+        var enums = contextInfo.getEnums();
+        if (enums.length != 0)
+            inputValue = enums[selectedValueID];
+        else if (expectsLearningUnit(contextInfo) && scenario.constructor == Scenario) {
+            var units = scenario.getUnits();
+            if (units.length > 0)
+                inputValue = units[selectedValueID].getUUID();
+        }
+    }
 
-    contextInfo.getParameters().forEach(function(param, index) {
+    if (typeof inputValue != "undefined" && inputValue != "") contextInfo.setChosenValue(inputValue);
+    else {
+        $(inputElement).parent().addClass("has-error");
+        return false;
+    }
+
+    var parameters = contextInfo.getParameters();
+    for (var index in parameters) {
+        var param = parameters[index];
         var paramElement = $("#popoverParameter"+index);
         var paramValue;
         if (param.getType() == "ENUM")
             paramValue = param.getEnums()[$(paramElement).select2("val")];
         else
             paramValue = $(paramElement).val();
-        param.setChosenValue(paramValue);
-    });
+
+        if (typeof paramValue != "undefined" && paramValue != "") param.setChosenValue(paramValue);
+        else {
+            $(paramElement).parent().addClass("has-error");
+            return false;
+        }
+    }
+
+    return true;
 }
 
 
