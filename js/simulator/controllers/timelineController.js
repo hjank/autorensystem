@@ -20,7 +20,8 @@ var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 function initTimeline(simulation) {
 
     simulation.initTimeline(numberOfSteps);
-    simulation.getTimeline().render();
+
+    simulation.renderTimeline();
 
     // set event handlers for these generated cells
     setCellEventHandlers(simulation);
@@ -29,10 +30,19 @@ function initTimeline(simulation) {
 
 
 
-
 /*********** view **********/
 
 
+function clearTable() {
+    $("#timelineTable thead").empty();
+    $("#timelineTable tbody").empty();
+}
+
+function createHeader() {
+    $("#timelineTable thead")
+        .append($("<tr>").addClass("timeline-header")
+            .append($("<th>").addClass("timeline-step-label")));
+}
 
 function createSteps(steps) {
     var timelineBodyElement = $("#timelineTable > tbody");
@@ -46,7 +56,7 @@ function createSteps(steps) {
             ));
 }
 
-function addColumnForContextInfo(contextInfo) {
+function createColumn(contextInfo) {
 
     $(".timeline-header").append($("<th>")
         .html(formatUnitIcons(contextInfo))
@@ -73,6 +83,14 @@ function addColumnForContextInfo(contextInfo) {
     });
 }
 
+
+function highlightSelectedStep(selectedStep) {
+    $("#timelineTable tbody tr.timeline-step").each(function(step){
+        if (step == selectedStep)
+            $(this).addClass("selected-step");
+        else $(this).removeClass("selected-step");
+    });
+}
 
 
 /********** event handling **********/
@@ -170,7 +188,6 @@ function _mark(event) {
 }
 
 
-
 function getColIDOfCell(cell) {
     return $(cell).parent().children(".timeline-cell").index(cell);
 }
@@ -180,6 +197,65 @@ function getRowIDOfCell(cell) {
 }
 
 
+function addOccupiedMarkup (cells) {
+    $(cells).addClass("timeline-cell-occupied");
+
+    var firstCell = $(cells).first().css("border-top", "1px solid");
+
+    /* var quickEdit = $("<a>").attr("href","#").addClass("fui-gear")
+     .on("click", function(event) {event.stopPropagation();});
+     firstCell.append(quickEdit);
+     quickEdit.popover({
+     content: createContextEventCopyDOM,
+     placement: "auto top",
+     selector: firstCell,
+     viewport: "#timelineTable"
+     });*/
+
+    $(cells).last().css("border-bottom", "1px solid")
+        .append($("<div>").addClass("occupied-resize-handle"));
+}
+
+
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
+}
+
+function freeAllCells() {
+    $(".timeline-cell-occupied").removeClass(".timeline-cell-occupied");
+}
+
+
+function hideAllPopovers(timeline) {
+
+    // triggers "hide.bs.popover" event handled by removing all markup
+    $(".popover").hide();
+
+    // remove all non-confirmed events
+    removeTemporaryEvents(timeline);
+}
+
+
+function removeTemporaryEvents(timeline) {
+
+    // remove all non-confirmed events
+    var markedCells = $(".timeline-cell-marked");
+    if ($(markedCells).length != 0) {
+        var startCell = $(markedCells).first();
+
+        var contextEvent = timeline.getEventAt(getRowIDOfCell(startCell), getColIDOfCell(startCell));
+        timeline.removeEvent(contextEvent);
+
+        $(markedCells).popover("destroy");
+    }
+}
+
+
+function removeAllPopovers(timeline) {
+
+    hideAllPopovers(timeline);
+
+    $(".timeline-cell-occupied").popover("destroy");
+
+    freeAllCells();
 }

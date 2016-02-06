@@ -60,15 +60,24 @@ Simulation.prototype.setTimeline = function (timeline) {
 };
 
 Simulation.prototype.addContextItem = function (contextInfo) {
+    // add the new item
     this._simulatedContextList.addItem(contextInfo);
+    // sort the list
+    this._simulatedContextList.setItems(this._simulatedContextList.getContextItemsSortedByClass());
 
-    //var index = this._simulatedContextList.getContextItemsSortedByClass().indexOf(contextInfo);
-    this._timeline.addColumn(contextInfo/*, index*/);
+    // get the new item's position in the sorted list
+    var index = this._simulatedContextList.getIndexByID(contextInfo.getID());
+    // add it to timeline columns accordingly
+    this._timeline.addColumn(contextInfo, index);
 
-    //return index;
 };
 
 Simulation.prototype.initTimeline = function (steps) {
+    // start from tabula rasa
+    if (this._timeline.getEvents().length != 0) this._timeline.setEvents([]);
+    if (this._timeline.getNumberOfColumns != 0) this._timeline.setColumnContextMap([]);
+    if (this._timeline.getNumberOfRows != 0) this._timeline.setRowMap([]);
+
     var self = this;
     this._simulatedContextList.getItems().forEach(function (item) {
         self._timeline.addColumn(item);
@@ -77,7 +86,9 @@ Simulation.prototype.initTimeline = function (steps) {
         this._timeline.addStep();
 };
 
-
+Simulation.prototype.renderTimeline = function () {
+    this._timeline.render(this);
+};
 
 
 Simulation.prototype.start = function (timelineCallback, canvasCallback) {

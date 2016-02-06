@@ -33,6 +33,7 @@ function initSimulator() {
         initTimeline(simulation);
 
         setSimulationEventHandlers();
+
         showSimulatorTab();
     });
 }
@@ -60,8 +61,7 @@ function updateSimulator(simulation) {
                     var contextInfo = new ContextInformation().fromJSON(item);
                     var index = simulation.addContextItem(contextInfo);
 
-                    //addColumnForContextInfo(contextInfo, index);
-                    simulation.getTimeline().render();
+                    simulation.renderTimeline();
                 }
             }
         });

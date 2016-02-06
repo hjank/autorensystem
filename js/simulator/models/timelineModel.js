@@ -6,7 +6,7 @@
 function Timeline (events, rowMap, columnMap, selectedStep) {
 
     this._events = events || [];
-    this._rowMap = rowMap || []; // keys are row, i.e. step numbers
+    this._rowMap = rowMap || [];
     this._columnContextMap = columnMap || [];
 
     this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : 0;
@@ -84,11 +84,11 @@ Timeline.prototype.getEventByUUID = function(eventUUID) {
 Timeline.prototype.setEvents = function (events) {
     this._events = events;
 };
-Timeline.prototype.setRowMap = function (eventsMap) {
-    this._rowMap = eventsMap;
+Timeline.prototype.setRowMap = function (array) {
+    this._rowMap = array;
 };
-Timeline.prototype.setColumnContextMap = function (map) {
-    this._columnContextMap = map;
+Timeline.prototype.setColumnContextMap = function (array) {
+    this._columnContextMap = array;
 };
 Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
@@ -113,6 +113,13 @@ Timeline.prototype.addColumn = function(contextInfo, index) {
     this._columnContextMap.splice(index, 0, {
         "contextInfo": contextInfo,
         "events": []
+    });
+
+    index++;
+    this._columnContextMap.slice(index).forEach(function (col) {
+        col.events.forEach(function (event) {
+            event.setColumn(event.getColumn()+1);
+        });
     });
 };
 
@@ -156,27 +163,22 @@ Timeline.prototype.removeEvent = function (eventUUID) {
 
 
 
-Timeline.prototype.render = function () {
+Timeline.prototype.render = function (simulation) {
 
-    $("#timelineTable thead").empty();
-    $("#timelineTable tbody").empty();
+    clearTable();
 
-
-    $("#timelineTable thead")
-        .append($("<tr>").addClass("timeline-header")
-            .append($("<th>").addClass("timeline-step-label")));
-
+    createHeader();
     createSteps(this._rowMap.length);
-
     this._columnContextMap.forEach(function (col) {
-        addColumnForContextInfo(col.contextInfo);
+        createColumn(col.contextInfo);
     });
 
-    var self = this;
-    $("#timelineTable tbody tr.timeline-step").each(function(step){
-        if (step == self._selectedStep)
-            $(this).addClass("selected-step");
-        else $(this).removeClass("selected-step");
+    highlightSelectedStep(this._selectedStep);
+
+    removeAllPopovers(this);
+    this._events.forEach(function(event) {
+        event.render(simulation);
     });
+
 };
 

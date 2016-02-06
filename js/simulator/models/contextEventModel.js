@@ -62,6 +62,10 @@ ContextEvent.prototype.getCopy = function () {
     return new ContextEvent(this._simulation, this._contextInfo, this._column, this._start, this._end, this._visible);
 };
 
-ContextEvent.prototype.render = function (callback, arg) {
-    (typeof callback == "function" && callback(this, arg));
+
+
+
+ContextEvent.prototype.render = function (simulation) {
+    createNewPopover(this, simulation);
+    addOccupiedMarkup(getContextEventCells(this));
 };
