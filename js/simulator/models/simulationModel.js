@@ -113,14 +113,18 @@ Simulation.prototype._run = function (timelineCallback) {
             var contextInfo = colEntry.getContextInfo();
             var contextInfoParameters = [];
             contextInfo.getParameters().forEach(function (parameter) {
-                contextInfoParameters.push([parameter.getID(), parameter.getType(), parameter.getChosenValue()]);
+                contextInfoParameters.push([
+                    parameter.getID(),
+                    parameter.getType(),
+                    (parameter.getChosenValue() || "NO_VALUE")
+                ]);
             });
 
             this._adaptationEngine.addContextInformation({
                 name: contextInfo.getID(),
                 type: contextInfo.getType(),
                 parameterList: contextInfoParameters,
-                value: contextInfo.getChosenValue()
+                value: contextInfo.getChosenValue() || "NO_VALUE"
             }, contextInfo.getMultiplicity());
         }
     });

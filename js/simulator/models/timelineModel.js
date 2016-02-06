@@ -5,7 +5,7 @@
 
 function Timeline (matrix, contextMap, selectedStep) {
 
-    this._eventMatrix = matrix || [];
+    this._eventMatrix = matrix || [[]];
     this._columnContextMap = contextMap || [];
     this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : 0;
 
@@ -71,24 +71,25 @@ Timeline.prototype.decrementSelectedStep = function () {
 
 
 Timeline.prototype.addStep = function () {
-    this._eventMatrix.push(new Array(this._columnContextMap.length)
-        .fill({})
-    );
+    var matrix = this._eventMatrix;
+    matrix.push(this._columnContextMap.map(function(contextInfo, index) {
+        return {};
+    }));
 };
 
 Timeline.prototype.addColumn = function(contextInfo, index) {
-    this._addColumnToMatrix(index);
     this._addContextColumn(contextInfo, index);
-};
-Timeline.prototype._addColumnToMatrix = function (index) {
-    this._eventMatrix.forEach(function(row){
-        if (typeof index != "undefined") row.splice(index, 0, {});
-        else row.push({});
-    });
+    this._addColumnToMatrix(index);
 };
 Timeline.prototype._addContextColumn = function(contextInfo, index) {
-    if (typeof index != "undefined") this._columnContextMap.splice(index, 0, contextInfo);
-    else this._columnContextMap.push(contextInfo);
+    if (typeof index == "undefined") index = this._columnContextMap.length;
+    this._columnContextMap.splice(index, 0, contextInfo);
+};
+Timeline.prototype._addColumnToMatrix = function (colIndex) {
+    if (typeof colIndex == "undefined") colIndex = this._columnContextMap.length;
+    this._eventMatrix.forEach(function(row){
+        row.splice(colIndex, 0, {});
+    });
 };
 
 Timeline.prototype.addEvent = function (event) {

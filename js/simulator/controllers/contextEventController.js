@@ -19,7 +19,7 @@ function createNewContextEvent (simulation) {
 
     var timeline = simulation.getTimeline();
     var contextEvent = new ContextEvent(
-        timeline.getColumnContext(colID),
+        new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
         colID,
         firstStepID,
         firstStepID + $(markedCells).length - 1,

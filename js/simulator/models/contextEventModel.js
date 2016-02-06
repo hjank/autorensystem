@@ -6,9 +6,9 @@
 function ContextEvent (contextInfo, column, start, end, visible) {
     this._uuid = "event"+uuid4();
     this._contextInfo = contextInfo || {};
-    this._column = column || 0;
-    this._start = start || 0;
-    this._end = end || 0;
+    this._column = (typeof column  == "undefined") ? 0 : column;
+    this._start = (typeof start  == "undefined") ? 0 : start;
+    this._end = (typeof end  == "undefined") ? this._start : end;
     this._visible = (typeof visible == "undefined") ? true : visible;
 
     return this;
