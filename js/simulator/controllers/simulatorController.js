@@ -11,14 +11,13 @@ function initSimulator() {
 
     var simulatedContextList = simulation.getSimulatedContextList();
 
-    // get relevant context - default: scenario context
-    //simulatedContextList.fromJSON(contextList.getItemsOfClass("CC_SCENARIO"));
     simulatedContextList.addItem(new ContextInformation()
         .fromJSON(contextList.getItemByID("CI_FINISHED_LEARNING_UNIT")));
     simulatedContextList.addItem(new ContextInformation()
         .fromJSON(contextList.getItemByID("CI_USER_DESTINATION")));
     simulatedContextList.addItem(new ContextInformation()
         .fromJSON(contextList.getItemByID("CI_USER_DID_PERFORM_ACTION")));
+
     simulatedContextList.resetAllContextValues();
     simulatedContextList.setItems(simulatedContextList.getContextItemsSortedByClass());
 
@@ -61,7 +60,8 @@ function updateSimulator(simulation) {
                     var contextInfo = new ContextInformation().fromJSON(item);
                     var index = simulation.addContextItem(contextInfo);
 
-                    addColumnForContextInfo(contextInfo, index);
+                    //addColumnForContextInfo(contextInfo, index);
+                    simulation.getTimeline().render();
                 }
             }
         });
@@ -71,7 +71,7 @@ function updateSimulator(simulation) {
 
 function setSimulationEventHandlers() {
 
-    $("#simulatorContainer *").tooltip();
+    $("#simulatorContainer *").tooltip({container: "body"});
 
     //$("#btnSimulatorInfo").on("click", showInfo);
     $("#btnSimulatorInfo")

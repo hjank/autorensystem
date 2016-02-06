@@ -3,17 +3,18 @@
  */
 
 
-function Simulation () {
+function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
-    this._title = "Unbenannt";
-    this._description = "";
+    this._title = title || "Unbenannt";
+    this._description = descr || "";
 
-    this._scenario = {};
-    this._simulatedContextList = new ContextInfoList();
+    this._scenario = scenario || {};
+    this._simulatedContextList = contextList || new ContextInfoList();
 
-    this._timeline = {};
+    this._timeline = timeline || new Timeline();
 
-    this._playBackSpeed = 3000; // default speed = 3 seconds per step
+    this._playBackSpeed = speed || 3000; // default speed = 3 seconds per step
+
     this._iteration = null;
     this._adaptationEngine = {};
 
@@ -67,6 +68,14 @@ Simulation.prototype.addContextItem = function (contextInfo) {
     //return index;
 };
 
+Simulation.prototype.initTimeline = function (steps) {
+    var self = this;
+    this._simulatedContextList.getItems().forEach(function (item) {
+        self._timeline.addColumn(item);
+    });
+    for (var i = 1; i <= steps; i++)
+        this._timeline.addStep();
+};
 
 
 

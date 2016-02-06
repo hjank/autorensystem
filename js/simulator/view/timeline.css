@@ -28,7 +28,7 @@ table#timelineTable tr.timeline-step.selected-step {
 }
 
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
-    text-emphasis: circle;
+    font-weight: bold;
 }
 
 table#timelineTable .timeline-step-label {
@@ -39,6 +39,7 @@ table#timelineTable .timeline-step-label {
     padding: 0px;
     font-size: small;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 table#timelineTable tr:first-of-type td.timeline-step-label,

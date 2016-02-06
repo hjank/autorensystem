@@ -19,58 +19,34 @@ var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
  */
 function initTimeline(simulation) {
 
-    simulation.setTimeline(new Timeline());
-
-    createSteps(simulation);
-
-    // create a column for each ContextInformation object
-    createColumns(simulation);
+    simulation.initTimeline(numberOfSteps);
+    simulation.getTimeline().render();
 
     // set event handlers for these generated cells
     setCellEventHandlers(simulation);
-
 }
 
 
-function createSteps(simulation) {
 
-    var timeline = simulation.getTimeline();
+
+
+/*********** view **********/
+
+
+
+function createSteps(steps) {
     var timelineBodyElement = $("#timelineTable > tbody");
 
-    for (var i = 1; i <= numberOfSteps; i++) {
-
-        timeline.addStep();
-
-        $(timelineBodyElement).append(
-            $("<tr>").addClass("timeline-step").append(
-                $("<td>").addClass("timeline-step-label").html(i.toString())
-            )
-        );
-    }
-
-    timeline.render();
+    for (var i = 1; i <= steps; i++)
+        $(timelineBodyElement)
+            .append($("<tr>").addClass("timeline-step")
+                .append($("<td>").addClass("timeline-step-label")
+                    .html(i.toString())
+                    .attr("title", "Schritt " + i.toString())
+            ));
 }
-
-/**
- * Create one column per (unique) context item
- */
-function createColumns(simulation) {
-
-    var simulatedContextList = simulation.getSimulatedContextList();
-    var timeline = simulation.getTimeline();
-
-    for (var i in simulatedContextList.getItems()) {
-        var contextInfo = simulatedContextList.getItem(i);
-        timeline.addColumn(contextInfo, i);
-
-        addColumnForContextInfo(contextInfo);
-    }
-}
-
 
 function addColumnForContextInfo(contextInfo) {
-
-    /*** view ***/
 
     $(".timeline-header").append($("<th>")
         .html(formatUnitIcons(contextInfo))
@@ -84,18 +60,23 @@ function addColumnForContextInfo(contextInfo) {
     // add one column for each context item
     $(".timeline-step").each(function() {
         $(this).append($("<td>")
-            .addClass("timeline-cell")
-            .attr("contextClass", contextInfo.getClasses()[0])
-            .tooltip({
-                animation: false,
-                container: "#tab5",
-                placement: "auto top",
-                title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
-                viewport: "#timelineContainer"
-            })
+                .addClass("timeline-cell")
+                .attr("contextClass", contextInfo.getClasses()[0])
+                .tooltip({
+                    animation: false,
+                    container: "#tab5",
+                    placement: "auto top",
+                    title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
+                    viewport: "#timelineContainer"
+                })
         );
     });
 }
+
+
+
+/********** event handling **********/
+
 
 /** *
  * Sets handlers for mouse events on table cells and on document, consequently
@@ -106,7 +87,6 @@ function setCellEventHandlers(simulation) {
     $(document).on("mousemove", _handleMousemove);
     $(document).on("mouseup", null, simulation, _handleMouseup);
 }
-
 
 
 /**
@@ -194,29 +174,12 @@ function _mark(event) {
 function getColIDOfCell(cell) {
     return $(cell).parent().children(".timeline-cell").index(cell);
 }
+
 function getRowIDOfCell(cell) {
     return $(cell).parent().index();
 }
 
+
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
-}
-
-function addOccupiedMarkup (cells) {
-    cells.addClass("timeline-cell-occupied");
-
-    var firstCell = $(cells).first().css("border-top", "1px solid");
-
-   /* var quickEdit = $("<a>").attr("href","#").addClass("fui-gear")
-        .on("click", function(event) {event.stopPropagation();});
-    firstCell.append(quickEdit);
-    quickEdit.popover({
-        content: createContextEventCopyDOM,
-        placement: "auto top",
-        selector: firstCell,
-        viewport: "#timelineTable"
-    });*/
-
-    $(cells).last().css("border-bottom", "1px solid")
-        .append($("<div>").addClass("occupied-resize-handle"));
 }
