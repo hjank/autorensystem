@@ -28,6 +28,9 @@ function createNewContextEvent (simulation) {
     timeline.addEvent(contextEvent);
 
     createNewPopover(contextEvent, simulation);
+
+    // editor popover will be attached to first cell
+    $(markedCells).first().popover("show");
 }
 
 
@@ -64,9 +67,6 @@ function createNewPopover(contextEvent, simulation) {
             removePopoverEventListeners();
         });
     });
-
-    // editor popover will be attached to first cell
-    $(markedCells).first().popover("show");
 }
 
 
@@ -154,6 +154,9 @@ function setPopoverEventHandlers(simulation, contextEvent) {
             // add new class and style
             addOccupiedMarkup(contextEvent);
         }
+
+        // add tooltip displaying chosen values
+        addToolTip(contextEvent);
 
         // triggers unmarking of all cells
         $(lastCell).popover("hide");

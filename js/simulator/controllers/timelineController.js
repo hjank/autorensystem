@@ -7,7 +7,7 @@
  */
 
 var numberOfSteps = 100;
-var down, dragging, moving; // Boolean: mouse down?, mouse down and moving?
+var down, dragging, resizing, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
 var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
 var horizontalBorderPx = 2; // a marked cell's top and bottom border sum in px
@@ -112,17 +112,22 @@ function setCellEventHandlers(simulation) {
  * @private
  */
 function _handleMousedown(event) {
+
     hideAllPopovers(event.data.getTimeline());
 
-    if (!$(event.target).hasClass("timeline-cell") || $(event.target).hasClass("timeline-cell-occupied")) return;
 
-    down = true;
+    if ($(event.target).hasClass("occupied-resize-handle"))
+        resizing = true;
+
+    else if ($(event.target).hasClass("timeline-cell") && !$(event.target).hasClass("timeline-cell-occupied"))
+        down = true;
+
+    else return;
 
     yOnMousedown = event.pageY;
     xOnMousedown = event.pageX;
     xFirstCellLeft = $(this).offset().left;
     yFirstCellTop = $(this).offset().top;
-
 }
 
 /**
@@ -134,7 +139,7 @@ function _handleMousedown(event) {
 function _handleMousemove(event) {
     event.preventDefault();
 
-    if (down) {
+    if (down || resizing) {
         dragging = true;
         _mark(event);
     }
@@ -147,19 +152,34 @@ function _handleMousemove(event) {
  * @private
  */
 function _handleMouseup(event) {
+    var simulation = event.data;
 
     // if the mouse has been down on an empty cell
     if (down) {
-
         // if a single cell was clicked, without dragging, mark it (for subsequent access)
         if (!dragging)
             _mark(event);
 
-        createNewContextEvent(event.data);
+        createNewContextEvent(simulation);
+    }
+
+    if (resizing) {
+        var timeline = simulation.getTimeline();
+
+        var markedCells = $(".timeline-cell-marked");
+        console.log("resized by: " + markedCells.length);
+        var firstCell = $(markedCells).first();
+
+        var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
+        contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
+        timeline.removeEvent(contextEvent);
+        timeline.addEvent(contextEvent);
+        contextEvent.render(simulation);
     }
 
     down = false;
     dragging = false;
+    resizing = false;
 }
 
 
@@ -259,34 +279,42 @@ function removeAllPopovers(timeline) {
 function addOccupiedMarkup (contextEvent) {
 
     var cells = getContextEventCells(contextEvent);
+    $(cells).empty();
 
     var firstCell = $(cells).first();
-
-    firstCell.append($("<a>").attr("href","#").addClass("fui-gear")
+    firstCell.css("border-top", "1px solid")
+        .append($("<a>").attr("href","#").addClass("fui-gear")
         .on("click", function(event) {
             firstCell.popover("show");
         })
     );
+    $(cells).addClass("timeline-cell-occupied");
 
-    var contextInfo = contextEvent.getContextInfo();
-    var contextInfoValues = translate_contextInformation(contextInfo.getID()) +
-        " ist: " +
-        translate_possibleValue(contextInfo.getChosenValue()) + $("<br/>");
-    contextInfo.getParameters().forEach(function (param) {
-        contextInfoValues += translate_parameter(param.getID()) + ": ";
-        contextInfoValues += translate_parameterValue(param.getChosenValue()) + " ";
-    });
-    $(cells).addClass("timeline-cell-occupied")
-        .tooltip({
-            container: "#tab5",
-            title: contextInfoValues,
-            viewport: "#timelineContainer"
-        })
-        .on("mouseover", function (event) {
-           event.target;
-        });
-
-    $(firstCell).css("border-top", "1px solid");
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));
+}
+
+
+function addToolTip (contextEvent) {
+
+    var cells = getContextEventCells(contextEvent);
+
+    var contextInfo = contextEvent.getContextInfo();
+    var chosenValue = contextInfo.getChosenValue();
+    if (expectsLearningUnit(contextInfo)) chosenValue = authorSystemContent.getUnitByUUID(chosenValue).getName();
+
+    var contextInfoValues = translate_contextInformation(contextInfo.getID()) + " ist " +
+        translate_possibleValue(chosenValue) + "<br><br>";
+    contextInfo.getParameters().forEach(function (param) {
+        contextInfoValues += translate_parameter(param.getID()) + ": ";
+        contextInfoValues += translate_parameterValue(param.getChosenValue()) + "<br>";
+    });
+
+    $(cells).tooltip("destroy");
+    $(cells).tooltip({
+        container: "#tab5",
+        html: true,
+        title: contextInfoValues,
+        viewport: "#timelineContainer"
+    });
 }

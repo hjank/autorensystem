@@ -135,7 +135,6 @@ Timeline.prototype.removeEvent = function (eventUUID) {
         eventUUID = eventUUID.getUUID();
 
     var start, end, col;
-
     for (var i in this._events)
         if (this._events[i].getUUID() == eventUUID) {
             start = this._events[i].getStart();
@@ -145,20 +144,24 @@ Timeline.prototype.removeEvent = function (eventUUID) {
             this._events.splice(i, 1);
             break;
         }
+    this.removeEventFromRows(eventUUID, start, end);
+    this.removeEventFromColumns(eventUUID, col)
+};
 
+Timeline.prototype.removeEventFromRows = function (eventUUID, start, end) {
     for (start; start <= end; start++)
         for (var i in this._rowMap[start])
             if (this._rowMap[start][i].getUUID() == eventUUID) {
                 this._rowMap[start].splice(i, 1);
                 break;
             }
-
+};
+Timeline.prototype.removeEventFromColumns = function (eventUUID, col) {
     for (var i in this._columnContextMap[col].events)
         if (this._columnContextMap[col].events[i].getUUID() == eventUUID) {
             this._columnContextMap[col].events.splice(i, 1);
             break;
         }
-
 };
 
 
