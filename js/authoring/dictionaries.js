@@ -109,7 +109,9 @@ var contextValueDictionary = {
     "STUDENT" : "Student/Lernender",
     "TEACHER" : "Lehrer",
     "UNKNOWN" : "Unbekannt",
-    "TRANSPORTATION" : "Auto/Öffentliche Verkehrsmittel"
+    "TRANSPORTATION" : "Auto/Öffentliche Verkehrsmittel",
+    "TRUE" : "wahr",
+    "FALSE" : "falsch"
 };
 
 var contextParameterValueDictionary = {
@@ -174,7 +176,7 @@ var relationDictionary = {
  * return translated context information name
  * */
 function translate_contextInformation(ci) {
-    return contextInfoDictionary[ci];
+    return contextInfoDictionary[ci] || ci;
 }
 
 // translate context classes into german
@@ -184,7 +186,7 @@ function translate_contextInformation(ci) {
  * return translated context class
  * */
 function translate_contextClass(cc) {
-    return contextClassDictionary[cc];
+    return contextClassDictionary[cc] || cc;
 }
 
 // translate operator into german
@@ -194,7 +196,7 @@ function translate_contextClass(cc) {
  * return translated operator
  * */
 function translate_operator(op) {
-    return contextOperatorDictionary[op];
+    return contextOperatorDictionary[op] || op;
 }
 
 // translate context value enums into german
@@ -204,7 +206,7 @@ function translate_operator(op) {
  * return translated context value
  * */
 function translate_possibleValue(cv) {
-    return contextValueDictionary[cv];
+    return contextValueDictionary[cv] || cv;
 }
 
 // translate parameter into german
@@ -214,7 +216,7 @@ function translate_possibleValue(cv) {
  * return translated parameter
  * */
 function translate_parameter(p) {
-    return contextParameterDictionary[p];
+    return contextParameterDictionary[p] || p;
 }
 
 // translate parameter values into german
@@ -224,11 +226,11 @@ function translate_parameter(p) {
  * return translated parameter value
  * */
 function translate_parameterValue(pv) {
-    return contextParameterValueDictionary[pv];
+    return contextParameterValueDictionary[pv] || pv;
 }
 
 function translate_metaData(md) {
-    return metaDataDictionary[md]
+    return metaDataDictionary[md] || md;
 }
 
 function translate_relationLabelForward(label) {

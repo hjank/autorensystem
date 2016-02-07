@@ -58,6 +58,9 @@ table#timelineTable tr.timeline-step > td.timeline-cell {
     opacity: 0.2;
 }
 
+table#timelineTable tr.timeline-step > td.timeline-cell div.tooltip-inner{
+    white-space: pre;
+}
 
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SCENARIO] {
     background-color: #3287C8;
@@ -92,17 +95,16 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     border-bottom: none;
     border-left: 2px solid;
     border-right: 2px solid;
-    cursor: pointer;
+    cursor: move;
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a {
-    color: gray;
+    color: black;
     position: absolute;
     top: 0px;
-    display: block;/*
-    padding: 2px;
-    width: 5px;
-    height: 5px;*/
+    padding: 5px;
+    display: block;
+    cursor: pointer;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a:hover {
     color: #cccccc;

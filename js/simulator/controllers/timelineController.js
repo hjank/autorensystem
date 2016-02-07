@@ -61,7 +61,6 @@ function createColumn(contextInfo) {
     $(".timeline-header").append($("<th>")
         .html(formatUnitIcons(contextInfo))
         .tooltip({
-            animation: false,
             container: "#tab5",
             placement: "auto left",
             viewport: "#timelineContainer"
@@ -73,7 +72,6 @@ function createColumn(contextInfo) {
                 .addClass("timeline-cell")
                 .attr("contextClass", contextInfo.getClasses()[0])
                 .tooltip({
-                    animation: false,
                     container: "#tab5",
                     placement: "auto top",
                     title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
@@ -116,7 +114,7 @@ function setCellEventHandlers(simulation) {
 function _handleMousedown(event) {
     hideAllPopovers(event.data.getTimeline());
 
-    if ($(event.target).hasClass("timeline-cell-occupied")) return;
+    if (!$(event.target).hasClass("timeline-cell") || $(event.target).hasClass("timeline-cell-occupied")) return;
 
     down = true;
 
@@ -197,25 +195,6 @@ function getRowIDOfCell(cell) {
 }
 
 
-function addOccupiedMarkup (cells) {
-    $(cells).addClass("timeline-cell-occupied");
-
-    var firstCell = $(cells).first().css("border-top", "1px solid");
-
-    /* var quickEdit = $("<a>").attr("href","#").addClass("fui-gear")
-     .on("click", function(event) {event.stopPropagation();});
-     firstCell.append(quickEdit);
-     quickEdit.popover({
-     content: createContextEventCopyDOM,
-     placement: "auto top",
-     selector: firstCell,
-     viewport: "#timelineTable"
-     });*/
-
-    $(cells).last().css("border-bottom", "1px solid")
-        .append($("<div>").addClass("occupied-resize-handle"));
-}
-
 
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
@@ -228,11 +207,26 @@ function freeAllCells() {
 
 function hideAllPopovers(timeline) {
 
+    removeEventMarkup();
+    removePopoverEventListeners();
+
     // triggers "hide.bs.popover" event handled by removing all markup
     $(".popover").hide();
 
     // remove all non-confirmed events
     removeTemporaryEvents(timeline);
+}
+
+
+function removeEventMarkup() {
+    // rescue google maps
+    $("#divMapsTemplate").append($("#divMaps"));
+    // remove select2 markup
+    $(".popover select").select2("destroy");
+    // remove class "timeline-cell-marked" from all cells
+    unmarkAllCells();
+
+    $("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
 }
 
 
@@ -258,4 +252,41 @@ function removeAllPopovers(timeline) {
     $(".timeline-cell-occupied").popover("destroy");
 
     freeAllCells();
+}
+
+
+
+function addOccupiedMarkup (contextEvent) {
+
+    var cells = getContextEventCells(contextEvent);
+
+    var firstCell = $(cells).first();
+
+    firstCell.append($("<a>").attr("href","#").addClass("fui-gear")
+        .on("click", function(event) {
+            firstCell.popover("show");
+        })
+    );
+
+    var contextInfo = contextEvent.getContextInfo();
+    var contextInfoValues = translate_contextInformation(contextInfo.getID()) +
+        " ist: " +
+        translate_possibleValue(contextInfo.getChosenValue()) + $("<br/>");
+    contextInfo.getParameters().forEach(function (param) {
+        contextInfoValues += translate_parameter(param.getID()) + ": ";
+        contextInfoValues += translate_parameterValue(param.getChosenValue()) + " ";
+    });
+    $(cells).addClass("timeline-cell-occupied")
+        .tooltip({
+            container: "#tab5",
+            title: contextInfoValues,
+            viewport: "#timelineContainer"
+        })
+        .on("mouseover", function (event) {
+           event.target;
+        });
+
+    $(firstCell).css("border-top", "1px solid");
+    $(cells).last().css("border-bottom", "1px solid")
+        .append($("<div>").addClass("occupied-resize-handle"));
 }

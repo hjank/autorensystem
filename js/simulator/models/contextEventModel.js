@@ -17,9 +17,6 @@ function ContextEvent (contextInfo, column, start, end, visible) {
 ContextEvent.prototype.getUUID = function () {
     return this._uuid;
 };
-ContextEvent.prototype.getSimulation = function () {
-    return this._simulation;
-};
 ContextEvent.prototype.getContextInfo = function () {
     return this._contextInfo;
 };
@@ -39,9 +36,6 @@ ContextEvent.prototype.isVisible = function () {
 ContextEvent.prototype.setUUID = function (uuid) {
     this._uuid = uuid;
 };
-ContextEvent.prototype.setSimulation = function (simulation) {
-    this._simulation = simulation;
-};
 ContextEvent.prototype.setContextInfo = function (contextInfo) {
     this._contextInfo = contextInfo;
 };
@@ -59,7 +53,7 @@ ContextEvent.prototype.setVisibility = function (visible) {
 };
 
 ContextEvent.prototype.getCopy = function () {
-    return new ContextEvent(this._simulation, this._contextInfo, this._column, this._start, this._end, this._visible);
+    return new ContextEvent(this._contextInfo, this._column, this._start, this._end, this._visible);
 };
 
 
@@ -67,5 +61,5 @@ ContextEvent.prototype.getCopy = function () {
 
 ContextEvent.prototype.render = function (simulation) {
     createNewPopover(this, simulation);
-    addOccupiedMarkup(getContextEventCells(this));
+    addOccupiedMarkup(this);
 };

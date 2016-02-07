@@ -39,7 +39,7 @@ function createNewPopover(contextEvent, simulation) {
     $(markedCells)
         .popover({
             container: "#tab5",
-            content: generatePopoverContent(),
+            content: generatePopoverContent,
             html: true,
             placement: "auto top",
             selector: markedCells,
@@ -49,6 +49,7 @@ function createNewPopover(contextEvent, simulation) {
             '<div class="popover-content"></div>' +
             '</div>',
             title: generatePopoverTitle(contextEvent.getContextInfo()),
+            trigger: "manual",
             viewport: "#timelineContainer"
         })
         .tooltip("destroy");
@@ -56,17 +57,16 @@ function createNewPopover(contextEvent, simulation) {
     $(markedCells).each(function (index, cell) {
         $(cell).on("shown.bs.popover", function(event){
             reconstructPopoverContent(this, simulation, contextEvent);
+            setPopoverEventHandlers(simulation, contextEvent);
             repositionPopover(this);
         }).on("hide.bs.popover", function() {
             removeEventMarkup();
+            removePopoverEventListeners();
         });
     });
 
-    // if no dragging happened, click event will be fired and opens popover (or closes open popover)
-    if ($(markedCells).hasClass("timeline-cell-marked") && $(markedCells).length > 1) {
-        // editor popover will be attached to first cell
-        $(markedCells).first().popover("show");
-    }
+    // editor popover will be attached to first cell
+    $(markedCells).first().popover("show");
 }
 
 
@@ -114,8 +114,6 @@ function reconstructPopoverContent(startCell, simulation, contextEvent) {
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
     $(".popover select").select2();
-
-    setPopoverEventHandlers(simulation, contextEvent);
 }
 
 function repositionPopover(cell) {
@@ -154,7 +152,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
         if ($(lastCell).hasClass("timeline-cell-marked")) {
             // add new class and style
-            addOccupiedMarkup($(".timeline-cell-marked"));
+            addOccupiedMarkup(contextEvent);
         }
 
         // triggers unmarking of all cells
@@ -162,6 +160,10 @@ function setPopoverEventHandlers(simulation, contextEvent) {
     });
 }
 
+function removePopoverEventListeners() {
+    $(".popover .popover-close").off("click");
+    $(".popover .popover-confirm").off("click");
+}
 
 function getContextEventCells(contextEvent) {
     var cells = $();
@@ -169,18 +171,6 @@ function getContextEventCells(contextEvent) {
         cells = cells.add($("#timelineTable").find(".timeline-step").eq(step)
             .children(".timeline-cell").eq(contextEvent.getColumn()));
     return cells;
-}
-
-
-function removeEventMarkup() {
-    // rescue google maps
-    $("#divMapsTemplate").append($("#divMaps"));
-    // remove select2 markup
-    $(".popover select").select2("destroy");
-    // remove class "timeline-cell-marked" from all cells
-    unmarkAllCells();
-
-    $("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
 }
 
 
