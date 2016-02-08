@@ -94,7 +94,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     cursor: move;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a {
+table#timelineTable tr.timeline-step > td.timeline-cell > a {
     color: black;
     position: absolute;
     top: 0px;

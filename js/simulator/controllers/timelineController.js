@@ -9,7 +9,8 @@
 var numberOfSteps = 100;
 var down, dragging, resizing, moving; // Boolean: mouse down?, mouse down and moving?
 var xOnMousedown, yOnMousedown; // click coordinates (in px)
-var xFirstCellLeft, yFirstCellTop; //  coordinates of clicked cell (in px)
+var xFirstCellLeft, yFirstCellTop; // coordinates of start cell (in px)
+var clickedCell, nextOccupiedCellTop;
 var horizontalBorderPx = 2; // a marked cell's top and bottom border sum in px
 var verticalBorderPx = 4;  // a marked cell's left and right border sum in px
 
@@ -94,7 +95,7 @@ function highlightSelectedStep(selectedStep) {
 /********** event handling **********/
 
 
-/** *
+/**
  * Sets handlers for mouse events on table cells and on document, consequently
  */
 function setCellEventHandlers(simulation) {
@@ -112,22 +113,30 @@ function setCellEventHandlers(simulation) {
  * @private
  */
 function _handleMousedown(event) {
+    var timeline = event.data.getTimeline();
 
-    hideAllPopovers(event.data.getTimeline());
+    hideAllPopovers(timeline);
 
-
-    if ($(event.target).hasClass("occupied-resize-handle"))
-        resizing = true;
-
-    else if ($(event.target).hasClass("timeline-cell") && !$(event.target).hasClass("timeline-cell-occupied"))
+    if ($(event.target).hasClass("timeline-cell") && !$(event.target).hasClass("timeline-cell-occupied")) {
         down = true;
 
+        yOnMousedown = event.pageY;
+        xOnMousedown = event.pageX;
+    }
+    else if ($(event.target).hasClass("occupied-resize-handle")) {
+        resizing = true;
+
+        var contextEvent = timeline.getEventAt(getRowIDOfCell(this), getColIDOfCell(this));
+        var eventStartCell = $(getContextEventCells(contextEvent)).first();
+        xFirstCellLeft = $(eventStartCell).offset().left;
+        yFirstCellTop = $(eventStartCell).offset().top;
+
+        event.stopPropagation();
+    }
     else return;
 
-    yOnMousedown = event.pageY;
-    xOnMousedown = event.pageX;
-    xFirstCellLeft = $(this).offset().left;
-    yFirstCellTop = $(this).offset().top;
+    clickedCell = this;
+    nextOccupiedCellTop = null;
 }
 
 /**
@@ -137,13 +146,17 @@ function _handleMousedown(event) {
  * @private
  */
 function _handleMousemove(event) {
+    // prevent marking of label cells
     event.preventDefault();
 
-    if (down || resizing) {
-        dragging = true;
-        _mark(event);
-    }
+    if (!down && !resizing) return;
+
+    if (down) dragging = true;
+
+    _mark(event);
 }
+
+
 
 /**
  * When down stops: create a new DIV where cells have been marked and attach context CRUD functionality.
@@ -163,23 +176,28 @@ function _handleMouseup(event) {
         createNewContextEvent(simulation);
     }
 
-    if (resizing) {
-        var timeline = simulation.getTimeline();
+    else if (resizing) {
+        // only if resizing actually happened, i.e. mouse moved away above/below resize handle
+        if (!$(event.target).hasClass("occupied-resize-handle")) {
+            var markedCells = $(".timeline-cell-marked");
+            $(clickedCell).empty();
 
-        var markedCells = $(".timeline-cell-marked");
-        console.log("resized by: " + markedCells.length);
-        var firstCell = $(markedCells).first();
-
-        var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
-        contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
-        timeline.removeEvent(contextEvent);
-        timeline.addEvent(contextEvent);
-        contextEvent.render(simulation);
+            var timeline = simulation.getTimeline();
+            var firstCell = $(markedCells).first();
+            var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
+            contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
+            timeline.removeEvent(contextEvent);
+            timeline.addEvent(contextEvent);
+            contextEvent.render(simulation);
+        }
+        _unmarkAllCells();
     }
 
     down = false;
     dragging = false;
     resizing = false;
+
+    $(".timeline-cell").css("cursor", "");
 }
 
 
@@ -191,13 +209,47 @@ function _handleMouseup(event) {
  */
 function _mark(event) {
 
-    $(".timeline-cell").each(function () {
-        var top = $(this).offset().top;
-        var bottom = top + $(this).height()+horizontalBorderPx;
-        var left = $(this).offset().left;
-        var right = left + $(this).width()+verticalBorderPx;
+    var referenceX, referenceY, referenceBottomY;
+    if (down) {
+        referenceX = xOnMousedown;
+        referenceY = yOnMousedown;
+    }
+    else if (resizing) {
+        referenceX = xFirstCellLeft;
+        referenceY = yFirstCellTop;
+    }
+    referenceBottomY = $(clickedCell).offset().top + $(clickedCell).height() + horizontalBorderPx;
 
-        if( bottom > yOnMousedown && event.pageY >= top && xOnMousedown >= left && xOnMousedown < right) {
+    // if targeted cell is already occupied by another event
+    if (event.pageY > referenceBottomY && $(event.target).hasClass("timeline-cell-occupied"))
+        nextOccupiedCellTop = $(event.target).offset().top;
+
+    // do not mark cell if it lies above the start
+    if (event.pageY < (down ? referenceY : referenceY+5) || 
+        // or is already occupied
+        (nextOccupiedCellTop && event.pageY >= nextOccupiedCellTop)) {
+        $(".timeline-cell").css("cursor", "no-drop");
+        return;
+    }
+    else if (resizing)
+        $(".timeline-cell").css("cursor", "s-resize");
+    else
+        $(".timeline-cell").css("cursor", "");
+
+
+    $(".timeline-cell").each(function () {
+
+        var top = $(this).offset().top;
+        var bottom = top + $(this).height() + horizontalBorderPx;
+        var left = $(this).offset().left;
+        var right = left + $(this).width() + verticalBorderPx;
+
+        // mark this cell if it lies in the correct column
+        if(referenceX >= left && referenceX < right &&
+            // and is not above start, i.e. marking will not surpass first cell
+            bottom > referenceY && event.pageY >= top) {
+
+            $(this).removeClass("timeline-cell-occupied");
             $(this).addClass( "timeline-cell-marked" );
         }
         else
@@ -216,11 +268,11 @@ function getRowIDOfCell(cell) {
 
 
 
-function unmarkAllCells() {
+function _unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
 }
 
-function freeAllCells() {
+function _freeAllCells() {
     $(".timeline-cell-occupied").removeClass(".timeline-cell-occupied");
 }
 
@@ -244,7 +296,7 @@ function removeEventMarkup() {
     // remove select2 markup
     $(".popover select").select2("destroy");
     // remove class "timeline-cell-marked" from all cells
-    unmarkAllCells();
+    _unmarkAllCells();
 
     $("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
 }
@@ -271,15 +323,14 @@ function removeAllPopovers(timeline) {
 
     $(".timeline-cell-occupied").popover("destroy");
 
-    freeAllCells();
+    _freeAllCells();
 }
-
 
 
 function addOccupiedMarkup (contextEvent) {
 
     var cells = getContextEventCells(contextEvent);
-    $(cells).empty();
+    $(cells).empty().css("border-bottom", "");
 
     var firstCell = $(cells).first();
     firstCell.css("border-top", "1px solid")
