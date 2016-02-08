@@ -153,6 +153,7 @@ function _handleMousemove(event) {
 
     if (down) dragging = true;
 
+    // mark targeted cells if creating or resizing an event
     _mark(event);
 }
 
@@ -171,9 +172,10 @@ function _handleMouseup(event) {
     if (down) {
         // if a single cell was clicked, without dragging, mark it (for subsequent access)
         if (!dragging)
-            _mark(event);
+            $(event.target).addClass("timeline-cell-marked");
 
-        createNewContextEvent(simulation);
+        if (! ($(event.target).offset().top <= $(clickedCell).offset().top))
+            createNewContextEvent(simulation);
     }
 
     else if (resizing) {
@@ -220,13 +222,13 @@ function _mark(event) {
     }
     referenceBottomY = $(clickedCell).offset().top + $(clickedCell).height() + horizontalBorderPx;
 
-    // if targeted cell is already occupied by another event
+    // if targeted cell is already occupied by another event, get its top Y coordinate
     if (event.pageY > referenceBottomY && $(event.target).hasClass("timeline-cell-occupied"))
         nextOccupiedCellTop = $(event.target).offset().top;
 
-    // do not mark cell if it lies above the start
-    if (event.pageY < (down ? referenceY : referenceY+5) || 
-        // or is already occupied
+    // if the targeted cell lies above the start
+    if (event.pageY < (down ? referenceY : referenceY+5) ||
+        // or below the next occupied cell's top
         (nextOccupiedCellTop && event.pageY >= nextOccupiedCellTop)) {
         $(".timeline-cell").css("cursor", "no-drop");
         return;
