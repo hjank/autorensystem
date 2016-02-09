@@ -12,6 +12,10 @@ function createNewContextEvent (simulation) {
 
     // keep track of selected cells
     var markedCells = $(".timeline-cell-marked");
+    var numberOfMarkedCells = $(markedCells).length;
+
+    if (numberOfMarkedCells == 0) return;
+
     // editor popover will be attached to first cell
     var startCell = $(markedCells).first();
     var firstStepID = getRowIDOfCell(startCell);
@@ -22,7 +26,7 @@ function createNewContextEvent (simulation) {
         new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
         colID,
         firstStepID,
-        firstStepID + $(markedCells).length - 1,
+        firstStepID + numberOfMarkedCells - 1,
         true
     );
     timeline.addEvent(contextEvent);
@@ -30,7 +34,7 @@ function createNewContextEvent (simulation) {
     createNewPopover(contextEvent, simulation);
 
     // editor popover will be attached to first cell
-    $(markedCells).first().popover("show");
+    $(startCell).popover("show");
 }
 
 
@@ -62,9 +66,11 @@ function createNewPopover(contextEvent, simulation) {
             reconstructPopoverContent(this, simulation, contextEvent);
             setPopoverEventHandlers(simulation, contextEvent);
             repositionPopover(this);
-        }).on("hide.bs.popover", function() {
-            removeEventMarkup();
+        }).on("hide.bs.popover", function (event) {
             removePopoverEventListeners();
+            removePopoverMarkup();
+            // remove all non-confirmed events
+            removeTemporaryEvents(simulation.getTimeline());
         });
     });
 }
@@ -136,16 +142,21 @@ function repositionPopover(cell) {
 
 function setPopoverEventHandlers(simulation, contextEvent) {
 
+    var timeline = simulation.getTimeline();
+
     $(".popover .popover-close").on("click", function(event){
+
         // closing popover without input + confirm, i.e. aborting event creation
-        hideAllPopovers(simulation.getTimeline());
+        hideAllPopovers(timeline);
 
         event.stopPropagation();
     });
 
     $(".popover .popover-confirm").on("click", function(event){
 
-        if (!confirmPopoverContent(contextEvent.getContextInfo(), simulation.getScenario())) {
+        var contextInfoDiv = $(event.target).parent();
+
+        if (!confirmPopoverContent(contextInfoDiv, contextEvent.getContextInfo(), simulation.getScenario())) {
             alert("Bitte geben Sie einen Wert und Parameter an.");
             return;
         }
@@ -158,8 +169,8 @@ function setPopoverEventHandlers(simulation, contextEvent) {
         // add tooltip displaying chosen values
         addToolTip(contextEvent);
 
-        // triggers unmarking of all cells
-        $(lastCell).popover("hide");
+        // triggers "hide.bs.popover" event
+        hideAllPopovers(timeline);
     });
 }
 

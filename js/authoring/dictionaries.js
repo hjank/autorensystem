@@ -206,7 +206,10 @@ function translate_operator(op) {
  * return translated context value
  * */
 function translate_possibleValue(cv) {
-    return contextValueDictionary[cv] || cv;
+    var valueString;
+    if (!isNaN(cv)) valueString = parseFloat(cv).toFixed(3);
+    else valueString = contextValueDictionary[cv] || cv;
+    return valueString;
 }
 
 // translate parameter into german
@@ -226,7 +229,10 @@ function translate_parameter(p) {
  * return translated parameter value
  * */
 function translate_parameterValue(pv) {
-    return contextParameterValueDictionary[pv] || pv;
+    var valueString;
+    if (!isNaN(pv)) valueString = parseFloat(pv).toFixed(3);
+    else valueString = contextParameterValueDictionary[pv] || pv;
+    return valueString;
 }
 
 function translate_metaData(md) {

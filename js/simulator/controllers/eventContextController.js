@@ -169,11 +169,11 @@ function fillPopoverParameterSelection(cp, divContextParams) {
 }
 
 
-function confirmPopoverContent(contextInfo, scenario) {
+function confirmPopoverContent(contextInfoDiv, contextInfo, scenario) {
 
-    var inputElement = $(".popover input.popover-value");
+    var inputElement = $(contextInfoDiv).children("input.popover-value");
     var inputValue = $(inputElement).val();
-    var selectedValueID = $(".popover .select.popover-value").select2("val");
+    var selectedValueID = $(contextInfoDiv).children(".select.popover-value").select2("val");
 
     // case value is one of ENUM or LEARNING_UNIT
     if (typeof selectedValueID != "undefined") {
@@ -196,7 +196,7 @@ function confirmPopoverContent(contextInfo, scenario) {
     var parameters = contextInfo.getParameters();
     for (var index in parameters) {
         var param = parameters[index];
-        var paramElement = $("#popoverParameter"+index);
+        var paramElement = $(contextInfoDiv).find("#popoverParameter"+index);
         var paramValue;
         if (param.getType() == "ENUM")
             paramValue = param.getEnums()[$(paramElement).select2("val")];

@@ -77,11 +77,9 @@ table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION
     background-color: #F03C32;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-marked,
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
-    opacity: 1;
+table#timelineTable tr.timeline-step > td.timeline-cell-marked {
+    opacity: 0.5;
 }
-
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     width: inherit;
@@ -92,6 +90,17 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     border-left: 2px solid;
     border-right: 2px solid;
     cursor: move;
+    opacity: 1;
+}
+
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied.invisible {
+    background-image: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 5px,
+            rgba(255,255,255,.5) 35px,
+            rgba(255,255,255,.5) 70px
+    );
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell > a {
@@ -102,7 +111,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell > a {
     display: block;
     cursor: pointer;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied > a:hover {
+table#timelineTable tr.timeline-step > td.timeline-cell > a:hover {
     color: #cccccc;
 }
 
