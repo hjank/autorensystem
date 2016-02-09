@@ -14,7 +14,6 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
     this._timeline = timeline || new Timeline();
 
     this._playBackSpeed = speed || 3000; // default speed = 3 seconds per step
-
     this._iteration = null;
     this._adaptationEngine = {};
 
@@ -27,12 +26,6 @@ Simulation.prototype.getTitle = function () {
 Simulation.prototype.getDescription = function () {
     return this._description;
 };
-Simulation.prototype.getPlayBackSpeed = function () {
-    return this._playBackSpeed;
-};
-Simulation.prototype.getStatus = function () {
-    return this._playBackSpeed;
-};
 Simulation.prototype.getScenario = function () {
     return this._scenario;
 };
@@ -41,6 +34,15 @@ Simulation.prototype.getSimulatedContextList = function () {
 };
 Simulation.prototype.getTimeline = function() {
     return this._timeline;
+};
+Simulation.prototype.getPlayBackSpeed = function () {
+    return this._playBackSpeed;
+};
+Simulation.prototype.isRunning = function () {
+    return this._iteration != null;
+};
+Simulation.prototype.getAdaptationEngine = function () {
+    return this._adaptationEngine;
 };
 
 Simulation.prototype.setTitle = function (title) {
@@ -91,14 +93,14 @@ Simulation.prototype.renderTimeline = function () {
 };
 
 
-Simulation.prototype.start = function (timelineCallback, canvasCallback) {
+Simulation.prototype.start = function () {
 
     this._timeline.setSelectedStep(0);
 
     /* TODO: 1. export(...); // generate rules
        TODO: 2. include AE and $.get(...) rules (see there)
        TODO: !!important!! ContextInformation will have to be renamed --> conflicting with contactJS!
-     */
+
 
     this._adaptationEngine = new AdaptationEngine(rules, true);
 
@@ -113,22 +115,24 @@ Simulation.prototype.start = function (timelineCallback, canvasCallback) {
         canvasCallback(id);
     });
 
-    this.run(timelineCallback);
+     */
 
+    this.run();
 };
 
-Simulation.prototype.run = function (timelineCallback) {
+Simulation.prototype.run = function () {
 
-    this._run(timelineCallback);
-    this._iteration = setInterval(function() { this._run(timelineCallback); }, this._playBackSpeed);
+    this._run(this);
+    this._iteration = setInterval(this._run, this._playBackSpeed, this);
 };
 
-Simulation.prototype._run = function (timelineCallback) {
+Simulation.prototype._run = function (self) {
 
-    // TODO: mark or highlight selected step in timeline
-    timelineCallback(this._timeline.getSelectedStep());
+    var selectedStep = self._timeline.getSelectedStep();
+    highlightSelectedStep(selectedStep);
+/*
 
-    this._timeline.getSelectedStepEvents().forEach( function(colEntry) {
+    self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
         if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
             var contextInfo = colEntry.getContextInfo();
             var contextInfoParameters = [];
@@ -140,7 +144,7 @@ Simulation.prototype._run = function (timelineCallback) {
                 ]);
             });
 
-            this._adaptationEngine.addContextInformation({
+            self._adaptationEngine.addContextInformation({
                 name: contextInfo.getID(),
                 type: contextInfo.getType(),
                 parameterList: contextInfoParameters,
@@ -150,15 +154,23 @@ Simulation.prototype._run = function (timelineCallback) {
     });
 
     // adapt and apply callbacks
-    this._adaptationEngine.startRuleMatching(this._playBackSpeed);
+    self._adaptationEngine.startRuleMatching(self._playBackSpeed);
     // stop immediately after because of internal interval
-    this._adaptationEngine.stopRuleMatching();
+    self._adaptationEngine.stopRuleMatching();
 
-    // go to next simulation step
-    this._timeline.incrementSelectedStep();
+*/
+
+    // go to next simulation step if there is one left
+    if (!self._timeline.incrementSelectedStep()) {
+        self.stop();
+        self._timeline.setSelectedStep(-1);
+
+        resetPlayback();
+    }
 };
 
 
 Simulation.prototype.stop = function (callback) {
     clearInterval(this._iteration);
+    this._iteration = null;
 };

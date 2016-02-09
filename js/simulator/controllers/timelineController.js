@@ -6,7 +6,7 @@
  *
  */
 
-var numberOfSteps = 100;
+var numberOfSteps = 10;
 var down, dragging, resizing, moving; // Boolean: mouse down?, mouse down and moving?
 var xFirstCellLeft, yFirstCellTop; // coordinates of start cell (in px)
 var clickedCell, nextOccupiedCellTop;
@@ -354,6 +354,18 @@ function addToolTip (contextEvent) {
 
     var cells = getContextEventCells(contextEvent);
 
+    $(cells).tooltip("destroy");
+    $(cells).tooltip({
+        container: "#tab5",
+        html: true,
+        title: getTooltipTitle(contextEvent),
+        viewport: "#timelineContainer"
+    });
+}
+
+
+function getTooltipTitle (contextEvent) {
+
     var contextInfo = contextEvent.getContextInfo();
     var chosenValue = contextInfo.getChosenValue();
     if (expectsLearningUnit(contextInfo)) chosenValue = authorSystemContent.getUnitByUUID(chosenValue).getName();
@@ -365,11 +377,5 @@ function addToolTip (contextEvent) {
         contextInfoValues += translate_parameterValue(param.getChosenValue()) + "<br>";
     });
 
-    $(cells).tooltip("destroy");
-    $(cells).tooltip({
-        container: "#tab5",
-        html: true,
-        title: contextInfoValues,
-        viewport: "#timelineContainer"
-    });
+    return contextInfoValues;
 }

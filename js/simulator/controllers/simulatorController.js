@@ -32,7 +32,7 @@ function initSimulator() {
 
         initTimeline(simulation);
 
-        setSimulationEventHandlers();
+        setSimulationEventHandlers(simulation);
 
         showSimulatorTab();
     });
@@ -69,11 +69,12 @@ function updateSimulator(simulation) {
 }
 
 
-function setSimulationEventHandlers() {
+function setSimulationEventHandlers(simulation) {
+
+    var timeline = simulation.getTimeline();
 
     $("#simulatorContainer *").tooltip({container: "body"});
 
-    //$("#btnSimulatorInfo").on("click", showInfo);
     $("#btnSimulatorInfo")
         .popover({
             container: "#tab5",
@@ -81,15 +82,55 @@ function setSimulationEventHandlers() {
             //html: true,
             placement: "auto top",
             template: '<div class="popover" role="tooltip">' +
-            '<div class="arrow"></div>' +
-            '<h3 class="popover-title"></h3>' +
-            '<div class="popover-content"></div>' +
-            '</div>',
+                '<div class="arrow"></div>' +
+                '<h3 class="popover-title"></h3>' +
+                '<div class="popover-content"></div>' +
+                '</div>',
             title: "",
             viewport: "#simulatorHeader"
-        })
+        });
+
+    $("#btnBackward").on("click", function (event) {
+        timeline.decrementSelectedStep();
+        highlightSelectedStep(timeline.getSelectedStep());
+    });
+
+    $("#btnForward").on("click", function (event) {
+        timeline.incrementSelectedStep();
+        highlightSelectedStep(timeline.getSelectedStep());
+    });
+
+
+    $("#btnPlaySimulation").on("click", function (event) {
+        // simulation is not running, either not yet or paused
+        if (!simulation.isRunning()) {
+            // first run
+            if (timeline.getSelectedStep() == -1) simulation.start();
+            // rerun after pause
+            else simulation.run();
+
+
+            $(this).removeClass("fui-play").addClass("fui-pause")
+                .tooltip("destroy")
+                .attr("title", "Simulation anhalten")
+                .tooltip({container: "body"});
+        }
+        // running --> pause
+        else {
+            simulation.stop();
+
+            $(this).removeClass("fui-pause").addClass("fui-play")
+                .tooltip("destroy")
+                .attr("title", "Simulation fortsetzen")
+                .tooltip({container: "body"});
+        }
+    });
+
 }
 
-function showInfo() {
-    $("#simulatorInfoText").text("Hier können Sie das Verhalten der Lernanwendung simulieren. Dazu modellieren Sie den Kontext des Lernszenarios.");
+function resetPlayback () {
+    $("#btnPlaySimulation").removeClass("fui-pause").addClass("fui-spinner11")
+        .tooltip("destroy")
+        .attr("title", "Simulation starten")
+        .tooltip({container: "body"});
 }

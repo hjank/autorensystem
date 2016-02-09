@@ -9,7 +9,7 @@ function Timeline (events, rowMap, columnMap, selectedStep) {
     this._rowMap = rowMap || [];
     this._columnContextMap = columnMap || [];
 
-    this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : 0;
+    this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : -1;
 
     return this;
 }
@@ -94,10 +94,18 @@ Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
 };
 Timeline.prototype.incrementSelectedStep = function () {
-    this._selectedStep++;
+    if (this._selectedStep <= this._rowMap.length) {
+        this._selectedStep++;
+        return true;
+    }
+    else return false;
 };
 Timeline.prototype.decrementSelectedStep = function () {
-    this._selectedStep--;
+    if (this._selectedStep >= 0) {
+        this._selectedStep--;
+        return true;
+    }
+    else return false;
 };
 
 
