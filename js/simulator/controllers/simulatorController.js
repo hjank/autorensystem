@@ -3,6 +3,7 @@
  */
 
 var simulations = [];
+var numberOfSteps = 20;
 
 // TODO: Consider switching between scenarios!
 function initSimulator() {
@@ -90,46 +91,70 @@ function setSimulationEventHandlers(simulation) {
             viewport: "#simulatorHeader"
         });
 
+    $("#btnBackToStart").on("click", function (event) {
+        simulation.stop();
+        highlightSelectedStep(timeline);
+    });
+
     $("#btnBackward").on("click", function (event) {
         timeline.decrementSelectedStep();
-        highlightSelectedStep(timeline.getSelectedStep());
+        highlightSelectedStep(timeline);
     });
 
     $("#btnForward").on("click", function (event) {
         timeline.incrementSelectedStep();
-        highlightSelectedStep(timeline.getSelectedStep());
+        highlightSelectedStep(timeline);
     });
 
 
     $("#btnPlaySimulation").on("click", function (event) {
-        // simulation is not running, either not yet or paused
-        if (!simulation.isRunning()) {
-            // first run
-            if (timeline.getSelectedStep() == -1) simulation.start();
-            // rerun after pause
-            else simulation.run();
 
+        switch (simulation.getStatus()) {
 
-            $(this).removeClass("fui-play").addClass("fui-pause")
-                .tooltip("destroy")
-                .attr("title", "Simulation anhalten")
-                .tooltip({container: "body"});
-        }
-        // running --> pause
-        else {
-            simulation.stop();
+            case PAUSED:
+                simulation.run();
 
-            $(this).removeClass("fui-pause").addClass("fui-play")
-                .tooltip("destroy")
-                .attr("title", "Simulation fortsetzen")
-                .tooltip({container: "body"});
+                setPlaybackButtonToPause();
+                break;
+
+            case RUNNING:
+                simulation.pause();
+
+                setPlaybackButtonToPlay();
+                break;
+
+            case STOPPED:
+                simulation.start();
+
+                setPlaybackButtonToPause();
+                break;
         }
     });
-
 }
 
-function resetPlayback () {
-    $("#btnPlaySimulation").removeClass("fui-pause").addClass("fui-spinner11")
+
+function setPlaybackButtonToPlay () {
+
+    var playbackButton = $("#btnPlaySimulation");
+    $(playbackButton).removeClass("fui-pause").addClass("fui-play")
+        .tooltip("destroy")
+        .attr("title", "Simulation fortsetzen")
+        .tooltip({container: "body"});
+}
+
+function setPlaybackButtonToPause () {
+
+    var playbackButton = $("#btnPlaySimulation");
+    $(playbackButton).removeClass("fui-play").addClass("fui-pause")
+        .tooltip("destroy")
+        .attr("title", "Simulation anhalten")
+        .tooltip({container: "body"});
+}
+
+function resetPlaybackButton () {
+
+    var playbackButton = $("#btnPlaySimulation");
+    $(playbackButton).removeClass("fui-pause").addClass("fui-play")
         .tooltip("destroy")
         .attr("title", "Simulation starten")
         .tooltip({container: "body"});

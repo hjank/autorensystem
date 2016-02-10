@@ -9,7 +9,7 @@ function Timeline (events, rowMap, columnMap, selectedStep) {
     this._rowMap = rowMap || [];
     this._columnContextMap = columnMap || [];
 
-    this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : -1;
+    this._selectedStep = (typeof selectedStep != "undefined") ? selectedStep : 0;
 
     return this;
 }
@@ -94,14 +94,14 @@ Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
 };
 Timeline.prototype.incrementSelectedStep = function () {
-    if (this._selectedStep <= this._rowMap.length) {
+    if (this._selectedStep < this._rowMap.length) {
         this._selectedStep++;
         return true;
     }
     else return false;
 };
 Timeline.prototype.decrementSelectedStep = function () {
-    if (this._selectedStep >= 0) {
+    if (this._selectedStep > 0) {
         this._selectedStep--;
         return true;
     }
@@ -179,7 +179,7 @@ Timeline.prototype.render = function (simulation) {
         createColumn(col.contextInfo);
     });
 
-    highlightSelectedStep(this._selectedStep);
+    highlightSelectedStep(this);
 
     removeAllPopovers(this);
     this._events.forEach(function(event) {

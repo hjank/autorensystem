@@ -6,7 +6,6 @@
  *
  */
 
-var numberOfSteps = 10;
 var down, dragging, resizing, moving; // Boolean: mouse down?, mouse down and moving?
 var xFirstCellLeft, yFirstCellTop; // coordinates of start cell (in px)
 var clickedCell, nextOccupiedCellTop;
@@ -82,9 +81,10 @@ function createColumn(contextInfo) {
 }
 
 
-function highlightSelectedStep(selectedStep) {
+function highlightSelectedStep(timeline) {
+
     $("#timelineTable tbody tr.timeline-step").each(function(step){
-        if (step == selectedStep)
+        if (step == timeline.getSelectedStep())
             $(this).addClass("selected-step");
         else $(this).removeClass("selected-step");
     });
@@ -102,8 +102,18 @@ function setCellEventHandlers(simulation) {
     $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
     $(document).on("mousemove", _handleMousemove);
     $(document).on("mouseup", null, simulation, _handleMouseup);
+
+    $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
 }
 
+function _handleLabelClick(event) {
+    var timeline = event.data.getTimeline();
+
+    timeline.setSelectedStep(getRowIDOfCell(this));
+    highlightSelectedStep(timeline);
+
+    event.stopPropagation();
+}
 
 /**
  * Triggered if the user clicks on a cell: sets down to true and records click coordinates.

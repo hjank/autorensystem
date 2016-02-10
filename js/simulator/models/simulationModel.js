@@ -2,6 +2,7 @@
  * Created by Helena on 15.01.2016.
  */
 
+const RUNNING = 0, PAUSED = 1, STOPPED = 2;
 
 function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
@@ -13,7 +14,9 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
     this._timeline = timeline || new Timeline();
 
-    this._playBackSpeed = speed || 3000; // default speed = 3 seconds per step
+    this._playBackSpeed = speed || 1000; // default speed = 3 seconds per step
+    this._status = STOPPED;
+
     this._iteration = null;
     this._adaptationEngine = {};
 
@@ -38,8 +41,8 @@ Simulation.prototype.getTimeline = function() {
 Simulation.prototype.getPlayBackSpeed = function () {
     return this._playBackSpeed;
 };
-Simulation.prototype.isRunning = function () {
-    return this._iteration != null;
+Simulation.prototype.getStatus = function () {
+    return this._status;
 };
 Simulation.prototype.getAdaptationEngine = function () {
     return this._adaptationEngine;
@@ -95,7 +98,7 @@ Simulation.prototype.renderTimeline = function () {
 
 Simulation.prototype.start = function () {
 
-    this._timeline.setSelectedStep(0);
+    //this._timeline.setSelectedStep(0);
 
     /* TODO: 1. export(...); // generate rules
        TODO: 2. include AE and $.get(...) rules (see there)
@@ -121,6 +124,7 @@ Simulation.prototype.start = function () {
 };
 
 Simulation.prototype.run = function () {
+    this._status = RUNNING;
 
     this._run(this);
     this._iteration = setInterval(this._run, this._playBackSpeed, this);
@@ -128,8 +132,7 @@ Simulation.prototype.run = function () {
 
 Simulation.prototype._run = function (self) {
 
-    var selectedStep = self._timeline.getSelectedStep();
-    highlightSelectedStep(selectedStep);
+    highlightSelectedStep(self._timeline);
 /*
 
     self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
@@ -163,14 +166,18 @@ Simulation.prototype._run = function (self) {
     // go to next simulation step if there is one left
     if (!self._timeline.incrementSelectedStep()) {
         self.stop();
-        self._timeline.setSelectedStep(-1);
-
-        resetPlayback();
     }
 };
 
-
-Simulation.prototype.stop = function (callback) {
+Simulation.prototype.pause = function () {
     clearInterval(this._iteration);
-    this._iteration = null;
+    this._status = PAUSED;
+};
+
+Simulation.prototype.stop = function () {
+    clearInterval(this._iteration);
+    this._status = STOPPED;
+    this._timeline.setSelectedStep(0);
+
+    resetPlaybackButton();
 };

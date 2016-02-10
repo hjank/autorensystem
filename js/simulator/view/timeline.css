@@ -22,15 +22,6 @@ table#timelineTable tr.timeline-step {
     height: 30px;
 }
 
-table#timelineTable tr.timeline-step.selected-step {
-    background: #1fcdd9;
-    border: solid 1px;
-}
-
-table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
-    font-weight: bold;
-}
-
 table#timelineTable .timeline-step-label {
     height: inherit;
     width: 10px;
@@ -47,6 +38,29 @@ table#timelineTable tr:last-of-type td.timeline-step-label,
 table#timelineTable th.timeline-step-label {
     border-style: none;
 }
+
+table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
+    font-weight: bold;
+    color: black;
+    background-color: red;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+/*table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-left: 10px solid darkcyan;
+    border-right: 10px solid transparent;
+    opacity: 0.5;
+}*/
+
 
 table#timelineTable tr.timeline-step > td.timeline-cell {
     min-width: 50px;
