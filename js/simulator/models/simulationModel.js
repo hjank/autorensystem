@@ -98,30 +98,41 @@ Simulation.prototype.renderTimeline = function () {
 
 Simulation.prototype.start = function () {
 
-    //this._timeline.setSelectedStep(0);
-
     /* TODO: 1. export(...); // generate rules
        TODO: 2. include AE and $.get(...) rules (see there)
-       TODO: !!important!! ContextInformation will have to be renamed --> conflicting with contactJS!
-
-
-    this._adaptationEngine = new AdaptationEngine(rules, true);
-
-    this._adaptationEngine.setSelectLearningUnitCallback(function(id, contextInformation) {
-        console.log("<select id='"+id+"'>");
-        for(var index in contextInformation) {
-            console.log(contextInformation[index]);
-        }
-        console.log("</select>");
-
-        // TODO: Highlight unit with selected ID!
-        canvasCallback(id);
-    });
-
      */
 
-    this.run();
+    var self = this;
+
+    require(['js/motivate-adaptationengine/scripts/config'], function() {
+         require(['MoAE'], function(AdaptationEngine) {
+             console.log("ready to rumble!");
+
+             $.ajax({
+                 url: "js/motivate-adaptationengine/nodeRules.js",
+                 dataType: "script",
+                 success: function (rules) {
+
+                     self._adaptationEngine = new AdaptationEngine(rules, true);
+
+                     self._adaptationEngine.setSelectLearningUnitCallback(function (id, contextInformation) {
+                         console.log("<select id='" + id + "'>");
+                         for (var index in contextInformation) {
+                             console.log(contextInformation[index]);
+                         }
+                         console.log("</select>");
+
+                         // TODO: Highlight unit with selected ID!
+                         //canvasCallback(id);
+                     });
+
+                     self.run();
+                 }
+             });
+         });
+    });
 };
+
 
 Simulation.prototype.run = function () {
     this._status = RUNNING;
@@ -133,7 +144,6 @@ Simulation.prototype.run = function () {
 Simulation.prototype._run = function (self) {
 
     highlightSelectedStep(self._timeline);
-/*
 
     self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
         if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
@@ -157,11 +167,10 @@ Simulation.prototype._run = function (self) {
     });
 
     // adapt and apply callbacks
-    self._adaptationEngine.startRuleMatching(self._playBackSpeed);
+    self._adaptationEngine.startRuleMatching(0);
     // stop immediately after because of internal interval
     self._adaptationEngine.stopRuleMatching();
 
-*/
 
     // go to next simulation step if there is one left
     if (!self._timeline.incrementSelectedStep()) {
