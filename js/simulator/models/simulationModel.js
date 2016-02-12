@@ -99,7 +99,7 @@ Simulation.prototype.renderTimeline = function () {
 Simulation.prototype.start = function () {
 
     /* TODO: 1. export(...); // generate rules
-       TODO: 2. include AE and $.get(...) rules (see there)
+       TODO: 2. get rules from wherever they get exported to
      */
 
     var self = this;
@@ -113,19 +113,18 @@ Simulation.prototype.start = function () {
                  dataType: "script",
                  success: function (rules) {
 
-                     self._adaptationEngine = new AdaptationEngine(rules, true);
+                     self._adaptationEngine = new AdaptationEngine(rules, false);
+                     self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
 
-                     self._adaptationEngine.setSelectLearningUnitCallback(function (id, contextInformation) {
-                         console.log("<select id='" + id + "'>");
-                         for (var index in contextInformation) {
-                             console.log(contextInformation[index]);
+                 /*        function (id, contextInformation) {
+                             for (var index in contextInformation) {
+                                 console.log(contextInformation[index]);
+                             }
+
+                             lightboxUnit(id);
                          }
-                         console.log("</select>");
-
-                         // TODO: Highlight unit with selected ID!
-                         //canvasCallback(id);
-                     });
-
+                     );
+*/
                      self.run();
                  }
              });

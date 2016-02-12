@@ -159,3 +159,32 @@ function resetPlaybackButton () {
         .attr("title", "Simulation starten")
         .tooltip({container: "body"});
 }
+
+
+
+/**
+ * This function highlights the given unit element by using a lightbox.
+ * The background is dimmed with the unit "lifted" on top of it in a light color.
+ *
+ * @param unitUUID The ID of the DOM Element representing the selected unit.
+ */
+function lightboxUnit(unitUUID) {
+
+    $("div.body").first().prepend(
+        $("<div>").addClass("lightbox-overlay")
+            .on("mousedown", function (event) {
+                $("div.lightbox-overlay").remove();
+            })
+    );
+
+    //$("#" + unitUUID).addClass("unit-selected");
+    $(".w").first().addClass("unit-selected").css({
+        "background": "",
+        "color": ""
+    });
+
+
+
+
+
+}

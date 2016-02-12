@@ -337,20 +337,3 @@ function removeUnitFromScenario(unitUUID, scenarioName) {
 }
 
 
-
-/**
- * This function highlights the given unit element by using a lightbox.
- * The background is dimmed with the unit "lifted" on top of it in a light color.
- *
- * @param unitUUID The ID of the DOM Element representing the selected unit.
- */
-function lightboxUnit(unitUUID) {
-
-    $("#container").css({
-        "background-color": "black",
-        "opacity": ".6",
-        "z-index": "1"
-    });
-
-    $("#" + unitUUID).css("background", "white").css("color", "black").css("z-index", "2");
-}
