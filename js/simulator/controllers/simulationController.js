@@ -76,20 +76,52 @@ function setSimulationEventHandlers(simulation) {
 
     $("#simulatorContainer *").tooltip({container: "body"});
 
+
+    /**** simulator info button and popover ****/
+
     $("#btnSimulatorInfo")
         .popover({
             container: "#tab5",
-            content: "Hier können Sie das Verhalten der Lernanwendung simulieren. Dazu modellieren Sie den Kontext des Lernszenarios.",
-            //html: true,
+            content: getSimulatorInfoText(simulation.getScenario()),
+            html: true,
             placement: "auto top",
-            template: '<div class="popover" role="tooltip">' +
-                '<div class="arrow"></div>' +
-                '<h3 class="popover-title"></h3>' +
-                '<div class="popover-content"></div>' +
-                '</div>',
-            title: "",
             viewport: "#simulatorHeader"
-        });
+        })
+        .tooltip()
+        .on("shown.bs.popover", function (event) {
+            $(event.target).tooltip("hide");
+            extendSimulatorInfoTitle($(event.target).data("bs.popover").$tip);
+            setSimulatorInfoEventHandler();
+        }
+    );
+
+    function getSimulatorInfoText(scenario) {
+        var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
+        var infoText = "Hier können Sie testen, wie sich Ihre Lernanwendung im Szenario " +
+            scenarioName +
+            "verhalten würde. <br><br>" +
+            "Modellieren Sie dazu den Kontext dieses Szenarios in der <b>Zeitleiste</b>. <br><br>";
+
+        var infoTextDiv = $("<div>").addClass("info-text").html(infoText)
+            .append($("<div>").addClass("info-text btn btn-default").text("Schließen"));
+
+        return infoTextDiv;
+    }
+
+    function extendSimulatorInfoTitle(popover) {
+        var closeX = $('<a href="#" title="Schließen" class="info-close">X</a>').tooltip();
+        $(popover).children("h3.popover-title").append(closeX);
+
+    }
+
+    function setSimulatorInfoEventHandler() {
+        $(".popover .info-close, .popover .info-text.btn").on("click", hideAllPopovers);
+    }
+
+
+
+    /**** playback controls ****/
+
 
     $("#btnBackToStart").on("click", function (event) {
         simulation.stop();
@@ -182,9 +214,4 @@ function lightboxUnit(unitUUID) {
         "background": "",
         "color": ""
     });
-
-
-
-
-
 }

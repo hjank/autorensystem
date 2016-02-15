@@ -62,16 +62,19 @@ function createNewPopover(contextEvent, simulation) {
         .tooltip("destroy");
 
     $(markedCells).each(function (index, cell) {
-        $(cell).on("shown.bs.popover", function(event){
-            reconstructPopoverContent(this, simulation, contextEvent);
-            setPopoverEventHandlers(simulation, contextEvent);
-            repositionPopover(this);
-        }).on("hide.bs.popover", function (event) {
-            removePopoverEventListeners();
-            removePopoverMarkup();
-            // remove all non-confirmed events
-            removeTemporaryEvents(simulation.getTimeline());
-        });
+        $(cell)
+            .on("shown.bs.popover", function(event){
+                reconstructPopoverContent(this, simulation, contextEvent);
+                setPopoverEventHandlers(simulation, contextEvent);
+                repositionPopover(this);
+                $(".popover").find("*").tooltip();
+            })
+            .on("hide.bs.popover", function (event) {
+                removePopoverEventListeners();
+                removePopoverMarkup();
+                // remove all non-confirmed events
+                removeTemporaryEvents(simulation.getTimeline());
+            });
     });
 }
 
@@ -84,7 +87,7 @@ function createNewPopover(contextEvent, simulation) {
  */
 function generatePopoverTitle (contextInfo) {
     var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
-    var closeX = $('<a href="#" title="Schließen ohne zu speichern" class="popover-close">X</a>');
+    var closeX = $('<a href="#" title="Schließen ohne zu speichern" class="popover-close">X</a>').tooltip();
     popoverTitle.append(closeX);
 
     return popoverTitle;
@@ -119,6 +122,10 @@ function reconstructPopoverContent(startCell, simulation, contextEvent) {
     fillPopoverContextValue(contextInfo, simulation.getScenario(), simulatedValueInput, simulatedValueSelect);
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
+    if (contextInfo.getChosenValue() != "") {
+        $(".popover div.popover-context-info").append(createContextEventDeleteDOM());
+    }
+
     $(".popover select").select2();
 }
 
@@ -147,7 +154,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
     $(".popover .popover-close").on("click", function(event){
 
         // closing popover without input + confirm, i.e. aborting event creation
-        hideAllPopovers(timeline);
+        hideAllPopovers();
 
         event.stopPropagation();
     });
@@ -170,7 +177,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
         addToolTip(contextEvent);
 
         // triggers "hide.bs.popover" event
-        hideAllPopovers(timeline);
+        hideAllPopovers();
     });
 }
 

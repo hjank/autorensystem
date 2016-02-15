@@ -1,8 +1,10 @@
-div#popoverContentTemplate {
-    display: none;
+div.popover div.popover-content {
+    font-size: medium;
 }
 
-div.popover h3.popover-title div a.popover-close {
+
+div.popover h3.popover-title div a.popover-close,
+div.popover h3.popover-title a.info-close {
     float: right;
 }
 
@@ -22,12 +24,20 @@ div.popover-context-info div.popover-parameters {
     margin-bottom: 10px;
 }
 
-.popover-parameter {
+div.popover-parameters div.popover-parameter {
     display: block;
     width: 235px;
     margin-bottom: 10px;
 }
+div.popover-parameters div.popover-parameter.parameter-input {
+    display: table-cell;
+}
 
 div.popover-context-info div.btn.popover-confirm {
     margin: 5px;
+}
+
+
+div#popoverContentTemplate {
+    display: none;
 }

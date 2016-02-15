@@ -124,7 +124,7 @@ function _handleLabelClick(event) {
 function _handleMousedown(event) {
     var timeline = event.data.getTimeline();
 
-    hideAllPopovers(timeline);
+    hideAllPopovers();
 
     if ($(event.target).hasClass("timeline-cell") && !$(event.target).hasClass("timeline-cell-occupied")) {
         down = true;
@@ -291,7 +291,7 @@ function _freeAllCells() {
 }
 
 
-function hideAllPopovers(timeline) {
+function hideAllPopovers() {
 
     // triggers "hide.bs.popover" event
     $(".popover").popover("hide");
@@ -329,9 +329,9 @@ function removeTemporaryEvents(timeline) {
 }
 
 
-function removeAllPopovers(timeline) {
+function removeAllPopovers() {
 
-    hideAllPopovers(timeline);
+    hideAllPopovers();
 
     $(".timeline-cell-occupied").popover("destroy");
 

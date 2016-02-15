@@ -39,14 +39,20 @@ table#timelineTable th.timeline-step-label {
     border-style: none;
 }
 
+table#timelineTable tr.timeline-step.selected-step {
+    border: 1px dotted black;
+}
+
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
-    font-weight: bold;
+    font-weight: bolder;
     color: black;
     background-color: red;
-    border-radius: 50%;
+    margin: 5px;
+    /*border-radius: 50%;
     -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
+    -webkit-border-radius: 50%;*/
 }
+
 
 /*table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before {
     content: '';

@@ -94,18 +94,12 @@ Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
 };
 Timeline.prototype.incrementSelectedStep = function () {
-    if (this._selectedStep < this._rowMap.length) {
+    if (this._selectedStep < this._rowMap.length)
         this._selectedStep++;
-        return true;
-    }
-    else return false;
 };
 Timeline.prototype.decrementSelectedStep = function () {
-    if (this._selectedStep > 0) {
+    if (this._selectedStep > 0)
         this._selectedStep--;
-        return true;
-    }
-    else return false;
 };
 
 
@@ -181,7 +175,7 @@ Timeline.prototype.render = function (simulation) {
 
     highlightSelectedStep(this);
 
-    removeAllPopovers(this);
+    removeAllPopovers();
     this._events.forEach(function(event) {
         event.render(simulation);
     });

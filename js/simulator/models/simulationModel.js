@@ -105,7 +105,9 @@ Simulation.prototype.start = function () {
     var self = this;
 
     require(['js/motivate-adaptationengine/scripts/config'], function() {
-         require(['MoAE'], function(AdaptationEngine) {
+        // main defines jQuery reference
+        // (see: http://stackoverflow.com/questions/23023167/requirejs-backbone-1-1-2-local-jquery-interfering-with-global-jquery?rq=1)
+        require(['MoAE', 'main'], function(AdaptationEngine) {
              console.log("ready to rumble!");
 
              $.ajax({
@@ -116,7 +118,7 @@ Simulation.prototype.start = function () {
                      self._adaptationEngine = new AdaptationEngine(rules, false);
                      self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
 
-                 /*        function (id, contextInformation) {
+                 /*       function (id, contextInformation) {
                              for (var index in contextInformation) {
                                  console.log(contextInformation[index]);
                              }
@@ -124,11 +126,12 @@ Simulation.prototype.start = function () {
                              lightboxUnit(id);
                          }
                      );
-*/
+                     */
+
                      self.run();
                  }
              });
-         });
+        });
     });
 };
 
@@ -142,38 +145,41 @@ Simulation.prototype.run = function () {
 
 Simulation.prototype._run = function (self) {
 
-    highlightSelectedStep(self._timeline);
-
-    self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
-        if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
-            var contextInfo = colEntry.getContextInfo();
-            var contextInfoParameters = [];
-            contextInfo.getParameters().forEach(function (parameter) {
-                contextInfoParameters.push([
-                    parameter.getID(),
-                    parameter.getType(),
-                    (parameter.getChosenValue() || "NO_VALUE")
-                ]);
-            });
-
-            self._adaptationEngine.addContextInformation({
-                name: contextInfo.getID(),
-                type: contextInfo.getType(),
-                parameterList: contextInfoParameters,
-                value: contextInfo.getChosenValue() || "NO_VALUE"
-            }, contextInfo.getMultiplicity());
-        }
-    });
-
-    // adapt and apply callbacks
-    self._adaptationEngine.startRuleMatching(0);
-    // stop immediately after because of internal interval
-    self._adaptationEngine.stopRuleMatching();
-
-
-    // go to next simulation step if there is one left
-    if (!self._timeline.incrementSelectedStep()) {
+    // stop if the end of the timeline is reached
+    if (self._timeline.getSelectedStep() == self._timeline.getNumberOfRows())
         self.stop();
+    else {
+        highlightSelectedStep(self._timeline);
+
+        self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
+            if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
+                var contextInfo = colEntry.getContextInfo();
+                var contextInfoParameters = [];
+                contextInfo.getParameters().forEach(function (parameter) {
+                    contextInfoParameters.push([
+                        parameter.getID(),
+                        parameter.getType(),
+                        (parameter.getChosenValue() || "NO_VALUE")
+                    ]);
+                });
+
+                self._adaptationEngine.addContextInformation({
+                    name: contextInfo.getID(),
+                    type: contextInfo.getType(),
+                    parameterList: contextInfoParameters,
+                    value: contextInfo.getChosenValue() || "NO_VALUE"
+                }, contextInfo.getMultiplicity());
+            }
+        });
+
+        // adapt and apply callbacks
+        self._adaptationEngine.startRuleMatching(0);
+        // stop immediately after because of internal interval
+        self._adaptationEngine.stopRuleMatching();
+
+
+        // go to next simulation step (if there is one left)
+        self._timeline.incrementSelectedStep();
     }
 };
 
