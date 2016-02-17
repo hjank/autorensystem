@@ -41,6 +41,13 @@ table#timelineTable th.timeline-step-label {
 
 table#timelineTable tr.timeline-step.selected-step {
     border: 1px dotted black;
+    background-image: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 5px,
+            rgba(255,255,255,.5) 35px,
+            rgba(255,255,255,.5) 70px
+    );
 }
 
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
@@ -48,9 +55,9 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
     color: black;
     background-color: red;
     margin: 5px;
-    /*border-radius: 50%;
+    border-radius: 50%;
     -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;*/
+    -webkit-border-radius: 50%;
 }
 
 
@@ -113,22 +120,15 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     opacity: 1;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied.invisible {
-    background-image: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 5px,
-            rgba(255,255,255,.5) 35px,
-            rgba(255,255,255,.5) 70px
-    );
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible {
+    background-image: repeating-linear-gradient( 45deg, transparent 1%, lightgrey 10%);
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell > a {
     color: black;
-    position: absolute;
-    top: 0px;
-    padding: 5px;
-    display: block;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: inline;
     cursor: pointer;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell > a:hover {

@@ -147,6 +147,8 @@ Timeline.prototype.removeEvent = function (eventUUID) {
             break;
         }
 
+    if (isNaN(start) || isNaN(end) || isNaN(col)) return;
+
     for (start; start <= end; start++)
         for (var i in this._rowMap[start])
             if (this._rowMap[start][i].getUUID() == eventUUID) {

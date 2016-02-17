@@ -347,16 +347,43 @@ function addOccupiedMarkup (contextEvent) {
     var firstCell = $(cells).first();
     firstCell.css("border-top", "1px solid")
         .append($("<a>").attr("href","#").addClass("fui-gear")
-        .on("click", function(event) {
-            firstCell.popover("show");
-        })
-    );
+            .on("click", function() { firstCell.popover("show"); }))
+        .append(createContextEventHideDOM());
 
     $(cells).removeClass("timeline-cell-marked")
         .addClass("timeline-cell-occupied");
 
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));
+
+    setHideEventListener(contextEvent, cells);
+}
+
+
+
+function setHideEventListener (contextEvent, cells) {
+
+    $(".timeline-cell-occupied a").on("click", function(event) {
+
+        if ($(event.target).hasClass("fui-eye-blocked")) {
+            contextEvent.setVisibility(false);
+
+            $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
+                .attr("title", "Einblenden")
+                .tooltip("fixTitle");
+
+            $(cells).addClass("timeline-cell-invisible");
+        }
+        else if ($(event.target).hasClass("fui-eye")) {
+            contextEvent.setVisibility(true);
+
+            $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
+                .attr("title", "Ausblenden")
+                .tooltip("fixTitle");
+
+            $(cells).removeClass("timeline-cell-invisible");
+        }
+    });
 }
 
 

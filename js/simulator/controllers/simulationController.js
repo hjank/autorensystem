@@ -31,9 +31,11 @@ function initSimulator() {
 
         $("#simulationTitle > span")[0].innerText = simulation.getTitle();
 
-        initTimeline(simulation);
+        $("#simulatorContainer *").tooltip({container: "body"});
 
         setSimulationEventHandlers(simulation);
+
+        initTimeline(simulation);
 
         showSimulatorTab();
     });
@@ -73,8 +75,6 @@ function updateSimulator(simulation) {
 function setSimulationEventHandlers(simulation) {
 
     var timeline = simulation.getTimeline();
-
-    $("#simulatorContainer *").tooltip({container: "body"});
 
 
     /**** simulator info button and popover ****/

@@ -2,7 +2,6 @@ div.popover div.popover-content {
     font-size: medium;
 }
 
-
 div.popover h3.popover-title div a.popover-close,
 div.popover h3.popover-title a.info-close {
     float: right;
@@ -33,10 +32,15 @@ div.popover-parameters div.popover-parameter.parameter-input {
     display: table-cell;
 }
 
-div.popover-context-info div.btn.popover-confirm {
-    margin: 5px;
+div.popover-context-info div.popover-bottom-buttons {
+    border-top: 1px solid lightgrey;
+    margin-top: 20px;
+    padding-top: 10px;
 }
 
+div.popover-context-info div.btn {
+    margin: 5px;
+}
 
 div#popoverContentTemplate {
     display: none;

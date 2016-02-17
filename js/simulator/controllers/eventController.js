@@ -122,10 +122,6 @@ function reconstructPopoverContent(startCell, simulation, contextEvent) {
     fillPopoverContextValue(contextInfo, simulation.getScenario(), simulatedValueInput, simulatedValueSelect);
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
-    if (contextInfo.getChosenValue() != "") {
-        $(".popover div.popover-context-info").append(createContextEventDeleteDOM());
-    }
-
     $(".popover select").select2();
 }
 
@@ -161,7 +157,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
     $(".popover .popover-confirm").on("click", function(event){
 
-        var contextInfoDiv = $(event.target).parent();
+        var contextInfoDiv = $(event.target).parents(".popover .popover-content .popover-context-info");
 
         if (!confirmPopoverContent(contextInfoDiv, contextEvent.getContextInfo(), simulation.getScenario())) {
             alert("Bitte geben Sie einen Wert und Parameter an.");
@@ -178,6 +174,11 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
         // triggers "hide.bs.popover" event
         hideAllPopovers();
+    });
+
+    $(".popover .popover-delete").on("click", function(event){
+        hideAllPopovers();
+        timeline.removeEvent(contextEvent);
     });
 }
 
@@ -217,5 +218,8 @@ function createContextEventHideDOM () {
         .attr("href", "#")
         .addClass("fui-eye-blocked")
         .attr("title", "Ausblenden")
-        .tooltip();
+        .on("mouseover", function (event) {
+            $(this).parent().tooltip("hide");
+        })
+        .tooltip({container: "body"});
 }

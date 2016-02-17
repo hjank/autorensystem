@@ -148,6 +148,7 @@ Simulation.prototype._run = function (self) {
     // stop if the end of the timeline is reached
     if (self._timeline.getSelectedStep() == self._timeline.getNumberOfRows())
         self.stop();
+
     else {
         highlightSelectedStep(self._timeline);
 
@@ -178,7 +179,7 @@ Simulation.prototype._run = function (self) {
         self._adaptationEngine.stopRuleMatching();
 
 
-        // go to next simulation step (if there is one left)
+        // go to next simulation step
         self._timeline.incrementSelectedStep();
     }
 };
