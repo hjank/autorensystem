@@ -356,34 +356,35 @@ function addOccupiedMarkup (contextEvent) {
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));
 
-    setHideEventListener(contextEvent, cells);
+
+    $(cells).on("click", "a", contextEvent, _handleClickHideShowEvent);
 }
 
 
 
-function setHideEventListener (contextEvent, cells) {
+function _handleClickHideShowEvent (event) {
 
-    $(".timeline-cell-occupied a").on("click", function(event) {
+    var contextEvent = event.data;
+    var cells = getContextEventCells(contextEvent);
 
-        if ($(event.target).hasClass("fui-eye-blocked")) {
-            contextEvent.setVisibility(false);
+    if ($(this).hasClass("fui-eye-blocked")) {
+        contextEvent.setVisibility(false);
 
-            $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
-                .attr("title", "Einblenden")
-                .tooltip("fixTitle");
+        $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
+            .attr("title", "Einblenden")
+            .tooltip("fixTitle");
 
-            $(cells).addClass("timeline-cell-invisible");
-        }
-        else if ($(event.target).hasClass("fui-eye")) {
-            contextEvent.setVisibility(true);
+        $(cells).addClass("timeline-cell-invisible");
+    }
+    else if ($(this).hasClass("fui-eye")) {
+        contextEvent.setVisibility(true);
 
-            $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
-                .attr("title", "Ausblenden")
-                .tooltip("fixTitle");
+        $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
+            .attr("title", "Ausblenden")
+            .tooltip("fixTitle");
 
-            $(cells).removeClass("timeline-cell-invisible");
-        }
-    });
+        $(cells).removeClass("timeline-cell-invisible");
+    }
 }
 
 

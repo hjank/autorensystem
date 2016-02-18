@@ -121,7 +121,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible {
-    background-image: repeating-linear-gradient( 45deg, transparent 1%, lightgrey 10%);
+    background-image: repeating-linear-gradient( 62deg, transparent 5%, lightgrey 10%, transparent 15%);
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell > a {
