@@ -64,7 +64,7 @@ function createNewPopover(contextEvent, simulation) {
     $(markedCells).each(function (index, cell) {
         $(cell)
             .on("shown.bs.popover", function(event){
-                reconstructPopoverContent(this, simulation, contextEvent);
+                reconstructPopoverContent(simulation, contextEvent);
                 setPopoverEventHandlers(simulation, contextEvent);
                 repositionPopover(this);
                 $(".popover").find("*").tooltip();
@@ -109,10 +109,7 @@ function generatePopoverContent () {
 }
 
 
-var lastCell;
-function reconstructPopoverContent(startCell, simulation, contextEvent) {
-    lastCell = startCell;
-
+function reconstructPopoverContent(simulation, contextEvent) {
     var contextInfo = contextEvent.getContextInfo();
 
     var simulatedValueInput = $(".popover div.popover-context-info > input.popover-value");
@@ -144,15 +141,12 @@ function repositionPopover(cell) {
 
 
 function setPopoverEventHandlers(simulation, contextEvent) {
-
     var timeline = simulation.getTimeline();
 
     $(".popover .popover-close").on("click", function(event){
 
         // closing popover without input + confirm, i.e. aborting event creation
         hideAllPopovers();
-
-        event.stopPropagation();
     });
 
     $(".popover .popover-confirm").on("click", function(event){
@@ -164,13 +158,8 @@ function setPopoverEventHandlers(simulation, contextEvent) {
             return;
         }
 
-        if ($(lastCell).hasClass("timeline-cell-marked")) {
-            // add new class and style
-            addOccupiedMarkup(contextEvent);
-        }
-
-        // add tooltip displaying chosen values
-        addToolTip(contextEvent);
+        // remove old and add new class, plus style, informative tooltip, and clickable icons
+        addOccupiedMarkup(contextEvent);
 
         // triggers "hide.bs.popover" event
         hideAllPopovers();
@@ -179,12 +168,14 @@ function setPopoverEventHandlers(simulation, contextEvent) {
     $(".popover .popover-delete").on("click", function(event){
         hideAllPopovers();
         timeline.removeEvent(contextEvent);
+        removeOccupiedMarkup(contextEvent);
     });
 }
 
 function removePopoverEventListeners() {
     $(".popover .popover-close").off("click");
     $(".popover .popover-confirm").off("click");
+    $(".popover .popover-delete").off("click");
 }
 
 function getContextEventCells(contextEvent) {

@@ -342,32 +342,50 @@ function removeAllPopovers() {
 function addOccupiedMarkup (contextEvent) {
 
     var cells = getContextEventCells(contextEvent);
-    $(cells).empty().css("border-bottom", "");
-
-    var firstCell = $(cells).first();
-    firstCell.css("border-top", "1px solid")
-        .append($("<a>").attr("href","#").addClass("fui-gear")
-            .on("click", function() { firstCell.popover("show"); }))
-        .append(createContextEventHideDOM());
 
     $(cells).removeClass("timeline-cell-marked")
-        .addClass("timeline-cell-occupied");
+        .addClass("timeline-cell-occupied")
+        .empty()
+        .css("border-bottom", "")
+        .tooltip("destroy")
+        .tooltip({
+            container: "#tab5",
+            html: true,
+            title: getTooltipTitle(contextEvent),
+            viewport: "#timelineContainer"
+        });
 
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));
 
+    $(cells).first()
+        .css("border-top", "1px solid")
+        .append($("<a>").attr("href","#").addClass("fui-gear"))
+        .append(createContextEventHideDOM())
+        .unbind("click").on("click", "a", contextEvent, _handleOccupiedCellAnchorClickEvent);
+}
 
-    $(cells).on("click", "a", contextEvent, _handleClickHideShowEvent);
+function removeOccupiedMarkup (contextEvent) {
+    var cells = getContextEventCells(contextEvent);
+
+    $(cells).removeClass("timeline-cell-occupied")
+        .empty()
+        .css("border-bottom", "")
+        .attr("title", translate_contextInformation(contextInfo.getID()) + " hat keinen Wert")
+        .tooltip("fixTitle");
 }
 
 
-
-function _handleClickHideShowEvent (event) {
+function _handleOccupiedCellAnchorClickEvent (event) {
 
     var contextEvent = event.data;
     var cells = getContextEventCells(contextEvent);
 
-    if ($(this).hasClass("fui-eye-blocked")) {
+    if ($(this).hasClass("fui-gear")) {
+        $(event.delegateTarget).popover("show");
+    }
+
+    else if ($(this).hasClass("fui-eye-blocked")) {
         contextEvent.setVisibility(false);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
@@ -376,6 +394,7 @@ function _handleClickHideShowEvent (event) {
 
         $(cells).addClass("timeline-cell-invisible");
     }
+
     else if ($(this).hasClass("fui-eye")) {
         contextEvent.setVisibility(true);
 
@@ -385,20 +404,8 @@ function _handleClickHideShowEvent (event) {
 
         $(cells).removeClass("timeline-cell-invisible");
     }
-}
 
-
-function addToolTip (contextEvent) {
-
-    var cells = getContextEventCells(contextEvent);
-
-    $(cells).tooltip("destroy");
-    $(cells).tooltip({
-        container: "#tab5",
-        html: true,
-        title: getTooltipTitle(contextEvent),
-        viewport: "#timelineContainer"
-    });
+    event.stopPropagation();
 }
 
 
