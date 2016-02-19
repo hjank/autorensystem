@@ -2,8 +2,13 @@ div.popover div.popover-content {
     font-size: medium;
 }
 
+div.simulator-info-text a {
+    text-decoration: underline;
+}
+
+
 div.popover h3.popover-title div a.popover-close,
-div.popover h3.popover-title a.info-close {
+div.popover h3.popover-title a.simulator-info-close {
     float: right;
 }
 

@@ -13,10 +13,6 @@ div#simulatorHeader {
     padding: 10px;
 }
 
-div#simulatorHeader div#simulatorInfo {
-    padding-bottom: 20px;
-}
-
 div#simulatorHeader div#simulationTitle {
     overflow: visible;
     text-align: center;
@@ -61,13 +57,13 @@ div#simulationToolbar span#playbackControls div.btn {
     background-color: white;
     border: 1px solid grey;
 }
-div#simulationToolbar span#playbackControls div.btn:hover {
+
+div#simulatorHeader span#btnSimulatorInfo:hover,
+div#simulationToolbar span#playbackControls div.btn:hover,
+div#simulationToolbar #btnSimulatorOptions.btn:hover {
     background-color: #cccccc;
 }
 div#simulationToolbar #btnSimulatorOptions {
     background-color: grey;
     color: white;
-}
-div#simulationToolbar #btnSimulatorOptions.btn:hover {
-    background-color: #cccccc;
 }

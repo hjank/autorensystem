@@ -182,5 +182,8 @@ Timeline.prototype.render = function (simulation) {
         event.render(simulation);
     });
 
+    // set event handlers for generated cells
+    setCellEventHandlers(simulation);
+
 };
 

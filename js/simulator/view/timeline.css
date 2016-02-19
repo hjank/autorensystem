@@ -39,29 +39,28 @@ table#timelineTable th.timeline-step-label {
     border-style: none;
 }
 
-table#timelineTable tr.timeline-step.selected-step {
-    border: 1px dotted black;
+
+
+table#timelineTable tr.timeline-step.selected-step,
+table#timelineTable tr.timeline-step.selected-step td.timeline-cell {
     background-image: repeating-linear-gradient(
             45deg,
-            transparent,
-            transparent 5px,
-            rgba(255,255,255,.5) 35px,
-            rgba(255,255,255,.5) 70px
+            rgba(0,0,0,.2),
+            rgba(0,0,0,.2)
     );
 }
+table#timelineTable tr.timeline-step.selected-step {
+     border: 1px dotted black;
+ }
 
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
-    font-weight: bolder;
+    font-weight: 900;
     color: black;
-    background-color: red;
     margin: 5px;
-    border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
 }
 
-
-/*table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before {
+/* makes the little arrow indicating selected step */
+table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before {
     content: '';
     display: block;
     position: absolute;
@@ -72,7 +71,8 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
     border-left: 10px solid darkcyan;
     border-right: 10px solid transparent;
     opacity: 0.5;
-}*/
+}
+
 
 
 table#timelineTable tr.timeline-step > td.timeline-cell {

@@ -21,9 +21,6 @@ function initTimeline(simulation) {
     simulation.initTimeline(numberOfSteps);
 
     simulation.renderTimeline();
-
-    // set event handlers for these generated cells
-    setCellEventHandlers(simulation);
 }
 
 
@@ -51,7 +48,7 @@ function createSteps(steps) {
             .append($("<tr>").addClass("timeline-step")
                 .append($("<td>").addClass("timeline-step-label")
                     .html(i.toString())
-                    .attr("title", "Schritt " + i.toString())
+                    .attr("title", "Situation " + i.toString())
             ));
 }
 

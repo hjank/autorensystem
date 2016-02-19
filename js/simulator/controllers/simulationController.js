@@ -29,18 +29,18 @@ function initSimulator() {
     $.get( "js/simulator/view/simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
-        $("#simulationTitle > span")[0].innerText = simulation.getTitle();
-
-        $("#simulatorContainer *").tooltip({container: "body"});
-
-        setSimulationEventHandlers(simulation);
-
         initTimeline(simulation);
-
+        renderSimulator(simulation);
         showSimulatorTab();
     });
 }
 
+function renderSimulator(simulation) {
+
+    $("#simulationTitle > span")[0].innerText = simulation.getTitle();
+    $("#simulatorContainer *").tooltip({container: "body"});
+    setSimulationEventHandlers(simulation);
+}
 
 function updateSimulator(simulation) {
 
@@ -62,13 +62,15 @@ function updateSimulator(simulation) {
             for (var i in simulatedContextList.getItems()) {
                 if (!simulatedContextList.getItemByID(item.getID())) {
                     var contextInfo = new ContextInformation().fromJSON(item);
-                    var index = simulation.addContextItem(contextInfo);
-
-                    simulation.renderTimeline();
+                    simulation.addContextItem(contextInfo);
                 }
             }
         });
     }
+
+    simulation.renderTimeline();
+
+    renderSimulator(simulation);
 }
 
 
@@ -76,46 +78,59 @@ function setSimulationEventHandlers(simulation) {
 
     var timeline = simulation.getTimeline();
 
-
     /**** simulator info button and popover ****/
 
     $("#btnSimulatorInfo")
+        .tooltip({container: "body", placement: "top", viewport: "#simulatorHeader"})
+        .popover("destroy")
         .popover({
             container: "#tab5",
             content: getSimulatorInfoText(simulation.getScenario()),
             html: true,
-            placement: "auto top",
-            viewport: "#simulatorHeader"
+            placement: "auto top"
         })
-        .tooltip()
         .on("shown.bs.popover", function (event) {
-            $(event.target).tooltip("hide");
-            extendSimulatorInfoTitle($(event.target).data("bs.popover").$tip);
+            $(event.target).tooltip("destroy");
+            extendSimulatorInfoPopover($(event.target).data("bs.popover").$tip);
             setSimulatorInfoEventHandler();
-        }
-    );
+        })
+        .on("hide.bs.popover", function (event) {
+            $(event.target).tooltip();
+        });
 
     function getSimulatorInfoText(scenario) {
         var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
-        var infoText = "Hier können Sie testen, wie sich Ihre Lernanwendung im Szenario " +
-            scenarioName +
-            "verhalten würde. <br><br>" +
-            "Modellieren Sie dazu den Kontext dieses Szenarios in der <b>Zeitleiste</b>. <br><br>";
+        var infoText = infotexts.intro.replace("SCENARIO", scenarioName);
 
-        var infoTextDiv = $("<div>").addClass("info-text").html(infoText)
-            .append($("<div>").addClass("info-text btn btn-default").text("Schließen"));
+        var infoTextDiv = $("<div>").addClass("simulator-info-text").html(infoText);
 
         return infoTextDiv;
     }
 
-    function extendSimulatorInfoTitle(popover) {
-        var closeX = $('<a href="#" title="Schließen" class="info-close">X</a>').tooltip();
-        $(popover).children("h3.popover-title").append(closeX);
+    function extendSimulatorInfoPopover(popover) {
+
+        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>').tooltip();
+        var titleElement = $(popover).children("h3.popover-title");
+        if ($(titleElement).find("a.simulator-info-close").length == 0)
+            titleElement.append(closeX);
+
+        $(".simulator-info-text a[about='scenario']").tooltip({
+            container: "body",
+            html: true,
+            placement: "auto top",
+            title: infotexts.scenario
+        });
+        $(".simulator-info-text a[about='context']").tooltip({
+            container: "body",
+            html: true,
+            placement: "auto top",
+            title: infotexts.context
+        });
 
     }
 
     function setSimulatorInfoEventHandler() {
-        $(".popover .info-close, .popover .info-text.btn").on("click", hideAllPopovers);
+        $(".popover .simulator-info-close").on("click", hideAllPopovers);
     }
 
 
