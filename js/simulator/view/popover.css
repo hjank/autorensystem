@@ -6,6 +6,9 @@ div.simulator-info-text a {
     text-decoration: underline;
 }
 
+#timeline-info-hint {
+    font-size: small;
+}
 
 div.popover h3.popover-title div a.popover-close,
 div.popover h3.popover-title a.simulator-info-close {

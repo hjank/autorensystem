@@ -1,38 +1,43 @@
-div#tab5 {
+#tab5 {
     width: 100%;
-    height: 100%;
     padding: 0px;
 }
 
-div#simulatorContainer {
+#simulatorContainer {
     width: 100%;
-    height: 100%;
 }
 
-div#simulatorHeader {
+#simulatorHeader {
     padding: 10px;
 }
 
-div#simulatorHeader div#simulationTitle {
+#simulationTitle {
     overflow: visible;
     text-align: center;
 }
 
-div#simulatorHeader div#simulationTitle span#simulationName {
+#simulationName,
+#timelineName {
     cursor: default;
 }
-
-div#simulatorHeader div#simulationTitle span {
+#simulationTitle span {
     text-align: center;
 }
-div#simulatorHeader div#simulationTitle span#btnSimulatorDescription:hover {
+
+#btnSimulatorDescription:hover {
     background-color: #cccccc;
     color: white;
 }
 
-div#timelineContainer {
+#simulatorInfo,
+#timelineInfo {
+    float: right;
+}
+
+#timelineContainer {
+    position: relative;
+    bottom: 0px;
     width: 100%;
-    height: 70%;
     overflow: auto;
     padding: 10px 10px 20px;
     border-top: 1px solid lightgrey;
@@ -40,7 +45,9 @@ div#timelineContainer {
     background-color: white;
 }
 
-div#simulationToolbar {
+#simulationToolbar {
+    position: relative;
+    bottom: 0px;
     width: 100%;
     height: 50px;
     margin-top: 20px;
@@ -49,21 +56,20 @@ div#simulationToolbar {
     padding: 5px;
 }
 
-div#simulationToolbar span {
+#simulationToolbar span {
     margin: 5px;
 }
 
-div#simulationToolbar span#playbackControls div.btn {
+#playbackControls div.btn {
     background-color: white;
     border: 1px solid grey;
 }
 
-div#simulatorHeader span#btnSimulatorInfo:hover,
-div#simulationToolbar span#playbackControls div.btn:hover,
-div#simulationToolbar #btnSimulatorOptions.btn:hover {
+#playbackControls div.btn:hover,
+#btnSimulatorOptions.btn:hover {
     background-color: #cccccc;
 }
-div#simulationToolbar #btnSimulatorOptions {
+#btnSimulatorOptions {
     background-color: grey;
     color: white;
 }

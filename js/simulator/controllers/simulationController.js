@@ -35,18 +35,12 @@ function initSimulator() {
     });
 }
 
-function renderSimulator(simulation) {
-
-    $("#simulationTitle > span")[0].innerText = simulation.getTitle();
-    $("#simulatorContainer *").tooltip({container: "body"});
-    setSimulationEventHandlers(simulation);
-}
 
 function updateSimulator(simulation) {
 
     if (!simulation) {
         for (var i in simulations)
-            if (simulations[i].getTitle() == $("#simulationTitle > span")[0].innerText)
+            if (simulations[i].getTitle() == $("#simulationName").text())
                 simulation = simulations[i];
     }
 
@@ -74,29 +68,34 @@ function updateSimulator(simulation) {
 }
 
 
-function setSimulationEventHandlers(simulation) {
+function renderSimulator(simulation) {
 
-    var timeline = simulation.getTimeline();
+    $("#simulationName").text(simulation.getTitle());
 
-    /**** simulator info button and popover ****/
+    $("#simulatorInfo, #timelineInfo").tooltip({
+        container: "body",
+        placement: "left"
+    });
 
-    $("#btnSimulatorInfo")
-        .tooltip({container: "body", placement: "top", viewport: "#simulatorHeader"})
+    $("#simulationToolbar *").tooltip({
+        container: "body",
+        placement: "auto top"
+    });
+
+    $("#simulatorContainer *").not("#simulatorInfo").tooltip({
+        container: "body",
+        placement: "auto bottom"
+    });
+
+    $("#simulatorInfo")
         .popover("destroy")
         .popover({
             container: "#tab5",
             content: getSimulatorInfoText(simulation.getScenario()),
             html: true,
-            placement: "auto top"
-        })
-        .on("shown.bs.popover", function (event) {
-            $(event.target).tooltip("destroy");
-            extendSimulatorInfoPopover($(event.target).data("bs.popover").$tip);
-            setSimulatorInfoEventHandler();
-        })
-        .on("hide.bs.popover", function (event) {
-            $(event.target).tooltip();
+            placement: "left"
         });
+
 
     function getSimulatorInfoText(scenario) {
         var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
@@ -107,27 +106,64 @@ function setSimulationEventHandlers(simulation) {
         return infoTextDiv;
     }
 
+    $("#timelineInfo")
+        .popover("destroy")
+        .popover({
+            container: "#tab5",
+            content: infotexts.timeline,
+            html: true,
+            placement: "left"
+        });
+
+
+    setSimulationEventHandlers(simulation);
+}
+
+
+function setSimulationEventHandlers(simulation) {
+
+    var timeline = simulation.getTimeline();
+
+    /**** simulator info button and popover ****/
+
+    $("#simulatorInfo, #timelineInfo")
+        .on("shown.bs.popover", function (event) {
+            $(event.target).tooltip("destroy");
+            extendSimulatorInfoPopover($(event.target).data("bs.popover").$tip);
+            setSimulatorInfoEventHandler();
+        })
+        .on("hide.bs.popover", function (event) {
+            $(event.target).tooltip({
+                container: "body",
+                placement: "left"
+            });
+        });
+
+
     function extendSimulatorInfoPopover(popover) {
 
-        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>').tooltip();
+        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>').tooltip({
+            container: "body",
+            placement: "bottom"
+        });
         var titleElement = $(popover).children("h3.popover-title");
         if ($(titleElement).find("a.simulator-info-close").length == 0)
             titleElement.append(closeX);
 
-        $(".simulator-info-text a[about='scenario']").tooltip({
+        $(".simulator-info-text a#simulator-info-scenario").tooltip({
             container: "body",
             html: true,
             placement: "auto top",
             title: infotexts.scenario
         });
-        $(".simulator-info-text a[about='context']").tooltip({
+        $(".simulator-info-text a#simulator-info-context").tooltip({
             container: "body",
             html: true,
             placement: "auto top",
             title: infotexts.context
         });
-
     }
+
 
     function setSimulatorInfoEventHandler() {
         $(".popover .simulator-info-close").on("click", hideAllPopovers);
