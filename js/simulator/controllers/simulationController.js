@@ -74,7 +74,7 @@ function renderSimulator(simulation) {
 
     $("#simulatorInfo, #timelineInfo").tooltip({
         container: "body",
-        placement: "left"
+        placement: "auto bottom"
     });
 
     $("#simulationToolbar *").tooltip({

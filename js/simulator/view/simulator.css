@@ -16,33 +16,16 @@
     text-align: center;
 }
 
-#simulationName,
-#timelineName {
-    cursor: default;
-}
 #simulationTitle span {
     text-align: center;
+}
+#simulationName{
+    cursor: default;
 }
 
 #btnSimulatorDescription:hover {
     background-color: #cccccc;
     color: white;
-}
-
-#simulatorInfo,
-#timelineInfo {
-    float: right;
-}
-
-#timelineContainer {
-    position: relative;
-    bottom: 0px;
-    width: 100%;
-    overflow: auto;
-    padding: 10px 10px 20px;
-    border-top: 1px solid lightgrey;
-    border-bottom: 1px solid lightgrey;
-    background-color: white;
 }
 
 #simulationToolbar {

@@ -99,8 +99,19 @@ function setCellEventHandlers(simulation) {
     $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
     $(document).on("mousemove", _handleMousemove);
     $(document).on("mouseup", null, simulation, _handleMouseup);
-
     $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
+
+    $(document).on("mouseover", ".timeline-header th:not(.timeline-step-label)", simulation, function (event) {
+        $(this).css("border", "1px solid grey");
+        var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
+        $(".timeline-step").each(function (index, step) {
+            $(step).children(".timeline-cell").eq(colIndex).css("opacity", ".5");
+        });
+    })
+        .on("mouseleave", ".timeline-header th", simulation, function (event) {
+            $(this).css("border", "");
+            $(".timeline-cell").css("opacity", "");
+        });
 }
 
 function _handleLabelClick(event) {

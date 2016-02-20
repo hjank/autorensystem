@@ -1,28 +1,55 @@
+#timelineContainer {
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    overflow: auto;
+    padding: 10px 10px 20px;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    background-color: white;
+}
+
+
+#timelineName {
+    cursor: default;
+}
+
 table#timelineTable,
 table#timelineTable tbody,
 table#timelineTable tr,
-table#timelineTable td {
+table#timelineTable td
+{
     margin: 0px;
     padding: 0px;
     height: inherit;
     border-collapse: collapse;
 }
 
-table#timelineTable {
+table#timelineTable
+{
     width: 100%;
     height: 100%;
     text-align: center;
+    margin-top: 20px;
 }
 
-table#timelineTable thead tr.timeline-header th {
+table#timelineTable thead tr.timeline-header th
+{
     text-align: center;
+    border: 1px dotted lightgrey;
+}
+table#timelineTable thead tr.timeline-header th:first-of-type
+{
+    border: none;
 }
 
-table#timelineTable tr.timeline-step {
+table#timelineTable tr.timeline-step
+{
     height: 30px;
 }
 
-table#timelineTable .timeline-step-label {
+table#timelineTable td.timeline-step-label
+{
     height: inherit;
     width: 10px;
     border-style: solid none;
@@ -32,35 +59,32 @@ table#timelineTable .timeline-step-label {
     vertical-align: middle;
     cursor: pointer;
 }
-
 table#timelineTable tr:first-of-type td.timeline-step-label,
 table#timelineTable tr:last-of-type td.timeline-step-label,
-table#timelineTable th.timeline-step-label {
+table#timelineTable th.timeline-step-label
+{
     border-style: none;
 }
 
 
-
-table#timelineTable tr.timeline-step.selected-step,
-table#timelineTable tr.timeline-step.selected-step td.timeline-cell {
-    background-image: repeating-linear-gradient(
-            45deg,
-            rgba(0,0,0,.2),
-            rgba(0,0,0,.2)
-    );
-}
-table#timelineTable tr.timeline-step.selected-step {
+table#timelineTable tr.timeline-step.selected-step
+{
      border: 1px dotted black;
- }
-
-table#timelineTable tr.timeline-step.selected-step td.timeline-step-label {
+}
+table#timelineTable tr.timeline-step.selected-step,
+table#timelineTable tr.timeline-step.selected-step td.timeline-cell
+{
+    background-image: repeating-linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2));
+}
+table#timelineTable tr.timeline-step.selected-step td.timeline-step-label
+{
     font-weight: 900;
     color: black;
     margin: 5px;
 }
-
 /* makes the little arrow indicating selected step */
-table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before {
+table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before
+{
     content: '';
     display: block;
     position: absolute;
@@ -75,7 +99,8 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before
 
 
 
-table#timelineTable tr.timeline-step > td.timeline-cell {
+table#timelineTable tr.timeline-step > td.timeline-cell
+{
     min-width: 50px;
     border-top: 1px solid;
     border-bottom: 1px solid;
@@ -85,30 +110,38 @@ table#timelineTable tr.timeline-step > td.timeline-cell {
     opacity: 0.2;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SCENARIO] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SCENARIO]
+{
     background-color: #3287C8;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PERSONAL] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PERSONAL]
+{
     background-color: #AF46C8;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SITUATIONAL] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SITUATIONAL]
+{
     background-color: #91F52D;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_TECHNICAL] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_TECHNICAL]
+{
     background-color: #969696;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PHYSICAL] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_PHYSICAL]
+{
     background-color: #FADC3C;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION] {
+table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION]
+{
     background-color: #F03C32;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-marked {
+table#timelineTable tr.timeline-step > td.timeline-cell-marked 
+{
     opacity: 0.5;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied
+{
     width: inherit;
     height: inherit;
     position: relative;
@@ -120,22 +153,26 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied {
     opacity: 1;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible {
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible 
+{
     background-image: repeating-linear-gradient( 62deg, transparent 5%, lightgrey 10%, transparent 15%);
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell > a {
+table#timelineTable tr.timeline-step > td.timeline-cell > a
+{
     color: black;
     padding-left: 2px;
     padding-right: 2px;
     display: inline;
     cursor: pointer;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell > a:hover {
+table#timelineTable tr.timeline-step > td.timeline-cell > a:hover
+{
     color: #cccccc;
 }
 
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle {
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle
+{
     width: 100%;
     height: 3px;
     position: absolute;
@@ -143,11 +180,13 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-re
     display: block;
     cursor: s-resize;
 }
-table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle:hover {
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle:hover
+{
      border-bottom: double;
 }
 
 
-div.tooltip div.tooltip-inner{
+div.tooltip div.tooltip-inner
+{
     text-align: left;
 }
