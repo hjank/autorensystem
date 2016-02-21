@@ -94,15 +94,22 @@ function highlightSelectedStep(timeline) {
 /**
  * Sets handlers for mouse events on table cells and on document, consequently
  */
+var set = false;
 function setCellEventHandlers(simulation) {
+
+    if (set) return;
 
     $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
     $(document).on("mousemove", _handleMousemove);
     $(document).on("mouseup", null, simulation, _handleMouseup);
+
     $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
+    $(document).on("click", ".timeline-header th .caret", null, _handleColumnHeaderClick);
+
+    set = true;
 }
 
 
@@ -211,23 +218,37 @@ function _handleLabelClick(event) {
     event.stopPropagation();
 }
 
-function _handleColumnHeaderEnter (event) {
-    $(event.target).css("border", "1px solid grey");
-    if ($(event.target).children("b").length == 0) $(event.target).append("<b class='caret'/>");
+function _handleColumnHeaderEnter(event) {
+    $(event.target).css("border", "1px solid grey").append("<b class='caret'/>");
     var colIndex = $(this).parent().children().not(".timeline-step-label").index(event.target);
 
-    $(".timeline-step").each(function (index, step) {
-        $(step).children(".timeline-cell").eq(colIndex).not(".timeline-cell-occupied").css("opacity", ".5");
-    });
+    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
+
+  /*  $(".timeline-step").each(function (index, step) {
+        $(step).children(".timeline-cell").eq(colIndex).not(".timeline-cell-occupied")
+            .css({
+                "background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"
+            });
+    });*/
 }
 
-function _handleColumnHeaderLeave (event) {
+function _handleColumnHeaderLeave(event) {
     $(event.target).css("border", "").children("b").remove();
-    $(".timeline-cell").css("opacity", "");
+    $(".timeline-cell").css("background-image", "");
 }
 
 
+function _handleColumnHeaderClick(event) {
 
+}
+
+function getColumnCells(colIndex) {
+    var cells = $();
+    $(".timeline-step").each(function (index, step) {
+        cells = cells.add($(step).children(".timeline-cell").eq(colIndex))
+    });
+    return cells;
+}
 
 
 /**

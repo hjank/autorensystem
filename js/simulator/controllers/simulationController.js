@@ -30,7 +30,8 @@ function initSimulator() {
         $( "#tab5" ).html( data );
 
         initTimeline(simulation);
-        renderSimulator(simulation);
+
+        $("#simulationName").text(simulation.getTitle());
         showSimulatorTab();
     });
 }
@@ -70,11 +71,13 @@ function updateSimulator(simulation) {
 
 function renderSimulator(simulation) {
 
+    $("#simulatorContainer *").off();
+
     $("#simulationName").text(simulation.getTitle());
 
     $("#simulatorInfo, #timelineInfo").tooltip({
         container: "body",
-        placement: "auto bottom"
+        placement: "auto left"
     });
 
     $("#simulationToolbar *").tooltip({
@@ -90,7 +93,7 @@ function renderSimulator(simulation) {
     $("#simulatorInfo")
         .popover("destroy")
         .popover({
-            container: "#tab5",
+            container: "body",
             content: getSimulatorInfoText(simulation.getScenario()),
             html: true,
             placement: "left"
@@ -109,12 +112,11 @@ function renderSimulator(simulation) {
     $("#timelineInfo")
         .popover("destroy")
         .popover({
-            container: "#tab5",
+            container: "body",
             content: infotexts.timeline,
             html: true,
             placement: "left"
         });
-
 
     setSimulationEventHandlers(simulation);
 }

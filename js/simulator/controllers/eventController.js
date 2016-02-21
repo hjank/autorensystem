@@ -45,7 +45,7 @@ function createNewPopover(contextEvent, simulation) {
     // create a context editor popover for each selected cell
     $(markedCells)
         .popover({
-            container: "#tab5",
+            container: "body",
             content: generatePopoverContent,
             html: true,
             placement: "auto top",
