@@ -50,6 +50,12 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) .caret
 {
     color: lightgrey;
     font-size: small;
+    cursor: pointer;
+}
+
+.timeline-column-options span.btn
+{
+    display: block;
 }
 
 table#timelineTable tr.timeline-step

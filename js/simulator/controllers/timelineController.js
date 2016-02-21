@@ -54,25 +54,39 @@ function createSteps(steps) {
 
 function createColumn(contextInfo) {
 
-    $(".timeline-header").append($("<th>")
-        .html(formatUnitIcons(contextInfo))
+    $(".timeline-header").append($("<th>").html(formatUnitIcons(contextInfo))
         .tooltip({
-            container: "#tab5",
+            container: "body",
             placement: "auto left",
             viewport: "#timelineContainer"
-        }));
+        })
+        .append($("<div>").addClass("caret").hide()
+            .popover({
+                container: "body",
+                content: getColumnOptions,
+                html: true,
+                placement: "bottom"
+            })
+        )
+    );
+
+    function getColumnOptions () {
+        return $("<div>").addClass("timeline-column-options")
+            .append($("<span>").addClass("btn btn-sm fui-plus"))
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked"))
+            .append($("<span>").addClass("btn btn-sm fui-trash"));
+    }
 
     // add one column for each context item
     $(".timeline-step").each(function() {
-        $(this).append($("<td>")
-                .addClass("timeline-cell")
-                .attr("contextClass", contextInfo.getClasses()[0])
-                .tooltip({
-                    container: "#tab5",
-                    placement: "auto top",
-                    title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
-                    viewport: "#timelineContainer"
-                })
+        $(this).append( $("<td>").addClass("timeline-cell")
+            .attr("contextClass", contextInfo.getClasses()[0])
+            .tooltip({
+                container: "#tab5",
+                placement: "auto top",
+                title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
+                viewport: "#timelineContainer"
+            })
         );
     });
 }
@@ -92,7 +106,7 @@ function highlightSelectedStep(timeline) {
 
 
 /**
- * Sets handlers for mouse events on table cells and on document, consequently
+ * Sets handlers for mouse events on table
  */
 var set = false;
 function setCellEventHandlers(simulation) {
@@ -107,7 +121,6 @@ function setCellEventHandlers(simulation) {
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
-    $(document).on("click", ".timeline-header th .caret", null, _handleColumnHeaderClick);
 
     set = true;
 }
@@ -219,28 +232,17 @@ function _handleLabelClick(event) {
 }
 
 function _handleColumnHeaderEnter(event) {
-    $(event.target).css("border", "1px solid grey").append("<b class='caret'/>");
-    var colIndex = $(this).parent().children().not(".timeline-step-label").index(event.target);
+    $(this).css("border", "1px solid grey").children("div.caret").show();
+    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
 
     getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
-
-  /*  $(".timeline-step").each(function (index, step) {
-        $(step).children(".timeline-cell").eq(colIndex).not(".timeline-cell-occupied")
-            .css({
-                "background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"
-            });
-    });*/
 }
 
 function _handleColumnHeaderLeave(event) {
-    $(event.target).css("border", "").children("b").remove();
+    $(this).css("border", "").children("div.caret").hide();
     $(".timeline-cell").css("background-image", "");
 }
 
-
-function _handleColumnHeaderClick(event) {
-
-}
 
 function getColumnCells(colIndex) {
     var cells = $();

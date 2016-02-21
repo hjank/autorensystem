@@ -31,7 +31,7 @@ function initSimulator() {
 
         initTimeline(simulation);
 
-        $("#simulationName").text(simulation.getTitle());
+        renderSimulator(simulation);
         showSimulatorTab();
     });
 }
@@ -71,9 +71,17 @@ function updateSimulator(simulation) {
 
 function renderSimulator(simulation) {
 
-    $("#simulatorContainer *").off();
-
     $("#simulationName").text(simulation.getTitle());
+
+    $("#btnSimulatorDescription")
+        .popover("destroy")
+        .popover({
+            container: "body",
+            content: "Here be name and description.",
+            html: true,
+            placement: "bottom"
+        });
+
 
     $("#simulatorInfo, #timelineInfo").tooltip({
         container: "body",
@@ -118,6 +126,17 @@ function renderSimulator(simulation) {
             placement: "left"
         });
 
+
+    $("#btnSimulatorOptions")
+        .popover("destroy")
+        .popover({
+            container: "body",
+            content: "Here be options.",
+            html: true,
+            placement: "left"
+        });
+
+
     setSimulationEventHandlers(simulation);
 }
 
@@ -148,9 +167,7 @@ function setSimulationEventHandlers(simulation) {
             container: "body",
             placement: "bottom"
         });
-        var titleElement = $(popover).children("h3.popover-title");
-        if ($(titleElement).find("a.simulator-info-close").length == 0)
-            titleElement.append(closeX);
+        $(popover).children("h3.popover-title").append(closeX);
 
         $(".simulator-info-text a#simulator-info-scenario").tooltip({
             container: "body",
@@ -176,23 +193,23 @@ function setSimulationEventHandlers(simulation) {
     /**** playback controls ****/
 
 
-    $("#btnBackToStart").on("click", function (event) {
+    $("#btnBackToStart").off().on("click", function (event) {
         simulation.stop();
         highlightSelectedStep(timeline);
     });
 
-    $("#btnBackward").on("click", function (event) {
+    $("#btnBackward").off().on("click", function (event) {
         timeline.decrementSelectedStep();
         highlightSelectedStep(timeline);
     });
 
-    $("#btnForward").on("click", function (event) {
+    $("#btnForward").off().on("click", function (event) {
         timeline.incrementSelectedStep();
         highlightSelectedStep(timeline);
     });
 
 
-    $("#btnPlaySimulation").on("click", function (event) {
+    $("#btnPlaySimulation").off().on("click", function (event) {
 
         switch (simulation.getStatus()) {
 
@@ -215,6 +232,9 @@ function setSimulationEventHandlers(simulation) {
                 break;
         }
     });
+
+
+
 }
 
 
