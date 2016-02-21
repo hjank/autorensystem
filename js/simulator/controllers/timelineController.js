@@ -101,27 +101,12 @@ function setCellEventHandlers(simulation) {
     $(document).on("mouseup", null, simulation, _handleMouseup);
     $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
 
-    $(document).on("mouseover", ".timeline-header th:not(.timeline-step-label)", simulation, function (event) {
-        $(this).css("border", "1px solid grey");
-        var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
-        $(".timeline-step").each(function (index, step) {
-            $(step).children(".timeline-cell").eq(colIndex).css("opacity", ".5");
-        });
-    })
-        .on("mouseleave", ".timeline-header th", simulation, function (event) {
-            $(this).css("border", "");
-            $(".timeline-cell").css("opacity", "");
-        });
+    $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
+    $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
 }
 
-function _handleLabelClick(event) {
-    var timeline = event.data.getTimeline();
 
-    timeline.setSelectedStep(getRowIDOfCell(this));
-    highlightSelectedStep(timeline);
 
-    event.stopPropagation();
-}
 
 /**
  * Triggered if the user clicks on a cell: sets down to true and records click coordinates.
@@ -214,6 +199,35 @@ function _handleMouseup(event) {
 
     $(".timeline-cell").css("cursor", "");
 }
+
+
+
+function _handleLabelClick(event) {
+    var timeline = event.data.getTimeline();
+
+    timeline.setSelectedStep(getRowIDOfCell(this));
+    highlightSelectedStep(timeline);
+
+    event.stopPropagation();
+}
+
+function _handleColumnHeaderEnter (event) {
+    $(event.target).css("border", "1px solid grey");
+    if ($(event.target).children("b").length == 0) $(event.target).append("<b class='caret'/>");
+    var colIndex = $(this).parent().children().not(".timeline-step-label").index(event.target);
+
+    $(".timeline-step").each(function (index, step) {
+        $(step).children(".timeline-cell").eq(colIndex).not(".timeline-cell-occupied").css("opacity", ".5");
+    });
+}
+
+function _handleColumnHeaderLeave (event) {
+    $(event.target).css("border", "").children("b").remove();
+    $(".timeline-cell").css("opacity", "");
+}
+
+
+
 
 
 /**

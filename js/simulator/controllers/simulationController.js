@@ -3,7 +3,7 @@
  */
 
 var simulations = [];
-var numberOfSteps = 20;
+var numberOfSteps = 80;
 
 // TODO: Consider switching between scenarios!
 function initSimulator() {

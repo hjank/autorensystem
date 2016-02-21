@@ -147,6 +147,7 @@ textarea {
 }
 
 .properties {
+    position: relative;
     width: 275px;
     overflow-y: auto;
     overflow-x: hidden;
