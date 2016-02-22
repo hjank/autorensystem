@@ -158,14 +158,13 @@ table#timelineTable tr.timeline-step > td.timeline-cell-marked
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied
 {
     width: inherit;
-    height: inherit;
     position: relative;
     border-top: none;
     border-bottom: none;
     border-left: 2px solid;
     border-right: 2px solid;
-    cursor: move;
     opacity: 1;
+    cursor: default;
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible 
