@@ -125,6 +125,8 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
         // triggers "hide.bs.popover" event
         hideAllPopovers();
+
+        simulation.renderTimeline();
     });
 
     $(".popover .popover-delete").off("click").on("click", function(){
