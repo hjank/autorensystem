@@ -176,14 +176,81 @@ function _handleMousemove(event) {
     event.preventDefault();
 
     if (!(mousedownOnEmptyCell || resizing || moving)) return;
-
-    // else
+    // else:
 
     dragging = true;
 
+    /*** get reference coordinates ***/
+
+    var referenceY;
+    if (mousedownOnEmptyCell)
+        referenceY = getTop(clickedCell);
+    else if (resizing)
+        referenceY = getTop(firstCell);
+
+    // get currently targeted cell
+    var targetedCell = $(event.target).closest(".timeline-cell");
+
+    /*** cursor style and "error-30"-handling ***/
+
+    // detect downward collision
+    if (!nextOccupiedCellTop && (event.pageY > getBottom(clickedCell))) {
+        // if targeted cell is already occupied by another event, get its top Y coordinate
+        if ($(targetedCell).hasClass("timeline-cell-occupied"))
+            nextOccupiedCellTop = getTop(targetedCell);
+    }
+
+    // prevent dragging into no-drop area, i.e. :
+    if ((event.pageY <= referenceY) // above drag start
+        || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
+        || (nextOccupiedCellTop && (event.pageY >= nextOccupiedCellTop))) // or over the next occupied cell
+    {
+        $(".timeline-cell").css("cursor", "no-drop");
+        return;
+    }
+    else if (resizing)
+        $(".timeline-cell").css("cursor", "s-resize");
+    else
+        $(".timeline-cell").css("cursor", "");
 
     // mark targeted cells if creating or resizing an event
-    _mark(event);
+    _mark(event, referenceY);
+}
+
+
+/*** tiny little helper (i.e. readability improvement) functions ***/
+var getTop = function (cell) {
+    return $(cell).offset().top - parseInt($(cell).css("border-top-width"));
+};
+var getBottom = function (cell) {
+    return $(cell).offset().top + $(cell).height() + parseInt($(cell).css("border-bottom-width"));
+};
+var getLeft = function (cell) {
+    return $(cell).offset().left - parseInt($(cell).css("border-left-width"));
+};
+
+/**
+ * Goes through all cells and marks those that were selected, restricted to the column clicked.
+ * (inspired by: http://stackoverflow.com/questions/10591747/making-a-google-calendar-like-dragging-interface)
+ *
+ * @param event The mousemove or mouseup event (only triggered after mousedown on a cell).
+ * @private
+ */
+function _mark(event, referenceY) {
+
+    /*** mark selected cells ***/
+
+    $(getColumnCells(getColIDOfCell(clickedCell))).each(function () {
+
+        // mark this cell if it's below drag start cell top, and the cursor has crossed its top
+        if((referenceY + 3 < getBottom(this)) && (getTop(this) <= event.pageY))
+        {
+            $(this).removeClass("timeline-cell-occupied");
+            $(this).addClass("timeline-cell-marked");
+        }
+        else
+            $(this).removeClass("timeline-cell-marked");
+    });
 }
 
 
@@ -199,8 +266,7 @@ function _handleMouseup(event) {
 
     // if no dragging happened, mark clicked cell (for subsequent access)
     if ((mousedownOnEmptyCell || resizing) && !dragging)
-        _mark(event);
-
+        $(clickedCell).addClass("timeline-cell-marked");
 
     // create new context event in formerly empty cells
     if (mousedownOnEmptyCell) {
@@ -229,86 +295,6 @@ function _handleMouseup(event) {
     moving = false;
 
     $(".timeline-cell").css("cursor", "");
-}
-
-
-/**
- * Goes through all cells and marks those that were selected, restricted to the column clicked.
- * (inspired by: http://stackoverflow.com/questions/10591747/making-a-google-calendar-like-dragging-interface)
- *
- * @param event The mousemove or mouseup event (only triggered after mousedown on a cell).
- * @private
- */
-function _mark(event) {
-
-
-    /*** tiny little helper (i.e. readability improvement) functions ***/
-
-    var getTop = function (cell) {
-        return $(cell).offset().top - parseInt($(cell).css("border-top-width"));
-    };
-    var getBottom = function (cell) {
-        return $(cell).offset().top + $(cell).height() + parseInt($(cell).css("border-bottom-width"));
-    };
-    var getLeft = function (cell) {
-        return $(cell).offset().left - parseInt($(cell).css("border-left-width"));
-    };
-
-
-    /*** get reference coordinates ***/
-
-    var referenceX, referenceY;
-    if (mousedownOnEmptyCell) {
-        referenceX = getLeft(clickedCell);
-        referenceY = getTop(clickedCell);
-    }
-    else if (resizing) {
-        referenceX = getLeft(firstCell);
-        referenceY = getTop(firstCell);
-    }
-
-    // get currently targeted cell
-    var targetedCell = $(event.target).closest(".timeline-cell");
-
-
-    /*** cursor style and "error-30"-handling ***/
-
-
-    // detect downward collision
-    if (!nextOccupiedCellTop && (event.pageY > getBottom(clickedCell))) {
-        // if targeted cell is already occupied by another event, get its top Y coordinate
-        if ($(targetedCell).hasClass("timeline-cell-occupied"))
-            nextOccupiedCellTop = getTop(targetedCell);
-    }
-
-    // prevent dragging into no-drop area, i.e. :
-    if ((event.pageY <= referenceY) // above drag start
-        || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
-        || (nextOccupiedCellTop && (event.pageY >= nextOccupiedCellTop))) // or over the next occupied cell
-    {
-        $(".timeline-cell").css("cursor", "no-drop");
-        return;
-    }
-    else if (resizing)
-        $(".timeline-cell").css("cursor", "s-resize");
-    else
-        $(".timeline-cell").css("cursor", "");
-
-
-
-    /*** mark selected cells ***/
-
-    $(getColumnCells(getColIDOfCell(clickedCell))).each(function () {
-
-        // mark this cell if it's below drag start cell top, and the cursor has crossed its top
-        if((referenceY + 3 < getBottom(this)) && (getTop(this) <= event.pageY))
-        {
-            $(this).removeClass("timeline-cell-occupied");
-            $(this).addClass("timeline-cell-marked");
-        }
-        else
-            $(this).removeClass("timeline-cell-marked");
-    });
 }
 
 
