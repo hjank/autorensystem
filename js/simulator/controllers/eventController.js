@@ -38,6 +38,12 @@ function createNewContextEvent (simulation) {
 }
 
 
+function deleteContextEvent (contextEvent, timeline) {
+    // make sure to hide popover before destroying it, to save google maps
+    hideAllPopovers();
+    timeline.removeEvent(contextEvent);
+    removeOccupiedMarkup(contextEvent);
+}
 
 
 function removeTemporaryEvents(timeline) {

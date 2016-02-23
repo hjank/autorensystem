@@ -14,7 +14,7 @@ function getContextEventCells(contextEvent) {
 
 
 
-function addOccupiedMarkup (contextEvent) {
+function addOccupiedMarkup (contextEvent, simulation) {
 
     var cells = getContextEventCells(contextEvent);
 
@@ -23,7 +23,8 @@ function addOccupiedMarkup (contextEvent) {
         .empty()
         .tooltip("destroy")
         .tooltip({
-            container: "#tab5",
+            animation: false,
+            container: "body",
             html: true,
             title: getTooltipTitle(contextEvent),
             viewport: "#timelineContainer"
@@ -36,7 +37,8 @@ function addOccupiedMarkup (contextEvent) {
         .css("border-top", "1px solid")
         .append($("<a>").attr("href","#").addClass("fui-new"))
         .append(createContextEventHideDOM())
-        .unbind("click").on("click", "a", contextEvent, _handleOccupiedCellAnchorClickEvent);
+        .append(createContextEventDeleteDOM())
+        .unbind("click").on("click", "a", simulation, _handleOccupiedCellAnchorClickEvent);
 }
 
 
@@ -45,14 +47,12 @@ function removeOccupiedMarkup (contextEvent) {
 
     $(cells).removeClass("timeline-cell-occupied")
         .empty()
-        .css("border-bottom", "")
-        .tooltip("destroy")
-        .tooltip({
-            container: "#tab5",
-            placement: "auto top",
-            title: translate_contextInformation(contextEvent.getContextInfo().getID()) + " hat keinen Wert",
-            viewport: "#timelineContainer"
+        .css({
+            "border-top": "",
+            "border-bottom": ""
         })
+        .tooltip("destroy")
+        .tooltip(getCellTooltipOptions(contextEvent.getContextInfo()))
         .popover("destroy");
 }
 
@@ -99,7 +99,10 @@ function createContextEventHideDOM () {
         .on("mouseover", function (event) {
             $(this).parent().tooltip("hide");
         })
-        .tooltip({container: "body"});
+        .tooltip({
+            animation: false,
+            container: "body"
+        });
 }
 
 
@@ -107,10 +110,11 @@ function createContextEventHideDOM () {
 
 function _handleOccupiedCellAnchorClickEvent (event) {
 
-    var contextEvent = event.data;
+    var timeline = event.data.getTimeline();
+    var contextEvent = timeline.getEventAt(getRowIDOfCell(event.delegateTarget), getColIDOfCell(event.delegateTarget));
     var cells = getContextEventCells(contextEvent);
 
-    if ($(this).hasClass("fui-gear")) {
+    if ($(this).hasClass("fui-new")) {
         $(event.delegateTarget).popover("show");
     }
 
@@ -132,6 +136,10 @@ function _handleOccupiedCellAnchorClickEvent (event) {
             .tooltip("fixTitle");
 
         $(cells).removeClass("timeline-cell-invisible");
+    }
+
+    else if ($(this).hasClass("fui-trash")) {
+        deleteContextEvent(contextEvent, timeline);
     }
 
     event.stopPropagation();

@@ -61,5 +61,5 @@ ContextEvent.prototype.getCopy = function () {
 
 ContextEvent.prototype.render = function (simulation) {
     createNewPopover(this, simulation);
-    addOccupiedMarkup(this);
+    addOccupiedMarkup(this, simulation);
 };

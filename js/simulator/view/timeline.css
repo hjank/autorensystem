@@ -60,7 +60,7 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) .caret
 
 table#timelineTable tr.timeline-step
 {
-    height: 30px;
+    height: 33px;
 }
 
 table#timelineTable td.timeline-step-label
@@ -84,7 +84,7 @@ table#timelineTable th.timeline-step-label
 
 table#timelineTable tr.timeline-step.selected-step
 {
-     border: 1px dotted black;
+    border: 1px dotted black;
 }
 table#timelineTable tr.timeline-step.selected-step,
 table#timelineTable tr.timeline-step.selected-step td.timeline-cell
@@ -94,6 +94,7 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-cell
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label
 {
     font-weight: 900;
+    text-align: right;
     color: black;
     margin: 5px;
 }
@@ -175,10 +176,19 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-i
 table#timelineTable tr.timeline-step > td.timeline-cell > a
 {
     color: black;
+    font-size: 13px;
     padding-left: 2px;
     padding-right: 2px;
     display: inline;
     cursor: pointer;
+}
+table#timelineTable tr.timeline-step > td.timeline-cell > a:first-of-type
+{
+    padding-left: 0px;
+}
+table#timelineTable tr.timeline-step > td.timeline-cell > a:last-of-type
+{
+    padding-right: 0px;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell > a:hover
 {

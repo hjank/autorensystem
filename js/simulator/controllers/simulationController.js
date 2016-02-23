@@ -5,7 +5,7 @@
 var simulations = [];
 var numberOfSteps = 80;
 
-// TODO: Consider switching between scenarios!
+// TODO: Save/load simulations
 function initSimulator() {
 
     var simulation = new Simulation();
@@ -193,23 +193,23 @@ function setSimulationEventHandlers(simulation) {
     /**** playback controls ****/
 
 
-    $("#btnBackToStart").off().on("click", function (event) {
+    $("#btnBackToStart").off("click").on("click", function (event) {
         simulation.stop();
         highlightSelectedStep(timeline);
     });
 
-    $("#btnBackward").off().on("click", function (event) {
+    $("#btnBackward").off("click").on("click", function (event) {
         timeline.decrementSelectedStep();
         highlightSelectedStep(timeline);
     });
 
-    $("#btnForward").off().on("click", function (event) {
+    $("#btnForward").off("click").on("click", function (event) {
         timeline.incrementSelectedStep();
         highlightSelectedStep(timeline);
     });
 
 
-    $("#btnPlaySimulation").off().on("click", function (event) {
+    $("#btnPlaySimulation").off("click").on("click", function (event) {
 
         switch (simulation.getStatus()) {
 
@@ -232,9 +232,6 @@ function setSimulationEventHandlers(simulation) {
                 break;
         }
     });
-
-
-
 }
 
 
@@ -242,27 +239,24 @@ function setPlaybackButtonToPlay () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-pause").addClass("fui-play")
-        .tooltip("destroy")
         .attr("title", "Simulation fortsetzen")
-        .tooltip({container: "body"});
+        .tooltip("fixTitle");
 }
 
 function setPlaybackButtonToPause () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-play").addClass("fui-pause")
-        .tooltip("destroy")
         .attr("title", "Simulation anhalten")
-        .tooltip({container: "body"});
+        .tooltip("fixTitle");
 }
 
 function resetPlaybackButton () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-pause").addClass("fui-play")
-        .tooltip("destroy")
         .attr("title", "Simulation starten")
-        .tooltip({container: "body"});
+        .tooltip("fixTitle");
 }
 
 

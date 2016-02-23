@@ -61,16 +61,15 @@ function generatePopoverTitle (contextInfo) {
 
 /**
  * Generate the content of the newly created popover, i.e. value and parameter selection.
- * @param contextEvent
  */
 function generatePopoverContent () {
 
     var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
 
-    var popoverTemplate = $(simulatedContextInfoMenuElement).clone();
-    $("#popoverContentTemplate").append(popoverTemplate);
+    //var popoverTemplate = $(simulatedContextInfoMenuElement).clone();
+    //$("#popoverContentTemplate").append(popoverTemplate);
 
-    return simulatedContextInfoMenuElement;
+    return $(simulatedContextInfoMenuElement).clone();
 }
 
 
@@ -123,18 +122,17 @@ function setPopoverEventHandlers(simulation, contextEvent) {
         }
 
         // remove old and add new class, plus style, informative tooltip, and clickable icons
-        addOccupiedMarkup(contextEvent);
+        addOccupiedMarkup(contextEvent, simulation);
 
         // triggers "hide.bs.popover" event
         hideAllPopovers();
 
+        // refresh timeline
         simulation.renderTimeline();
     });
 
     $(".popover .popover-delete").off("click").on("click", function(){
-        hideAllPopovers();
-        timeline.removeEvent(contextEvent);
-        removeOccupiedMarkup(contextEvent);
+        deleteContextEvent(contextEvent, timeline);
     });
 }
 
