@@ -164,7 +164,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied
     border-left: 2px solid;
     border-right: 2px solid;
     opacity: 1;
-    cursor: default;
+    cursor: move;
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible 

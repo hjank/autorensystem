@@ -208,14 +208,14 @@ function _handleMousemove(event) {
 
     // get currently targeted cell
     var targetedCell = $(event.target).closest(".timeline-cell");
+    var targetIsNoCell = ($(targetedCell).length == 0);
 
 
     // detect any collision for moving entire event via drag and drop
     var dropAllowed = true;
     if (moving) {
-        if ($(targetedCell).length == 0)
-            dropAllowed = false;
-        else {
+        // only try drag and drop if mouse is over timeline cell
+        if (!targetIsNoCell) {
             var rowIndex = getRowIDOfCell(targetedCell);
             var colIndex = getColIDOfCell(targetedCell);
 
@@ -245,10 +245,11 @@ function _handleMousemove(event) {
 
 
     // prevent dragging into no-drop area, i.e. :
-    if ((moving && !dropAllowed) // out of table bounds or into occupied cells when moving
+    if (targetIsNoCell // into anything that is no timeline cell
+        || (moving && !dropAllowed) // or out of table bounds or into occupied cells when moving
         || (!moving && event.pageY <= referenceY) // or above drag start
         || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
-        || (!moving && nextOccupiedCellTop && (event.pageY >= nextOccupiedCellTop))) // or over the next occupied cell
+        || (!moving && nextOccupiedCellTop && (event.pageY >= nextOccupiedCellTop - 3))) // or over the next occupied cell
     {
         $("body *").css("cursor", "no-drop");
         return;
@@ -319,7 +320,7 @@ function _handleMouseup(event) {
     var simulation = event.data;
 
     // if no dragging happened, mark clicked cell (for subsequent access)
-    if ((mousedownOnEmptyCell || resizing) && !dragging)
+    if ((mousedownOnEmptyCell || resizing || moving) && !dragging)
         $(clickedCell).addClass("timeline-cell-marked");
 
 
@@ -330,11 +331,12 @@ function _handleMouseup(event) {
 
     // or resize context event
     else if (resizing || moving) {
+        var markedCells = $(".timeline-cell-marked");
 
         var timeline = simulation.getTimeline();
         var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
-        contextEvent.setStart(getRowIDOfCell($(".timeline-cell-marked").first()));
-        contextEvent.setEnd(getRowIDOfCell($(".timeline-cell-marked").last()));
+        contextEvent.setStart(getRowIDOfCell($(markedCells).first()));
+        contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
 
         timeline.removeEvent(contextEvent);
         timeline.addEvent(contextEvent);

@@ -34,7 +34,7 @@ function addOccupiedMarkup (contextEvent) {
 
     $(cells).first()
         .css("border-top", "1px solid")
-        .append($("<a>").attr("href","#").addClass("fui-gear"))
+        .append($("<a>").attr("href","#").addClass("fui-new"))
         .append(createContextEventHideDOM())
         .unbind("click").on("click", "a", contextEvent, _handleOccupiedCellAnchorClickEvent);
 }
