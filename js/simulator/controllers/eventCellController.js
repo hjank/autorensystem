@@ -21,7 +21,6 @@ function addOccupiedMarkup (contextEvent) {
     $(cells).removeClass("timeline-cell-marked")
         .addClass("timeline-cell-occupied")
         .empty()
-        .css("border-bottom", "")
         .tooltip("destroy")
         .tooltip({
             container: "#tab5",

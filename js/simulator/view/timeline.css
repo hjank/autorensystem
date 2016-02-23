@@ -159,8 +159,8 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied
 {
     width: inherit;
     position: relative;
-    border-top: none;
-    border-bottom: none;
+    border-top: hidden;
+    border-bottom: hidden;
     border-left: 2px solid;
     border-right: 2px solid;
     opacity: 1;

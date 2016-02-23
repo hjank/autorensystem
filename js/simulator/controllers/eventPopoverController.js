@@ -14,7 +14,7 @@ function createNewPopover(contextEvent, simulation) {
             container: "body",
             content: generatePopoverContent,
             html: true,
-            placement: "auto top",
+            placement: "bottom",
             selector: markedCells,
             template: '<div class="popover" role="tooltip">' +
             '<div class="arrow"></div>' +
@@ -29,7 +29,7 @@ function createNewPopover(contextEvent, simulation) {
 
     $(markedCells).each(function (index, cell) {
         $(cell)
-            .on("shown.bs.popover", function(event){
+            .on("shown.bs.popover", function(){
                 reconstructPopoverContent(simulation, contextEvent);
                 setPopoverEventHandlers(simulation, contextEvent);
                 repositionPopover(this);
@@ -89,20 +89,22 @@ function reconstructPopoverContent(simulation, contextEvent) {
 
 
 function repositionPopover(cell) {
-    var cellTop = $(cell).position().top;
-    var cellBottom = cellTop + $(cell).height();
-    var popoverHeight = $(".popover").height();
-    var newPositionTop = cellTop - popoverHeight - 11;
-    var newPositionBottom = cellBottom + popoverHeight + 11;
+    var popover = $(cell).data("bs.popover").$tip;
+    var cellBottom = getBottom(cell);
 
-    var newPosition = "";
-    if (newPositionTop > $("#tab5").offset().top)
-        newPosition = newPositionTop;
-    else if (newPositionBottom < $("#tab5").height()) {
-        newPosition = cellBottom + 11;
-        $(".popover .arrow").hide();
+    var containerBottom = getBottom($("#simulatorContainer"));
+
+    var timelineWindow = $(cell).parents("#timelineTableWindow");
+    var timelineScrollTop = $(timelineWindow).scrollTop();
+
+    if (getBottom(popover) > containerBottom) {
+        // reposition the popover to window bottom
+        $(popover).css("top", "initial");
+        $(popover).css("bottom", "0px");
+
+        // scroll the timeline so that selected cell remains visible
+        $(timelineWindow).animate({scrollTop: (timelineScrollTop + cellBottom - getTop(popover))}, 500);
     }
-    $(".popover").css("top", newPosition);
 }
 
 
