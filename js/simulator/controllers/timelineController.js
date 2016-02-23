@@ -221,14 +221,15 @@ function _handleMousemove(event) {
 
             var eventCells = $();
             for (var i = 0; i < $(originalEventCells).length && dropAllowed; i++) {
-                var eventCell = getCellAt(rowIndex + i - clickedCellIndex, colIndex);
+                var newRowIndex = rowIndex + i - clickedCellIndex;
+                var eventCell = getCellAt(newRowIndex, colIndex);
                 eventCells = eventCells.add(eventCell);
 
-                dropAllowed = (
-                    $(originalEventCells).index(eventCell) >= 0 || !$(eventCell).hasClass("timeline-cell-occupied")
-                );
+                dropAllowed = (newRowIndex >= 0 &&
+                    ($(originalEventCells).index(eventCell) >= 0 || !$(eventCell).hasClass("timeline-cell-occupied")));
             }
-            if (dropAllowed)
+
+            if (dropAllowed && originalEventCells.length == eventCells.filter(".timeline-cell").length)
                 originalEventCells = eventCells;
         }
     }
