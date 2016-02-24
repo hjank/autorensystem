@@ -18,9 +18,8 @@ function addOccupiedMarkup (contextEvent, simulation) {
 
     var cells = getContextEventCells(contextEvent);
 
-    $(cells).removeClass("timeline-cell-marked")
-        .addClass("timeline-cell-occupied")
-        .empty()
+    $(cells)
+        .removeClass("timeline-cell-marked")
         .tooltip("destroy")
         .tooltip({
             animation: false,
@@ -29,6 +28,14 @@ function addOccupiedMarkup (contextEvent, simulation) {
             title: getTooltipTitle(contextEvent),
             viewport: "#timelineContainer"
         });
+
+    if (expectsLearningUnit(contextEvent.getContextInfo())) {
+        cells = $(cells).first();
+    }
+
+    $(cells)
+        .addClass("timeline-cell-occupied")
+        .empty();
 
     $(cells).last().css("border-bottom", "1px solid")
         .append($("<div>").addClass("occupied-resize-handle"));

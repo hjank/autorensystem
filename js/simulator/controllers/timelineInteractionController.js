@@ -258,9 +258,7 @@ function _handleMouseup(event) {
         if (moving)
             contextEvent.setStart(getRowIDOfCell($(markedCells).first()));
         contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
-
-        timeline.removeEvent(contextEvent);
-        timeline.addEvent(contextEvent);
+        timeline.updateEvent(contextEvent);
 
         // refresh everything and reload tooltips
         simulation.renderTimeline();

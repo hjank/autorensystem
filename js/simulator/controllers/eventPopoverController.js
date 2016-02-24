@@ -110,10 +110,16 @@ function setPopoverEventHandlers(simulation, contextEvent) {
     $(".popover .popover-confirm").off("click").on("click", function(event){
 
         var contextInfoDiv = $(event.target).parents(".popover .popover-content .popover-context-info");
+        var contextInfo = contextEvent.getContextInfo();
 
-        if (!confirmPopoverContent(contextInfoDiv, contextEvent.getContextInfo(), simulation.getScenario())) {
+        if (!confirmPopoverContent(contextInfoDiv, contextInfo, simulation.getScenario())) {
             alert("Bitte geben Sie einen Wert und Parameter an.");
             return;
+        }
+
+        if (expectsLearningUnit(contextInfo)) {
+            contextEvent.setEnd(timeline.getNumberOfRows()-1);
+            timeline.updateEvent(contextEvent);
         }
 
         // remove old and add new class, plus style, informative tooltip, and clickable icons

@@ -5,6 +5,8 @@
 
 function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectPossibleValuesElement) {
 
+    var chosenValue = ci.getChosenValue();
+
     selectPossibleValuesElement.empty();
 
     // if a unit is expected as value (a unit's UUID, that is, which will be entered on confirm)
@@ -13,15 +15,22 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
 
         // add all units of the current scenario
         scenario.getUnits().forEach(function (unit, index) {
+
             selectPossibleValuesElement.append($("<option>")
                 .attr("value", index.toString())
                 .html(unit.getName()));
+
+            if (chosenValue == unit.getUUID())
+                selectPossibleValuesElement.val(index);
+
         });
     }
 
-    else
+    else {
+        var type = ci.getType();
+        var enums = ci.getEnums();
 
-        switch (ci.getType()) {
+        switch (type) {
 
             case "FLOAT":
             case "INTEGER":
@@ -43,14 +52,13 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
                 inputContextValueElement.remove();
 
                 // fill selection bar
-                var enums = ci.getEnums();
                 for (var i in enums) {
                     var option = $("<option>").attr("value", i.toString());
                     option.html(translate_possibleValue(enums[i]));
                     selectPossibleValuesElement.append(option);
                 }
 
-                if (ci.getType() == "BOOLEAN")
+                if (type == "BOOLEAN")
 
                     selectPossibleValuesElement.children("option").each(function (index, option) {
                         var value = $(option).html();
@@ -58,11 +66,9 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
                     });
         }
 
-
-    var chosenValue = ci.getChosenValue();
-    if (chosenValue != "") {
+        if (chosenValue != "" && enums.length > 0)
+            selectPossibleValuesElement.val(enums.indexOf(chosenValue));
         inputContextValueElement.val(chosenValue);
-        selectPossibleValuesElement.val(enums.indexOf(chosenValue));
     }
 }
 

@@ -163,6 +163,10 @@ Timeline.prototype.removeEvent = function (eventUUID) {
         }
 };
 
+Timeline.prototype.updateEvent = function (event) {
+    this.removeEvent(event);
+    this.addEvent(event);
+};
 
 
 Timeline.prototype.render = function (simulation) {
