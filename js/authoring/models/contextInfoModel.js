@@ -42,7 +42,7 @@ ContextInformation.prototype.getID = function () {
     return this._id;
 };
 
-ContextInformation.prototype.getMultiplicity = function () {
+ContextInformation.prototype.hasMultiplicity = function () {
     return this._multiplicity;
 };
 

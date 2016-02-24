@@ -15,6 +15,18 @@ div.popover h3.popover-title a.simulator-info-close {
     float: right;
 }
 
+
+.popover-column-options span.btn
+{
+    display: block;
+}
+.popover-column-options span.btn:hover
+{
+    background-color: #cccccc;
+}
+
+
+
 div.popover-context-info {
     text-align: center;
 }
@@ -50,6 +62,11 @@ div.popover-context-info div.popover-bottom-buttons {
 div.popover-context-info div.btn {
     margin: 5px;
 }
+
+
+
+
+
 
 div#popoverContentTemplate {
     display: none;

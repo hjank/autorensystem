@@ -20,52 +20,54 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
         return;
     }
 
-    switch (ci.getType()) {
+    else
 
-        case "FLOAT":
-        case "INTEGER":
-            selectPossibleValuesElement.remove();
-            inputContextValueElement.attr("type", "number");
-            setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
+        switch (ci.getType()) {
 
-            break;
+            case "FLOAT":
+            case "INTEGER":
+                selectPossibleValuesElement.remove();
+                inputContextValueElement.attr("type", "number");
+                setMinMaxDefault(ci.getMin(), ci.getMax(), ci.getDefault(), inputContextValueElement);
 
-        case "STRING":
-            selectPossibleValuesElement.remove();
-            inputContextValueElement.attr("type", "text");
+                break;
 
-            break;
+            case "STRING":
+                selectPossibleValuesElement.remove();
+                inputContextValueElement.attr("type", "text");
 
-        case "ENUM":
-            inputContextValueElement.css("display", "none");         // make input field invisible
+                break;
 
-            // fill selection bar
-            var enums = ci.getEnums();
-            for (var i in enums) {
-                var option = $("<option>").attr("value", i.toString());
-                option.html(translate_possibleValue(enums[i]));
-                selectPossibleValuesElement.append(option);
-            }
+            case "ENUM":
+                inputContextValueElement.css("display", "none");         // make input field invisible
 
-            break;
+                // fill selection bar
+                var enums = ci.getEnums();
+                for (var i in enums) {
+                    var option = $("<option>").attr("value", i.toString());
+                    option.html(translate_possibleValue(enums[i]));
+                    selectPossibleValuesElement.append(option);
+                }
 
-        case "BOOLEAN":
-            inputContextValueElement.css("display", "none");      // and input field invisible
+                break;
 
-            // get the two possible values true and false in selection bar
-            selectPossibleValuesElement.append($("<option>").attr("value", 1).html("ist wahr"));
-            selectPossibleValuesElement.append($("<option>").attr("value", 0).html("ist falsch"));
+            case "BOOLEAN":
+                inputContextValueElement.css("display", "none");      // and input field invisible
 
-            break;
-    }
+                // get the two possible values true and false in selection bar
+                selectPossibleValuesElement.append($("<option>").attr("value", 1).html("ist wahr"));
+                selectPossibleValuesElement.append($("<option>").attr("value", 0).html("ist falsch"));
+
+                break;
+        }
 }
 
 function fillPopoverParameterSelection(cp, divContextParams) {
 
     // in case there are coordinates to be set
     var divMaps = $("#divMaps");
-    var coordsExpected = false;
     var lat, long;
+
     // remove all parameter fields from previous editing (except maps div)
     $("#divMapsTemplate").append(divMaps);
 
@@ -76,39 +78,36 @@ function fillPopoverParameterSelection(cp, divContextParams) {
 
         // get each parameter's ID, translated name, and previously chosen value (given we are in edit mode)
         var thisParam = cp[i];
-        var parameterOriginal = thisParam.getID();
-        var parameterTranslation = translate_parameter(parameterOriginal);
+        var parameterID = thisParam.getID();
         var chosenValue = thisParam.getChosenValue(); // "" if not chosen previously
 
+        // unfortunately necessary if "label for" is used, as it is
         var id = "popoverParameter"+i;
-        var div = $("<div>").addClass("popover-parameter");
-        var child;
+        var div = $("<div>")
+            .addClass("popover-parameter")
+            .append(createParameterLabelDOM(id, translate_parameter(parameterID)));
+        divContextParams.append(div);
 
+
+        var child;
         switch (thisParam.getType()) {
 
             // type enum needs a drop down selection for only possible values
             case "ENUM":
-                div.append(createParameterLabelDOM(id, parameterTranslation));
-                child = createNamedDOMElement("select", id)
-                    .addClass("form-control select select-primary select-block mbl");
+                //child = createNamedDOMElement("select", id).addClass("form-control select select-primary select-block mbl");
+                div.append(child = createNamedDOMElement("select", id)
+                    .addClass("form-control select select-primary select-block mbl"));
 
                 // append all possible values
                 var enums = thisParam.getEnums();
                 enums.forEach(function(val, index) {
                     child.append($("<option>").attr("value", index.toString()).html(translate_parameterValue(val)));
                 });
-                div.append(child);
-                divContextParams.append(div);
 
-                $("#" + id).select2();
+                //$("#" + id).select2();
                 // decision depends on mode we are in: new info --> empty, edit mode --> previous choice
-                if (chosenValue == "")
-                    $("#" + id).select2("data", {id:"\r",text:"\r"});
-                else
-                    $("#" + id).select2("data", {
-                        id:enums.indexOf(chosenValue),
-                        text:translate_parameterValue(chosenValue)
-                    });
+                if (chosenValue != "")
+                    $(child).val(enums.indexOf(chosenValue));
 
                 break;
 
@@ -116,31 +115,23 @@ function fillPopoverParameterSelection(cp, divContextParams) {
             // type float or integer each need an input field and a specific label
             case "INTEGER":
             case "FLOAT":
-                // if coordinates are expected, set lat and long to either "" (new info) or previously input values
-                if (/CP_.*LONGITUDE/.test(parameterOriginal)) {
-                    long = chosenValue;
-                    coordsExpected = true;
-                }
-                if (/CP_.*LATITUDE/.test(parameterOriginal)) {
-                    lat = chosenValue;
-                    coordsExpected = true;
-                }
+                // if coordinates are expected, set lat and long to previously chosen values (default: "")
+                if (/CP_.*LONGITUDE/.test(parameterID)) long = chosenValue;
+                if (/CP_.*LATITUDE/.test(parameterID)) lat = chosenValue;
 
-                div.addClass("parameter-input").append(createParameterLabelDOM(id, parameterTranslation));
-                child = createNamedDOMElement("input", id).addClass("form-control")
+                div.addClass("parameter-input");
+                child = createNamedDOMElement("input", id)
+                    .addClass("form-control")
                     .attr("type", "number")
-                    .on("keyup", function (event) {
-                        getParameterInput(event, coordsExpected);
-                    });
+                    .on("keyup", function (event) { getParameterInput(event, (lat || long)); })
+                    .val(chosenValue);
+                div.append(child);
+
                 setMinMaxDefault(thisParam.getMin(), thisParam.getMax(), thisParam.getDefault(), child);
 
-                // if we are in edit mode: previously saved value, else ""
-                child.val(chosenValue);
-                div.append(child);
-                divContextParams.append(div);
 
                 // display google maps if both lat and long have been set
-                if (typeof lat != "undefined" && typeof long != "undefined") {
+                if (!isNaN(lat) && !isNaN(long)) {
 
                     // put the map in a visible spot and render it correctly (hopefully)
                     divContextParams.append(divMaps);
@@ -149,20 +140,20 @@ function fillPopoverParameterSelection(cp, divContextParams) {
                     if (chosenValue != "") {
                         var latlng = new google.maps.LatLng(lat, long);
                         replaceMarker(latlng);
-                        //resetMapToCenter(latlng);
-                    } else
-                        resizeMap();
+                        resetMapToCenter(latlng);
+                    }
+                    resizeMap();
                 }
+
                 break;
 
             // type string needs an input field and a specific label
             case "STRING":
-                div.append(createParameterLabelDOM(id, parameterTranslation));
-                child = createNamedDOMElement("input", id).addClass("form-control").attr("type", "text");
-                // if we are in edit mode: previously saved value, else ""
-                child.val(chosenValue);
-                div.append(child);
-                divContextParams.append(div);
+                div.append(createNamedDOMElement("input", id)
+                    .addClass("form-control")
+                    .attr("type", "text")
+                    .val(chosenValue));
+
                 break;
         }
     }

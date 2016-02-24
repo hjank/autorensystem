@@ -169,7 +169,7 @@ Simulation.prototype._run = function (self) {
                     type: contextInfo.getType(),
                     parameterList: contextInfoParameters,
                     value: contextInfo.getChosenValue() || "NO_VALUE"
-                }, contextInfo.getMultiplicity());
+                }, contextInfo.hasMultiplicity());
             }
         });
 

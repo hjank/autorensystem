@@ -58,11 +58,6 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) div.ti
     border: 1px solid grey;
 }
 
-.timeline-column-options span.btn
-{
-    display: block;
-}
-
 table#timelineTable tr.timeline-step
 {
     height: 33px;

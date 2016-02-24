@@ -43,14 +43,17 @@ function createSteps(steps) {
 
 function createColumn(contextInfo) {
 
-    var _getColumnOptions = function (contextInfo) {
-        var timelineColumnOptions = $("<div>").addClass("timeline-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked")).attr("title", "alle Werte ausblenden")
-            .append($("<span>").addClass("btn btn-sm fui-trash")).attr("title", "alle Werte löschen");
+    var _getColumnOptionsContent = function (contextInfo) {
 
-        if (contextInfo.getMultiplicity())
-            timelineColumnOptions
-                .append($("<span>").addClass("btn btn-sm fui-plus")).attr("title", "neue Spalte einfügen")
+        var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("alle Werte ausblenden")))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("alle Werte löschen")));
+
+        if (contextInfo.hasMultiplicity())
+            timelineColumnOptionsContent
+                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("neue Spalte einfügen")));
+
+        return timelineColumnOptionsContent;
     };
 
 
@@ -60,9 +63,10 @@ function createColumn(contextInfo) {
             .append($("<div>").addClass("timeline-header-options")
                 .text("...").hide()
                 .tooltip(getTopTooltipOptions("Optionen für " + translate_contextInformation(contextInfo.getID())))
+                .popover("destroy")
                 .popover({
                     container: "body",
-                    content: _getColumnOptions(contextInfo),
+                    content: _getColumnOptionsContent(contextInfo),
                     html: true,
                     placement: "bottom"
                 })
