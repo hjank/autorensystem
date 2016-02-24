@@ -43,31 +43,38 @@ function createSteps(steps) {
 
 function createColumn(contextInfo) {
 
+    var _getColumnOptions = function (contextInfo) {
+        var timelineColumnOptions = $("<div>").addClass("timeline-column-options")
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked")).attr("title", "alle Werte ausblenden")
+            .append($("<span>").addClass("btn btn-sm fui-trash")).attr("title", "alle Werte löschen");
+
+        if (contextInfo.getMultiplicity())
+            timelineColumnOptions
+                .append($("<span>").addClass("btn btn-sm fui-plus")).attr("title", "neue Spalte einfügen")
+    };
+
+
     $(".timeline-header")
         .append($("<th>")
             .html(formatUnitIcons(contextInfo))
-            .append($("<div>").addClass("caret").hide()
+            .append($("<div>").addClass("timeline-header-options")
+                .text("...").hide()
+                .tooltip(getTopTooltipOptions("Optionen für " + translate_contextInformation(contextInfo.getID())))
                 .popover({
                     container: "body",
-                    content: getColumnOptions,
+                    content: _getColumnOptions(contextInfo),
                     html: true,
                     placement: "bottom"
                 })
             )
         );
 
-    function getColumnOptions () {
-        return $("<div>").addClass("timeline-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-plus")).attr("title", "neue Spalte einfügen").tooltip()
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked"))
-            .append($("<span>").addClass("btn btn-sm fui-trash"));
-    }
-
     // add one column for each context item
     $(".timeline-step").each(function() {
-        $(this).append( $("<td>").addClass("timeline-cell")
-            .attr("contextClass", contextInfo.getClasses()[0])
-            .tooltip(getCellTooltipOptions(contextInfo))
+        $(this)
+            .append( $("<td>").addClass("timeline-cell")
+                .attr("contextClass", contextInfo.getClasses()[0])
+                .tooltip(getTopTooltipOptions(translate_contextInformation(contextInfo.getID()) + " hat keinen Wert"))
         );
     });
 }
@@ -84,13 +91,19 @@ function highlightSelectedStep(timeline) {
 
 
 function activateTimelineTooltips () {
-    $("#timelineContainer *").tooltip({
+
+    // activate timeline info tooltip
+    $("#timelineInfo").tooltip({
         container: "body",
-        placement: "auto top"
-    })
+        placement: "auto left"
+    });
+
+    // re-initialize all tooltips with given options (if any) or default
+    $("#timelineContainer *").each(function (index, element) {
+        var tooltip = $(element).data("bs.tooltip");
+        $(element).tooltip(tooltip ? tooltip.options : {container: "body"});
+    });
 }
-
-
 
 
 
@@ -129,12 +142,12 @@ function removeAllCellTooltips () {
     $(".timeline-cell").find("*").addBack().tooltip("destroy");
 }
 
-function getCellTooltipOptions (contextInfo) {
+function getTopTooltipOptions (title) {
     return {
         animation: false,
         container: "body",
+        html: true,
         placement: "auto top",
-        title: translate_contextInformation(contextInfo.getID()) + " hat keinen Wert",
-        viewport: "#timelineContainer"
+        title: title
     };
 }

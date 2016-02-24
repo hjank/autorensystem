@@ -289,14 +289,14 @@ function _handleLabelClick(event) {
 
 
 function _handleColumnHeaderEnter(event) {
-    $(this).css("border", "1px solid grey").children("div.caret").show();
+    $(this).css("border", "1px solid grey").children("div.timeline-header-options").show();
     var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
 
     getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
 }
 
 function _handleColumnHeaderLeave(event) {
-    $(this).css("border", "").children("div.caret").hide();
+    $(this).css("border", "").children("div.timeline-header-options").hide();
     $(".timeline-cell").css("background-image", "");
 }
 

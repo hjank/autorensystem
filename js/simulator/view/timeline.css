@@ -46,11 +46,16 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label)
     text-align: center;
     border: 1px dotted lightgrey;
 }
-table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) .caret
+table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) div.timeline-header-options
 {
-    color: lightgrey;
-    font-size: small;
+    height: inherit;
+    margin-left: 5px;
+    display: inline;
     cursor: pointer;
+}
+table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) div.timeline-header-options:hover
+{
+    border: 1px solid grey;
 }
 
 .timeline-column-options span.btn

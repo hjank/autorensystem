@@ -52,7 +52,9 @@ function removeOccupiedMarkup (contextEvent) {
             "border-bottom": ""
         })
         .tooltip("destroy")
-        .tooltip(getCellTooltipOptions(contextEvent.getContextInfo()))
+        .tooltip(getTopTooltipOptions(
+            translate_contextInformation(contextEvent.getContextInfo().getID()) + " hat keinen Wert"
+        ))
         .popover("destroy");
 }
 

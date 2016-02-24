@@ -184,5 +184,6 @@ Timeline.prototype.render = function (simulation) {
 
     // set event handlers for generated cells
     setCellEventHandlers(simulation);
+
     activateTimelineTooltips();
 };
