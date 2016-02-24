@@ -9,7 +9,7 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
 
     // if a unit is expected as value (a unit's UUID, that is, which will be entered on confirm)
     if (expectsLearningUnit(ci) && scenario.constructor == Scenario) {
-        inputContextValueElement.css("display", "none"); // make input field invisible
+        inputContextValueElement.remove();
 
         // add all units of the current scenario
         scenario.getUnits().forEach(function (unit, index) {
@@ -17,7 +17,6 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
                 .attr("value", index.toString())
                 .html(unit.getName()));
         });
-        return;
     }
 
     else
@@ -39,7 +38,9 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
                 break;
 
             case "ENUM":
-                inputContextValueElement.css("display", "none");         // make input field invisible
+            case "BOOLEAN":
+
+                inputContextValueElement.remove();
 
                 // fill selection bar
                 var enums = ci.getEnums();
@@ -49,18 +50,22 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
                     selectPossibleValuesElement.append(option);
                 }
 
-                break;
+                if (ci.getType() == "BOOLEAN")
 
-            case "BOOLEAN":
-                inputContextValueElement.css("display", "none");      // and input field invisible
-
-                // get the two possible values true and false in selection bar
-                selectPossibleValuesElement.append($("<option>").attr("value", 1).html("ist wahr"));
-                selectPossibleValuesElement.append($("<option>").attr("value", 0).html("ist falsch"));
-
-                break;
+                    selectPossibleValuesElement.children("option").each(function (index, option) {
+                        var value = $(option).html();
+                        $(option).html("ist " + value);
+                    });
         }
+
+
+    var chosenValue = ci.getChosenValue();
+    if (chosenValue != "") {
+        inputContextValueElement.val(chosenValue);
+        selectPossibleValuesElement.val(enums.indexOf(chosenValue));
+    }
 }
+
 
 function fillPopoverParameterSelection(cp, divContextParams) {
 

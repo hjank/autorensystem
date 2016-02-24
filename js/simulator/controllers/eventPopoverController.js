@@ -66,9 +66,6 @@ function generatePopoverContent () {
 
     var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
 
-    //var popoverTemplate = $(simulatedContextInfoMenuElement).clone();
-    //$("#popoverContentTemplate").append(popoverTemplate);
-
     return $(simulatedContextInfoMenuElement).clone();
 }
 
