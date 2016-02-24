@@ -52,9 +52,6 @@ function _handleMousedown(event) {
     // delegate target is an occupied cell
     if ($(this).hasClass("timeline-cell-occupied")) {
 
-        // prevent tooltips from getting in the way
-        removeAllCellTooltips();
-
         var contextEvent = timeline.getEventAt(getRowIDOfCell(this), getColIDOfCell(this));
         var contextEventCells = getContextEventCells(contextEvent);
         firstCell = $(contextEventCells).first();
@@ -88,7 +85,10 @@ function _handleMousedown(event) {
     clickedCell = this;
     nextOccupiedCellTop = 0;
 
-    event.stopPropagation();
+
+    // prevent tooltips from getting in the way
+    if (resizing || moving)
+        removeAllCellTooltips();
 }
 
 

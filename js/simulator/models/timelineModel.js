@@ -167,6 +167,7 @@ Timeline.prototype.removeEvent = function (eventUUID) {
 
 Timeline.prototype.render = function (simulation) {
 
+    removeAllPopovers();
     clearTable();
 
     createHeader();
@@ -177,7 +178,6 @@ Timeline.prototype.render = function (simulation) {
 
     highlightSelectedStep(this);
 
-    removeAllPopovers();
     this._events.forEach(function(event) {
         event.render(simulation);
     });

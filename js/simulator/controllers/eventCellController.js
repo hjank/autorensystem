@@ -38,7 +38,7 @@ function addOccupiedMarkup (contextEvent, simulation) {
         .append($("<a>").attr("href","#").addClass("fui-new"))
         .append(createContextEventHideDOM())
         .append(createContextEventDeleteDOM())
-        .unbind("click").on("click", "a", simulation, _handleOccupiedCellAnchorClickEvent);
+        .off("click").on("click", "a", simulation, _handleOccupiedCellAnchorClickEvent);
 }
 
 
@@ -51,11 +51,11 @@ function removeOccupiedMarkup (contextEvent) {
             "border-top": "",
             "border-bottom": ""
         })
+        .popover("destroy")
         .tooltip("destroy")
         .tooltip(getTopTooltipOptions(
             translate_contextInformation(contextEvent.getContextInfo().getID()) + " hat keinen Wert"
-        ))
-        .popover("destroy");
+        ));
 }
 
 
@@ -143,6 +143,4 @@ function _handleOccupiedCellAnchorClickEvent (event) {
     else if ($(this).hasClass("fui-trash")) {
         deleteContextEvent(contextEvent, timeline);
     }
-
-    event.stopPropagation();
 }

@@ -6,16 +6,16 @@
 
 function createNewPopover(contextEvent, simulation) {
 
-    var markedCells = getContextEventCells(contextEvent);
+    var contextEventCells = getContextEventCells(contextEvent);
 
     // create a context editor popover for each selected cell
-    $(markedCells)
+    $(contextEventCells)
         .popover({
             container: "body",
             content: generatePopoverContent,
             html: true,
             placement: "bottom",
-            selector: markedCells,
+            selector: contextEventCells,
             template: '<div class="popover" role="tooltip">' +
             '<div class="arrow"></div>' +
             '<h3 class="popover-title"></h3>' +
@@ -27,20 +27,18 @@ function createNewPopover(contextEvent, simulation) {
         })
         .tooltip("destroy");
 
-    $(markedCells).each(function (index, cell) {
-        $(cell)
-            .on("shown.bs.popover", function(){
-                reconstructPopoverContent(simulation, contextEvent);
-                setPopoverEventHandlers(simulation, contextEvent);
-                repositionPopover(this);
-                $(".popover").find("*").tooltip();
-            })
-            .on("hide.bs.popover", function (event) {
-                removePopoverMarkup();
-                // remove all non-confirmed events
-                removeTemporaryEvents(simulation.getTimeline());
-            });
-    });
+    $(contextEventCells)
+        .on("shown.bs.popover", function(){
+            reconstructPopoverContent(simulation, contextEvent);
+            setPopoverEventHandlers(simulation, contextEvent);
+            repositionPopover(this);
+        })
+        .on("hide.bs.popover", function (event) {
+            removePopoverMarkup();
+            // remove all non-confirmed events
+            removeTemporaryEvents(simulation.getTimeline());
+        });
+
 }
 
 
@@ -52,7 +50,7 @@ function createNewPopover(contextEvent, simulation) {
  */
 function generatePopoverTitle (contextInfo) {
     var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
-    var closeX = $('<a href="#" title="Schließen ohne zu speichern" class="popover-close">X</a>').tooltip();
+    var closeX = $('<a href="#" title="Schließen ohne zu speichern" class="popover-close">X</a>');
     popoverTitle.append(closeX);
 
     return popoverTitle;
@@ -65,7 +63,6 @@ function generatePopoverTitle (contextInfo) {
 function generatePopoverContent () {
 
     var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
-
     return $(simulatedContextInfoMenuElement).clone();
 }
 
@@ -81,6 +78,7 @@ function reconstructPopoverContent(simulation, contextEvent) {
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
     $(".popover select").select2();
+    $(".popover").find("*").tooltip();
 }
 
 

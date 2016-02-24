@@ -49,7 +49,7 @@ function createColumn(contextInfo) {
             .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("alle Werte ausblenden")))
             .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("alle Werte löschen")));
 
-        if (contextInfo.hasMultiplicity())
+        if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
                 .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("neue Spalte einfügen")));
 
