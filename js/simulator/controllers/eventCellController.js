@@ -25,27 +25,33 @@ function addOccupiedMarkup (contextEvent, simulation) {
             animation: false,
             container: "body",
             html: true,
-            title: getTooltipTitle(contextEvent),
+            title: getTooltipTitle(contextEvent, simulation.getTimeline()),
             viewport: "#timelineContainer"
         });
 
-    if (expectsLearningUnit(contextEvent.getContextInfo())) {
-        cells = $(cells).first();
-    }
+    var doesExpectLearningUnit = expectsLearningUnit(contextEvent.getContextInfo());
+    var firstCell = $(cells).first();
+
+    // "finished learning unit" is implicitly valid till the end of all time...
+    if (doesExpectLearningUnit)
+        cells = firstCell;
 
     $(cells)
-        .addClass("timeline-cell-occupied")
-        .empty();
+        .addClass("timeline-cell-occupied");
 
-    $(cells).last().css("border-bottom", "1px solid")
-        .append($("<div>").addClass("occupied-resize-handle"));
-
-    $(cells).first()
+    $(firstCell)
         .css("border-top", "1px solid")
         .append($("<a>").attr("href","#").addClass("fui-new"))
         .append(createContextEventHideDOM())
         .append(createContextEventDeleteDOM())
         .off("click").on("click", "a", simulation, _handleOccupiedCellAnchorClickEvent);
+
+    var lastCell = $(cells).last();
+    $(lastCell).css("border-bottom", "1px solid");
+
+    // ...hence only "common" context information events shall be resizable
+    if (!doesExpectLearningUnit)
+        $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
 }
 
 
@@ -67,20 +73,34 @@ function removeOccupiedMarkup (contextEvent) {
 
 
 
-function getTooltipTitle (contextEvent) {
+function getTooltipTitle (contextEvent, timeline) {
 
+    var tooltipTitle = "";
     var contextInfo = contextEvent.getContextInfo();
     var chosenValue = contextInfo.getChosenValue();
-    if (expectsLearningUnit(contextInfo)) chosenValue = authorSystemContent.getUnitByUUID(chosenValue).getName();
 
-    var contextInfoValues = translate_contextInformation(contextInfo.getID()) + " ist " +
-        translate_possibleValue(chosenValue) + "<br><br>";
-    contextInfo.getParameters().forEach(function (param) {
-        contextInfoValues += translate_parameter(param.getID()) + ": ";
-        contextInfoValues += translate_parameterValue(param.getChosenValue()) + "<br>";
-    });
+    if (expectsLearningUnit(contextInfo)) {
+        tooltipTitle = "Abgeschlossene Lerneinheiten:<br><br>";
+        var columnEvents = timeline.getColumnEvents(contextEvent.getColumn());
+        for (var i in columnEvents) {
+            var event = columnEvents[i];
+            if (event.getStart() <= contextEvent.getStart()) {
+                chosenValue = event.getContextInfo().getChosenValue();
+                tooltipTitle += authorSystemContent.getUnitByUUID(chosenValue).getName() + "<br>";
+            }
+        }
+    }
 
-    return contextInfoValues;
+    else {
+        tooltipTitle = translate_contextInformation(contextInfo.getID()) + " ist " +
+            translate_possibleValue(chosenValue) + "<br><br>";
+        contextInfo.getParameters().forEach(function (param) {
+            tooltipTitle += translate_parameter(param.getID()) + ": ";
+            tooltipTitle += translate_parameterValue(param.getChosenValue()) + "<br>";
+        });
+    }
+
+    return tooltipTitle;
 }
 
 

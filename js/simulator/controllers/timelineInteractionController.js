@@ -9,19 +9,19 @@
 
 var mousedownOnEmptyCell, dragging, resizing, moving; // Boolean interaction state indicators
 var clickedCell; // needed for both creating and resizing events
-var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area)
 var firstCell; // needed for resizing and moving
 var originalEventCells, clickedCellIndex; // needed for moving
+var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area)
 
 
 
 /**
  * Sets handlers for mouse events on table
  */
-var cellEventHandlersSet = false;
+var timelineEventHandlersSet = false;
 function setCellEventHandlers(simulation) {
 
-    if (cellEventHandlersSet) return;
+    if (timelineEventHandlersSet) return;
 
     $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
     $(document).on("mousemove", _handleMousemove);
@@ -32,7 +32,7 @@ function setCellEventHandlers(simulation) {
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
 
-    cellEventHandlersSet = true;
+    timelineEventHandlersSet = true;
 }
 
 
@@ -45,6 +45,7 @@ function setCellEventHandlers(simulation) {
  * @private
  */
 function _handleMousedown(event) {
+
     var timeline = event.data.getTimeline();
 
     hideAllPopovers();
@@ -53,8 +54,11 @@ function _handleMousedown(event) {
     if ($(this).hasClass("timeline-cell-occupied")) {
 
         var contextEvent = timeline.getEventAt(getRowIDOfCell(this), getColIDOfCell(this));
-        var contextEventCells = getContextEventCells(contextEvent);
-        firstCell = $(contextEventCells).first();
+        originalEventCells = getContextEventCells(contextEvent);
+        firstCell = $(originalEventCells).first();
+        if (expectsLearningUnit(contextEvent.getContextInfo()))
+            originalEventCells = firstCell;
+
 
         // resizing a scheduled context event
         if ($(event.target).hasClass("occupied-resize-handle")) {
@@ -64,9 +68,6 @@ function _handleMousedown(event) {
         // moving a scheduled context event
         else if ($(event.target).is(this)) {
             moving = true;
-
-            var contextEvent = timeline.getEventAt(getRowIDOfCell(this), getColIDOfCell(this));
-            originalEventCells = getContextEventCells(contextEvent);
             clickedCellIndex = $(originalEventCells).index(this);
 
             $(this).css("cursor", "move");
@@ -107,7 +108,7 @@ function _handleMousemove(event) {
 
     /*** else: ***/
 
-        // prevent marking of label cells
+    // prevent marking of label cells
     event.preventDefault();
 
     dragging = true;
@@ -211,9 +212,7 @@ function _mark(event, referenceY) {
 
             // mark this cell if it's below drag start cell top, and the cursor has crossed its top
             if((referenceY + 3 < getBottom(this)) && (getTop(this) <= event.pageY))
-            {
                 $(this).removeClass("timeline-cell-occupied").addClass("timeline-cell-marked");
-            }
             else
                 $(this).removeClass("timeline-cell-marked");
         });
@@ -233,37 +232,45 @@ function _mark(event, referenceY) {
  * @private
  */
 function _handleMouseup(event) {
-    var simulation = event.data;
 
-    // if no dragging happened, mark clicked cell (for subsequent access)
-    if (!dragging) {
-        if (mousedownOnEmptyCell || resizing)
-            $(clickedCell).addClass("timeline-cell-marked");
-        else if (moving)
-            $(originalEventCells).addClass("timeline-cell-marked");
+    /*** handle timeline cell interaction ***/
+
+    if (mousedownOnEmptyCell || resizing || moving) {
+
+        // if no dragging happened, mark clicked cell (for subsequent access)
+        if (!dragging) {
+            if (mousedownOnEmptyCell || resizing)
+                $(clickedCell).addClass("timeline-cell-marked");
+            else
+                $(originalEventCells).addClass("timeline-cell-marked");
+        }
+
+
+        var simulation = event.data;
+
+        // create new context event in formerly empty cells
+        if (mousedownOnEmptyCell) {
+            createNewContextEvent(simulation);
+        }
+
+        // or update resized or moved context event
+        else /** if (resizing || moving) **/ {
+            var markedCells = $(".timeline-cell-marked");
+
+            var timeline = simulation.getTimeline();
+            var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
+
+            var newStart = getRowIDOfCell(moving ? $(markedCells).first() : firstCell);
+            var newEnd = getRowIDOfCell($(markedCells).last());
+
+            updateEventTimeslot(contextEvent, timeline, newStart, newEnd);
+
+            // refresh everything and reload tooltips
+            simulation.renderTimeline();
+        }
     }
 
-
-    // create new context event in formerly empty cells
-    if (mousedownOnEmptyCell) {
-        createNewContextEvent(simulation);
-    }
-
-    // or resize context event
-    else if (resizing || moving) {
-        var markedCells = $(".timeline-cell-marked");
-
-        var timeline = simulation.getTimeline();
-        var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
-        if (moving)
-            contextEvent.setStart(getRowIDOfCell($(markedCells).first()));
-        contextEvent.setEnd(getRowIDOfCell($(markedCells).last()));
-        timeline.updateEvent(contextEvent);
-
-        // refresh everything and reload tooltips
-        simulation.renderTimeline();
-    }
-
+    /*** in any case ***/
 
     mousedownOnEmptyCell = false;
     dragging = false;

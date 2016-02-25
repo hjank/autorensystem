@@ -117,10 +117,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
             return;
         }
 
-        if (expectsLearningUnit(contextInfo)) {
-            contextEvent.setEnd(timeline.getNumberOfRows()-1);
-            timeline.updateEvent(contextEvent);
-        }
+        updateEventTimeslot(contextEvent, timeline);
 
         // remove old and add new class, plus style, informative tooltip, and clickable icons
         addOccupiedMarkup(contextEvent, simulation);
@@ -142,7 +139,6 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
 
 function hideAllPopovers() {
-
     // triggers "hide.bs.popover" event
     $(".popover").popover("hide");
 }
@@ -151,10 +147,7 @@ function hideAllPopovers() {
 function removeAllPopovers() {
 
     hideAllPopovers();
-
     $(".timeline-cell-occupied").popover("destroy");
-
-    freeAllCells();
 }
 
 

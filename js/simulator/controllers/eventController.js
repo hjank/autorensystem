@@ -60,7 +60,26 @@ function removeTemporaryEvents(timeline) {
 
         // remove class "timeline-cell-marked" from all cells
         unmarkAllCells();
-        // destroy temporary popover
-        //$(markedCells).popover("destroy");
     }
+}
+
+
+function updateEventTimeslot (contextEvent, timeline, newStart, newEnd) {
+
+    if (typeof newStart == "undefined")
+        newStart = contextEvent.getStart();
+
+    if (expectsLearningUnit(contextEvent.getContextInfo()))
+        newEnd = timeline.getNumberOfRows() - 1;
+
+    else if (typeof newEnd == "undefined")
+        newEnd = contextEvent.getEnd();
+
+
+    timeline.removeEvent(contextEvent);
+
+    contextEvent.setStart(newStart);
+    contextEvent.setEnd(newEnd);
+
+    timeline.addEvent(contextEvent);
 }
