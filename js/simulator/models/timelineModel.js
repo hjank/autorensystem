@@ -213,7 +213,7 @@ Timeline.prototype.render = function (simulation) {
     createSteps(this._rowMap.length);
 
     this._columnContextMap.forEach(function (col) {
-        createColumn(col.contextInfo, simulation);
+        createColumn(col.contextInfo);
     });
 
     highlightSelectedStep(simulation);

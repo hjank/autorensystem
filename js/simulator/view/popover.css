@@ -24,7 +24,10 @@ div.popover h3.popover-title a.simulator-info-close {
 {
     background-color: #cccccc;
 }
-
+.popover-column-options span.btn.fui-trash:hover
+{
+    background-color: red;
+}
 
 
 div.popover-context-info {

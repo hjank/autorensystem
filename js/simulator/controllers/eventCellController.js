@@ -148,23 +148,19 @@ function _handleOccupiedCellAnchorClickEvent (event) {
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {
-        contextEvent.setVisibility(false);
+        hideContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
             .attr("title", "Einblenden")
             .tooltip("fixTitle");
-
-        $(cells).addClass("timeline-cell-invisible");
     }
 
     else if ($(this).hasClass("fui-eye")) {
-        contextEvent.setVisibility(true);
+        showContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
             .attr("title", "Ausblenden")
             .tooltip("fixTitle");
-
-        $(cells).removeClass("timeline-cell-invisible");
     }
 
     else if ($(this).hasClass("fui-trash")) {

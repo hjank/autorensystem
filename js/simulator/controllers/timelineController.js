@@ -41,38 +41,17 @@ function createSteps(steps) {
             ));
 }
 
-function createColumn(contextInfo, simulation) {
+function createColumn(contextInfo) {
 
     var _getColumnOptionsContent = function (contextInfo) {
 
-        var timeline = simulation.getTimeline();
-
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked")
-                .tooltip(getTopTooltipOptions("Alle Werte ausblenden"))
-                .off("click").on("click", function (event) {
-                    //TODO
-                }))
-            .append($("<span>").addClass("btn btn-sm fui-trash")
-                .tooltip(getTopTooltipOptions("Alle Werte löschen"))
-                .off("click").on("click", function (event) {
-                    timeline.removeColumn(/*TODO*/);
-                    simulation.renderTimeline();
-
-                    $(event.target).tooltip("hide");
-                }));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("Alle Werte ausblenden")))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Spalte mit allen Werten löschen")));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
-                .append($("<span>").addClass("btn btn-sm fui-plus")
-                    .tooltip(getTopTooltipOptions("Neue Spalte einfügen"))
-                    .off("click").on("click", function (event) {
-                        timeline.addColumn(contextInfo);
-                        simulation.renderTimeline();
-
-                        $(event.target).tooltip("hide");
-                    })
-            );
+                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("Neue Spalte einfügen")));
 
         return timelineColumnOptionsContent;
     };

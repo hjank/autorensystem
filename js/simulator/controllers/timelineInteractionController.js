@@ -28,9 +28,11 @@ function setCellEventHandlers(simulation) {
     $(document).on("mouseup", null, simulation, _handleMouseup);
 
     $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
+    $(document).on("click", ".popover-column-options .btn", simulation, _handleColumnHeaderOptionClick);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
+
 
     timelineEventHandlersSet = true;
 }
@@ -308,3 +310,37 @@ function _handleColumnHeaderLeave(event) {
     $(".timeline-cell").css("background-image", "");
 }
 
+
+function _handleColumnHeaderOptionClick(event) {
+    var simulation = event.data;
+    var timeline = simulation.getTimeline();
+
+    var timelineHeaderOptionsElement = $(this).parents(".popover").data("bs.popover").$element;
+    var thisColumn = $(".timeline-header-options").index(timelineHeaderOptionsElement);
+    var columnEvents = timeline.getColumnEvents(thisColumn);
+    var contextInfo = timeline.getColumnContext(thisColumn);
+
+    if ($(this).hasClass("fui-eye-blocked")) {
+        hideContextEvents(columnEvents);
+
+        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", "Alle Werte einblenden").tooltip("fixTitle");
+    }
+
+    else if ($(this).hasClass("fui-eye")) {
+        showContextEvents(columnEvents);
+
+        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", "Alle Werte ausblenden").tooltip("fixTitle");
+    }
+
+    else if ($(this).hasClass("fui-trash")) {
+        timeline.removeColumn(thisColumn);
+        simulation.renderTimeline();
+    }
+
+    else if ($(this).hasClass("fui-plus")) {
+        timeline.addColumn(contextInfo);
+        simulation.renderTimeline();
+    }
+
+    $(this).tooltip("hide");
+}
