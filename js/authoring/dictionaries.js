@@ -111,7 +111,7 @@ var contextValueDictionary = {
     "UNKNOWN" : "Unbekannt",
     "TRANSPORTATION" : "Auto/Öffentliche Verkehrsmittel",
     "TRUE" : "wahr",
-    "FALSE" : "falsch"
+    "FALSE" : "nicht wahr"
 };
 
 var contextParameterValueDictionary = {

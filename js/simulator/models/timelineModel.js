@@ -63,6 +63,7 @@ Timeline.prototype.getColumnContext = function(col) {
     return this._columnContextMap[col].contextInfo;
 };
 
+
 Timeline.prototype.getSelectedStep = function () {
     return this._selectedStep;
 };
@@ -117,17 +118,47 @@ Timeline.prototype.addStep = function (index) {
 };
 
 Timeline.prototype.addColumn = function(contextInfo, index) {
-    if (typeof index == "undefined") index = this._columnContextMap.length;
 
+    if (typeof index == "undefined") {
+        // append column to last one for this info
+        this._columnContextMap.forEach(function (column, colID) {
+            if (column.contextInfo.getID() == contextInfo.getID()) index = colID
+        });
+        // if still undefined, for there's yet no column for this info
+        if (typeof index == "undefined")
+            index = this._columnContextMap.length;
+    }
+
+    // actually add the column at calculated index
     this._columnContextMap.splice(index, 0, {
         "contextInfo": contextInfo,
         "events": []
     });
 
+    // adjust column properties of all events following that column
     index++;
     this._columnContextMap.slice(index).forEach(function (col) {
         col.events.forEach(function (event) {
             event.setColumn(event.getColumn()+1);
+        });
+    });
+};
+
+Timeline.prototype.removeColumn = function(index) {
+    if (typeof index == "undefined")
+        return;
+
+    var self = this;
+    this._columnContextMap.slice(index).forEach(function (col) {
+        col.events.forEach(function (event) {
+            self.removeEvent(event);
+        });
+    });
+    this._columnContextMap.splice(index, 1);
+
+    this._columnContextMap.slice(index).forEach(function (col) {
+        col.events.forEach(function (event) {
+            event.setColumn(event.getColumn()-1);
         });
     });
 };
@@ -180,8 +211,9 @@ Timeline.prototype.render = function (simulation) {
 
     createHeader();
     createSteps(this._rowMap.length);
+
     this._columnContextMap.forEach(function (col) {
-        createColumn(col.contextInfo);
+        createColumn(col.contextInfo, simulation);
     });
 
     highlightSelectedStep(simulation);

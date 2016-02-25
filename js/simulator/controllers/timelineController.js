@@ -41,17 +41,38 @@ function createSteps(steps) {
             ));
 }
 
-function createColumn(contextInfo) {
+function createColumn(contextInfo, simulation) {
 
     var _getColumnOptionsContent = function (contextInfo) {
 
+        var timeline = simulation.getTimeline();
+
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("alle Werte ausblenden")))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("alle Werte löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked")
+                .tooltip(getTopTooltipOptions("Alle Werte ausblenden"))
+                .off("click").on("click", function (event) {
+                    //TODO
+                }))
+            .append($("<span>").addClass("btn btn-sm fui-trash")
+                .tooltip(getTopTooltipOptions("Alle Werte löschen"))
+                .off("click").on("click", function (event) {
+                    timeline.removeColumn(/*TODO*/);
+                    simulation.renderTimeline();
+
+                    $(event.target).tooltip("hide");
+                }));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
-                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("neue Spalte einfügen")));
+                .append($("<span>").addClass("btn btn-sm fui-plus")
+                    .tooltip(getTopTooltipOptions("Neue Spalte einfügen"))
+                    .off("click").on("click", function (event) {
+                        timeline.addColumn(contextInfo);
+                        simulation.renderTimeline();
+
+                        $(event.target).tooltip("hide");
+                    })
+            );
 
         return timelineColumnOptionsContent;
     };
@@ -124,6 +145,24 @@ function activateTimelineTooltips () {
 
 
 
+function hideContextEvents(contextEvents) {
+    contextEvents.forEach(function (contextEvent) {
+        contextEvent.setVisibility(false);
+
+        $(getContextEventCells(contextEvent)).addClass("timeline-cell-invisible");
+    });
+}
+
+function showContextEvents(contextEvents) {
+    contextEvents.forEach(function (contextEvent) {
+        contextEvent.setVisibility(true);
+
+        $(getContextEventCells(contextEvent)).removeClass("timeline-cell-invisible");
+    });
+}
+
+
+
 function getColumnCells(colIndex) {
     var cells = $();
     $(".timeline-step").each(function (index, step) {
@@ -154,6 +193,9 @@ function freeAllCells() {
     $(".timeline-cell-occupied").empty()
         .removeClass(".timeline-cell-occupied");
 }
+
+
+
 
 function removeAllCellTooltips () {
     $(".timeline-cell").find("*").addBack().tooltip("destroy");
