@@ -150,7 +150,7 @@ Simulation.prototype._run = function (self) {
         self.stop();
 
     else {
-        highlightSelectedStep(self._timeline);
+        highlightSelectedStep(self);
 
         self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
             if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
@@ -195,4 +195,5 @@ Simulation.prototype.stop = function () {
     this._timeline.setSelectedStep(0);
 
     resetPlaybackButton();
+    highlightSelectedStep(this);
 };

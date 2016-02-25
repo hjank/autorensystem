@@ -84,13 +84,26 @@ function createColumn(contextInfo) {
 }
 
 
-function highlightSelectedStep(timeline) {
+function highlightSelectedStep(simulation) {
+    var selectedStep = simulation.getTimeline().getSelectedStep();
+    var isSimulating = simulation.getStatus() != STOPPED;
 
     $("#timelineTable tbody tr.timeline-step").each(function(step){
-        if (step == timeline.getSelectedStep())
+        if (isSimulating && step == selectedStep)
             $(this).addClass("selected-step");
         else $(this).removeClass("selected-step");
     });
+
+    var selectedStepElement = $(".selected-step");
+    var timelineWindow = $("#timelineTableWindow");
+
+    if (isSimulating && getBottom(selectedStepElement) >= getBottom(timelineWindow) ) {
+        var timelineScrollTop = $(timelineWindow).scrollTop();
+        var scrollTopDelta = timelineScrollTop + getTop(selectedStepElement) - getTop(timelineWindow);
+
+        // scroll the timeline so that selected step remains visible
+        $(timelineWindow).animate({scrollTop: scrollTopDelta}, 500);
+    }
 }
 
 

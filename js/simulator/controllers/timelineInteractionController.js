@@ -277,10 +277,13 @@ function _handleMouseup(event) {
 
 
 function _handleLabelClick(event) {
-    var timeline = event.data.getTimeline();
+    var simulation = event.data;
 
-    timeline.setSelectedStep(getRowIDOfCell(this));
-    highlightSelectedStep(timeline);
+    if (simulation.getStatus() != STOPPED) {
+        var timeline = simulation.getTimeline();
+        timeline.setSelectedStep(getRowIDOfCell(this));
+        highlightSelectedStep(simulation);
+    }
 
     event.stopPropagation();
 }

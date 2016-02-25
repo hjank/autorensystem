@@ -88,7 +88,7 @@ function repositionPopover(cell) {
 
     var containerBottom = getBottom($("#simulatorContainer"));
 
-    var timelineWindow = $(cell).parents("#timelineTableWindow");
+    var timelineWindow = $("#timelineTableWindow");
     var timelineScrollTop = $(timelineWindow).scrollTop();
 
     if (getBottom(popover) > containerBottom) {

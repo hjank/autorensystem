@@ -58,17 +58,19 @@ function setSimulationEventHandlers(simulation) {
 
     $("#btnBackToStart").off("click").on("click", function (event) {
         simulation.stop();
-        highlightSelectedStep(timeline);
+        highlightSelectedStep(simulation);
+
+        $("#timelineTableWindow").animate({scrollTop: 0}, 500);
     });
 
     $("#btnBackward").off("click").on("click", function (event) {
         timeline.decrementSelectedStep();
-        highlightSelectedStep(timeline);
+        highlightSelectedStep(simulation);
     });
 
     $("#btnForward").off("click").on("click", function (event) {
         timeline.incrementSelectedStep();
-        highlightSelectedStep(timeline);
+        highlightSelectedStep(simulation);
     });
 
 

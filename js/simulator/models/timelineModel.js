@@ -180,7 +180,7 @@ Timeline.prototype.render = function (simulation) {
         createColumn(col.contextInfo);
     });
 
-    highlightSelectedStep(this);
+    highlightSelectedStep(simulation);
 
     this._events.forEach(function(event) {
         event.render(simulation);
