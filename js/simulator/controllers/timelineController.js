@@ -46,8 +46,8 @@ function createColumn(contextInfo) {
     var _getColumnOptionsContent = function (contextInfo) {
 
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("Alle Werte ausblenden")))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Spalte mit allen Werten löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("Alle Werte der Spalte ausblenden")))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Alle Werte der Spalte löschen")));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent

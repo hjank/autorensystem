@@ -63,6 +63,15 @@ Timeline.prototype.getColumnContext = function(col) {
     return this._columnContextMap[col].contextInfo;
 };
 
+Timeline.prototype.getColumnsForContextInfo = function(contextInfo) {
+    var columns = [];
+    this._columnContextMap.forEach(function (column) {
+        if (column.contextInfo.getID() == contextInfo.getID())
+            columns.push(column);
+    });
+    return columns;
+};
+
 
 Timeline.prototype.getSelectedStep = function () {
     return this._selectedStep;

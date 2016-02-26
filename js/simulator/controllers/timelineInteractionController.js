@@ -317,8 +317,8 @@ function _handleColumnHeaderOptionClick(event) {
 
     var timelineHeaderOptionsElement = $(this).parents(".popover").data("bs.popover").$element;
     var thisColumn = $(".timeline-header-options").index(timelineHeaderOptionsElement);
-    var columnEvents = timeline.getColumnEvents(thisColumn);
     var contextInfo = timeline.getColumnContext(thisColumn);
+    var columnEvents = timeline.getColumnEvents(thisColumn);
 
     if ($(this).hasClass("fui-eye-blocked")) {
         hideContextEvents(columnEvents);
@@ -333,7 +333,12 @@ function _handleColumnHeaderOptionClick(event) {
     }
 
     else if ($(this).hasClass("fui-trash")) {
-        timeline.removeColumn(thisColumn);
+        if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
+            timeline.removeColumn(thisColumn);
+        else
+            columnEvents.forEach(function (event) {
+                timeline.removeEvent(event);
+            });
         simulation.renderTimeline();
     }
 
