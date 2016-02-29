@@ -69,7 +69,7 @@ function parseContextInfoXML (xml) {
         // 3. all possible values (boolean choices are treated as enums)
         var array_possibleValues = [];
         if (type == "BOOLEAN")
-            array_possibleValues = ["FALSE", "TRUE"];
+            array_possibleValues = ["TRUE", "FALSE"];
         else
             contextValue.children("possibleValues").children().each(function() {
                 array_possibleValues.push(this.innerHTML);
