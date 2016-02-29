@@ -3,16 +3,6 @@
  *
  */
 
-/**
- * Initialize timeline
- */
-function initTimeline(simulation) {
-
-    simulation.initTimeline(numberOfSteps);
-    simulation.renderTimeline();
-}
-
-
 
 
 /*********** view **********/
