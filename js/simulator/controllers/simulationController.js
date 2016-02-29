@@ -9,18 +9,19 @@ function setSimulationEventHandlers(simulation) {
     /**** simulation selection ****/
 
     var simulationSelectElement = $("#simulationSelection");
-    $(simulationSelectElement).on("select2:select", function (e) {
+    $(simulationSelectElement).off().on("select2-selecting", function (e) {
         //updateSimulator(simulationSelectElement.select2("data").id);
-        updateSimulator(e.val());
+        updateSimulator(simulations[e.val]);
+        e.preventDefault();
     });
+
 
     /**** simulator info button and popover ****/
 
-    $("#simulatorInfo, #timelineInfo")
+    $("#simulatorInfo, #timelineInfo, #btnSimulatorDescription")
         .on("shown.bs.popover", function (e) {
             $(e.target).tooltip("destroy");
             extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
-            setSimulatorInfoEventHandler();
         })
         .on("hide.bs.popover", function (e) {
             $(e.target).tooltip({
@@ -32,10 +33,13 @@ function setSimulationEventHandlers(simulation) {
 
     function extendSimulatorInfoPopover(popover) {
 
-        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>').tooltip({
-            container: "body",
-            placement: "bottom"
-        });
+        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>')
+            .tooltip({
+                container: "body",
+                placement: "bottom"
+            })
+            .off("click").on("click", hideAllPopovers);
+
         $(popover).children("h3.popover-title").append(closeX);
 
         $(".simulator-info-text a#simulator-info-scenario").tooltip({
@@ -50,11 +54,6 @@ function setSimulationEventHandlers(simulation) {
             placement: "auto top",
             title: infotexts.context
         });
-    }
-
-
-    function setSimulatorInfoEventHandler() {
-        $(".popover .simulator-info-close").on("click", hideAllPopovers);
     }
 
 

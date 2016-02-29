@@ -1,19 +1,23 @@
 div.popover div.popover-content {
     font-size: medium;
 }
-
-div.simulator-info-text a {
-    text-decoration: underline;
-}
-
-#timeline-info-hint {
-    font-size: small;
-}
-
 div.popover h3.popover-title div a.popover-close,
 div.popover h3.popover-title a.simulator-info-close {
     float: right;
 }
+
+
+
+
+div.simulator-info-text a {
+    text-decoration: underline;
+}
+#timeline-info-hint {
+    font-size: small;
+}
+
+
+
 
 
 .popover-column-options span.btn
@@ -28,6 +32,16 @@ div.popover h3.popover-title a.simulator-info-close {
 {
     background-color: red;
 }
+
+
+
+
+.popover-simulation-name-description * {
+    display: block;
+    width: 235px;
+}
+
+
 
 
 div.popover-context-info {

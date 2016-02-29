@@ -71,6 +71,7 @@ function updateSimulator(simulation) {
             // no match found but open simulation already belongs somewhere --> create a new one
             if (!foundMatch && simulatedScenario.constructor == Scenario) {
                 simulation = new Simulation();
+                simulations.push(simulation);
                 simulation.initTimeline(numberOfSteps);
             }
 
@@ -132,11 +133,18 @@ function renderSimulator(simulation) {
 
     /*** buttons, tooltips and popovers ***/
 
+    var getNameDescriptionPopoverContent = function () {
+        var nameDescrPopover = $("#popoverContentTemplate > div.popover-simulation-name-description").clone();
+        $(nameDescrPopover.find(".popover-simulation-name")).val(simulation.getTitle());
+        $(nameDescrPopover.find(".popover-simulation-description")).val(simulation.getDescription());
+        return nameDescrPopover;
+    };
+
     $("#btnSimulatorDescription")
         .popover("destroy")
         .popover({
             container: "body",
-            content: "Here be name and description.",
+            content: getNameDescriptionPopoverContent(),
             html: true,
             placement: "bottom"
         });
@@ -150,11 +158,6 @@ function renderSimulator(simulation) {
     $("#simulationToolbar *").tooltip({
         container: "body",
         placement: "auto top"
-    });
-
-    $("#simulatorContainer *").not("#simulatorInfo").tooltip({
-        container: "body",
-        placement: "auto bottom"
     });
 
 
