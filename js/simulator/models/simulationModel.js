@@ -6,7 +6,7 @@ const RUNNING = 0, PAUSED = 1, STOPPED = 2;
 
 function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
-    this._title = title || "Unbenannt";
+    this._title = title || "Leere Vorlage";
     this._description = descr || "";
 
     this._scenario = scenario || {};
@@ -20,8 +20,28 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
     this._iteration = null;
     this._adaptationEngine = {};
 
+
+    // add default context info: finished learning unit (necessary for simulation)
+    this._initContextInfoList();
+
     return this;
 }
+
+Simulation.prototype._initContextInfoList = function () {
+    if (!contextList) {
+        console.log("ERROR: contextList has not been initialized yet!");
+        return;
+    }
+    // default entry
+    var finishedLearningUnitContextInfo = contextList.getItemByID("CI_FINISHED_LEARNING_UNIT");
+    if (!finishedLearningUnitContextInfo) {
+        console.log("ERROR: There is no context information with ID 'CI_FINISHED_LEARNING_UNIT'!");
+        return;
+    }
+
+    this._simulatedContextList.addItem(new ContextInformation().fromJSON(finishedLearningUnitContextInfo));
+    this._simulatedContextList.resetAllContextValues();
+};
 
 Simulation.prototype.getTitle = function () {
     return this._title;
@@ -76,6 +96,7 @@ Simulation.prototype.addContextItem = function (contextInfo) {
     this._timeline.addColumn(contextInfo, index);
 
 };
+
 
 Simulation.prototype.initTimeline = function (steps) {
     // start from tabula rasa
