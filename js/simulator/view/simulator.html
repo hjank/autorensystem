@@ -2,9 +2,19 @@
 
     <div id="simulatorHeader">
         <div id="simulationTitle">
-            <span id="simulationName"></span>
-            <span id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Name und Beschreibung dieser Simulation ändern"></span>
-            <a href="#" id="simulatorInfo" title="Hilfe zum Simulator"><b class="btn-xs fui-question-circle"></b></a>
+            <span>
+                <label for="simulatorInfo">Wählen Sie einen Testfall aus:</label>
+                <a href="#" id="simulatorInfo" title="Hilfe zum Simulator"><b class="btn-xs fui-question-circle"></b></a>
+            </span>
+            <span>
+                <select id="simulationSelection" class="form-control select select-primary mbl">
+                    <optgroup label="Für dieses Szenario"></optgroup>
+                    <optgroup label="Für andere Szenarien"></optgroup>
+                </select>
+                <label for="simulationSelection">
+                    <div id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Name und Beschreibung dieser Simulation ändern"></div>
+                </label>
+            </span>
         </div>
     </div>
 

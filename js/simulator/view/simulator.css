@@ -19,11 +19,18 @@
     text-align: center;
 }
 
-#simulationTitle span {
-    text-align: center;
+#simulationTitle span:last-of-type {
+    float: left;
 }
-#simulationName{
-    cursor: default;
+
+#simulationTitle span:last-of-type {
+    float: right;
+}
+
+#simulationTitle span .select {
+    max-width: 200px;
+    min-width: 200px;
+    width: 200px;
 }
 
 #btnSimulatorDescription:hover {
