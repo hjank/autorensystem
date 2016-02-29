@@ -125,7 +125,7 @@ function createContextEventHideDOM () {
         .attr("href", "#")
         .addClass("fui-eye-blocked")
         .attr("title", "Ausblenden")
-        .on("mouseover", function (event) {
+        .on("mouseover", function (e) {
             $(this).parent().tooltip("hide");
         })
         .tooltip({
@@ -137,14 +137,14 @@ function createContextEventHideDOM () {
 
 
 
-function _handleOccupiedCellAnchorClickEvent (event) {
+function _handleOccupiedCellAnchorClickEvent (e) {
 
-    var timeline = event.data.getTimeline();
-    var contextEvent = timeline.getEventAt(getRowIDOfCell(event.delegateTarget), getColIDOfCell(event.delegateTarget));
+    var timeline = e.data.getTimeline();
+    var contextEvent = timeline.getEventAt(getRowIDOfCell(e.delegateTarget), getColIDOfCell(e.delegateTarget));
     var cells = getContextEventCells(contextEvent);
 
     if ($(this).hasClass("fui-new")) {
-        $(event.delegateTarget).popover("show");
+        $(e.delegateTarget).popover("show");
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {

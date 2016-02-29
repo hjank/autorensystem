@@ -134,7 +134,7 @@ function fillPopoverParameterSelection(cp, divContextParams) {
                 child = createNamedDOMElement("input", id)
                     .addClass("form-control")
                     .attr("type", "number")
-                    .on("keyup", function (event) { getParameterInput(event, (lat || long)); })
+                    .on("keyup", function (e) { getParameterInput(e, (lat || long)); })
                     .val(chosenValue);
                 div.append(child);
 

@@ -33,7 +33,7 @@ function createNewPopover(contextEvent, simulation) {
             setPopoverEventHandlers(simulation, contextEvent);
             repositionPopover(this);
         })
-        .on("hide.bs.popover", function (event) {
+        .on("hide.bs.popover", function (e) {
             removePopoverMarkup();
             // remove all non-confirmed events
             removeTemporaryEvents(simulation.getTimeline());
@@ -107,9 +107,9 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 
     $(".popover .popover-close").off("click").on("click", hideAllPopovers);
 
-    $(".popover .popover-confirm").off("click").on("click", function(event){
+    $(".popover .popover-confirm").off("click").on("click", function(e){
 
-        var contextInfoDiv = $(event.target).parents(".popover .popover-content .popover-context-info");
+        var contextInfoDiv = $(e.target).parents(".popover .popover-content .popover-context-info");
         var contextInfo = contextEvent.getContextInfo();
 
         if (!confirmPopoverContent(contextInfoDiv, contextInfo, simulation.getScenario())) {

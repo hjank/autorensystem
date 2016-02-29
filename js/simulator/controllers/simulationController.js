@@ -6,18 +6,24 @@
 
 function setSimulationEventHandlers(simulation) {
 
-    var timeline = simulation.getTimeline();
+    /**** simulation selection ****/
+
+    var simulationSelectElement = $("#simulationSelection");
+    $(simulationSelectElement).on("select2:select", function (e) {
+        //updateSimulator(simulationSelectElement.select2("data").id);
+        updateSimulator(e.val());
+    });
 
     /**** simulator info button and popover ****/
 
     $("#simulatorInfo, #timelineInfo")
-        .on("shown.bs.popover", function (event) {
-            $(event.target).tooltip("destroy");
-            extendSimulatorInfoPopover($(event.target).data("bs.popover").$tip);
+        .on("shown.bs.popover", function (e) {
+            $(e.target).tooltip("destroy");
+            extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
             setSimulatorInfoEventHandler();
         })
-        .on("hide.bs.popover", function (event) {
-            $(event.target).tooltip({
+        .on("hide.bs.popover", function (e) {
+            $(e.target).tooltip({
                 container: "body",
                 placement: "left"
             });
@@ -55,26 +61,28 @@ function setSimulationEventHandlers(simulation) {
 
     /**** playback controls ****/
 
+    var timeline = simulation.getTimeline();
 
-    $("#btnBackToStart").off("click").on("click", function (event) {
+
+    $("#btnBackToStart").off("click").on("click", function (e) {
         simulation.stop();
         highlightSelectedStep(simulation);
 
         $("#timelineTableWindow").animate({scrollTop: 0}, 500);
     });
 
-    $("#btnBackward").off("click").on("click", function (event) {
+    $("#btnBackward").off("click").on("click", function (e) {
         timeline.decrementSelectedStep();
         highlightSelectedStep(simulation);
     });
 
-    $("#btnForward").off("click").on("click", function (event) {
+    $("#btnForward").off("click").on("click", function (e) {
         timeline.incrementSelectedStep();
         highlightSelectedStep(simulation);
     });
 
 
-    $("#btnPlaySimulation").off("click").on("click", function (event) {
+    $("#btnPlaySimulation").off("click").on("click", function (e) {
 
         switch (simulation.getStatus()) {
 
@@ -135,7 +143,7 @@ function lightboxUnit(unitUUID) {
 
     $("div.body").first().prepend(
         $("<div>").addClass("lightbox-overlay")
-            .on("mousedown", function (event) {
+            .on("mousedown", function (e) {
                 $("div.lightbox-overlay").remove();
             })
     );

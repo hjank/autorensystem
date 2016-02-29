@@ -758,9 +758,9 @@ function getInputContextValue(event) {
  * @param {int} num Contains the specific input id number.
  * @param {Boolean} coord True if coordinates are expected as input.
  * */
-function getParameterInput(event, coord) {
+function getParameterInput(e, coord) {
 
-    var parameterElement = event.target;
+    var parameterElement = e.target;
     var val = $(parameterElement).val();
 
     // reduce too big values to maximum
