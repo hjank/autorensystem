@@ -3,3 +3,6 @@
 .idea/
 catalog-v001.xml
 build/
+export/content.json
+export/nodeRules.js
+savedData.json
