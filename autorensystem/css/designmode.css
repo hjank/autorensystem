@@ -1,0 +1,326 @@
+   H1 {border-width: 1; border: solid; text-align: center}
+   
+    #info-box {
+		border: 3px dashed #F00;
+		padding: 0px;
+        position: absolute;
+        right: 1em;
+        top: 0;
+        width: 400px;
+		height: 400px;
+     }
+	 
+	 
+	#designmodeProperties {
+		/*display:none;*/
+	}
+	
+/*	.centered {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	*/ 
+	.rowarea {
+		float: left;
+		border: 0px dashed #F00;
+		padding: 0px;
+        position: relative;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+		overflow:hidden;
+	}
+	
+	.colarea {
+		float: left;
+		border: 0px dashed #F00;
+		padding: 0px;
+        position: relative;
+        left: 0px;
+        top: 0px;
+		text-overflow: clip;
+		overflow:hidden;
+	}
+	
+	.gridelement {
+		/*float: left;*/
+		padding: 10px;
+		/*border: 2px;*/
+		background: white;
+		position:absolute;
+		/*left:5px;*/
+		/*top: 5px;*/
+		/*width:100%;*/
+		/*height:100%;*/	
+		/*max-height:8px;*/
+		text-overflow: clip;
+		/*overflow:hidden;*/
+		/*z-index:999;*/
+		/*border: inset 6px gray;
+		border-top-color: gray;
+		border-bottom-color: gray;
+		border-left-color: gray;
+		border-right-color: gray;*/
+		/*overflow:hidden;*/
+		overflow:visible;
+		z-index:3;
+		
+		
+		-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+		-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+		box-sizing: border-box;  
+		
+		-webkit-box-shadow:inset 0px 0px 0px 3px gray;
+		-moz-box-shadow:inset 0px 0px 0px 3px gray;
+		box-shadow:inset 2px 0px 0px 3px gray;
+		/*border-width: 3px; */
+		/*box-shadow:inset	0px 0px 40px red, 0px 0px 0px 10px gray, 0px 0px 0px 10px gray, 0px 0px 0px 10px gray;*/
+	}
+	
+	/*  http://stackoverflow.com/questions/5670879/css-html-create-a-glowing-border-around-an-input-field */
+	.borderglowing { 
+		outline: none;
+		border-color: #9ecaed;
+		box-shadow: 0 0 20px #9ecaed;
+	}
+	
+	.borderglowingred { 
+		outline: none;
+		border-color: #9ecaed;
+		box-shadow: 0 0 10px #9ecaed;
+	}
+	
+
+	#gridcontainer {
+		/*border: 2px; */
+		display:none;
+		width:600px;
+		height:400px;
+		/*left:1px;*/
+		/*right: 1px;*/
+		/*right:50px;*/
+		left:50px;
+		top:50px;
+		position: relative;
+		background:gray; /*green*/
+		/*overflow:hidden;*/
+		padding:0px;
+		outline: thick solid #ffffff;
+		
+		/*outline: none;
+		border-color: gray;
+		box-shadow: 0 0 20px #9ecaed;
+		*/
+	}
+	
+	#workingarea {
+		background:gray;
+		padding:20px;
+	}
+	
+	#divisionmarker {
+		border: 0px;
+		width:5px;
+		height:5px;
+		left:0px;
+		top:0px;
+		position: absolute;
+		background: red;
+		overflow:hidden;
+		z-index:6;
+		display:none;
+	}
+	
+	#sizemarker {
+		border: 0px;
+		width:5px;
+		height:5px;
+		left:0px;
+		top:0px;
+		position: absolute;
+		background: green;
+		overflow:hidden;
+		z-index:6;
+		display:none;
+	}
+	
+	#newmediamenu {
+		/*position: absolute;
+		bottom:10px; 
+		height:200px;
+		width:170x
+		*/
+	}
+	
+	.newmediamenu {
+		/*position: absolute;*/
+		/*bottom:10px;*/
+		/*height:200px;*/
+		/*width:170x*/
+	}
+	
+	.draggablemenuitem {
+		z-index:8;
+		position: relative;
+		top:0px;
+		left: 0px;
+		padding:5px;
+		height:70px;
+		width:70px;
+		float:left;
+	}
+	
+	.graybg {
+		background: gray;
+	}
+	
+	
+	.tomtexteditor {
+		background: white;
+			
+	}
+	
+	.tomtexteditor h1 {
+		font-size:20px;
+			
+	}
+	
+	.mediaelement {
+		position: relative;
+		width: 100%;
+		max-width: 100%;
+		height: 100%;
+		max-height: 100%;
+		top:0px;
+		left:0px;
+	/*	background: blue;*/
+		z-index:4;
+		background-size: cover;
+		background-position: center;
+		overflow: hidden;
+		text-overflow:clip;
+	}
+
+	.ui-menu { width: 150px; }
+	
+/*	#contextmenumedia {
+		z-index:200000000;
+		position:absolute; 
+		display:none;
+	}
+	*/
+	/*
+	#contextmenugrid {
+		z-index:100000;
+		position:absolute; 
+		display:none;
+	}
+	*/
+	.pictureelement {
+		width: 100%;
+		height: 100%;
+	}
+	
+	.videoelement {
+		width: 100%;
+		height: 100%;
+		top:0px;
+		left:0px;
+		position:absolute;
+	}
+	
+	
+	.my-editor {
+		all: initial;
+		* {
+			all: unset;
+		}
+	}
+	
+	.optionsmenu {
+		display:none;
+	}
+	
+	.fill {
+	  object-fit: fill;
+	}
+
+	.contain {
+	  object-fit: contain;
+	}
+
+	.cover {
+	  object-fit: cover;
+	}
+
+	.none {
+	  object-fit: none;
+	}
+	
+	.uploadform {
+		width: 50%;
+		height:50%;
+		margin: 0 auto;
+		border: 2px black;
+		
+	}
+	
+	#textbar {
+		background: black;
+		display:none;
+		width:400px;
+	}
+	
+	.infobarmedia {
+		/*width: 100px;
+		height: 10px;*/
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		
+	}
+	
+	.mediaicon {
+		height: 30px;
+		padding: 5px;
+	}
+	
+	.editmediaelementbutton {
+		position: absolute;
+		bottom: 0px;
+		right:0px;
+		height: 50px;
+		width: 50px;
+		background: darkblue;
+	}
+	
+	
+	.mycontextmenu {
+		background: #2f4154;
+		color: #2f4154;
+		font-size: 12px;
+		width:200px;
+		height:auto;
+		position:absolute;
+		color:white;
+		z-index:10;
+	}
+
+	.mycontextmenu ul {
+		list-style-type:none;
+		list-style-image:none;
+		margin:0px;
+		padding:0px;
+		cursor: context-menu;
+	}
+	
+	.mycontextmenu li { list-style-type: none; padding:3px;}
+	.mycontextmenu li:hover { background-color:#1abc9c; list-style-type: none}
+	
+	/* studi-version */
+	#navbar-right {
+		display:none;
+	}
+	}

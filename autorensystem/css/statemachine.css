@@ -1,0 +1,99 @@
+.w {
+    padding: 20px;
+    position: absolute;
+    z-index: 4;
+    border: 1px solid #34495e;
+    border-radius: 4px;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    cursor: move;
+    background-color: white;
+    font-size: 14px;
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+    text-align: center;
+}
+
+.w:hover {
+    background: #1e8151;
+    color: white;
+}
+
+.aLabel {
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+}
+
+.aLabel._jsPlumb_hover, ._jsPlumb_source_hover, ._jsPlumb_target_hover {
+    background-color: #1e8151;
+    color: white;
+}
+
+.aLabel {
+    background-color: white;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    border: 1px solid #346789;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.ep {
+    position: absolute;
+    bottom: 38%;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: orange;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ep:hover {
+    background: darkorange;
+}
+
+.statemaschine ._jsPlumb_endpoint {
+    z-index: 3;
+}
+
+.statemaschine {
+    position: absolute;
+}
+
+.dragHover {
+    border: 2px solid orange;
+}
+
+path {
+    cursor: pointer;
+}
+
+body {
+    padding:0;
+    margin:0;
+    font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: white;
+}
+
+.info {
+    position: absolute;
+    bottom: 37%;
+    left: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: blue;
+    cursor: pointer;
+}
+.info:hover {
+    /*box-shadow: 0px 0px 6px black;*/
+}
+
+#stm {
+    width: 10000px;
+    height: 10000px;
+    position: relative;
+    overflow: auto;
+}

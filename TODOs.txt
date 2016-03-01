@@ -1,0 +1,7 @@
+﻿Fehlerliste
+***********
+
+- Gitter verschwindet, wenn es zum ersten Mal erstellt wird [OK]
+- Drop-Down-Menü (nur durchsichtig ohne sichtbare Klickbarkeit) 
+	_ bootstrap Kontextmenü - http://jsfiddle.net/kylemit/x9tgy/
+- 

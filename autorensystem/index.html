@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Autorensystem</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- general style sheets -->
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/statemachine.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+
+        <!-- general javascript scripts -->
+        <!--<script src="//code.jquery.com/jquery-2.0.3.js"></script>-->
+        <!--<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>-->
+        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.custom/external/jquery/jquery-2.1.4.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.ui.touch-punch-0.2.2.min.js"></script>
+        <!--<script type="text/javascript" src="js/vendor/jquery.jsPlumb-1.7.2.js"/>-->
+        <script type="text/javascript" src="js/vendor/jsPlumb-1.7.10.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery.lightbox_me.js"></script>
+
+        <script type="text/javascript" src="js/authoring/formatSelections.js"></script>
+        <script type="text/javascript" src="js/authoring/dictionaries.js"></script>
+        <script type="text/javascript" src="js/authoring/utils.js"></script>
+
+        <!-- models -->
+        <script type="text/javascript" src="js/authoring/models/xmlParser.js"></script>
+        <script type="text/javascript" src="js/authoring/models/authorSystemContentModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/contextInfoModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/parameterModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/contextInfoListModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/scenarioModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/unitModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/connectionModel.js"></script>
+        <script type="text/javascript" src="js/authoring/models/aBoxJSONLDModel.js"></script>
+
+        <!-- controllers -->
+        <script type="text/javascript" src="js/authoring/controllers/authorSystemController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/canvasController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/contextInfoController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/menuController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/navBarController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/saveScenarioController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/exportScenarioController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/sliderController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/unitController.js"></script>
+
+        <!-- tab controllers -->
+        <script type="text/javascript" src="js/authoring/controllers/tabs/tabBarController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/tabs/contextTabController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/tabs/locationInfoMapViewController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/tabs/propertiesTabController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/tabs/relationTabController.js"></script>
+
+        <!-- modal window controllers -->
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/contactModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/deleteConnectionModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/deleteScenarioModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/deleteUnitModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/generalModalWindowsController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/helpModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/loadScenarioModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/loginModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/newScenarioModalWindowController.js"></script>
+        <script type="text/javascript" src="js/authoring/controllers/modalWindows/profileModalWindowController.js"></script>
+
+        <!-- single entry point -->
+        <script type="text/javascript" src="js/main.js"></script>
+
+
+        <!-- Menu bar -->
+        <link rel="stylesheet" href="css/menu.css">
+
+
+        <!-- modal window -->
+        <link rel="stylesheet" href="css/pgwmodal.css">
+
+        <!-- slider design -->
+        <link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
+
+        <!-- flat ui -->
+        <link rel="stylesheet" href="css/custom-icons.css">
+        <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
+        <link rel="stylesheet" href="css/flat-ui.css">
+
+        <script type="text/javascript" src="js/vendor/flat-ui.js"></script>
+
+
+        <!-- slider with pips -->
+        <!--<link rel="stylesheet" href="css/jquery-ui-slider-pips.css">-->
+        <script type="text/javascript" src="js/vendor/jquery-ui-slider-pips.js"></script>
+
+        <link rel="stylesheet" href="css/tabs.css">
+        <link rel="stylesheet" href="css/navigation.css">
+
+
+        <!-- google maps api -->
+        <!--<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>-->
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.22&signed_in=false&libraries=places"></script>
+
+	<!-- tomsstuff -->
+				<!-- designmode -->
+        <link rel="stylesheet" href="css/designmode.css">
+		<link rel="stylesheet" href="css/textmediaoutput.css">
+		<!--link rel="stylesheet" href="css/contextmenu.css"-->
+		<script type="text/javascript" src="js/authoring/modeController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/designModeControllerMain.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/loadJSON.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/createJSON.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/login.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/guimanagement.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/resizeController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/divideController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/ratiosliderController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/paddingsliderController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/mediaElementController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/neighborhood.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/myContextMenu.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/guismodel.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/texteditorController.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/loader.js"></script>
+		<script type="text/javascript" src="js/authoring/designmodecontrollers/converterJsonHtml.js"></script>
+		<!--script type="text/javascript" src="js/authoring/designmodecontrollers/contextMenuController2.js"></script-->
+		<!--script type="text/javascript" src="js/authoring/designmodecontrollers/paddingController.js"></script-->
+		<script type="text/javascript" src="js/vendor/resize.js"></script>
+		<script type="text/javascript" src="js/vendor/Math.uuid.js"></script>
+		<script type="text/javascript" src="js/vendor/ckeditor/ckeditor.js"></script>
+
+
+        <!-- simulator -->
+        <link rel="stylesheet" href="js/simulator/view/simulator.css">
+        <link rel="stylesheet" href="js/simulator/view/timeline.css">
+        <link rel="stylesheet" href="js/simulator/view/popover.css">
+        <link rel="stylesheet" href="js/simulator/view/unit-selection.css">
+
+        <script type="text/javascript" src="js/simulator/models/simulationModel.js"></script>
+        <script type="text/javascript" src="js/simulator/models/timelineModel.js"></script>
+        <script type="text/javascript" src="js/simulator/models/contextEventModel.js"></script>
+
+        <script type="text/javascript" src="js/simulator/infotexts.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/eventController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/eventCellController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/eventPopoverController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/eventPopoverContextInfoController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/timelineController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/timelineInteractionController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/simulatorController.js"></script>
+        <script type="text/javascript" src="js/simulator/controllers/simulationController.js"></script>
+
+        <script type="text/javascript" src="js/simulator/motivate-adaptationengine/scripts/lib/require.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container" style="margin-left: 0;">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand" href="#">Autorensystem</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <!--<li class="active"><a href="#">Home</a></li>-->
+                        <li class="dropdown">
+                            <a id="navbarScenario" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-window"></b> Szenario <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="showNewScenario"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="deleteScenario"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="saveScenario"><a href="#">Speichern <b class="fui-export" style="float: right"></b></a></li>
+                                <li id="exportScenario"><a download="#">Export <b class="fui-upload" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="navbarLearningUnit" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-new"></b> Lerneinheit <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="createLearnUnit"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="deleteLearnUnit"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        <!--<li class="dropdown">
+                            <a id="contextSimulation" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-play2"></b> Kontextsimulation <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="createSimulation"><a href="#">Erstellen <b class="fui-plus" style="float: right"></b></a></li>
+                                <li id="openSimulation"><a href="#">Öffnen <b class="fui-folder-open" style="float: right"></b></a></li>
+                                <li id="deleteSimulation"><a href="#">Löschen <b class="fui-trash" style="float: right"></b></a></li>
+                                <li id="importSimulation"><a href="#">Importieren <b class="fui-upload" style="float: right"></b></a></li>
+                            </ul>
+                        </li>-->
+                        <!--<li><a href="#test"><b class="fui-exit"></b> Testen</a></li>-->
+                        <!--<li id="navHeadStatistic"><a href="#statistic"><img src="img/Icons/iconmonstr-bar-chart-icon-32.png"> Statistiken</a></li>-->
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fui-user"></b> Benutzer<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="showProfile"><a href="#">Profil <b class="fui-gear" style="float: right"></b></a></li>
+                                <li id="showLogin"><a href="#">Logout <b class="fui-lock" style="float: right"></b></a></li>
+                            </ul>
+                        </li>
+                        -->
+                        <li id="showContact"><a href="#"><b class="fui-document"></b> Kontakt</a></li>
+                        <li class="active" id="showHelp" style="cursor: pointer"><a><b class="fui-question-circle"></b> Hilfe</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+
+            <div id='cssmenu' class="menu">
+                <ul id="menuScenarios">
+                </ul>
+            </div>
+
+            <div class="main">
+                <div class="page-hdr">
+                    <ul class="navbar" id="navbar-left-little">
+                        <!--<li id="navmenu" title="Show/Hide Menu" style="cursor: pointer"><span style="margin:auto">&#9776</span></li>-->
+                        <li id="navmenu" title="Zeige/Verstecke Struktur">
+                            <a href="#" class="fui-arrow-left" style="padding: 0 9px; "></a>
+                        </li>
+                    </ul>
+                    <ul class="navbar" id="navbar-right-little">
+                        <li id="navadd" title="Lerneinheit hinzufügen">
+                            <span class="fui-plus"></span>
+                        </li>
+                        <li id="navtab" title="Zeige/Verstecke Eigenschaften">
+                            <a href="#" class="fui-arrow-right" style="padding: 0 9px; "></a>
+                        </li>
+                    </ul>
+                    <span style="text-align: center">
+                        <label id="lname"></label>
+                    </span>
+                </div>
+                <div id="container" class="content">
+                    <ul id="navbar-middle-little">
+                        <li class="slider" style="height: 200px;">
+                        </li>
+                    </ul>
+
+                    <!--<div class="content" id="stm">-->
+                    <div id="stm">
+                    </div>
+		<!--tomsstuff -->
+					<!--a href="#" onclick="changeToDesignMode()" id="tomtest">test</a-->
+
+						<div id="gridcontainer" class="centered" data-ratioheight="3" data-ratiowidth="4" data-idcounter="0" data-padding="1" data-showborders="true" data-gridpadding="1">
+							<div class="gridelement" value="0" style="width:100%;height:100%;top:0%;left:0%;" id="gridelement8" >
+								<!--div class="resizesnapper" style="background:black;height:100%;width:30px;position:absolute;left:40%;top:0px;"></div-->
+							</div>
+						</div>
+
+		<!--/tomsstuff -->
+                </div>
+            </div>
+
+            <!-- Property area -->
+            <div class="properties">
+                <!-- tabs header-->
+                <div class="tabBar">
+                    <ul>
+                        <li><a href="#tab0" title="Szenario" class="active scenarioTab fui-window"></a></li>
+                        <li><a href="#tab1" title="Lerneinheit" class="unitTab fui-new"></a></li>
+                        <li><a href="#tab2" title="Metadaten" class="contentTab fui-list-large-thumbnails"></a></li>
+                        <li><a href="#tab3" title="Kontextinformationen" class="unitTab fui-info-circle"></a></li>
+                        <li><a href="#tab4" title="Relation" class="relationTab fui-resize"></a></li>
+                        <li><a href="#tab5" title="Simulator" class="simulatorTab fui-play2"></a></li>
+                    </ul>
+                </div>
+
+                <!-- content of the tabs -->
+                <div class="tabDetails">
+                    <div id="tab0" class="tabContents scenarioTab"></div>
+                    <div id="tab1" class="tabContents unitTab">
+                        <div id="formProperties">
+                            <div>
+                                <label for="inputUnitName" class="label-tabs label">Name</label>
+                                <input id="inputUnitName" class="form-control" name="unitName" value="" type="text">
+                            </div>
+                            <div>
+                                <label for="inputUnitDescription" class="label-tabs label">Beschreibung</label>
+                                <textarea id="inputUnitDescription" class="form-control" name="unitDescription" rows="5"></textarea>
+                            </div>
+                            <div>
+                                <div id="tabBtnDeleteUnit" class="btn btn-danger">
+                                    <b class="fui-trash"> </b>Lerneinheit löschen
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab2" class="tabContents contentTab">
+                        <div>
+                            <div id="designmodeProperties">
+                                <div id="mediampropertymenu">
+                                    <h6>Medien-Optionen</h6>
+
+                                    <div id="pageoptionmenu" class="optionsmenu" style="display:block;">
+                                        <p><b>Seiten-Optionen</b></p>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Bearbeitungsmodus</div>
+                                            <div class="panel-body">
+                                                <!--input type="checkbox" checked data-toggle="switch" name="custom-switch-text" data-on-text="Layout" data-off-text="Medien" id="mediamode"/-->
+                                                <fieldset>
+                                                    <input type="radio" id="mediamode" name="editormode" ><label for="mediamode">Medienmodus</label><br>
+                                                    <input type="radio" id="layoutmode" name="editormode" checked="checked"><label for="layoutmode">Layoutmodus</label><br>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        <!--a href="#" onclick="sendguidata()">Sichern</a> |
+                                        <a href="#" onclick="loadguidata()">Laden</a-->
+                                        <div class="panel panel-default" id="ratio-panel">
+                                            <div class="panel-heading"  >Seitenverh&auml;ltnis</div>
+                                            <div class="panel-body">
+                                                <div id="ratioslider" class="ratioslider" style="width:200px; float:left" ></div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default" id="padding-panel">
+                                            <div class="panel-heading" >Zwischenabst&auml;nde</div>
+                                            <div class="panel-body">
+                                                <div id="paddingslider" class="paddingslider" style="width:200px; float:left" ></div>
+                                            </div>
+                                        </div>
+
+                                        <label for="gridbordercheckbox">Gitter anzeigen</label>
+                                        <input type="checkbox" name="gridbordercheckbox" id="gridbordercheckbox" checked="checked" /> <br />
+
+                                        <div id="newmediamenu"   >
+                                            <div class="panel panel-default" id="media-panel">
+                                                <div class="panel-heading">Medienbibliothek</div>
+                                                <div class="panel-body">
+                                                    <div class="newmediamenu">
+                                                        <div class="mediamenuitem1" value="text">
+                                                            <img src="img/designmode/icon-text.png" height="100" class="draggablemenuitem" value="text">
+                                                        </div>
+                                                        <div class="mediamenuitem2" value="picture">
+                                                            <img src="img/designmode/icon-picture.png" height="100" class="draggablemenuitem" value="picture">
+                                                        </div>
+                                                        <br>
+                                                        <div class="mediamenuitem3" value="sound">
+                                                            <img src="img/designmode/icon-sound.png" height="100" class="draggablemenuitem" value="sound">
+                                                        </div>
+                                                        <div class="mediamenuitem4" value="video">
+                                                            <img src="img/designmode/icon-video.png" height="100" class="draggablemenuitem" value="video">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="picoptionmenu" class="optionsmenu">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Bild hochladen</div>
+                                            <div class="panel-body">
+
+                                                <form class="uploadform" action="/upload" method="post" enctype   =  "multipart/form-data" id="picuploadform">
+                                                    <input type="file" name="mediaelement" accept=".jpg, .gif, .png" id="picfileinput"/>
+                                                    <button type="submit">Upload</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Seitenverh&auml;ltnis</div>
+                                            <div class="panel-body">
+
+                                                <form id="picmenu">
+                                                    <input type="radio" name="picformat" value="filled">Filled<br>
+                                                    <input type="radio" name="picformat" value="aspectratio">Aspect Ratio<br>
+                                                    <input type="radio" name="picformat" value="panscan">Pan and Scan
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="videooptionmenu" class="optionsmenu">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Video hochladen</div>
+                                            <div class="panel-body">
+                                                <form class="uploadform" action="/upload" method="post" enctype   =  "multipart/form-data" id="viduploadform">
+                                                    <input type="file" name="mediaelement" accept=".mp4" id= "vidfileinput"/>
+                                                    <button type="submit">Upload</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Seitenverh&auml;ltnis</div>
+                                            <div class="panel-body">
+                                                <form id="videomenu">
+                                                    <input type="radio" name="videoformat" value="filled">Filled<br>
+                                                    <input type="radio" name="videoformat" value="aspectratio">Aspect Ratio<br>
+                                                    <input type="radio" name="videoformat" value="panscan">Pan and Scan
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Wiedergabeeinstellungen</div>
+                                            <div class="panel-body">
+                                                <form>
+                                                    <input type="checkbox" name="autoplay" class="videooptions">Autoplay<br>
+                                                    <input type="checkbox" name="controls" class="videooptions">Show Controls<br>
+                                                    <input type="checkbox" name="loop" class="videooptions">Loop<br>
+                                                    <input type="checkbox" name="muted" class="videooptions">Mute<br>
+                                                    <!--input type="checkbox" name="poster" class="videooptions">Preview Pic<br-->
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="soundoptionmenu" class="optionsmenu">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Audio hochladen</div>
+                                            <div class="panel-body">
+                                                <form class="uploadform" action="/upload" method="post" enctype="multipart/form-data" id="audiouploadform">
+                                                    <input type="file" name="mediaelement" accept=".mp3, .wav" id="soundfileinput" />
+                                                    <button type="submit" >Upload</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Wiedergabeoptionen</div>
+                                            <div class="panel-body">
+                                                <form>
+                                                    <input type="checkbox" name="autoplay" class="soundoptions">Autoplay<br>
+                                                    <input type="checkbox" name="controls" class="soundoptions">Show Controls<br>
+                                                    <input type="checkbox" name="loop" class="soundoptions">Loop<br>
+                                                    <input type="checkbox" name="mute" class="soundoptions">Mute<br>
+                                                    <!--input type="checkbox" name="poster" class="videooptions">Preview Pic<br-->
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="textoptionmenu" class="optionsmenu">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Text eingeben</div>
+                                            <div class="panel-body">
+
+                                                Geben Sie hier Ihren Text ein:
+                                                <textarea id="cktexteditor" name="cktexteditor">&lt;p&gt;Initial value.&lt;/p&gt;</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab3" class="tabContents unitTab">
+                        <form id="formContextInformation">
+                            <div id="mainContextInfo">
+                                <div id="mainContextInfoSAT">
+                                    <label class="label-tabs label" for="selectNumberContextInfos">Erfüllt</label><br>
+                                    <select id="selectNumberContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 90px;">
+                                        <option value="0">Alle</option>
+                                        <option value="1">Eine</option>
+                                    </select>
+                                </div>
+                                <div id="mainContextInfoSelection">
+                                    <label class="label-tabs label" for="selectMultiContextInfos">dieser Kontextinformationen</label>
+                                    <select id="selectMultiContextInfos" class="form-control multiselect multiselect-info" multiple="multiple" style="min-width: 235px">
+                                    </select>
+                                    <hr class="hr-tabs">
+                                </div>
+                                <div>
+                                    <div id="btnAddContextInfos" class="btn btn-info"><b class="fui-plus-circle"> </b>Hinzufügen</div>
+                                </div>
+                            </div>
+                            <div id="detailContextInfo" style="display: none">
+                                <div>
+                                    <div id="btnBackToMainContextInfo" class="btn btn-info btn-xs" title="Zurück zur Übersicht">
+                                        <b class="fui-arrow-left"> </b><b class="fui-home"></b>
+                                    </div>
+                                    <div id="btnConfirmContextInfoSmall" class="btn btn-info btn-xs" title="Eingaben bestätigen">
+                                        <b class="fui-check-circle"></b>
+                                    </div>
+                                </div>
+                                <div id="contextSelection">
+                                    <label class="label-tabs label" for="selectContextInfos">Die Kontextinformation</label>
+                                    <select id="selectContextInfos" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                                    </select>
+                                </div>
+                                <div id="divContextParameter">
+                                </div>
+                                <div>
+                                    <!--<label class="label-tabs label" for="selectOperator">Operator</label>-->
+                                    <select id="selectOperator" class="form-control select select-primary select-block mbl" style="min-width: 235px;">
+                                    </select>
+                                </div>
+                                <div id="divContextValue">
+                                    <!--<label class="label-tabs label" for="inputContextValue">Wert</label>-->
+                                    <input id="inputContextValue" class="form-control" name="inputContextValue" disabled onkeyup="getInputContextValue(this)">
+                                    <select id="selectPossibleValues" class="form-control select select-primary select-block mbl" style="min-width: 235px; display: none">
+                                    </select>
+                                </div>
+                                <div id="divMapsTemplate" style="display:none">
+                                    <div id="divMaps" style="display:block">
+                                        <div class="maps-row">
+                                            <input class="pac-input controls" type="text" placeholder="Suchen">
+                                            <div id="maps" style="height: 250px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="btnConfirmContextInfo" class="btn btn-info">
+                                        <b class="fui-check-circle"> </b>
+                                        Bestätigen
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- content of label relations -->
+                    <div id="tab4" class="tabContents relationTab">
+                        <div id="divSelectRelations">
+                            <div id="tabRelationBody">
+                                <p id="preLabelRelations" class="label-tabs label">Ist eine</p>
+                                <select id="selectRelations" class="form-control select select-primary select-block mbl">
+                                    <option value="pre">Voraussetzung (PRE)</option>
+                                    <option value="alt">Alternative (ALT)</option>
+                                    <option value="bas">Grundlage (BAS)</option>
+                                    <option value="ref">Referenz (REF)</option>
+                                    <option value="ext">Erweiterung (EXT)</option>
+                                    <option value="hlp">Hilfe (HLP)</option>
+                                </select>
+                                <p id="postLabelRelations" class="label-tabs label">Für</p>
+                                <div>
+                                    <div id="tabBtnDeleteConnection" class="btn btn-danger">
+                                        <b class="fui-trash" ></b>Verbindung löschen
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab5" class="tabContents simulatorTab"></div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>-->
+
+        <!-- login -->
+        <div id="modal-login" class="modal fade" tabindex="-1">
+            <div class="modal-dialog" style="width: 400px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Login
+                    </div>
+                    <div class="modal-body">
+                        <div style="text-align: center;">
+                            <label>Bitte loggen Sie sich ein!</label>
+                        </div>
+                        <form action="index.html">
+                            <div class="form-group has-feedback"><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px">
+                                <span class="form-control-feedback fui-user"></span>
+                            </div>
+                            <div class="form-group has-feedback"><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px">
+                                <span class="form-control-feedback fui-lock"></span>
+                            </div>
+                        </form>
+                        <div>
+                            <label id="hrefRegist" style="cursor:pointer; color: #16a085; margin-right: 10px">Registrieren</label>
+                            <label id="hrefPWForgot" style="cursor:pointer; color: #16a085">Passwort vergessen</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="margin-right: 10px">Login</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- register -->
+        <div id="modal-register" class="modal fade" tabindex="-1">
+            <div class="modal-dialog" style="width: 400px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Login
+                    </div>
+                    <div class="modal-body">
+                        <div style="text-align: center;">
+                            <label>Bitte registrieren Sie sich hier!</label>
+                        </div>
+                        <form action="index.html">
+                            <div class="form-group has-feedback"><input class="form-control" name="username" placeholder="Username" type="text" maxlength="30" style="line-height: 22px" id="username-register-input">
+                                <span class="form-control-feedback fui-user"></span>
+                            </div>
+                            <div class="form-group has-feedback"><input class="form-control" name="passwort" placeholder="Passwort" type="password" maxlength="30" style="line-height: 22px" id="password-register-input">
+                                <span class="form-control-feedback fui-lock"></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="margin-right: 10px" id="register-btn">Registrieren</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- new scenario -->
+        <div id="modal-new-szenario" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Neues Szenario erstellen
+                    </div>
+                    <div class="modal-body">
+                        <form name="formSzenarioName">
+                            <div>
+                                <label class="label-tabs label">Name</label>
+                                <input autofocus class="form-control" id="sname" name="szenarioName" title="Szenario-Name (4-40 Zeichen)" placeholder="Gibt den Name ein" type="text" size="40" maxlength="30">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnSE" class="btn btn-primary" data-dismiss="modal" style="margin-right: 10px">Erstellen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- delete scenario -->
+        <div id="modal-delete-szenario" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Szenarien löschen
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div>
+                                <label>Wähle die Szenarien aus, welche gelöscht werden sollen!</label>
+                            </div>
+                            <div>
+                                <label class="label label-modal" for="selectSzenarioDeletion">Szenarienübersicht</label>
+                                <br>
+                                <select id="selectSzenarioDeletion" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                                </select>
+                            </div>
+                            <div id="choiceDeletionScenarios">
+                                <label class="label label-modal" for="selectSzenarioDeletion2">Zu löschende Szenarien</label><br>
+                                <select id="selectSzenarioDeletion2" multiple="multiple" class="form-control multiselect multiselect-info mbl" data-toggle="select">
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteSzenario" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px"></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- confirm delete scenario -->
+        <div id="modal-delete-szenario-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p>Wollen Sie die Szenarien wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="deleteScenarios" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="deleteScenariosNot" type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- load scenario -->
+        <div id="modal-load-szenario" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Szenario laden
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label>Wähle ein Szenario aus, welches geladen werden soll!</label>
+                        </div>
+                        <div>
+                            <select id="listLoadScenarios" class="form-control select select-primary mbl" data-toggle="select">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!--<button class="btn btn-primary" onclick="loadScenario()" data-dismiss="modal" style="margin-right: 10px">Laden</button>-->
+                        <button id="btnLoadScenario" class="btn btn-primary" style="margin-right: 10px">Laden</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- delete units -->
+        <div id="modal-delete-units" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Lerneinheiten löschen
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div>
+                                <label>Wähle die Lerneinheiten aus, welche gelöscht werden sollen!</label>
+                            </div>
+                            <div>
+                                <label class="label-modal label" for="selectScenarioDeleteUnit">Auswahl des Szenarios</label><br>
+                                <select id="selectScenarioDeleteUnit" class="form-control select select-primary mbl" data-toggle="select">
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-modal label" for="selectMultiDeleteUnits">Lösche Lerneinheiten</label><br>
+                                <select id="selectMultiDeleteUnits" class="form-control multiselect multiselect-danger" multiple="multiple">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteUnits" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px"></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- confirm delete units -->
+        <div id="modal-delete-units-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p>Wollen Sie die Lerneinheiten wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteUnits2" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button id="btnDeleteUnitsNot" type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- user profile -->
+        <div id="modal-user" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Profil
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div>
+                                <label class="label-modal label" for="inputUsername">Name</label>
+                                <input autofocus id="inputUsername" name="username" placeholder="Benutzername" value="Benutzer" class="form-control" type="text" size="40" maxlength="30">
+                            </div>
+                            <div>
+                                <label class="label-modal label">Beschreibung</label>
+                                <textarea class="form-control" rows="4"></textarea>
+                            </div>
+                            <div>
+                                <label class="label-modal label" for="pwOld">Aktuelles Passwort</label><br>
+                                <input class="form-control" id="pwOld" name="passwort" placeholder="Passwort" type="password" maxlength="30">
+                            </div>
+                            <div>
+                                <a id="showPW">
+                                    <label id="hrefPW">Passwort ändern</label>
+                                </a>
+                            </div>
+                            <div>
+                                <p class="invis" id="pwNewProfil">
+                                    <input class="form-control" name="passwort" placeholder="Neues Passwort" type="password" size="40" maxlength="30">
+                                </p>
+                            </div>
+                            <div>
+                                <p class="invis" id="pwNewRepProfil">
+                                    <input class="form-control" name="passwort" placeholder="Neues Passwort bestätigen" type="password" size="40" maxlength="30" style="margin-bottom: 30px;">
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="margin-right: 10px">Sichern</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- contact -->
+        <div id="modal-contact" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Kontakt
+                    </div>
+                    <div class="modal-body">
+                        <form id="modalContactForm">
+                            <div>
+                                <label class="label-modal label">Name</label>
+                                <div class="input-group">
+                                    <input class="form-control" name="userName" placeholder="Gib deinen Namen ein" type="text">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn" data-toggle="tooltip" data-placement="bottom" title="Name zwischen 4-40 Zeichen">
+                                            <span class="fui-question-circle"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="label-modal label">E-Mail Adresse *</label>
+                                <div class="form-group has-feedback">
+                                    <input class="form-control" name="userMail" placeholder="Gib deine E-Mail Adresse ein" type="email">
+                                    <a data-toggle="tooltip" data-placement="right" title="Name zwischen 4-40 Zeichen">
+                                        <span class="form-control-feedback fui-question-circle"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="label-modal label">Anmerkung *</label>
+                                <div class="form-group has-feedback">
+                                    <textarea class="form-control" name="userText" rows="4" cols="38" style="resize: both; max-width: 100%;"></textarea>
+                                    <span class="form-control-feedback fui-question-circle"></span>
+                                </div>
+                                <div>
+                                    <label>* notwendig</label>
+                                </div>
+                            </div>
+                            <button id="getContentContact" class="btn btn-primary" type="reset" data-dismiss="modal" style="margin-right: 10px">Senden</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- help -->
+        <div id="modal-help" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Hilfe
+                    </div>
+                    <div class="modal-body">
+                        <p>Hier finden Sie Hilfe!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- maps -->
+        <!--<div id="modal-maps" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Karte
+                    </div>
+                    <div class="modal-body">
+                        <div id="divMaps">
+                           <div class="maps-row">
+                                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                                <div id="maps" style="height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnConfirmMapCoordinates" data-dismiss="modal" style="margin-right: 10px">Bestätigen</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+        <!-- confirm delete unit in tab -->
+        <div id="modal-delete-unit-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p id="tabTextUnitDeletion">Wollen Sie die Lerneinheit wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteUnit" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- confirm delete unit in tab -->
+        <div id="modal-delete-connection-confirm" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        Bestätigung
+                    </div>
+                    <div class="modal-body">
+                        <p>Wollen Sie die Verbindung wirklich löschen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDeleteConnection" class="btn btn-danger" data-dismiss="modal" style="margin-right: 10px">JA</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NEIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<!-- tomsstuff -->
+		<div id="divisionmarker"></div>
+		<div id="sizemarker" class="draggable"></div>
+
+    </body>
+</html>
