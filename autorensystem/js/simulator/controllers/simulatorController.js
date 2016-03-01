@@ -25,7 +25,7 @@ function initSimulator() {
     simulatedContextList.resetAllContextValues();
     simulatedContextList.setItems(simulatedContextList.getContextItemsSortedByClass());
     */
-    
+
 
     simulation.initTimeline(numberOfSteps);
 

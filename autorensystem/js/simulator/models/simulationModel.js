@@ -119,37 +119,36 @@ Simulation.prototype.renderTimeline = function () {
 
 Simulation.prototype.start = function () {
 
-    /* TODO: 1. export(...); // generate rules
-       TODO: 2. get rules from wherever they get exported to
-     */
+    this._status = RUNNING;
 
     var self = this;
 
-    require(['js/simulator/motivate-adaptationengine/scripts/config'], function() {
-        // main defines jQuery reference
-        // (see: http://stackoverflow.com/questions/23023167/requirejs-backbone-1-1-2-local-jquery-interfering-with-global-jquery?rq=1)
-        require(['MoAE', 'main'], function(AdaptationEngine) {
-            console.log("ready to rumble!");
+    exportScenario(function (rules) {
 
-            $.get("/export/nodeRules.js", function (rules) {
+        require(['js/simulator/motivate-adaptationengine/scripts/config'], function() {
+            // main defines jQuery reference
+            // (see: http://stackoverflow.com/questions/23023167/requirejs-backbone-1-1-2-local-jquery-interfering-with-global-jquery?rq=1)
+            require(['MoAE', 'main'], function(AdaptationEngine) {
+                console.log("ready to rumble!");
 
-                 self._adaptationEngine = new AdaptationEngine(rules, false);
-                 self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
+                self._adaptationEngine = new AdaptationEngine(rules, false);
+                self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
 
                 /*  function (id, contextInformation) {
-                         for (var index in contextInformation) {
-                             console.log(contextInformation[index]);
-                         }
+                 for (var index in contextInformation) {
+                 console.log(contextInformation[index]);
+                 }
 
-                         lightboxUnit(id);
-                     }
+                 lightboxUnit(id);
+                 }
                  );
                  */
 
-                 self.run();
-             });
+                self.run();
+            });
         });
     });
+
 };
 
 
