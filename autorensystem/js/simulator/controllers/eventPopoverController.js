@@ -28,12 +28,12 @@ function createNewPopover(contextEvent, simulation) {
         .tooltip("destroy");
 
     $(contextEventCells)
-        .on("shown.bs.popover", function(){
+        .off("shown.bs.popover").on("shown.bs.popover", function(){
             reconstructPopoverContent(simulation, contextEvent);
             setPopoverEventHandlers(simulation, contextEvent);
             repositionPopover(this);
         })
-        .on("hide.bs.popover", function (e) {
+        .off("hide.bs.popover").on("hide.bs.popover", function (e) {
             removePopoverMarkup();
             // remove all non-confirmed events
             removeTemporaryEvents(simulation.getTimeline());

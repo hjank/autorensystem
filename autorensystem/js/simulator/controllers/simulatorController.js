@@ -74,7 +74,7 @@ function updateSimulator(simulation) {
             // no match found but open simulation already belongs somewhere --> create a new one
             if (!foundMatch && simulatedScenario.constructor == Scenario) {
                 simulation = new Simulation();
-                simulations.push(simulation);
+                simulation.setTitle(simulation.getTitle() + " (" + simulations.push(simulation) + ")");
                 simulation.initTimeline(numberOfSteps);
             }
 
@@ -123,7 +123,7 @@ function renderSimulator(simulation) {
 
     // re-fill selection and set current simulation selected
     simulations.forEach(function (sim, index) {
-        if (sim.getTitle() == simulation.getTitle())
+        if (sim == simulation)
             $(simulationSelectElement.children()[0]).append(new Option(sim.getTitle(), index, false, true));
         else if (sim.getScenario() == currentScenario)
             $(simulationSelectElement.children()[0]).append(new Option(sim.getTitle(), index));

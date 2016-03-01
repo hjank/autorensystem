@@ -18,23 +18,25 @@ var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area
 /**
  * Sets handlers for mouse events on table
  */
-var timelineEventHandlersSet = false;
 function setCellEventHandlers(simulation) {
 
-    if (timelineEventHandlersSet) return;
+    // detach event handlers from previous simulation
+    $(document).off("mousedown", ".timeline-cell", _handleMousedown);
+    $(document).off("mousemove", _handleMousemove);
+    $(document).off("mouseup", _handleMouseup);
+    $(document).off("click", "td.timeline-step-label", _handleLabelClick);
+    $(document).off("click", ".popover-column-options .btn", _handleColumnHeaderOptionClick);
+    $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", _handleColumnHeaderEnter);
+    $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", _handleColumnHeaderLeave);
 
+    // re-attach event handlers for current simulation
     $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
     $(document).on("mousemove", _handleMousemove);
     $(document).on("mouseup", null, simulation, _handleMouseup);
-
     $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
     $(document).on("click", ".popover-column-options .btn", simulation, _handleColumnHeaderOptionClick);
-
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
-
-
-    timelineEventHandlersSet = true;
 }
 
 
