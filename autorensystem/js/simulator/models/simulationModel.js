@@ -131,7 +131,7 @@ Simulation.prototype.start = function () {
             require(['MoAE', 'main'], function(AdaptationEngine) {
                 console.log("ready to rumble!");
 
-                self._adaptationEngine = new AdaptationEngine(rules, false);
+                self._adaptationEngine = new AdaptationEngine($.globalEval(rules), false);
                 self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
 
                 /*  function (id, contextInformation) {
@@ -176,7 +176,7 @@ Simulation.prototype._run = function (self) {
                     contextInfoParameters.push([
                         parameter.getID(),
                         parameter.getType(),
-                        (parameter.getChosenValue() || "NO_VALUE")
+                        (parameter.getChosenValue() || "CV_UNKNOWN")
                     ]);
                 });
 
@@ -184,7 +184,7 @@ Simulation.prototype._run = function (self) {
                     name: contextInfo.getID(),
                     type: contextInfo.getType(),
                     parameterList: contextInfoParameters,
-                    value: contextInfo.getChosenValue() || "NO_VALUE"
+                    value: contextInfo.getChosenValue() || "CV_UNKNOWN"
                 }, contextInfo.hasMultiplicity());
             }
         });

@@ -26,10 +26,6 @@ function exportScenario(callback) {
     //console.log(JSON.stringify(JSONLD, null, ' '));
 
 
-
-    // determine mode of operation
-    var isCalledBySimulation = (typeof callback == "function");
-
     $.ajax({
         url: "http://localhost:9998/noderules/get-adaptation-rules",
         type: "POST",
@@ -41,8 +37,8 @@ function exportScenario(callback) {
         success: function(response) {
             console.log(response);
 
-            // simulator creates adaptation engine from rules
-            if (isCalledBySimulation)
+            // simulator will create adaptation engine from rules
+            if (typeof callback == "function")
                 callback(response);
 
             // common export: data are saved to disk
