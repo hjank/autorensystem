@@ -61,9 +61,10 @@ function generatePopoverTitle (contextInfo) {
  * Generate the content of the newly created popover, i.e. value and parameter selection.
  */
 function generatePopoverContent () {
-
-    var simulatedContextInfoMenuElement = $("#popoverContentTemplate > div.popover-context-info");
-    return $(simulatedContextInfoMenuElement).clone();
+    return $(".simulator-component-template")
+        .filter(".popover-context-info")
+        .clone()
+        .removeClass("simulator-component-template");
 }
 
 
@@ -135,7 +136,9 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 }
 
 
-
+function hideAllTooltips() {
+    $(".tooltip").tooltip("hide");
+}
 
 
 function hideAllPopovers() {
@@ -159,5 +162,5 @@ function removePopoverMarkup() {
     // remove select2 markup
     $(".popover select").select2("destroy");
 
-    $("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
+    //$("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
 }

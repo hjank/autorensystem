@@ -8,6 +8,21 @@
 /*********** view **********/
 
 
+function removeTimelineTableMarkup() {
+    unmarkAllCells();
+    removeAllPopovers();
+    freeAllCells();
+    clearTable();
+}
+
+function activateTimelineTable(simulation) {
+    // set event handlers for generated cells
+    setTimelineMouseEventHandlers(simulation);
+    highlightSelectedStep(simulation);
+    activateTimelineTooltips();
+}
+
+
 function clearTable() {
     $("#timelineTable thead").empty();
     $("#timelineTable tbody").empty();
@@ -78,11 +93,15 @@ function highlightSelectedStep(simulation) {
     var selectedStep = simulation.getTimeline().getSelectedStep();
     var isSimulating = simulation.getStatus() != STOPPED;
 
+    // highlight selected step if simulation is running or paused
+
     $("#timelineTable tbody tr.timeline-step").each(function(step){
         if (isSimulating && step == selectedStep)
             $(this).addClass("selected-step");
         else $(this).removeClass("selected-step");
     });
+
+    // scroll selected step into view
 
     var selectedStepElement = $(".selected-step");
     var timelineWindow = $("#timelineTableWindow");
@@ -100,10 +119,18 @@ function highlightSelectedStep(simulation) {
 function activateTimelineTooltips () {
 
     // activate timeline info tooltip
-    $("#timelineInfo").tooltip({
-        container: "body",
-        placement: "auto left"
-    });
+    $("#timelineInfo")
+        .tooltip({
+            container: "body",
+            placement: "auto left"
+        })
+        .popover("destroy")
+        .popover({
+            container: "body",
+            content: infotexts.timeline,
+            html: true,
+            placement: "left"
+        });
 
     // re-initialize all tooltips with given options (if any) or default
     $("#timelineContainer *").each(function (index, element) {

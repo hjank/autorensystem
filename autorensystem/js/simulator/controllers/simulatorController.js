@@ -100,8 +100,6 @@ function updateSimulator(simulation) {
         });
     }
 
-    simulation.renderTimeline();
-
     renderSimulator(simulation);
 }
 
@@ -137,7 +135,10 @@ function renderSimulator(simulation) {
     /*** buttons, tooltips and popovers ***/
 
     var getNameDescriptionPopoverContent = function () {
-        var nameDescrPopover = $("#popoverContentTemplate > div.popover-simulation-name-description").clone();
+        var nameDescrPopover = $(".simulator-component-template")
+            .filter(".popover-simulation-name-description")
+            .clone()
+            .removeClass("simulator-component-template");
         $(nameDescrPopover.find(".popover-simulation-name")).val(simulation.getTitle());
         $(nameDescrPopover.find(".popover-simulation-description")).val(simulation.getDescription());
         return nameDescrPopover;
@@ -183,16 +184,6 @@ function renderSimulator(simulation) {
         });
 
 
-    $("#timelineInfo")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: infotexts.timeline,
-            html: true,
-            placement: "left"
-        });
-
-
     $("#btnSimulatorOptions")
         .popover("destroy")
         .popover({
@@ -204,6 +195,10 @@ function renderSimulator(simulation) {
 
 
     setSimulationEventHandlers(simulation);
+
+
+
+    simulation.renderTimeline();
 }
 
 

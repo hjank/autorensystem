@@ -129,13 +129,13 @@ Timeline.prototype.addStep = function (index) {
 Timeline.prototype.addColumn = function(contextInfo, index) {
 
     if (typeof index == "undefined") {
-        // append column to last one for this info
+        // default: "post-pend" new column
+        index = this._columnContextMap.length;
+
+        // if context info type already exists in timeline, append column to last one for this info
         this._columnContextMap.forEach(function (column, colID) {
-            if (column.contextInfo.getID() == contextInfo.getID()) index = colID
+            if (column.contextInfo.getID() == contextInfo.getID()) index = colID + 1;
         });
-        // if still undefined, for there's yet no column for this info
-        if (typeof index == "undefined")
-            index = this._columnContextMap.length;
     }
 
     // actually add the column at calculated index
@@ -213,26 +213,16 @@ Timeline.prototype.removeEvent = function (eventUUID) {
 
 Timeline.prototype.render = function (simulation) {
 
-    unmarkAllCells();
-    removeAllPopovers();
-    freeAllCells();
-    clearTable();
+    removeTimelineTableMarkup();
 
     createHeader();
     createSteps(this._rowMap.length);
-
     this._columnContextMap.forEach(function (col) {
         createColumn(col.contextInfo);
     });
-
-    highlightSelectedStep(simulation);
-
     this._events.forEach(function(event) {
         event.render(simulation);
     });
 
-    // set event handlers for generated cells
-    setCellEventHandlers(simulation);
-
-    activateTimelineTooltips();
+    activateTimelineTable(simulation);
 };

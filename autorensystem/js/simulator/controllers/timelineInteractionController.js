@@ -18,7 +18,7 @@ var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area
 /**
  * Sets handlers for mouse events on table
  */
-function setCellEventHandlers(simulation) {
+function setTimelineMouseEventHandlers(simulation) {
 
     // detach event handlers from previous simulation
     $(document).off("mousedown", ".timeline-cell", _handleMousedown);
@@ -237,6 +237,14 @@ function _mark(e, referenceY) {
  */
 function _handleMouseup(e) {
 
+    /*** "click away" otherwise irritating tooltips and popovers ***/
+
+    hideAllTooltips();
+    // since "mouseup" is triggered before "click", all popover showing remains intact
+    if (!( $(e.target).is(".popover") || $(e.target).parents().is(".popover") ))
+        hideAllPopovers();
+
+
     /*** handle timeline cell interaction ***/
 
     if (mousedownOnEmptyCell || resizing || moving) {
@@ -274,7 +282,8 @@ function _handleMouseup(e) {
         }
     }
 
-    /*** in any case ***/
+
+    /*** in any case of mouseup on document ***/
 
     mousedownOnEmptyCell = false;
     dragging = false;
@@ -318,6 +327,7 @@ function _handleColumnHeaderOptionClick(e) {
     var timeline = simulation.getTimeline();
 
     var timelineHeaderOptionsElement = $(this).parents(".popover").data("bs.popover").$element;
+    var timelineHeaderOptionsPopover = $(this).parents(".popover").data("bs.popover").$tip;
     var thisColumn = $(".timeline-header-options").index(timelineHeaderOptionsElement);
     var contextInfo = timeline.getColumnContext(thisColumn);
     var columnEvents = timeline.getColumnEvents(thisColumn);
@@ -350,4 +360,5 @@ function _handleColumnHeaderOptionClick(e) {
     }
 
     $(this).tooltip("hide");
+    $(".popover").popover("hide");
 }

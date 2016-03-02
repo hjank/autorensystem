@@ -85,6 +85,6 @@ div.popover-context-info div.btn {
 
 
 
-div#popoverContentTemplate {
+.simulator-component-template {
     display: none;
 }

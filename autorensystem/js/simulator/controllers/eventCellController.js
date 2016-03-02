@@ -52,6 +52,10 @@ function addOccupiedMarkup (contextEvent, simulation) {
     // ...hence only "common" context information events shall be resizable
     if (!doesExpectLearningUnit)
         $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
+
+
+    if (!contextEvent.isVisible())
+        $(firstCell).find("a.fui-eye-blocked").trigger("click");
 }
 
 
@@ -139,7 +143,8 @@ function createContextEventHideDOM () {
 
 function _handleOccupiedCellAnchorClickEvent (e) {
 
-    var timeline = e.data.getTimeline();
+    var simulation = e.data;
+    var timeline = simulation.getTimeline();
     var contextEvent = timeline.getEventAt(getRowIDOfCell(e.delegateTarget), getColIDOfCell(e.delegateTarget));
     var cells = getContextEventCells(contextEvent);
 
@@ -165,5 +170,6 @@ function _handleOccupiedCellAnchorClickEvent (e) {
 
     else if ($(this).hasClass("fui-trash")) {
         deleteContextEvent(contextEvent, timeline);
+        simulation.renderTimeline();
     }
 }
