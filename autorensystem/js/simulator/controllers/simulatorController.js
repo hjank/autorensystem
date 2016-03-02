@@ -134,27 +134,7 @@ function renderSimulator(simulation) {
 
     /*** buttons, tooltips and popovers ***/
 
-    var getNameDescriptionPopoverContent = function () {
-        var nameDescrPopover = $(".simulator-component-template")
-            .filter(".popover-simulation-name-description")
-            .clone()
-            .removeClass("simulator-component-template");
-        $(nameDescrPopover.find(".popover-simulation-name")).val(simulation.getTitle());
-        $(nameDescrPopover.find(".popover-simulation-description")).val(simulation.getDescription());
-        return nameDescrPopover;
-    };
-
-    $("#btnSimulatorDescription")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: getNameDescriptionPopoverContent(),
-            html: true,
-            placement: "bottom"
-        });
-
-
-    $("#simulatorInfo, #btnSimulatorDescription").tooltip({
+    $("#simulatorInfo, #btnSimulationProperties").tooltip({
         container: "body",
         placement: "left"
     });

@@ -1,4 +1,4 @@
-<div id="simulatorContainer">
+<div id="simulatorContainer" class="simulator-container">
 
     <div id="simulatorHeader">
         <div id="simulationTitle">
@@ -12,7 +12,7 @@
                     <optgroup label="Für andere Szenarien"></optgroup>
                 </select>
                 <label for="simulationSelection">
-                    <div id="btnSimulatorDescription" class="btn btn-sm fui-new" title="Name und Beschreibung dieser Simulation ändern"></div>
+                    <div id="btnSimulationProperties" class="btn btn-sm fui-new" title="Name und Beschreibung dieser Simulation ändern"></div>
                 </label>
             </span>
         </div>
@@ -41,12 +41,30 @@
             <div id="btnSimulatorOptions" class="btn btn-sm fui-gear" title="Optionen"></div>
         </span>
     </div>
-
-<!--
-    <div id="simulatorFooter">
-    </div>-->
-
 </div>
+
+
+<div id="simulatorPropertiesContainer" class="simulator-container simulator-component-template">
+    <div>
+        <div id="btnBackToSimulator" class="btn btn-info btn-xs" title="Zurück zum Simulator">
+            <b class="fui-arrow-left"> </b><b class="fui-home"></b>
+        </div>
+    </div>
+    <div>
+        <label for="simulationNameInput" class="label-tabs label">Name des zu simulierenden Testfalls:</label>
+        <input id="simulationNameInput" class="form-control" name="unitName" value="" type="text">
+    </div>
+    <div>
+        <label for="simulationDescriptionInput" class="label-tabs label">Beschreibung:</label>
+        <textarea id="simulationDescriptionInput" class="form-control" name="unitDescription" rows="5"></textarea>
+    </div>
+    <div>
+        <div id="btnDeleteSimulation" class="btn btn-danger">
+            <b class="fui-trash"> </b>Diesen Testfall löschen
+        </div>
+    </div>
+</div>
+
 
 
 <div class="simulator-component-template popover-context-info">
@@ -65,16 +83,4 @@
         </div>
     </div>
 
-</div>
-
-
-<div class="simulator-component-template popover-simulation-name-description">
-    <div>
-        <label>Name</label>
-        <input class="popover-simulation-name">
-    </div>
-    <div>
-        <label>Beschreibung</label>
-        <textarea class="popover-simulation-description"></textarea>
-    </div>
 </div>

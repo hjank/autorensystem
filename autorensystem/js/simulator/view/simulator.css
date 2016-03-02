@@ -3,12 +3,13 @@
     padding: 0px;
 }
 
-#simulatorContainer {
+.simulator-container {
     width: 100%;
     position: absolute;
     top: 30px;
     bottom: 0px;
 }
+
 
 #simulatorHeader {
     padding: 10px;
@@ -33,7 +34,7 @@
     width: 200px;
 }
 
-#btnSimulatorDescription:hover {
+#btnSimulationProperties:hover {
     background-color: #cccccc;
     color: white;
 }
@@ -65,4 +66,27 @@
 #btnSimulatorOptions {
     background-color: grey;
     color: white;
+}
+
+
+
+
+#simulatorPropertiesContainer {
+    padding: 20px;
+}
+#simulatorPropertiesContainer > div {
+    margin-bottom: 20px;
+    width: 100%;
+}
+#btnDeleteSimulation {
+    margin-top: 50px;
+    width: 100%;
+}
+
+
+
+
+
+.simulator-component-template {
+    display: none;
 }

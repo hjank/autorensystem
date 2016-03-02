@@ -1,4 +1,5 @@
-#timelineContainer {
+#timelineContainer
+{
     position: absolute;
     top: 100px;
     bottom: 90px;
@@ -10,11 +11,13 @@
     background-color: white;
 }
 
-#timelineName {
+#timelineName
+{
     cursor: default;
 }
 
-#timelineTableWindow {
+#timelineTableWindow
+{
     position: absolute;
     width: 100%;
     top: 50px;

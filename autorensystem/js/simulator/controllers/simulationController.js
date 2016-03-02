@@ -16,9 +16,9 @@ function setSimulationEventHandlers(simulation) {
     });
 
 
-    /**** simulator info button and popover ****/
+    /**** simulator and timeline info buttons and popovers ****/
 
-    $("#simulatorInfo, #timelineInfo, #btnSimulatorDescription")
+    $("#simulatorInfo, #timelineInfo")
         .on("shown.bs.popover", function (e) {
             $(e.target).tooltip("destroy");
             extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
@@ -29,7 +29,6 @@ function setSimulationEventHandlers(simulation) {
                 placement: "left"
             });
         });
-
 
     function extendSimulatorInfoPopover(popover) {
 
@@ -55,6 +54,21 @@ function setSimulationEventHandlers(simulation) {
             title: infotexts.context
         });
     }
+
+
+    /**** simulation properties: name, description, delete ****/
+
+    $("#btnSimulationProperties").off("click").on("click", function (e) {
+
+        $("#simulationNameInput").val(simulation.getTitle());
+        $("#simulatorContainer").hide();
+        $("#simulatorPropertiesContainer").show();
+    });
+
+    $("#btnBackToSimulator").off("click").on("click", function (e) {
+        $("#simulatorContainer").show();
+        $("#simulatorPropertiesContainer").hide();
+    });
 
 
 
