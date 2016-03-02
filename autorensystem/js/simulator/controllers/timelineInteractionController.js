@@ -335,13 +335,13 @@ function _handleColumnHeaderOptionClick(e) {
     if ($(this).hasClass("fui-eye-blocked")) {
         hideContextEvents(columnEvents);
 
-        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", "Alle Werte einblenden").tooltip("fixTitle");
+        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", infotexts.detectAll).tooltip("fixTitle");
     }
 
     else if ($(this).hasClass("fui-eye")) {
         showContextEvents(columnEvents);
 
-        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", "Alle Werte ausblenden").tooltip("fixTitle");
+        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", infotexts.ignoreAll).tooltip("fixTitle");
     }
 
     else if ($(this).hasClass("fui-trash")) {

@@ -22,5 +22,10 @@ var infotexts = {
         "<div id='timeline-info-hint'><b>Tipp</b>: Soll ein bestimmter Wert über mehrere Situationen hinweg gelten (z.B. Alter des Benutzers), " +
         "markieren Sie den gewünschten Zeitraum, indem Sie mit gedrückter Maus über die Zeitfenster fahren.</div>",
 
-    "mgmt": "Hier können Sie einen neuen Testfall anlegen sowie bereits erstellte Testfälle bearbeiten oder löschen."
+    "mgmt": "Hier können Sie einen neuen Testfall anlegen sowie bereits erstellte Testfälle bearbeiten oder löschen.",
+
+    "ignore": "Wert nicht erfassen",
+    "ignoreAll": "Keinen dieser Werte erfassen",
+    "detect": "Wert erfassen",
+    "detectAll": "Alle dieser Werte erfassen"
 };

@@ -128,7 +128,7 @@ function createContextEventHideDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-eye-blocked")
-        .attr("title", "Ausblenden")
+        .attr("title", infotexts.ignore)
         .on("mouseover", function (e) {
             $(this).parent().tooltip("hide");
         })
@@ -156,7 +156,7 @@ function _handleOccupiedCellAnchorClickEvent (e) {
         hideContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
-            .attr("title", "Einblenden")
+            .attr("title", infotexts.detect)
             .tooltip("fixTitle");
     }
 
@@ -164,7 +164,7 @@ function _handleOccupiedCellAnchorClickEvent (e) {
         showContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
-            .attr("title", "Ausblenden")
+            .attr("title", infotexts.ignore)
             .tooltip("fixTitle");
     }
 

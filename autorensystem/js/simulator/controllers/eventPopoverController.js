@@ -136,18 +136,8 @@ function setPopoverEventHandlers(simulation, contextEvent) {
 }
 
 
-function hideAllTooltips() {
-    $(".tooltip").tooltip("hide");
-}
 
-
-function hideAllPopovers() {
-    // triggers "hide.bs.popover" event
-    $(".popover").popover("hide");
-}
-
-
-function removeAllPopovers() {
+function removeAllEventPopovers() {
 
     hideAllPopovers();
     $(".timeline-cell-occupied").popover("destroy");
@@ -161,6 +151,4 @@ function removePopoverMarkup() {
     $("#divMapsTemplate").append($("#divMaps"));
     // remove select2 markup
     $(".popover select").select2("destroy");
-
-    //$("#popoverContentTemplate > div.popover-context-info").not(":first").remove();
 }

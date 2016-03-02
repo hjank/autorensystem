@@ -10,7 +10,7 @@
 
 function removeTimelineTableMarkup() {
     unmarkAllCells();
-    removeAllPopovers();
+    removeAllEventPopovers();
     freeAllCells();
     clearTable();
 }
@@ -51,8 +51,8 @@ function createColumn(contextInfo) {
     var _getColumnOptionsContent = function (contextInfo) {
 
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions("Alle Werte der Spalte ausblenden")))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Alle Werte der Spalte löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions(infotexts.ignoreAll)))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Alle dieser Werte löschen")));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
@@ -191,6 +191,15 @@ function freeAllCells() {
 }
 
 
+
+function hideAllTooltips() {
+    $(".tooltip").tooltip("hide");
+}
+
+function hideAllPopovers() {
+    // triggers "hide.bs.popover" event --> see handling: createNewPopover() in eventPopoverController.js
+    $(".popover").popover("hide");
+}
 
 
 function removeAllCellTooltips () {
