@@ -241,8 +241,7 @@ function _handleMouseup(e) {
 
     hideAllTooltips();
     // since "mouseup" is triggered before "click", all popover showing remains intact
-    if (!( $(e.target).is(".popover") || $(e.target).parents().is(".popover") ))
-        hideAllPopovers();
+    //if (!( $(e.target).is(".popover") || $(e.target).parents().is(".popover") )) hideAllPopovers();
 
 
     /*** handle timeline cell interaction ***/
