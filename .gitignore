@@ -6,3 +6,4 @@ build/
 export/content.json
 export/nodeRules.js
 savedData.json
+rulegenerator/
