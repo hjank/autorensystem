@@ -166,25 +166,36 @@ Simulation.prototype._run = function (self) {
         self.stop();
 
     else {
+        undoLightboxing();
         highlightSelectedStep(self);
 
         self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
             if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
                 var contextInfo = colEntry.getContextInfo();
+                var contextType = contextInfo.getType();
+                var contextValue = contextInfo.getChosenValue();
+                if (contextValue == "") contextValue = "CV_UNKNOWN";
+
+
                 var contextInfoParameters = [];
                 contextInfo.getParameters().forEach(function (parameter) {
+                    var parameterType = parameter.getType();
+                    var parameterValue = parameter.getChosenValue();
+                    if (parameterValue == "") parameterValue = "CV_UNKNOWN";
+
                     contextInfoParameters.push([
                         parameter.getID(),
-                        parameter.getType(),
-                        (parameter.getChosenValue() || "CV_UNKNOWN")
+                        parameterType,
+                        ((parameterType == "BOOLEAN" ? parameterValue.toLowerCase() : parameterValue))
                     ]);
                 });
 
+
                 self._adaptationEngine.addContextInformation({
                     name: contextInfo.getID(),
-                    type: contextInfo.getType(),
+                    type: contextType,
                     parameterList: contextInfoParameters,
-                    value: contextInfo.getChosenValue() || "CV_UNKNOWN"
+                    value: contextType == "BOOLEAN" ? contextValue.toLowerCase() : contextValue
                 }, contextInfo.hasMultiplicity());
             }
         });

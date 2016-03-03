@@ -188,17 +188,6 @@ function _handleMousemove(e) {
 }
 
 
-/*** tiny little helper (i.e. readability improvement) functions ***/
-var getTop = function (cell) {
-    return $(cell).offset().top - parseInt($(cell).css("border-top-width"));
-};
-var getBottom = function (cell) {
-    return $(cell).offset().top + $(cell).height() + parseInt($(cell).css("border-bottom-width"));
-};
-var getLeft = function (cell) {
-    return $(cell).offset().left - parseInt($(cell).css("border-left-width"));
-};
-
 /**
  * Goes through all cells and marks those that were selected, restricted to the column clicked.
  * (inspired by: http://stackoverflow.com/questions/10591747/making-a-google-calendar-like-dragging-interface)
@@ -241,7 +230,11 @@ function _handleMouseup(e) {
 
     hideAllTooltips();
     // since "mouseup" is triggered before "click", all popover showing remains intact
-    //if (!( $(e.target).is(".popover") || $(e.target).parents().is(".popover") )) hideAllPopovers();
+    var popover = $(".popover.in");
+    if (popover.length > 0
+        && $(e.target).closest(popover.data("bs.popover").$element).length == 0
+        && (e.pageX < getLeft(popover) || e.pageX > getRight(popover)
+            || e.pageY < getTop(popover) || e.pageY > getBottom(popover))) hideAllPopovers();
 
 
     /*** handle timeline cell interaction ***/
@@ -290,6 +283,7 @@ function _handleMouseup(e) {
     moving = false;
 
     $("body *").css("cursor", "");
+
 }
 
 

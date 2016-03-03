@@ -141,6 +141,7 @@ function activateTimelineTooltips () {
 
 
 
+
 function hideContextEvents(contextEvents) {
     contextEvents.forEach(function (contextEvent) {
         contextEvent.setVisibility(false);
@@ -166,6 +167,23 @@ function getColumnCells(colIndex) {
     });
     return cells;
 }
+
+
+
+/*** tiny little helper (i.e. readability improvement) functions ***/
+function getTop (cell) {
+    return $(cell).offset().top - parseInt($(cell).css("border-top-width"));
+}
+function getBottom (cell) {
+    return $(cell).offset().top + $(cell).height() + parseInt($(cell).css("border-bottom-width"));
+}
+function getLeft (cell) {
+    return $(cell).offset().left - parseInt($(cell).css("border-left-width"));
+}
+function getRight (cell) {
+    return $(cell).offset().left + $(cell).width() + parseInt($(cell).css("border-right-width"));
+}
+
 
 function getColIDOfCell(cell) {
     return $(cell).parent().children(".timeline-cell").index(cell);

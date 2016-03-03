@@ -140,6 +140,9 @@ define('MoRE', ['nools', 'node-rules', 'contactJS', 'MathUuid'], function (nools
                     });
                     break;
                 case RuleEngine.NODE_RULES:
+
+                    console.log(contextInformation);
+
                     this._R.execute(contextInformation, this._callbacks["ruleMatchingSuccessCallback"]);
                     var endTime = Math.floor(Date.now() / 1000);
                     if (self._verbose) console.log("Time for rule matching "+(endTime-startTime)+" secs.");

@@ -161,9 +161,14 @@ function lightboxUnit(unitUUID) {
             })
     );
 
-    //$("#" + unitUUID).addClass("unit-selected");
-    $(".w").first().addClass("unit-selected").css({
+    $("#" + unitUUID).addClass("unit-selected").css({
         "background": "",
         "color": ""
     });
+}
+
+
+function undoLightboxing() {
+    $("div.lightbox-overlay").remove();
+    $(".w").removeClass("unit-selected");
 }
