@@ -43,8 +43,7 @@ function addOccupiedMarkup (contextEvent, simulation) {
         .css("border-top", "1px solid")
         .append($("<a>").attr("href","#").addClass("fui-new"))
         .append(createContextEventHideDOM())
-        .append(createContextEventDeleteDOM())
-        .off("click").on("click", "a", simulation, _handleOccupiedCellAnchorClickEvent);
+        .append(createContextEventDeleteDOM());
 
     var lastCell = $(cells).last();
     $(lastCell).css("border-bottom", "1px solid");
@@ -141,7 +140,7 @@ function createContextEventHideDOM () {
 
 
 
-function _handleOccupiedCellAnchorClickEvent (e) {
+function handleOccupiedCellAnchorClickEvent (e) {
 
     var simulation = e.data;
     var timeline = simulation.getTimeline();

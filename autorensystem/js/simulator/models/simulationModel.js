@@ -121,8 +121,9 @@ Simulation.prototype.start = function () {
 
     this._status = RUNNING;
 
-    var self = this;
+    notifySimulationStart(true);
 
+    var self = this;
     exportScenario(function (rules) {
 
         require(['js/simulator/motivate-adaptationengine/scripts/config'], function() {
@@ -151,6 +152,8 @@ Simulation.prototype.start = function () {
 
 Simulation.prototype.run = function () {
     this._status = RUNNING;
+
+    notifySimulationStart(false);
 
     this._run(this);
     this._iteration = setInterval(this._run, this._playBackSpeed, this);

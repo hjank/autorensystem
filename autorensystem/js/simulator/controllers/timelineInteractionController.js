@@ -15,40 +15,14 @@ var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area
 
 
 
-/**
- * Sets handlers for mouse events on table
- */
-function setTimelineMouseEventHandlers(simulation) {
-
-    // detach event handlers from previous simulation
-    $(document).off("mousedown", ".timeline-cell", _handleMousedown);
-    $(document).off("mousemove", _handleMousemove);
-    $(document).off("mouseup", _handleMouseup);
-    $(document).off("click", "td.timeline-step-label", _handleLabelClick);
-    $(document).off("click", ".popover-column-options .btn", _handleColumnHeaderOptionClick);
-    $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", _handleColumnHeaderEnter);
-    $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", _handleColumnHeaderLeave);
-
-    // re-attach event handlers for current simulation
-    $(document).on("mousedown", ".timeline-cell", simulation, _handleMousedown);
-    $(document).on("mousemove", _handleMousemove);
-    $(document).on("mouseup", null, simulation, _handleMouseup);
-    $(document).on("click", "td.timeline-step-label", simulation, _handleLabelClick);
-    $(document).on("click", ".popover-column-options .btn", simulation, _handleColumnHeaderOptionClick);
-    $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderEnter);
-    $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, _handleColumnHeaderLeave);
-}
-
-
-
 
 /**
  * Triggered if the user clicks on a cell: sets down to true and records click coordinates.
  *
  * @param e
- * @private
+ *
  */
-function _handleMousedown(e) {
+function handleMousedown(e) {
 
     var timeline = e.data.getTimeline();
 
@@ -102,9 +76,9 @@ function _handleMousedown(e) {
  * If a cell has been clicked, all cells where the mouse is dragged over will be marked.
  *
  * @param e The mousemove event. Not restricted to cells because cursor may leave the table.
- * @private
+ *
  */
-function _handleMousemove(e) {
+function handleMousemove(e) {
 
     // handle only marking, resizing, moving
     if (!(mousedownOnEmptyCell || resizing || moving)) return;
@@ -193,7 +167,7 @@ function _handleMousemove(e) {
  * (inspired by: http://stackoverflow.com/questions/10591747/making-a-google-calendar-like-dragging-interface)
  *
  * @param e The mousemove or mouseup event (only triggered after mousedown on a cell).
- * @private
+ *
  */
 function _mark(e, referenceY) {
 
@@ -222,9 +196,8 @@ function _mark(e, referenceY) {
  * When down stops: create a new DIV where cells have been marked and attach context CRUD functionality.
  *
  * @param e The mouseup event. Can occur anywhere in the document.
- * @private
  */
-function _handleMouseup(e) {
+function handleMouseup(e) {
 
     /*** "click away" otherwise irritating tooltips and popovers ***/
 
@@ -289,7 +262,7 @@ function _handleMouseup(e) {
 
 
 
-function _handleLabelClick(e) {
+function handleLabelClick(e) {
     var simulation = e.data;
     var status = simulation.getStatus();
 
@@ -307,59 +280,4 @@ function _handleLabelClick(e) {
     }
 
     e.stopPropagation();
-}
-
-
-function _handleColumnHeaderEnter(e) {
-    $(this).css("border", "1px solid grey").children("div.timeline-header-options").show();
-    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
-
-    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
-}
-
-function _handleColumnHeaderLeave(e) {
-    $(this).css("border", "").children("div.timeline-header-options").hide();
-    $(".timeline-cell").css("background-image", "");
-}
-
-
-function _handleColumnHeaderOptionClick(e) {
-    var simulation = e.data;
-    var timeline = simulation.getTimeline();
-
-    var timelineHeaderOptionsElement = $(this).parents(".popover").data("bs.popover").$element;
-    var timelineHeaderOptionsPopover = $(this).parents(".popover").data("bs.popover").$tip;
-    var thisColumn = $(".timeline-header-options").index(timelineHeaderOptionsElement);
-    var contextInfo = timeline.getColumnContext(thisColumn);
-    var columnEvents = timeline.getColumnEvents(thisColumn);
-
-    if ($(this).hasClass("fui-eye-blocked")) {
-        hideContextEvents(columnEvents);
-
-        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", infotexts.detectAll).tooltip("fixTitle");
-    }
-
-    else if ($(this).hasClass("fui-eye")) {
-        showContextEvents(columnEvents);
-
-        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", infotexts.ignoreAll).tooltip("fixTitle");
-    }
-
-    else if ($(this).hasClass("fui-trash")) {
-        if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
-            timeline.removeColumn(thisColumn);
-        else
-            columnEvents.forEach(function (event) {
-                timeline.removeEvent(event);
-            });
-        simulation.renderTimeline();
-    }
-
-    else if ($(this).hasClass("fui-plus")) {
-        timeline.addColumn(contextInfo);
-        simulation.renderTimeline();
-    }
-
-    $(this).tooltip("hide");
-    $(".popover").popover("hide");
 }

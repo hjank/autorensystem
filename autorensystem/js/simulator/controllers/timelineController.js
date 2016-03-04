@@ -17,7 +17,6 @@ function removeTimelineTableMarkup() {
 
 function activateTimelineTable(simulation) {
     // set event handlers for generated cells
-    setTimelineMouseEventHandlers(simulation);
     highlightSelectedStep(simulation);
     activateTimelineTooltips();
 }
@@ -130,6 +129,16 @@ function activateTimelineTooltips () {
             content: infotexts.timeline,
             html: true,
             placement: "left"
+        })
+        .off("shown.bs.popover").on("shown.bs.popover", function (e) {
+            $(e.target).tooltip("destroy");
+            addCloseXToPopoverTitle($(e.target).data("bs.popover").$tip);
+        })
+        .off("hide.bs.popover").on("hide.bs.popover", function (e) {
+            $(e.target).tooltip({
+                container: "body",
+                placement: "left"
+            });
         });
 
     // re-initialize all tooltips with given options (if any) or default

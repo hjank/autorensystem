@@ -145,6 +145,9 @@ function renderSimulator(simulation) {
     });
 
 
+
+    /**** simulator info button tooltip and popover ****/
+
     var getSimulatorInfoText = function (scenario) {
         var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
         var infoText = infotexts.intro.replace("SCENARIO", scenarioName);
@@ -154,6 +157,23 @@ function renderSimulator(simulation) {
         return infoTextDiv;
     };
 
+    var extendSimulatorInfoPopover = function (popover) {
+        addCloseXToPopoverTitle(popover);
+
+        $(".simulator-info-text a#simulator-info-scenario").tooltip({
+            container: "body",
+            html: true,
+            placement: "auto top",
+            title: infotexts.scenario
+        });
+        $(".simulator-info-text a#simulator-info-context").tooltip({
+            container: "body",
+            html: true,
+            placement: "auto top",
+            title: infotexts.context
+        });
+    };
+
     $("#simulatorInfo")
         .popover("destroy")
         .popover({
@@ -161,26 +181,35 @@ function renderSimulator(simulation) {
             content: getSimulatorInfoText(simulation.getScenario()),
             html: true,
             placement: "left"
+        })
+        .off("shown.bs.popover").on("shown.bs.popover", function (e) {
+            $(e.target).tooltip("destroy");
+            extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
+        })
+        .off("hide.bs.popover").on("hide.bs.popover", function (e) {
+            $(e.target).tooltip({
+                container: "body",
+                placement: "left"
+            });
         });
 
 
-    $("#btnSimulatorOptions")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: "Here be options.",
-            html: true,
-            placement: "left"
-        });
 
-
-
+    setMouseEventHandlers(simulation);
     setSimulationEventHandlers(simulation);
-
 
     simulation.renderTimeline();
 }
 
+
+function addCloseXToPopoverTitle(popover) {
+    var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>')
+        .tooltip({
+            container: "body",
+            placement: "bottom"
+        });
+    $(popover).children("h3.popover-title").append(closeX);
+}
 
 
 

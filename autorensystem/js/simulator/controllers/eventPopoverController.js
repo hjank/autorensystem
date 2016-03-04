@@ -106,8 +106,6 @@ function repositionPopover(cell) {
 function setPopoverEventHandlers(simulation, contextEvent) {
     var timeline = simulation.getTimeline();
 
-    $(".popover .popover-close").off("click").on("click", hideAllPopovers);
-
     $(".popover .popover-confirm").off("click").on("click", function(e){
 
         var contextInfoDiv = $(e.target).parents(".popover .popover-content .popover-context-info");

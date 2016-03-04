@@ -1,8 +1,7 @@
 div.popover div.popover-content {
     font-size: medium;
 }
-div.popover h3.popover-title div a.popover-close,
-div.popover h3.popover-title a.simulator-info-close {
+div.popover h3.popover-title a.popover-close {
     float: right;
 }
 

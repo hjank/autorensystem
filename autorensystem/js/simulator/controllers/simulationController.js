@@ -22,45 +22,6 @@ function setSimulationEventHandlers(simulation) {
     });
 
 
-    /**** simulator and timeline info buttons and popovers ****/
-
-    $("#simulatorInfo, #timelineInfo")
-        .on("shown.bs.popover", function (e) {
-            $(e.target).tooltip("destroy");
-            extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
-        })
-        .on("hide.bs.popover", function (e) {
-            $(e.target).tooltip({
-                container: "body",
-                placement: "left"
-            });
-        });
-
-    function extendSimulatorInfoPopover(popover) {
-
-        var closeX = $('<a href="#" title="Schließen" class="simulator-info-close">X</a>')
-            .tooltip({
-                container: "body",
-                placement: "bottom"
-            })
-            .off("click").on("click", hideAllPopovers);
-
-        $(popover).children("h3.popover-title").append(closeX);
-
-        $(".simulator-info-text a#simulator-info-scenario").tooltip({
-            container: "body",
-            html: true,
-            placement: "auto top",
-            title: infotexts.scenario
-        });
-        $(".simulator-info-text a#simulator-info-context").tooltip({
-            container: "body",
-            html: true,
-            placement: "auto top",
-            title: infotexts.context
-        });
-    }
-
 
     /**** simulation properties: name, description, delete ****/
 
@@ -176,6 +137,16 @@ function resetPlaybackButton () {
 }
 
 
+
+function notifySimulationStart(show) {
+    var notificationModal = $(".modal.simulation-notification");
+
+    if (show)
+        $(notificationModal).modal("show");
+    else
+        $(notificationModal).modal("hide");
+
+}
 
 
 function showAdaptationEngineSelection(unitUUID) {
