@@ -69,7 +69,6 @@ table#timelineTable tr.timeline-step
 table#timelineTable td.timeline-step-label
 {
     height: inherit;
-    width: 10px;
     border-style: solid none;
     margin: 0px;
     padding: 0px;
@@ -97,7 +96,6 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-cell
 table#timelineTable tr.timeline-step.selected-step td.timeline-step-label
 {
     font-weight: 900;
-    text-align: right;
     color: black;
     margin: 5px;
 }

@@ -6,11 +6,17 @@
 
 function setSimulationEventHandlers(simulation) {
 
+    var simulatorMainContainerElement = $("#simulatorContainer");
+    var simulationSelectElement = $("#simulationSelection");
+    var simulationNameInputElement = $("#simulationNameInput");
+    var simulationDescriptionInputElement = $("#simulationDescriptionInput");
+    var simulationSpeedInputElement = $("#simulationSpeedInput");
+
+
+
     /**** simulation selection ****/
 
-    var simulationSelectElement = $("#simulationSelection");
     $(simulationSelectElement).off().on("select2-selecting", function (e) {
-        //updateSimulator(simulationSelectElement.select2("data").id);
         updateSimulator(simulations[e.val]);
         e.preventDefault();
     });
@@ -59,15 +65,39 @@ function setSimulationEventHandlers(simulation) {
     /**** simulation properties: name, description, delete ****/
 
     $("#btnSimulationProperties").off("click").on("click", function (e) {
+        $(simulationNameInputElement).val(simulation.getTitle());
+        $(simulationDescriptionInputElement).val(simulation.getDescription());
 
-        $("#simulationNameInput").val(simulation.getTitle());
-        $("#simulatorContainer").hide();
+        simulatorMainContainerElement.hide();
         $("#simulatorPropertiesContainer").show();
     });
 
-    $("#btnBackToSimulator").off("click").on("click", function (e) {
-        $("#simulatorContainer").show();
-        $("#simulatorPropertiesContainer").hide();
+
+    /**** simulation options ****/
+
+    $("#btnSimulatorOptions").off("click").on("click", function (e) {
+
+        $(simulationSpeedInputElement).val(simulation.getPlayBackSpeed()/1000);
+        simulatorMainContainerElement.hide();
+        $("#simulationOptionsContainer").show();
+    });
+
+
+    /**** return home to simulator from properties or options ****/
+
+    $(".btn.back-to-simulator").off("click").on("click", function (e) {
+
+        var simulationName = $(simulationNameInputElement).val();
+        var simulationDescription = $(simulationDescriptionInputElement).val();
+        var playBackSpeedInSeconds = $(simulationSpeedInputElement).val();
+
+        if (simulationName) simulation.setTitle(simulationName);
+        if (simulationDescription) simulation.setDescription(simulationDescription);
+        if (playBackSpeedInSeconds) simulation.setPlayBackSpeed(playBackSpeedInSeconds * 1000);
+
+        $(".simulator-component-template").hide();
+        simulatorMainContainerElement.show();
+        updateSimulator();
     });
 
 
@@ -146,6 +176,12 @@ function resetPlaybackButton () {
 }
 
 
+
+
+function showAdaptationEngineSelection(unitUUID) {
+    lightboxUnit(unitUUID);
+}
+
 /**
  * This function highlights the given unit element by using a lightbox.
  * The background is dimmed with the unit "lifted" on top of it in a light color.
@@ -154,7 +190,7 @@ function resetPlaybackButton () {
  */
 function lightboxUnit(unitUUID) {
 
-    $("div.body").first().prepend(
+    $("#container").prepend(
         $("<div>").addClass("lightbox-overlay")
             .on("mousedown", function (e) {
                 $("div.lightbox-overlay").remove();
@@ -170,5 +206,5 @@ function lightboxUnit(unitUUID) {
 
 function undoLightboxing() {
     $("div.lightbox-overlay").remove();
-    $(".w").removeClass("unit-selected");
+    $(".unit-selected").removeClass("unit-selected");
 }

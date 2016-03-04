@@ -174,8 +174,8 @@ function renderSimulator(simulation) {
         });
 
 
-    setSimulationEventHandlers(simulation);
 
+    setSimulationEventHandlers(simulation);
 
 
     simulation.renderTimeline();

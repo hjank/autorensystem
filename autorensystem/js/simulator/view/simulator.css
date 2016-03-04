@@ -71,22 +71,18 @@
 
 
 
-#simulatorPropertiesContainer {
+
+.simulator-component-template {
+    display: none;
+}
+.simulator-component-template {
     padding: 20px;
 }
-#simulatorPropertiesContainer > div {
+.simulator-component-template > div {
     margin-bottom: 20px;
     width: 100%;
 }
 #btnDeleteSimulation {
     margin-top: 50px;
     width: 100%;
-}
-
-
-
-
-
-.simulator-component-template {
-    display: none;
 }
