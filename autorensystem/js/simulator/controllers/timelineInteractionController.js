@@ -291,11 +291,19 @@ function _handleMouseup(e) {
 
 function _handleLabelClick(e) {
     var simulation = e.data;
+    var status = simulation.getStatus();
 
-    if (simulation.getStatus() != STOPPED) {
-        var timeline = simulation.getTimeline();
-        timeline.setSelectedStep(getRowIDOfCell(this));
-        highlightSelectedStep(simulation);
+    if (status != STOPPED) {
+
+        simulation.pause();
+
+        // point the simulation to selected step
+        simulation.getTimeline().setSelectedStep(getRowIDOfCell(this));
+
+        simulation.run();
+
+        // do not restart simulation when it has been paused
+        if (status == PAUSED) simulation.pause();
     }
 
     e.stopPropagation();
