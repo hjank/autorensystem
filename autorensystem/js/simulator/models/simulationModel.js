@@ -132,17 +132,14 @@ Simulation.prototype.start = function () {
                 console.log("ready to rumble!");
 
                 self._adaptationEngine = new AdaptationEngine($.globalEval(rules), false);
-                self._adaptationEngine.setSelectLearningUnitCallback(lightboxUnit);
-
-                /*  function (id, contextInformation) {
-                 for (var index in contextInformation) {
-                 console.log(contextInformation[index]);
-                 }
-
-                 lightboxUnit(id);
-                 }
-                 );
-                 */
+                self._adaptationEngine.setSelectLearningUnitCallback(showAdaptationEngineSelection);
+                self._adaptationEngine.setNewContextInformationCallback(function (contextList) {
+                    console.log("I will now clear out this context list:");
+                    contextList.getItems().forEach(function (item) {
+                        console.log(item);
+                    });
+                    contextList.clear();
+                });
 
                 self.run();
             });
@@ -168,6 +165,11 @@ Simulation.prototype._run = function (self) {
     else {
         undoLightboxing();
         highlightSelectedStep(self);
+
+
+        self._adaptationEngine.startContextDetection(0);
+        self._adaptationEngine.stopContextDetection();
+
 
         self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
             if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
@@ -199,6 +201,7 @@ Simulation.prototype._run = function (self) {
                 }, contextInfo.hasMultiplicity());
             }
         });
+
 
         // adapt and apply callbacks
         self._adaptationEngine.startRuleMatching(0);
