@@ -14,7 +14,6 @@ function Timeline (events, rowMap, columnMap, selectedStep) {
     return this;
 }
 
-
 Timeline.prototype.getEvents = function() {
     return this._events;
 };
@@ -225,4 +224,14 @@ Timeline.prototype.render = function (simulation) {
     });
 
     activateTimelineTable(simulation);
+};
+
+
+
+
+Timeline.prototype.deserializeEvents = function (events) {
+    var self = this;
+    events.forEach(function (event) {
+        self.addEvent(ContextEvent.deserialize(event));
+    });
 };

@@ -3,8 +3,8 @@
  */
 
 
-function ContextEvent (contextInfo, column, start, end, visible) {
-    this._uuid = "event"+uuid4();
+function ContextEvent (uuid, contextInfo, column, start, end, visible) {
+    this._uuid = uuid || "event"+uuid4();
     this._contextInfo = contextInfo || {};
     this._column = (typeof column  == "undefined") ? 0 : column;
     this._start = (typeof start  == "undefined") ? 0 : start;
@@ -53,8 +53,9 @@ ContextEvent.prototype.setVisibility = function (visible) {
 };
 
 ContextEvent.prototype.getCopy = function () {
-    return new ContextEvent(this._contextInfo, this._column, this._start, this._end, this._visible);
+    return new ContextEvent("event"+uuid4(), this._contextInfo, this._column, this._start, this._end, this._visible);
 };
+
 
 
 
@@ -62,4 +63,17 @@ ContextEvent.prototype.getCopy = function () {
 ContextEvent.prototype.render = function (simulation) {
     createNewPopover(this, simulation);
     addOccupiedMarkup(this, simulation);
+};
+
+
+
+ContextEvent.deserialize = function (json) {
+    return new ContextEvent(
+        json._uuid,
+        new ContextInformation().fromJSON(json._contextInfo),
+        json._column,
+        json._start,
+        json._end,
+        json._visible
+    );
 };

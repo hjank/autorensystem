@@ -7,27 +7,14 @@ var numberOfSteps = 80;
 
 function initSimulator() {
 
-    // TODO: Save/load simulations
-    var simulation = new Simulation();
-    simulations.push(simulation);
+    simulations = authorSystemContent.getTestcases();
 
+    if (simulations.length == 0) {
+        var simulation = new Simulation();
+        simulations.push(simulation);
 
-    /*
-    TODO: remove when ready to deploy -- test purpose only!
-
-    var simulatedContextList = simulation.getSimulatedContextList();
-
-    simulatedContextList.addItem(new ContextInformation()
-        .fromJSON(contextList.getItemByID("CI_USER_DESTINATION")));
-    simulatedContextList.addItem(new ContextInformation()
-        .fromJSON(contextList.getItemByID("CI_USER_DID_PERFORM_ACTION")));
-
-    simulatedContextList.resetAllContextValues();
-    simulatedContextList.setItems(simulatedContextList.getContextItemsSortedByClass());
-    */
-
-
-    simulation.initTimeline(numberOfSteps);
+        simulation.initTimeline(numberOfSteps);
+    }
 
     // init the simulation editor timeline
     // 1. fetch and append html
@@ -196,10 +183,12 @@ function renderSimulator(simulation) {
 
 
     setMouseEventHandlers(simulation);
+
     setSimulationEventHandlers(simulation);
 
     simulation.renderTimeline();
 }
+
 
 
 function addCloseXToPopoverTitle(popover) {
@@ -214,7 +203,5 @@ function addCloseXToPopoverTitle(popover) {
 
 
 function setUnloadEventHandler() {
-    $(window).bind('beforeunload', function(){
-
-    });
+    $(window).bind('beforeunload', showSaveScenario);
 }

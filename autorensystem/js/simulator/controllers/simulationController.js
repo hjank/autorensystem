@@ -6,6 +6,9 @@
 
 function setSimulationEventHandlers(simulation) {
 
+    var timeline = simulation.getTimeline();
+
+
     var simulatorMainContainerElement = $("#simulatorContainer");
     var simulationSelectElement = $("#simulationSelection");
     var simulationNameInputElement = $("#simulationNameInput");
@@ -64,8 +67,6 @@ function setSimulationEventHandlers(simulation) {
 
 
     /**** playback controls ****/
-
-    var timeline = simulation.getTimeline();
 
 
     $("#btnBackToStart").off("click").on("click", function (e) {
@@ -135,6 +136,7 @@ function resetPlaybackButton () {
         .attr("title", "Simulation starten")
         .tooltip("fixTitle");
 }
+
 
 
 

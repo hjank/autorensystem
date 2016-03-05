@@ -4,6 +4,8 @@
 
 const RUNNING = 0, PAUSED = 1, STOPPED = 2;
 
+
+
 function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
     this._title = title || "Leere Vorlage";
@@ -229,4 +231,29 @@ Simulation.prototype.stop = function () {
 
     resetPlaybackButton();
     highlightSelectedStep(this);
+};
+
+
+
+
+Simulation.makeSerializable = function(simulation) {
+    var scenario = simulation.getScenario();
+    simulation.setScenario(scenario.constructor == Scenario ? scenario.getName() : "");
+};
+
+Simulation.deserialize = function(json) {
+    var thisSimulation = new Simulation(
+        json._title,
+        json._description,
+        authorSystemContent.getScenario(json._scenario),
+        new ContextInfoList().fromJSON(json._simulatedContextList),
+        new Timeline(),
+        json._playBackSpeed
+    );
+
+    var serializedTimeline = json._timeline;
+    thisSimulation.initTimeline(serializedTimeline._rowMap.length);
+    thisSimulation.getTimeline().deserializeEvents(serializedTimeline._events);
+
+    return thisSimulation;
 };

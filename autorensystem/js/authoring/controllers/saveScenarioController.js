@@ -47,4 +47,8 @@ function replaceScenarioReferencesWithNames () {
             units[j].setScenarioReference(scenarios[i].getName());
         }
     }
+
+    authorSystemContent.getTestcases().forEach(function(testcase) {
+        Simulation.makeSerializable(testcase);
+    });
 }

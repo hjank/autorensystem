@@ -32,6 +32,13 @@ function initLoader() {
 
                 authorSystemContent.setGUIs(loadedData["_guis"]);
                 guis = loadedData["_guis"];
+
+
+                var testcases = loadedData["_testcases"];
+                testcases.forEach(function(simulation) {
+                    simulation = Simulation.deserialize(simulation);
+                });
+                authorSystemContent.setTestcases(testcases);
             }
         }
     });

@@ -29,6 +29,8 @@ function AuthorSystemContent() {
     this._options = {};
     this._guis = [];
 
+    this._testcases = [];
+
     return this;
 }
 
@@ -48,6 +50,11 @@ AuthorSystemContent.prototype.getGUIs = function() {
     return this._guis;
 };
 
+AuthorSystemContent.prototype.getTestcases = function() {
+    return this._testcases;
+};
+
+
 AuthorSystemContent.prototype.getScenario = function(scenarioName) {
     for (var i in this._scenarioList) {
         var scenario = this._scenarioList[i];
@@ -59,6 +66,11 @@ AuthorSystemContent.prototype.getScenario = function(scenarioName) {
 AuthorSystemContent.prototype.setGUIs = function(guis) {
     this._guis = guis;
 };
+
+AuthorSystemContent.prototype.setTestcases = function(testcases) {
+    this._testcases = testcases;
+};
+
 
 /**
  *  Adds a new scenario object to the authoring system.

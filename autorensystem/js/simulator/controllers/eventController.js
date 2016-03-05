@@ -23,6 +23,7 @@ function createNewContextEvent (simulation) {
 
     var timeline = simulation.getTimeline();
     var contextEvent = new ContextEvent(
+        "event"+uuid4(),
         new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
         colID,
         firstStepID,
