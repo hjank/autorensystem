@@ -64,7 +64,8 @@ function generatePopoverContent () {
     return $(".simulator-component-template")
         .filter(".popover-context-info")
         .clone()
-        .removeClass("simulator-component-template");
+        .removeClass("simulator-component-template")
+        .css("display", "");
 }
 
 

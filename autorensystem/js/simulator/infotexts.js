@@ -27,5 +27,7 @@ var infotexts = {
     "ignore": "Wert nicht erfassen",
     "ignoreAll": "Keinen dieser Werte erfassen",
     "detect": "Wert erfassen",
-    "detectAll": "Alle dieser Werte erfassen"
+    "detectAll": "Alle dieser Werte erfassen",
+
+    "unknownValue": " ist unbekannt"
 };

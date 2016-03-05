@@ -82,7 +82,7 @@ function createColumn(contextInfo) {
         $(this)
             .append( $("<td>").addClass("timeline-cell")
                 .attr("contextClass", contextInfo.getClasses()[0])
-                .tooltip(getTopTooltipOptions(translate_contextInformation(contextInfo.getID()) + " hat keinen Wert"))
+                .tooltip(getTopTooltipOptions(translate_contextInformation(contextInfo.getID()) + infotexts.unknownValue))
         );
     });
 }

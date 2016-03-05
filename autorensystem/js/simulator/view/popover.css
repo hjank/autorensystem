@@ -1,5 +1,9 @@
 div.popover div.popover-content {
+
+}
+div.popover div.popover-content {
     font-size: medium;
+    display: block;
 }
 div.popover h3.popover-title a.popover-close {
     float: right;

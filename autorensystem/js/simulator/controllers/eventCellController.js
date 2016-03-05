@@ -70,7 +70,7 @@ function removeOccupiedMarkup (contextEvent) {
         .popover("destroy")
         .tooltip("destroy")
         .tooltip(getTopTooltipOptions(
-            translate_contextInformation(contextEvent.getContextInfo().getID()) + " hat keinen Wert"
+            translate_contextInformation(contextEvent.getContextInfo().getID()) + infotexts.unknownValue
         ));
 }
 
@@ -144,11 +144,12 @@ function handleOccupiedCellAnchorClickEvent (e) {
 
     var simulation = e.data;
     var timeline = simulation.getTimeline();
-    var contextEvent = timeline.getEventAt(getRowIDOfCell(e.delegateTarget), getColIDOfCell(e.delegateTarget));
+    var firstCell = $(this).parent();
+    var contextEvent = timeline.getEventAt(getRowIDOfCell(firstCell), getColIDOfCell(firstCell));
     var cells = getContextEventCells(contextEvent);
 
     if ($(this).hasClass("fui-new")) {
-        $(e.delegateTarget).popover("show");
+        $(firstCell).popover("show");
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {
