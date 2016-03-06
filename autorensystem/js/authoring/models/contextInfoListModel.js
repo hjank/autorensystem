@@ -48,10 +48,12 @@ function ContextInfoList() {
 
 // generates and adds a new items list from a list of JSON objects duck-typable as ContextInformation
 ContextInfoList.prototype.fromJSON = function (data) {
-    for (var i in data) {
+    var self = this;
+    data._items.forEach(function (item) {
         // "cast" the context items to ContextInformation (incl. Parameter)
-        this.addItem(new ContextInformation().fromJSON(data[i]));
-    }
+        self.addItem(new ContextInformation().fromJSON(item));
+    });
+    return this;
 };
 
 ContextInfoList.prototype.initClasses = function () {
