@@ -12,7 +12,13 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
     this._description = descr || "";
 
     this._scenario = scenario || {};
-    this._simulatedContextList = contextList || new ContextInfoList();
+
+    if (!contextList) {
+        this._simulatedContextList = new ContextInfoList();
+        this._initContextInfoList();
+    }
+    else
+        this._simulatedContextList = contextList;
 
     this._timeline = timeline || new Timeline();
 
@@ -23,12 +29,12 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
     this._adaptationEngine = {};
 
 
-    // add default context info: finished learning unit (necessary for simulation)
-    this._initContextInfoList();
 
     return this;
 }
 
+
+// add default context info: finished learning unit (necessary for simulation)
 Simulation.prototype._initContextInfoList = function () {
     if (!contextList) {
         console.log("ERROR: contextList has not been initialized yet!");
@@ -242,6 +248,7 @@ Simulation.makeSerializable = function(simulation) {
 };
 
 Simulation.deserialize = function(json) {
+
     var thisSimulation = new Simulation(
         json._title,
         json._description,
@@ -251,9 +258,8 @@ Simulation.deserialize = function(json) {
         json._playBackSpeed
     );
 
-    var serializedTimeline = json._timeline;
-    thisSimulation.initTimeline(serializedTimeline._rowMap.length);
-    thisSimulation.getTimeline().deserializeEvents(serializedTimeline._events);
+    thisSimulation.initTimeline(json._timeline._rowMap.length);
+    thisSimulation.getTimeline().deserializeEvents(json._timeline._events);
 
     return thisSimulation;
 };

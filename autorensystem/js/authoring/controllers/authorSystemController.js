@@ -34,11 +34,9 @@ function initLoader() {
                 guis = loadedData["_guis"];
 
 
-                var testcases = loadedData["_testcases"];
-                testcases.forEach(function(simulation) {
-                    simulation = Simulation.deserialize(simulation);
+                loadedData["_testcases"].forEach(function(testcase) {
+                    authorSystemContent.addTestcase(Simulation.deserialize(testcase));
                 });
-                authorSystemContent.setTestcases(testcases);
             }
         }
     });

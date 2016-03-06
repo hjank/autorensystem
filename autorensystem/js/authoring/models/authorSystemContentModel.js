@@ -67,8 +67,8 @@ AuthorSystemContent.prototype.setGUIs = function(guis) {
     this._guis = guis;
 };
 
-AuthorSystemContent.prototype.setTestcases = function(testcases) {
-    this._testcases = testcases;
+AuthorSystemContent.prototype.addTestcase = function(testcase) {
+    this._testcases.push(testcase);
 };
 
 

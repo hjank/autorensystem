@@ -12,9 +12,8 @@ var authorSystemContent = new AuthorSystemContent();
 
 // if jsPlumb is ready (wrapper for jQuery.ready which means DOM is fully loaded)
 jsPlumb.ready(function () {
-
     // initialize global context list
-    getContextInfoList(false); // false = not from URL, but from local server
+    getContextInfoList(false, contextInfoListLoadedCallback); // false = not from URL, but from local server
 });
 
 /**
@@ -27,5 +26,12 @@ function contextInfoListLoadedCallback () {
     initLoader();
     // init simulator
     initSimulator();
-    //handleSimulatorNavBarMenuEvents();
+    // set handler for saving authorSystemContent before window gets unloaded (i.e. on closing authorsystem)
+    //setUnloadEventHandler();
+}
+
+
+
+function setUnloadEventHandler() {
+    $(window).bind('beforeunload', showSaveScenario);
 }

@@ -3,7 +3,7 @@
  */
 
 
-function getContextInfoList(fromURL) {
+function getContextInfoList(fromURL, callback) {
 
     // http://localhost:9998/xml/get-context-information
     // build url
@@ -21,7 +21,7 @@ function getContextInfoList(fromURL) {
         // if file is available parse out all information
         success: function(xml) {
             parseContextInfoXML(xml);
-            contextInfoListLoadedCallback();
+            (typeof callback == "function" && callback());
         }
     });
 }
