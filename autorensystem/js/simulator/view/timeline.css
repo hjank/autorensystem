@@ -69,6 +69,7 @@ table#timelineTable tr.timeline-step
 table#timelineTable td.timeline-step-label
 {
     height: inherit;
+    width: 15px;
     border-style: solid none;
     margin: 0px;
     padding: 0px;

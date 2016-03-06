@@ -7,7 +7,7 @@
 /**
  * Sets handlers for mouse events on table
  */
-function setMouseEventHandlers(simulation) {
+function setTimelineEventHandlers(simulation) {
 
     // detach event handlers from previous simulation
     $(document).off("mousedown", ".timeline-cell", handleMousedown);

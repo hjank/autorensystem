@@ -9,22 +9,12 @@ function initSimulator() {
 
     simulations = authorSystemContent.getTestcases();
 
-    if (simulations.length == 0) {
-        var simulation = new Simulation();
-        simulations.push(simulation);
-
-        simulation.initTimeline(numberOfSteps);
-    }
-
     // init the simulation editor timeline
     // 1. fetch and append html
     $.get( "js/simulator/view/simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
-        renderSimulator(simulation);
         showSimulatorTab();
-
-        setUnloadEventHandler();
     });
 }
 
@@ -36,13 +26,21 @@ function updateSimulator(simulation) {
     var currentScenario = authorSystemContent.getScenario(currentScenarioName);
     var scenarioExists = !!currentScenario;
 
+
     /*** first, choose the right (testcase for) simulation, which is supposed to model the current scenario ***/
 
     if (!simulation) {
 
+        if (simulations.length == 0) {
+            simulation = new Simulation();
+            simulations.push(simulation);
+
+            simulation.initTimeline(numberOfSteps);
+        }
+
         // re-use previously selected simulation testcase
         var simulationSelectElement = $("#simulationSelection");
-        simulation = simulations[simulationSelectElement.val()];
+        simulation = simulations[simulationSelectElement.val() || 0];
 
         var simulatedScenario = simulation.getScenario();
 
@@ -102,18 +100,14 @@ function renderSimulator(simulation) {
     var currentScenario = authorSystemContent.getScenario(currentScenarioName);
 
     // clear selection
-    simulationSelectElement.select2("destroy").children().each(function (i, optgroup) {
-        $(optgroup).empty();
-    });
+    simulationSelectElement.select2("destroy").empty();
 
     // re-fill selection and set current simulation selected
     simulations.forEach(function (sim, index) {
         if (sim == simulation)
-            $(simulationSelectElement.children()[0]).append(new Option(sim.getTitle(), index, false, true));
+            $(simulationSelectElement).append(new Option(sim.getTitle(), index, false, true));
         else if (sim.getScenario() == currentScenario)
-            $(simulationSelectElement.children()[0]).append(new Option(sim.getTitle(), index));
-        else
-            $(simulationSelectElement.children()[1]).append(new Option(sim.getTitle(), index));
+            $(simulationSelectElement).append(new Option(sim.getTitle(), index));
     });
 
     simulationSelectElement.select2();
@@ -126,7 +120,7 @@ function renderSimulator(simulation) {
         placement: "left"
     });
 
-    $("#simulationToolbar *").tooltip({
+    $("#simulationToolbar *, #simulatorPropertiesContainer *, #simulationOptionsContainer *").tooltip({
         container: "body",
         placement: "auto top"
     });
@@ -145,6 +139,8 @@ function renderSimulator(simulation) {
     };
 
     var extendSimulatorInfoPopover = function (popover) {
+
+        replaceActionVerbInTitle(popover);
         addCloseXToPopoverTitle(popover);
 
         $(".simulator-info-text a#simulator-info-scenario").tooltip({
@@ -182,8 +178,7 @@ function renderSimulator(simulation) {
 
 
 
-    setMouseEventHandlers(simulation);
-
+    setTimelineEventHandlers(simulation);
     setSimulationEventHandlers(simulation);
 
     simulation.renderTimeline();
@@ -200,8 +195,10 @@ function addCloseXToPopoverTitle(popover) {
     $(popover).children("h3.popover-title").append(closeX);
 }
 
+function replaceActionVerbInTitle(popover) {
+    var titleElement = $(popover).children("h3.popover-title");
+    var titleText = $(titleElement).text();
 
-
-function setUnloadEventHandler() {
-    $(window).bind('beforeunload', showSaveScenario);
+    titleText = titleText.replace(" anzeigen", "");
+    $(titleElement).text(titleText);
 }

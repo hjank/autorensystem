@@ -78,9 +78,21 @@
 .simulator-component-template {
     padding: 20px;
 }
-.simulator-component-template > div {
+.simulator-component-template > div,
+#simulationProperties > div {
     margin-bottom: 20px;
     width: 100%;
+}
+#simulatorPropertiesContainer {
+    text-align: center;
+}
+#simulatorPropertiesContainer > label {
+    white-space: normal;
+    padding: 0px;
+    font: menu;
+}
+#simulatorPropertiesContainer > * {
+    text-align: left;
 }
 #btnDeleteSimulation {
     margin-top: 50px;

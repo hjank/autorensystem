@@ -121,7 +121,7 @@ function activateTimelineTooltips () {
     $("#timelineInfo")
         .tooltip({
             container: "body",
-            placement: "auto left"
+            placement: "left"
         })
         .popover("destroy")
         .popover({
@@ -132,7 +132,10 @@ function activateTimelineTooltips () {
         })
         .off("shown.bs.popover").on("shown.bs.popover", function (e) {
             $(e.target).tooltip("destroy");
-            addCloseXToPopoverTitle($(e.target).data("bs.popover").$tip);
+
+            var popoverElement = $(e.target).data("bs.popover").$tip;
+            replaceActionVerbInTitle(popoverElement);
+            addCloseXToPopoverTitle(popoverElement);
         })
         .off("hide.bs.popover").on("hide.bs.popover", function (e) {
             $(e.target).tooltip({

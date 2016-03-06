@@ -19,7 +19,7 @@ function setSimulationEventHandlers(simulation) {
 
     /**** simulation selection ****/
 
-    $(simulationSelectElement).off().on("select2-selecting", function (e) {
+    $(simulationSelectElement).off("select2-selecting").on("select2-selecting", function (e) {
         updateSimulator(simulations[e.val]);
         e.preventDefault();
     });
@@ -32,18 +32,21 @@ function setSimulationEventHandlers(simulation) {
         $(simulationNameInputElement).val(simulation.getTitle());
         $(simulationDescriptionInputElement).val(simulation.getDescription());
 
-        simulatorMainContainerElement.hide();
-        $("#simulatorPropertiesContainer").show();
+        enterSimulationPropertiesView();
     });
 
+    $("#btnDeleteSimulation").off("click").on("click", function (e) {
+        simulations.splice(simulations.indexOf(simulation), 1);
+
+        returnToSimulatorMainView();
+    });
 
     /**** simulation options ****/
 
     $("#btnSimulatorOptions").off("click").on("click", function (e) {
-
         $(simulationSpeedInputElement).val(simulation.getPlayBackSpeed()/1000);
-        simulatorMainContainerElement.hide();
-        $("#simulationOptionsContainer").show();
+
+        enterSimulationOptionsView();
     });
 
 
@@ -59,10 +62,29 @@ function setSimulationEventHandlers(simulation) {
         if (simulationDescription) simulation.setDescription(simulationDescription);
         if (playBackSpeedInSeconds) simulation.setPlayBackSpeed(playBackSpeedInSeconds * 1000);
 
+        returnToSimulatorMainView();
+    });
+
+
+    /**** convenience wrappers ****/
+
+    function enterSimulationPropertiesView() {
+        simulatorMainContainerElement.hide();
+        $("#simulatorPropertiesContainer").show();
+    }
+
+    function enterSimulationOptionsView() {
+        simulatorMainContainerElement.hide();
+        $("#simulationOptionsContainer").show();
+    }
+
+    function returnToSimulatorMainView() {
         $(".simulator-component-template").hide();
         simulatorMainContainerElement.show();
+
+        // anticipate the common case: properties will have been changed, so do update
         updateSimulator();
-    });
+    }
 
 
 

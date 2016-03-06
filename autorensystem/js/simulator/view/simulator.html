@@ -4,15 +4,12 @@
         <div id="simulationTitle">
             <span>
                 <label for="simulatorInfo">Wählen Sie einen Testfall:</label>
-                <a href="#" id="simulatorInfo" title="Über diesen Simulator"><b class="btn-xs fui-question-circle"></b></a>
+                <a href="#" id="simulatorInfo" title="Erklärung zum Simulator anzeigen"><b class="btn-xs fui-question-circle"></b></a>
             </span>
             <span>
-                <select id="simulationSelection" class="form-control select select-primary mbl">
-                    <optgroup label="Für dieses Szenario"></optgroup>
-                    <optgroup label="Für andere Szenarien"></optgroup>
-                </select>
+                <select id="simulationSelection" class="form-control select select-primary mbl"></select>
                 <label for="simulationSelection">
-                    <div id="btnSimulationProperties" class="btn btn-sm fui-new" title="Name und Beschreibung dieser Simulation ändern"></div>
+                    <div id="btnSimulationProperties" class="btn btn-sm fui-new" title="Einstellungen bearbeiten"></div>
                 </label>
             </span>
         </div>
@@ -21,7 +18,7 @@
 
     <div id="timelineContainer" align="center">
         <span id="timelineName">Szenario-Zeitleiste</span>
-        <a href="#" id="timelineInfo" title="Hilfe zur Zeitleiste"><b class="btn-xs fui-question-circle"></b></a>
+        <a href="#" id="timelineInfo" title="Hilfe zur Zeitleiste anzeigen"><b class="btn-xs fui-question-circle"></b></a>
         <div id="timelineTableWindow">
             <table id="timelineTable">
                 <thead></thead>
@@ -50,14 +47,17 @@
             <b class="fui-arrow-left"> </b><b class="fui-home"></b>
         </div>
     </div>
-    <div>
-        <label for="simulationNameInput" class="label-tabs label">Name des zu simulierenden Testfalls:</label>
-        <input id="simulationNameInput" class="form-control" type="text">
+    <div id="simulationProperties">
+        <div>
+            <label for="simulationNameInput" class="label-tabs label">Name des zu simulierenden Testfalls:</label>
+            <input id="simulationNameInput" class="form-control" type="text">
+        </div>
+        <div>
+            <label for="simulationDescriptionInput" class="label-tabs label">Beschreibung:</label>
+            <textarea id="simulationDescriptionInput" class="form-control" rows="5"></textarea>
+        </div>
     </div>
-    <div>
-        <label for="simulationDescriptionInput" class="label-tabs label">Beschreibung:</label>
-        <textarea id="simulationDescriptionInput" class="form-control" rows="5"></textarea>
-    </div>
+    <label for="simulationProperties" class="label-tabs label">Eingaben werden automatisch gespeichert.</label>
     <div>
         <div id="btnDeleteSimulation" class="btn btn-danger">
             <b class="fui-trash"> </b>Diesen Testfall löschen
