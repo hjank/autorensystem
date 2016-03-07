@@ -217,7 +217,7 @@ function unmarkAllCells() {
 
 function freeAllCells() {
     $(".timeline-cell-occupied").empty()
-        .removeClass(".timeline-cell-occupied");
+        .removeClass("timeline-cell-occupied");
 }
 
 
