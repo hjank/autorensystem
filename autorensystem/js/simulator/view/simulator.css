@@ -20,21 +20,17 @@
     text-align: center;
 }
 
-#simulationTitle span:last-of-type {
-    float: left;
-}
-
-#simulationTitle span:last-of-type {
+#simulatorInfo {
     float: right;
 }
 
-#simulationTitle span .select {
+#simulationTitle .select {
     max-width: 200px;
     min-width: 200px;
     width: 200px;
 }
 
-#btnSimulationProperties:hover {
+#simulationTitle .btn:hover {
     background-color: #cccccc;
     color: white;
 }
@@ -83,18 +79,10 @@
     margin-bottom: 20px;
     width: 100%;
 }
-#simulatorPropertiesContainer {
-    text-align: center;
-}
-#simulatorPropertiesContainer > label {
-    white-space: normal;
-    padding: 0px;
-    font: menu;
-}
-#simulatorPropertiesContainer > * {
-    text-align: left;
-}
 #btnDeleteSimulation {
-    margin-top: 50px;
+    margin-top: 20px;
     width: 100%;
+}
+#simulationList {
+    border-top: 1px solid lightgrey;
 }

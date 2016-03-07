@@ -40,7 +40,7 @@ function updateSimulator(simulation) {
 
         // re-use previously selected simulation testcase
         var simulationSelectElement = $("#simulationSelection");
-        simulation = simulations[simulationSelectElement.val() || 0];
+        simulation = simulations[simulationSelectElement.val() || simulations.length-1];
 
         var simulatedScenario = simulation.getScenario();
 
@@ -96,28 +96,39 @@ function renderSimulator(simulation) {
     /*** simulation testcase selection ***/
 
     var simulationSelectElement = $("#simulationSelection");
+    var thisScenarioSimulationOptgroup = $(simulationSelectElement).children()[0];
+    var otherScenarioSimulationOptgroup = $(simulationSelectElement).children()[1];
+
     var currentScenarioName = $("#lname")[0].innerHTML;
     var currentScenario = authorSystemContent.getScenario(currentScenarioName);
 
     // clear selection
-    simulationSelectElement.select2("destroy").empty();
+    simulationSelectElement.select2("destroy").children().empty();
 
     // re-fill selection and set current simulation selected
     simulations.forEach(function (sim, index) {
         if (sim == simulation)
-            $(simulationSelectElement).append(new Option(sim.getTitle(), index, false, true));
+            $(thisScenarioSimulationOptgroup).append(new Option(sim.getTitle(), index, false, true));
         else if (sim.getScenario() == currentScenario)
-            $(simulationSelectElement).append(new Option(sim.getTitle(), index));
+            $(thisScenarioSimulationOptgroup).append(new Option(sim.getTitle(), index));
+        else
+            $(otherScenarioSimulationOptgroup).append(new Option(sim.getTitle(), index));
     });
+    $(thisScenarioSimulationOptgroup).append(new Option(" Neue Vorlage", simulations.length));
 
-    simulationSelectElement.select2();
+    simulationSelectElement.select2({
+        formatResult: function (option) {
+            if (option.id == simulations.length) option.text = "<b class='fui-plus'/>" + option.text;
+            return option.text;
+        }
+    });
 
 
     /*** buttons, tooltips and popovers ***/
 
-    $("#simulatorInfo, #btnSimulationProperties").tooltip({
+    $("#simulatorInfo, #simulationTitle .btn").tooltip({
         container: "body",
-        placement: "left"
+        placement: "auto"
     });
 
     $("#simulationToolbar *, #simulatorPropertiesContainer *, #simulationOptionsContainer *").tooltip({

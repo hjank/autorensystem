@@ -7,7 +7,7 @@
 function setSimulationEventHandlers(simulation) {
 
     var timeline = simulation.getTimeline();
-
+    var scenario = simulation.getScenario();
 
     var simulatorMainContainerElement = $("#simulatorContainer");
     var simulationSelectElement = $("#simulationSelection");
@@ -20,7 +20,36 @@ function setSimulationEventHandlers(simulation) {
     /**** simulation selection ****/
 
     $(simulationSelectElement).off("select2-selecting").on("select2-selecting", function (e) {
-        updateSimulator(simulations[e.val]);
+
+        var selectedTestcase;
+
+        // "+ Neue Vorlage"
+        if (e.val == simulations.length) {
+            selectedTestcase = new Simulation();
+            selectedTestcase.setScenario(scenario);
+            selectedTestcase.initTimeline(numberOfSteps);
+            simulations.push(selectedTestcase);
+
+            updateSimulator(selectedTestcase);
+        }
+        // existing testcase
+        else {
+            selectedTestcase = simulations[e.val];
+
+            // chosen from another scenario -> make a copy
+            if (selectedTestcase.getScenario() != scenario) {
+                var testcaseCopy = selectedTestcase.getCopy();
+                testcaseCopy.setScenario(scenario);
+                simulations.push(testcaseCopy);
+
+                updateSimulator(testcaseCopy);
+            }
+
+            // common case: testcase for scenario
+            else
+                updateSimulator(selectedTestcase);
+        }
+
         e.preventDefault();
     });
 
