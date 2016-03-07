@@ -103,8 +103,8 @@ Timeline.prototype.setEvents = function (events) {
 Timeline.prototype.setRowMap = function (array) {
     this._rowMap = array;
 };
-Timeline.prototype.setColumnContextMap = function (array) {
-    this._columnContextMap = array;
+Timeline.prototype.setColumnContextMap = function (map) {
+    this._columnContextMap = map;
 };
 Timeline.prototype.setSelectedStep = function (selectedStep) {
     this._selectedStep = selectedStep;
@@ -121,8 +121,30 @@ Timeline.prototype.decrementSelectedStep = function () {
 
 
 Timeline.prototype.addStep = function (index) {
+
+    var newStep = [];
+
     if (typeof index == "undefined") index = this._rowMap.length;
-    this._rowMap.splice(index, 0, []);
+
+    // if step is inserted (instead of appended)
+    else {
+        // adjust start and end of each event to new position in timeline
+        this._events.forEach(function (event) {
+            var eventStart = event.getStart();
+            if (eventStart >= index) event.setStart(eventStart + 1);
+            var eventEnd = event.getEnd();
+            if (eventEnd >= index) event.setEnd(eventEnd + 1);
+        });
+
+        // add events that span several steps including this one to newly inserted step
+        this._rowMap[index].forEach(function (event) {
+            if (event.getStart() < index)
+                newStep.push(event);
+        });
+    }
+
+    // add/insert new step
+    this._rowMap.splice(index, 0, newStep);
 };
 
 Timeline.prototype.addColumn = function(contextInfo, index) {
@@ -177,6 +199,14 @@ Timeline.prototype.addEvent = function (event) {
         this._rowMap[start].push(event);
     this._columnContextMap[event.getColumn()].events.push(event);
 };
+
+Timeline.prototype.addAllEvents = function (events) {
+    var self = this;
+    events.forEach(function (event) {
+        self.addEvent(event);
+    });
+};
+
 
 Timeline.prototype.removeEvent = function (eventUUID) {
     if (eventUUID.constructor == ContextEvent)
