@@ -102,7 +102,23 @@ Simulation.prototype.addContextItem = function (contextInfo) {
     var index = this._simulatedContextList.getIndexByID(contextInfo.getID());
     // add it to timeline columns accordingly
     this._timeline.addColumn(contextInfo, index);
+};
 
+Simulation.prototype.getCopy = function () {
+
+    var copy = new Simulation(
+        "Kopie von " + this._title,
+        this._description,
+        this._scenario,
+        new ContextInfoList().fromJSON(this._simulatedContextList),
+        new Timeline(),
+        this._playBackSpeed
+    );
+
+    copy.initTimeline(this._timeline.getNumberOfRows());
+    copy.getTimeline().addAllEvents(this._timeline.getEvents());
+
+    return copy;
 };
 
 
@@ -123,6 +139,8 @@ Simulation.prototype.initTimeline = function (steps) {
 Simulation.prototype.renderTimeline = function () {
     this._timeline.render(this);
 };
+
+
 
 
 Simulation.prototype.start = function () {
@@ -245,6 +263,11 @@ Simulation.prototype.stop = function () {
 Simulation.makeSerializable = function(simulation) {
     var scenario = simulation.getScenario();
     simulation.setScenario(scenario.constructor == Scenario ? scenario.getName() : "");
+};
+
+Simulation.undoMakeSerializable = function(simulation) {
+    var scenario = authorSystemContent.getScenario(simulation.getScenario());
+    simulation.setScenario(scenario || {});
 };
 
 Simulation.deserialize = function(json) {
