@@ -34,6 +34,8 @@ function showSaveScenario() {
         data: {"json": JSON.stringify(authorSystemContent)},
         success: function() {
             alert("Daten wurden gespeichert.");
+
+            replaceScenarioNamesWithReferences();
         }
     });
 }
