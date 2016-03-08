@@ -16,8 +16,9 @@ var infotexts = {
     "titleDescr": "Falls Sie mehrere Testfälle für dieses oder ein weiteres Szenario simulieren möchten, " +
         "können Sie zur Unterscheidung hier einen Namen und eine Beschreibung hinzufügen.",
 
-    "timeline": "Diese Zeitleiste zeigt Ihnen für jede Situation des Szenarios an, welche Kontextinformationen gelten sollen.<br>" +
-        "Um einer Kontextinformation einen neuen Wert zu geben, <i>klicken</i> Sie in das entsprechende Zeitfenster.<br>" +
+    "timeline": "Diese Zeitleiste zeigt Ihnen alle Kontextinformationen an, die das aktuelle Szenario beschreiben." +
+        "Jede Zeile bildet eine einzelne Situation des Szenarios ab, mit den darin geltenden Kontextinformationen.<br>" +
+        "Um einer Kontextinformation einen neuen Wert zu geben, klicken Sie in das entsprechende Zeitfenster.<br>" +
         "<hr>" +
         "<div id='timeline-info-hint'><b>Tipp</b>: Soll ein bestimmter Wert über mehrere Situationen hinweg gelten (z.B. Alter des Benutzers), " +
         "markieren Sie den gewünschten Zeitraum, indem Sie mit gedrückter Maus über die Zeitfenster fahren.</div>",

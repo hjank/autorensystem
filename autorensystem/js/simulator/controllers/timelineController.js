@@ -17,7 +17,7 @@ function removeTimelineTableMarkup() {
 
 function activateTimelineTable(simulation) {
     // set event handlers for generated cells
-    highlightSelectedStep(simulation);
+    highlightCurrentSituation(simulation);
     activateTimelineTooltips();
 }
 
@@ -42,6 +42,10 @@ function createSteps(steps) {
                 .append($("<td>").addClass("timeline-step-label")
                     .html(i.toString())
                     .attr("title", "Situation " + i.toString())
+                    .append($("<div>")
+                        .addClass("timeline-step-add")
+                        .html("<b class='fui-plus'>")
+                        .attr("title", "Situation einfügen"))
             ));
 }
 
@@ -88,19 +92,16 @@ function createColumn(contextInfo) {
 }
 
 
-function highlightSelectedStep(simulation) {
+function highlightCurrentSituation(simulation) {
+
     var selectedStep = simulation.getTimeline().getSelectedStep();
     var isSimulating = simulation.getStatus() != STOPPED;
 
     // highlight selected step if simulation is running or paused
+    if (isSimulating) highlightStep(selectedStep);
+    else removeStepHighlighting();
 
-    $("#timelineTable tbody tr.timeline-step").each(function(step){
-        if (isSimulating && step == selectedStep)
-            $(this).addClass("selected-step");
-        else $(this).removeClass("selected-step");
-    });
-
-    // scroll selected step into view
+    // scroll selected step into view during simulation
 
     var selectedStepElement = $(".selected-step");
     var timelineWindow = $("#timelineTableWindow");
@@ -112,6 +113,20 @@ function highlightSelectedStep(simulation) {
         // scroll the timeline so that selected step remains visible
         $(timelineWindow).animate({scrollTop: scrollTopDelta}, 500);
     }
+}
+
+
+function highlightStep(stepIndex) {
+
+    $("#timelineTable tbody tr.timeline-step").each(function(step){
+        if (step == stepIndex)
+            $(this).addClass("selected-step");
+        else $(this).removeClass("selected-step");
+    });
+}
+
+function removeStepHighlighting() {
+    $(".selected-step").removeClass("selected-step");
 }
 
 

@@ -260,24 +260,53 @@ function handleMouseup(e) {
 }
 
 
+function handleStepLabelClick(e) {
 
-
-function handleLabelClick(e) {
     var simulation = e.data;
     var status = simulation.getStatus();
+    var selectedStepIndex = getRowIDOfCell(this);
 
     if (status != STOPPED) {
-
-        simulation.pause();
-
         // point the simulation to selected step
-        simulation.getTimeline().setSelectedStep(getRowIDOfCell(this));
-
-        simulation.run();
-
-        // do not restart simulation when it has been paused
-        if (status == PAUSED) simulation.pause();
+        simulation.getTimeline().setSelectedStep(selectedStepIndex);
+        // and simulate
+        simulateSelectedSituation(simulation);
     }
+    else
+        highlightStep(selectedStepIndex);
 
     e.stopPropagation();
+}
+
+
+function handleStepLabelMouseenter(e) {
+    $(this).children(".timeline-step-add").show();
+}
+function handleStepLabelMouseleave(e) {
+    $(this).children(".timeline-step-add").hide();
+}
+
+function handleAddStepMouseenter(e) {
+    //$(this).css("top", "15px");
+
+    var labelCell = $(this).parent();
+    $(labelCell).tooltip("hide");
+
+    $(labelCell).parent().children().css({"border-bottom":"1px double red"});
+    $(labelCell).parent().next().children().css({"border-top":"1px double red"});
+
+    e.stopPropagation();
+}
+function handleAddStepMouseleave(e) {
+    var labelCell = $(this).parent();
+    $(labelCell).tooltip("show");
+
+    $(labelCell).parent().children().css({"border-bottom":""});
+    $(labelCell).parent().next().children().css({"border-top":""});
+}
+function handleAddStepClick(e) {
+    var simulation = e.data;
+    var timeline = simulation.getTimeline();
+    timeline.addStep(getRowIDOfCell($(this).parent()) + 1);
+    simulation.renderTimeline();
 }

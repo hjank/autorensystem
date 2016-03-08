@@ -68,6 +68,7 @@ table#timelineTable tr.timeline-step
 
 table#timelineTable td.timeline-step-label
 {
+    position: relative;
     height: inherit;
     width: 15px;
     border-style: solid none;
@@ -82,6 +83,16 @@ table#timelineTable tr:last-of-type td.timeline-step-label,
 table#timelineTable th.timeline-step-label
 {
     border-style: none;
+}
+table#timelineTable td.timeline-step-label .timeline-step-add
+{
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: -10px;
+    opacity: 0.8;
 }
 
 
@@ -155,7 +166,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION
 
 table#timelineTable tr.timeline-step > td.timeline-cell-marked 
 {
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied
