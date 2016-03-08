@@ -122,19 +122,21 @@ function setSimulationEventHandlers(simulation) {
 
     $("#btnBackToStart").off("click").on("click", function (e) {
         simulation.stop();
-        highlightSelectedStep(simulation);
+        highlightCurrentSituation(simulation);
 
         $("#timelineTableWindow").animate({scrollTop: 0}, 500);
     });
 
     $("#btnBackward").off("click").on("click", function (e) {
         timeline.decrementSelectedStep();
-        highlightSelectedStep(simulation);
+        highlightCurrentSituation(simulation);
+        simulateSelectedSituation(simulation);
     });
 
     $("#btnForward").off("click").on("click", function (e) {
         timeline.incrementSelectedStep();
-        highlightSelectedStep(simulation);
+        highlightCurrentSituation(simulation);
+        simulateSelectedSituation(simulation);
     });
 
 
@@ -163,6 +165,24 @@ function setSimulationEventHandlers(simulation) {
     });
 }
 
+function simulateSelectedSituation(simulation) {
+    var status = simulation.getStatus();
+
+    if (status != STOPPED) {
+        // stop simulation from running on
+        simulation.pause();
+
+        // re-run simulation of selected situation
+        simulation.run();
+
+        // do not restart simulation when it has been paused before step was clicked
+        if (status == PAUSED) {
+            simulation.pause();
+            // and re-set selected step which was incremented at the end of _run()
+            simulation.getTimeline().decrementSelectedStep();
+        }
+    }
+}
 
 function setPlaybackButtonToPlay () {
 
@@ -191,14 +211,14 @@ function resetPlaybackButton () {
 
 
 
-function notifySimulationStart(show) {
+function showSimulationStartNotification() {
     var notificationModal = $(".modal.simulation-notification");
+    $(notificationModal).modal("show");
+}
 
-    if (show)
-        $(notificationModal).modal("show");
-    else
-        $(notificationModal).modal("hide");
-
+function hideSimulationStartNotification() {
+    var notificationModal = $(".modal.simulation-notification");
+    $(notificationModal).modal("hide");
 }
 
 
