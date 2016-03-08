@@ -147,7 +147,7 @@ Simulation.prototype.start = function () {
 
     this._status = RUNNING;
 
-    notifySimulationStart(true);
+    showSimulationStartNotification();
 
     var self = this;
     exportScenario(function (rules) {
@@ -168,6 +168,7 @@ Simulation.prototype.start = function () {
                     contextList.clear();
                 });
 
+                self._timeline.setSelectedStep(0);
                 self.run();
             });
         });
@@ -179,7 +180,7 @@ Simulation.prototype.start = function () {
 Simulation.prototype.run = function () {
     this._status = RUNNING;
 
-    notifySimulationStart(false);
+    hideSimulationStartNotification();
 
     this._run(this);
     this._iteration = setInterval(this._run, this._playBackSpeed, this);
@@ -193,7 +194,7 @@ Simulation.prototype._run = function (self) {
 
     else {
         undoLightboxing();
-        highlightSelectedStep(self);
+        highlightCurrentSituation(self);
 
 
         self._adaptationEngine.startContextDetection(0);
@@ -206,7 +207,11 @@ Simulation.prototype._run = function (self) {
                 var contextType = contextInfo.getType();
                 var contextValue = contextInfo.getChosenValue();
                 if (contextValue == "") contextValue = "CV_UNKNOWN";
-
+                else {
+                    if (contextType == "INTEGER") contextValue = parseInt(contextValue);
+                    if (contextType == "FLOAT") contextValue = parseFloat(contextValue);
+                    if (contextType == "BOOLEAN") contextValue = contextValue.toLowerCase();
+                }
 
                 var contextInfoParameters = [];
                 contextInfo.getParameters().forEach(function (parameter) {
@@ -217,7 +222,7 @@ Simulation.prototype._run = function (self) {
                     contextInfoParameters.push([
                         parameter.getID(),
                         parameterType,
-                        ((parameterType == "BOOLEAN" ? parameterValue.toLowerCase() : parameterValue))
+                        ((parameterType == "" ? parameterValue.toLowerCase() : parameterValue))
                     ]);
                 });
 
@@ -226,7 +231,7 @@ Simulation.prototype._run = function (self) {
                     name: contextInfo.getID(),
                     type: contextType,
                     parameterList: contextInfoParameters,
-                    value: contextType == "BOOLEAN" ? contextValue.toLowerCase() : contextValue
+                    value: contextValue
                 }, contextInfo.hasMultiplicity());
             }
         });
@@ -254,7 +259,7 @@ Simulation.prototype.stop = function () {
     this._timeline.setSelectedStep(0);
 
     resetPlaybackButton();
-    highlightSelectedStep(this);
+    highlightCurrentSituation(this);
 };
 
 
