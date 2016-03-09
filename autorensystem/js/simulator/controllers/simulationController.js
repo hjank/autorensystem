@@ -25,10 +25,8 @@ function setSimulationEventHandlers(simulation) {
 
         // "+ Neue Vorlage"
         if (e.val == simulations.length) {
-            selectedTestcase = new Simulation();
+            selectedTestcase = getNewInitializedSimulation();
             selectedTestcase.setScenario(scenario);
-            selectedTestcase.initTimeline(numberOfSteps);
-            simulations.push(selectedTestcase);
 
             updateSimulator(selectedTestcase);
         }
@@ -40,6 +38,13 @@ function setSimulationEventHandlers(simulation) {
             if (selectedTestcase.getScenario() != scenario) {
                 var testcaseCopy = selectedTestcase.getCopy();
                 testcaseCopy.setScenario(scenario);
+
+                // reset all finished learning unit events since those do not apply here
+                var copiedTimeline = testcaseCopy.getTimeline();
+                copiedTimeline.getColumnEvents(0).forEach(function (fluEvt) { // FLU always comes first (see simulation init)
+                    copiedTimeline.removeEvent(fluEvt);
+                });
+
                 simulations.push(testcaseCopy);
 
                 updateSimulator(testcaseCopy);
