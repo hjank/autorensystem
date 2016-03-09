@@ -3,6 +3,7 @@
  */
 
 
+var situationClipboard;
 
 function handleStepLabelClick(e) {
 
@@ -38,39 +39,40 @@ function handleStepOptionClick(e) {
     var timeline = simulation.getTimeline();
 
     var selectedStep = $(".selected-step");
+    var stepIndex = $(selectedStep).index();
 
-    if ($(this).hasClass("fui-plus")) {
-        timeline.addStep(getRowIDOfCell(selectedStep) + 1);
+
+    if ($(this).hasClass("fui-copy")) {
+        situationClipboard = timeline.getSelectedStepEvents();
     }
 
-    else if ($(this).hasClass("fui-copy")) {
-    }
+    else {
 
-    else if ($(this).hasClass("fui-trash")) {
-    }
+        if ($(this).hasClass("fui-plus")) {
+            timeline.addStep(stepIndex + 1);
+        }
 
+        else if ($(this).hasClass("fui-trash")) {
+            timeline.removeStep(stepIndex);
+        }
+
+        simulation.renderTimeline();
+    }
 
     $(this).tooltip("hide");
     $(".popover").popover("hide");
-
-    simulation.renderTimeline();
 }
 
 function handleAddStepMouseenter(e) {
+    var selectedStep = $(".selected-step");
 
-    var labelCell = $(this).parent();
-    $(labelCell).tooltip("hide");
-
-    $(labelCell).parent().children().css({"border-bottom":"1px double red"});
-    $(labelCell).parent().next().children().css({"border-top":"1px double red"});
-
-    e.stopPropagation();
+    $(selectedStep).children().css({"border-bottom":"1px double red"});
+    $(selectedStep).next().children().css({"border-top":"1px double red"});
 }
 
 function handleAddStepMouseleave(e) {
-    var labelCell = $(this).parent();
-    $(labelCell).tooltip("show");
+    var selectedStep = $(".selected-step");
 
-    $(labelCell).parent().children().css({"border-bottom":""});
-    $(labelCell).parent().next().children().css({"border-top":""});
+    $(selectedStep).children().css({"border-bottom":""});
+    $(selectedStep).next().children().css({"border-top":""});
 }

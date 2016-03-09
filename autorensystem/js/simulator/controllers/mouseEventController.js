@@ -20,6 +20,8 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).off("click", "td.timeline-step-label", handleStepLabelClick);
     $(document).off("click", ".popover-step-options .btn", handleStepOptionClick);
+    $(document).off("mouseenter", ".popover-step-options .btn.fui-plus", handleAddStepMouseenter);
+    $(document).off("mouseleave", ".popover-step-options .btn.fui-plus", handleAddStepMouseleave);
 
     $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
     $(document).off("click", ".popover-column-options .btn", handleColumnHeaderOptionClick);
@@ -38,6 +40,8 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).on("click", "td.timeline-step-label", simulation, handleStepLabelClick);
     $(document).on("click", ".popover-step-options .btn", simulation, handleStepOptionClick);
+    $(document).on("mouseenter", ".popover-step-options .btn.fui-plus", null, handleAddStepMouseenter);
+    $(document).on("mouseleave", ".popover-step-options .btn.fui-plus", null, handleAddStepMouseleave);
 
     $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
     $(document).on("click", ".popover-column-options .btn", simulation, handleColumnHeaderOptionClick);
