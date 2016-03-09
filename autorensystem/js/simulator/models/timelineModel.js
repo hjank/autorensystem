@@ -147,6 +147,28 @@ Timeline.prototype.addStep = function (index) {
     this._situations.splice(index, 0, newStep);
 };
 
+Timeline.prototype.removeStep = function(index) {
+    if (typeof index == "undefined")
+        return;
+
+    // remove all events of this situation, but only this situation
+    var self = this;
+    this._situations[index].forEach(function (event) {
+        if (event.getStart() == index && (event.getEnd() == index || event.getColumn() == 0))
+            self.removeEvent(event);
+    });
+    // remove the situation itself
+    this._situations.splice(index, 1);
+
+    // re-set start and end of each following event accordingly
+    this._events.forEach(function (event) {
+        var eventStart = event.getStart();
+        if (eventStart > index) event.setStart(eventStart - 1);
+        var eventEnd = event.getEnd();
+        if (eventEnd >= index) event.setEnd(eventEnd - 1);
+    });
+};
+
 Timeline.prototype.addColumn = function(contextInfo, index) {
 
     if (typeof index == "undefined") {
@@ -179,10 +201,8 @@ Timeline.prototype.removeColumn = function(index) {
         return;
 
     var self = this;
-    this._columnContextMap.slice(index).forEach(function (col) {
-        col.events.forEach(function (event) {
-            self.removeEvent(event);
-        });
+    this._columnContextMap[index].events.forEach(function (event) {
+        self.removeEvent(event);
     });
     this._columnContextMap.splice(index, 1);
 
