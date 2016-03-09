@@ -22,10 +22,10 @@ jsPlumb.ready(function () {
 function contextInfoListLoadedCallback () {
     // initialize jsPlumb instance
     initPlumbCanvas();
-    // reload data from localStorage
-    initLoader();
-    // init simulator
-    initSimulator();
+
+    // reload data from localStorage and once done, init simulator as well
+    initLoader(initSimulator);
+
     // set handler for saving authorSystemContent before window gets unloaded (i.e. on closing authorsystem)
     //setUnloadEventHandler();
 }

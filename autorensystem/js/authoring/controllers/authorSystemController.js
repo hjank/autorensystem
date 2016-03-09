@@ -3,7 +3,7 @@
  */
 
 
-function initLoader() {
+function initLoader(callback) {
     // after finishing the parsing, elements could be added into tab bar
     setContextTabListeners();
     //setScenarios();     // only needed if scenarios already exist at program start
@@ -37,6 +37,9 @@ function initLoader() {
                 loadedData["_testcases"].forEach(function(testcase) {
                     authorSystemContent.addTestcase(Simulation.deserialize(testcase));
                 });
+
+                // call callback if it's a function
+                (typeof callback == "function" && callback())
             }
         }
     });
