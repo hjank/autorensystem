@@ -140,7 +140,7 @@ function handleMousemove(e) {
 
 
     // prevent dragging into no-drop area, i.e. :
-    if (!targetIsCell // into anything that is no timeline cell
+    if (!targetIsCell // into anything that is not a timeline cell
         || (moving && !dropAllowed) // or out of table bounds or into occupied cells when moving
         || (!moving && e.pageY <= referenceY) // or above drag start
         || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column

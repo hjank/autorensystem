@@ -172,6 +172,7 @@ table#timelineTable tr.timeline-step > td.timeline-cell > a
     font-size: 13px;
     padding-left: 2px;
     padding-right: 2px;
+    margin: 1px 0px;
     display: inline;
     cursor: pointer;
 }
