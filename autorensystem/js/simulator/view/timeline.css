@@ -48,17 +48,7 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label)
 {
     text-align: center;
     border: 1px dotted lightgrey;
-}
-table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) div.timeline-header-options
-{
-    height: inherit;
-    margin-left: 5px;
-    display: inline;
     cursor: pointer;
-}
-table#timelineTable thead tr.timeline-header th:not(.timeline-step-label) div.timeline-header-options:hover
-{
-    border: 1px solid grey;
 }
 
 table#timelineTable tr.timeline-step
@@ -84,16 +74,6 @@ table#timelineTable th.timeline-step-label
 {
     border-style: none;
 }
-table#timelineTable td.timeline-step-label .timeline-step-add
-{
-    display: none;
-    cursor: pointer;
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    bottom: -10px;
-    opacity: 0.8;
-}
 
 
 table#timelineTable tr.timeline-step.selected-step
@@ -112,7 +92,7 @@ table#timelineTable tr.timeline-step.selected-step td.timeline-step-label
     margin: 5px;
 }
 /* makes the little arrow indicating selected step */
-table#timelineTable tr.timeline-step.selected-step td.timeline-step-label:before
+table#timelineTable tr.timeline-step.selected-step.simulated-situation td.timeline-step-label:before
 {
     content: '';
     display: block;

@@ -102,14 +102,14 @@ function handleMousemove(e) {
 
     // get currently targeted cell
     var targetedCell = $(e.target).closest(".timeline-cell");
-    var targetIsNoCell = ($(targetedCell).length == 0);
+    var targetIsCell = $(e.target).is(targetedCell);
 
 
     // detect any collision for moving entire event via drag and drop
     var dropAllowed = true;
     if (moving) {
         // only try drag and drop if mouse is over timeline cell
-        if (!targetIsNoCell) {
+        if (targetIsCell) {
             var rowIndex = getRowIDOfCell(targetedCell);
             var colIndex = getColIDOfCell(targetedCell);
 
@@ -140,7 +140,7 @@ function handleMousemove(e) {
 
 
     // prevent dragging into no-drop area, i.e. :
-    if (targetIsNoCell // into anything that is no timeline cell
+    if (!targetIsCell // into anything that is no timeline cell
         || (moving && !dropAllowed) // or out of table bounds or into occupied cells when moving
         || (!moving && e.pageY <= referenceY) // or above drag start
         || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
@@ -257,56 +257,4 @@ function handleMouseup(e) {
 
     $("body *").css("cursor", "");
 
-}
-
-
-function handleStepLabelClick(e) {
-
-    var simulation = e.data;
-    var status = simulation.getStatus();
-    var selectedStepIndex = getRowIDOfCell(this);
-
-    if (status != STOPPED) {
-        // point the simulation to selected step
-        simulation.getTimeline().setSelectedStep(selectedStepIndex);
-        // and simulate
-        simulateSelectedSituation(simulation);
-    }
-    else
-        highlightStep(selectedStepIndex);
-
-    e.stopPropagation();
-}
-
-
-function handleStepLabelMouseenter(e) {
-    $(this).children(".timeline-step-add").show();
-}
-function handleStepLabelMouseleave(e) {
-    $(this).children(".timeline-step-add").hide();
-}
-
-function handleAddStepMouseenter(e) {
-    //$(this).css("top", "15px");
-
-    var labelCell = $(this).parent();
-    $(labelCell).tooltip("hide");
-
-    $(labelCell).parent().children().css({"border-bottom":"1px double red"});
-    $(labelCell).parent().next().children().css({"border-top":"1px double red"});
-
-    e.stopPropagation();
-}
-function handleAddStepMouseleave(e) {
-    var labelCell = $(this).parent();
-    $(labelCell).tooltip("show");
-
-    $(labelCell).parent().children().css({"border-bottom":""});
-    $(labelCell).parent().next().children().css({"border-top":""});
-}
-function handleAddStepClick(e) {
-    var simulation = e.data;
-    var timeline = simulation.getTimeline();
-    timeline.addStep(getRowIDOfCell($(this).parent()) + 1);
-    simulation.renderTimeline();
 }

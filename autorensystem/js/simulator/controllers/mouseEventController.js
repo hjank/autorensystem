@@ -16,14 +16,10 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderEnter);
     $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderLeave);
+    $(document).off("click", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderClick);
 
-    $(document).off("mouseenter", "td.timeline-step-label", handleStepLabelMouseenter);
-    $(document).off("mouseleave", "td.timeline-step-label", handleStepLabelMouseleave);
     $(document).off("click", "td.timeline-step-label", handleStepLabelClick);
-
-    $(document).off("mouseenter", "td.timeline-step-label .timeline-step-add", null, handleAddStepMouseenter);
-    $(document).off("mouseleave", "td.timeline-step-label .timeline-step-add", null, handleAddStepMouseleave);
-    $(document).off("click", "td.timeline-step-label .timeline-step-add", handleAddStepClick);
+    $(document).off("click", ".popover-step-options .btn", handleStepOptionClick);
 
     $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
     $(document).off("click", ".popover-column-options .btn", handleColumnHeaderOptionClick);
@@ -38,14 +34,10 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderLeave);
+    $(document).on("click", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderClick);
 
-    $(document).on("mouseenter", "td.timeline-step-label", null, handleStepLabelMouseenter);
-    $(document).on("mouseleave", "td.timeline-step-label", handleStepLabelMouseleave);
     $(document).on("click", "td.timeline-step-label", simulation, handleStepLabelClick);
-
-    $(document).on("mouseenter", "td.timeline-step-label .timeline-step-add", null, handleAddStepMouseenter);
-    $(document).on("mouseleave", "td.timeline-step-label .timeline-step-add", null, handleAddStepMouseleave);
-    $(document).on("click", "td.timeline-step-label .timeline-step-add", simulation, handleAddStepClick);
+    $(document).on("click", ".popover-step-options .btn", simulation, handleStepOptionClick);
 
     $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
     $(document).on("click", ".popover-column-options .btn", simulation, handleColumnHeaderOptionClick);

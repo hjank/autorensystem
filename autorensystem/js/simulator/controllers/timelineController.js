@@ -36,17 +36,31 @@ function createHeader() {
 function createSteps(steps) {
     var timelineBodyElement = $("#timelineTable > tbody");
 
+    var _getStepOptionsContent = function () {
+
+        var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
+            .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("Neue Situation einfügen")))
+            .append($("<span>").addClass("btn btn-sm fui-copy").tooltip(getTopTooltipOptions("Situation kopieren")))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Situation löschen")));
+
+        return timelineStepOptionsContent;
+    };
+
     for (var i = 1; i <= steps; i++)
         $(timelineBodyElement)
             .append($("<tr>").addClass("timeline-step")
                 .append($("<td>").addClass("timeline-step-label")
                     .html(i.toString())
                     .attr("title", "Situation " + i.toString())
-                    .append($("<div>")
-                        .addClass("timeline-step-add")
-                        .html("<b class='fui-plus'>")
-                        .attr("title", "Situation einfügen"))
-            ));
+                )
+                .popover({
+                    container: "body",
+                    content: _getStepOptionsContent(),
+                    html: true,
+                    placement: "top",
+                    trigger: "manual"
+                })
+            );
 }
 
 function createColumn(contextInfo) {
@@ -68,17 +82,17 @@ function createColumn(contextInfo) {
     $(".timeline-header")
         .append($("<th>")
             .html(formatUnitIcons(contextInfo))
-            .append($("<div>").addClass("timeline-header-options")
-                .text("...").hide()
-                .tooltip(getTopTooltipOptions("Optionen für " + translate_contextInformation(contextInfo.getID())))
-                .popover("destroy")
+            //.append($("<div>").addClass("timeline-header-options")
+            //    .text("...").hide()
+            //    .tooltip(getTopTooltipOptions("Optionen für " + translate_contextInformation(contextInfo.getID())))
+            //    .popover("destroy")
                 .popover({
                     container: "body",
                     content: _getColumnOptionsContent(contextInfo),
                     html: true,
                     placement: "bottom"
                 })
-            )
+            //)
         );
 
     // add one column for each context item
@@ -101,11 +115,13 @@ function highlightCurrentSituation(simulation) {
     if (isSimulating) highlightStep(selectedStep);
     else removeStepHighlighting();
 
-    // scroll selected step into view during simulation
-
     var selectedStepElement = $(".selected-step");
-    var timelineWindow = $("#timelineTableWindow");
 
+    // add line indicator (little arrow)
+    selectedStepElement.addClass("simulated-situation");
+
+    // scroll selected step into view during simulation
+    var timelineWindow = $("#timelineTableWindow");
     if (isSimulating && getBottom(selectedStepElement) >= getBottom(timelineWindow) ) {
         var timelineScrollTop = $(timelineWindow).scrollTop();
         var scrollTopDelta = timelineScrollTop + getTop(selectedStepElement) - getTop(timelineWindow);

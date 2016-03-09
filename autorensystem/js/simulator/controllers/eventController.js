@@ -71,7 +71,7 @@ function updateEventTimeslot (contextEvent, timeline, newStart, newEnd) {
         newStart = contextEvent.getStart();
 
     if (expectsLearningUnit(contextEvent.getContextInfo()))
-        newEnd = timeline.getNumberOfRows() - 1;
+        newEnd = timeline.getNumberOfSituations() - 1;
 
     else if (typeof newEnd == "undefined")
         newEnd = contextEvent.getEnd();

@@ -5,29 +5,30 @@
 
 
 function handleColumnHeaderEnter(e) {
-    $(this).css("border", "1px solid grey").children("div.timeline-header-options").show();
-    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
-
-    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
+    $(this).css("border", "1px solid grey");
 }
-
 
 function handleColumnHeaderLeave(e) {
     $(this).css("border", "").children("div.timeline-header-options").hide();
     $(".timeline-cell").css("background-image", "");
 }
 
+function handleColumnHeaderClick(e) {
+
+    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
+    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
+}
 
 
 function handleColumnHeaderOptionClick(e) {
     var simulation = e.data;
     var timeline = simulation.getTimeline();
 
-    var timelineHeaderOptionsElement = $(this).parents(".popover").data("bs.popover").$element;
-    var timelineHeaderOptionsPopover = $(this).parents(".popover").data("bs.popover").$tip;
-    var thisColumn = $(".timeline-header-options").index(timelineHeaderOptionsElement);
+    var timelineHeaderElement = $(this).parents(".popover").data("bs.popover").$element;
+    var thisColumn = $(".timeline-header th").not(".timeline-step-label").index(timelineHeaderElement);
     var contextInfo = timeline.getColumnContext(thisColumn);
     var columnEvents = timeline.getColumnEvents(thisColumn);
+
 
     if ($(this).hasClass("fui-eye-blocked")) {
         hideContextEvents(columnEvents);
