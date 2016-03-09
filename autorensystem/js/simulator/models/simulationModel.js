@@ -104,6 +104,22 @@ Simulation.prototype.addContextItem = function (contextInfo) {
     this._timeline.addColumn(contextInfo, index);
 };
 
+Simulation.prototype.removeContextItem = function (contextInfo, allInstances) {
+    var contextInfoID = contextInfo.getID();
+
+    // get the item's position in the (sorted) list
+    var index = this._simulatedContextList.getIndexByID(contextInfoID);
+    // remove it from timeline columns
+    this._timeline.removeColumn(index);
+
+    // remove the item from context list
+    this._simulatedContextList.getItems().splice(index, 1);
+
+    // repeat for all instances
+    if (allInstances && this._simulatedContextList.getItemByID(contextInfoID))
+        this.removeContextItem(contextInfo, allInstances);
+};
+
 Simulation.prototype.getCopy = function () {
 
     var copy = new Simulation(

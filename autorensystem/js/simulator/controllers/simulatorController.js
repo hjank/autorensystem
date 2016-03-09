@@ -2,12 +2,14 @@
  * Created by Helena on 06.01.2016.
  */
 
-var simulations = [];
+var simulations;
+var scenarioContextList;
 var numberOfSteps = 80;
 
 function initSimulator() {
 
     simulations = authorSystemContent.getTestcases();
+    scenarioContextList = new ContextInfoList();
 
     // init the simulation editor timeline
     // 1. fetch and append html
@@ -19,6 +21,13 @@ function initSimulator() {
 }
 
 
+function getNewInitializedSimulation() {
+    var simulation = new Simulation();
+    simulations.push(simulation);
+    simulation.initTimeline(numberOfSteps);
+
+    return simulation;
+}
 
 function updateSimulator(simulation) {
 
@@ -27,24 +36,22 @@ function updateSimulator(simulation) {
     var scenarioExists = !!currentScenario;
 
 
-    /*** first, choose the right (testcase for) simulation, which is supposed to model the current scenario ***/
+    /*** first, choose the right (test case for) simulation, which is supposed to model the current scenario ***/
 
     if (!simulation) {
 
-        if (simulations.length == 0) {
-            simulation = new Simulation();
-            simulations.push(simulation);
+        // if no test cases exist yet -> create first one
+        if (simulations.length == 0)
+            simulation = getNewInitializedSimulation();
 
-            simulation.initTimeline(numberOfSteps);
-        }
 
-        // re-use previously selected simulation testcase
-        var simulationSelectElement = $("#simulationSelection");
-        simulation = simulations[simulationSelectElement.val() || simulations.length-1];
+        // re-use previously selected simulation test case (if not just deleted) or the new one just added
+        var selectedSimIdx = $("#simulationSelection").val();
+        simulation = simulations[(selectedSimIdx && selectedSimIdx < simulations.length) ? selectedSimIdx : 0];
 
-        var simulatedScenario = simulation.getScenario();
 
         // if this does not match the current scenario, find the first one that does and choose it instead
+        var simulatedScenario = simulation.getScenario();
         if (simulatedScenario != currentScenario) {
             var foundMatch = false;
             for (var i in simulations) {
@@ -56,35 +63,40 @@ function updateSimulator(simulation) {
                 }
             }
 
-            // no match found but open simulation already belongs somewhere --> create a new one
-            if (!foundMatch && simulatedScenario.constructor == Scenario) {
-                simulation = new Simulation();
-                simulation.setTitle(simulation.getTitle() + " (" + simulations.push(simulation) + ")");
-                simulation.initTimeline(numberOfSteps);
-            }
+            // no match found and open simulation already belongs somewhere else --> create a new test case for this scenario
+            if (!foundMatch && simulatedScenario.constructor == Scenario)
+                simulation = getNewInitializedSimulation();
 
-            // new or old simulation is not associated with any scenario yet --> do just that
-            if (scenarioExists)
-                simulation.setScenario(currentScenario);
         }
     }
 
     /*** then, get all relevant context for current scenario (if it exists) ***/
 
     if (scenarioExists) {
+
+        // new or old simulation is not associated with any scenario yet --> do just that
+        simulation.setScenario(currentScenario);
+
         var simulatedContextList = simulation.getSimulatedContextList();
+        scenarioContextList.setItems(currentScenario.getScenarioContext());
 
         // get a list of all context information items added in this scenario
-        currentScenario.getScenarioContext().forEach(function(item) {
-            for (var i in simulatedContextList.getItems()) {
-                if (!simulatedContextList.getItemByID(item.getID())) {
-                    var contextInfo = new ContextInformation().fromJSON(item);
-                    simulation.addContextItem(contextInfo);
-                }
+        scenarioContextList.getItems().forEach(function(item) {
+            // add uniquely new items (no duplicates)
+            if (!simulatedContextList.getItemByID(item.getID())) {
+                var contextInfo = new ContextInformation().fromJSON(item);
+                simulation.addContextItem(contextInfo);
             }
+        });
+        // remove context items not relevant for this scenario from simulated context list
+        simulatedContextList.getItems().forEach(function (simItem) {
+            // not contained in scenario context -> remove
+            if (!scenarioContextList.getItemByID(simItem.getID()) && !expectsLearningUnit(simItem))
+                simulation.removeContextItem(simItem, true);
         });
     }
 
+    // and, finally, render the user interface
     renderSimulator(simulation);
 }
 
@@ -188,15 +200,16 @@ function renderSimulator(simulation) {
         });
 
 
-
+    // activate the user interface
     setTimelineEventHandlers(simulation);
     setSimulationEventHandlers(simulation);
 
+    // render the scenario context timeline with all events
     simulation.renderTimeline();
 }
 
 
-
+// add "X" to popover (right corner) for closing
 function addCloseXToPopoverTitle(popover) {
     var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>')
         .tooltip({
@@ -206,6 +219,7 @@ function addCloseXToPopoverTitle(popover) {
     $(popover).children("h3.popover-title").append(closeX);
 }
 
+// let popover title show only what popover displays, without action associated with opening it
 function replaceActionVerbInTitle(popover) {
     var titleElement = $(popover).children("h3.popover-title");
     var titleText = $(titleElement).text();
