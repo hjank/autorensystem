@@ -21,13 +21,7 @@ function addOccupiedMarkup (contextEvent, simulation) {
     $(cells)
         .removeClass("timeline-cell-marked")
         .tooltip("destroy")
-        .tooltip({
-            animation: false,
-            container: "body",
-            html: true,
-            title: getTooltipTitle(contextEvent, simulation.getTimeline()),
-            viewport: "#timelineContainer"
-        });
+        .tooltip(getContextTooltipOptions(getContextTooltipTitle(contextEvent, simulation.getTimeline())));
 
     var doesExpectLearningUnit = expectsLearningUnit(contextEvent.getContextInfo());
     var firstCell = $(cells).first();
@@ -69,14 +63,12 @@ function removeOccupiedMarkup (contextEvent) {
         })
         .popover("destroy")
         .tooltip("destroy")
-        .tooltip(getTopTooltipOptions(
-            translate_contextInformation(contextEvent.getContextInfo().getID()) + infotexts.unknownValue
-        ));
+        .tooltip(getContextTooltipOptions(getContextUnknownTooltipTitle(contextEvent.getContextInfo())));
 }
 
 
 
-function getTooltipTitle (contextEvent, timeline) {
+function getContextTooltipTitle (contextEvent, timeline) {
 
     var tooltipTitle = "";
     var contextInfo = contextEvent.getContextInfo();
@@ -119,7 +111,7 @@ function createContextEventCopyDOM () {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-copy")
-        .attr("title", "Duplizieren")
+        .attr("title", "Kopieren")
         .tooltip();
 }
 

@@ -30,5 +30,6 @@ var infotexts = {
     "detect": "Wert erfassen",
     "detectAll": "Alle dieser Werte erfassen",
 
-    "unknownValue": " ist unbekannt"
+    "unknownValue": " ist unbekannt",
+    "noFLU": "Nutzer hat noch keine Lerneinheit abgeschlossen"
 };

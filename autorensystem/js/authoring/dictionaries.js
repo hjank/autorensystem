@@ -266,7 +266,7 @@ function translate_operator(op) {
  * */
 function translate_possibleValue(cv) {
     var valueString;
-    if (!isNaN(cv)) valueString = parseFloat(cv).toFixed(3);
+    if (!isNaN(cv)) valueString = parseFloat(parseFloat(cv).toFixed(3)); // convert to number -> truncate decimals -> lose "0"s
     else valueString = contextValueDictionary[cv] || cv;
     return valueString;
 }
@@ -289,7 +289,7 @@ function translate_parameter(p) {
  * */
 function translate_parameterValue(pv) {
     var valueString;
-    if (!isNaN(pv)) valueString = parseFloat(pv).toFixed(3);
+    if (!isNaN(pv)) valueString = parseFloat(parseFloat(pv).toFixed(3)); // convert to number -> truncate decimals -> lose "0"s
     else valueString = contextParameterValueDictionary[pv] || pv;
     return valueString;
 }

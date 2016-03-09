@@ -39,9 +39,9 @@ function createSteps(steps) {
     var _getStepOptionsContent = function () {
 
         var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
-            .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("Neue Situation einfügen")))
-            .append($("<span>").addClass("btn btn-sm fui-copy").tooltip(getTopTooltipOptions("Situation kopieren")))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Situation löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Situation einfügen")))
+            .append($("<span>").addClass("btn btn-sm fui-copy").tooltip(getInteractionTooltipOptions("Situation kopieren")))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getInteractionTooltipOptions("Situation löschen")));
 
         return timelineStepOptionsContent;
     };
@@ -68,12 +68,12 @@ function createColumn(contextInfo) {
     var _getColumnOptionsContent = function (contextInfo) {
 
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getTopTooltipOptions(infotexts.ignoreAll)))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getTopTooltipOptions("Alle dieser Werte löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getInteractionTooltipOptions(infotexts.ignoreAll)))
+            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getInteractionTooltipOptions("Alle dieser Werte löschen")));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
-                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getTopTooltipOptions("Neue Spalte einfügen")));
+                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Spalte einfügen")));
 
         return timelineColumnOptionsContent;
     };
@@ -100,8 +100,8 @@ function createColumn(contextInfo) {
         $(this)
             .append( $("<td>").addClass("timeline-cell")
                 .attr("contextClass", contextInfo.getClasses()[0])
-                .tooltip(getTopTooltipOptions(translate_contextInformation(contextInfo.getID()) + infotexts.unknownValue))
-        );
+                .tooltip(getContextTooltipOptions(getContextUnknownTooltipTitle(contextInfo)))
+            );
     });
 }
 
@@ -267,9 +267,27 @@ function removeAllCellTooltips () {
     $(".timeline-cell").find("*").addBack().tooltip("destroy");
 }
 
-function getTopTooltipOptions (title) {
+
+function getContextUnknownTooltipTitle(contextInfo) {
+    // "Nutzer hat noch keine Lerneinheit abgeschlossen"
+    return (expectsLearningUnit(contextInfo) ? infotexts.noFLU :
+        // "<CONTEXT NAME> ist unbekannt"
+        translate_contextInformation(contextInfo.getID()) + infotexts.unknownValue);
+}
+
+function getContextTooltipOptions (title) {
     return {
         animation: false,
+        container: "body",
+        html: true,
+        placement: "auto top",
+        title: title
+    };
+}
+
+function getInteractionTooltipOptions (title) {
+    return {
+        animation: true,
         container: "body",
         html: true,
         placement: "auto top",
