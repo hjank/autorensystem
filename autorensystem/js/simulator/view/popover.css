@@ -22,21 +22,31 @@ div.simulator-info-text a {
 
 
 
+.popover .btn:hover
+{
+    background-color: #cccccc;
+}
+
 
 .popover-column-options span.btn
 {
     display: block;
-}
-.popover-column-options span.btn:hover
-{
-    background-color: #cccccc;
 }
 .popover-column-options span.btn.fui-trash:hover
 {
     background-color: red;
 }
 
-
+.popover-step-options .btn
+{
+    padding: 5px;
+    display: inline;
+}
+.popover-step-options .btn-separator
+{
+    padding: 5px;
+    color: lightgrey;
+}
 
 
 .popover-simulation-name-description * {

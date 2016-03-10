@@ -18,15 +18,22 @@ function setTimelineEventHandlers(simulation) {
     $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderLeave);
     $(document).off("click", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderClick);
 
-    $(document).off("click", "td.timeline-step-label", handleStepLabelClick);
-    $(document).off("click", ".popover-step-options .btn", handleStepOptionClick);
-    $(document).off("mouseenter", ".popover-step-options .btn.fui-plus", handleAddStepMouseenter);
-    $(document).off("mouseleave", ".popover-step-options .btn.fui-plus", handleAddStepMouseleave);
+    //$(document).off("mouseover", "tr.timeline-step", handleStepMouseover);
 
-    $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
+    $(document).off("click", "td.timeline-step-label", handleStepLabelClick);
+
+    $(document).off("click", ".popover-step-options .btn", handleStepOptionClick);
+    $(document).off("mouseenter", ".popover-step-options .btn", handleAddStepMouseenter);
+    $(document).off("mouseleave", ".popover-step-options .btn", handleAddStepMouseleave);
+
     $(document).off("click", ".popover-column-options .btn", handleColumnHeaderOptionClick);
 
+    $(document).off("mouseover", ".timeline-cell-occupied a", hideAllParentsTooltips);
+    $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
+
     $(document).off("click", ".popover .popover-close", hideAllPopovers);
+
+
 
 
     // re-attach event handlers for current simulation
@@ -38,13 +45,18 @@ function setTimelineEventHandlers(simulation) {
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderLeave);
     $(document).on("click", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderClick);
 
-    $(document).on("click", "td.timeline-step-label", simulation, handleStepLabelClick);
-    $(document).on("click", ".popover-step-options .btn", simulation, handleStepOptionClick);
-    $(document).on("mouseenter", ".popover-step-options .btn.fui-plus", null, handleAddStepMouseenter);
-    $(document).on("mouseleave", ".popover-step-options .btn.fui-plus", null, handleAddStepMouseleave);
+    //$(document).on("mouseover", "tr.timeline-step", simulation, handleStepMouseover);
 
-    $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
+    $(document).on("click", "td.timeline-step-label", simulation, handleStepLabelClick);
+
+    $(document).on("click", ".popover-step-options .btn", simulation, handleStepOptionClick);
+    $(document).on("mouseenter", ".popover-step-options .btn", null, handleAddStepMouseenter);
+    $(document).on("mouseleave", ".popover-step-options .btn", null, handleAddStepMouseleave);
+
     $(document).on("click", ".popover-column-options .btn", simulation, handleColumnHeaderOptionClick);
+
+    $(document).on("mouseover", ".timeline-cell-occupied a", null, hideAllParentsTooltips);
+    $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
 
     $(document).on("click", ".popover .popover-close", null, hideAllPopovers);
 

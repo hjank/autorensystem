@@ -53,7 +53,10 @@ ContextEvent.prototype.setVisibility = function (visible) {
 };
 
 ContextEvent.prototype.getCopy = function () {
-    return new ContextEvent("event"+uuid4(), this._contextInfo, this._column, this._start, this._end, this._visible);
+    var copy = ContextEvent.deserialize(this);
+    copy.setUUID("event"+uuid4());
+
+    return copy;
 };
 
 

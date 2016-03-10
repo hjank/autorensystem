@@ -16,7 +16,6 @@ function removeTimelineTableMarkup() {
 }
 
 function activateTimelineTable(simulation) {
-    // set event handlers for generated cells
     highlightCurrentSituation(simulation);
     activateTimelineTooltips();
 }
@@ -39,6 +38,9 @@ function createSteps(steps) {
     var _getStepOptionsContent = function () {
 
         var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
+            .append($("<span>").addClass("btn btn-sm fui-check").tooltip(getInteractionTooltipOptions("Kopierte Situation einfügen")).hide())
+            .append($("<span>").addClass("btn btn-sm fui-cross").tooltip(getInteractionTooltipOptions("Kopieren abbrechen")).hide())
+            .append($("<span>").addClass("btn-separator").text("|").hide())
             .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Situation einfügen")))
             .append($("<span>").addClass("btn btn-sm fui-copy").tooltip(getInteractionTooltipOptions("Situation kopieren")))
             .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getInteractionTooltipOptions("Situation löschen")));
@@ -141,10 +143,22 @@ function highlightStep(stepIndex) {
     });
 }
 
+function markStep(stepIndex) {
+
+    $("#timelineTable tbody tr.timeline-step").each(function(step){
+        if (step == stepIndex)
+            $(this).addClass("marked-step");
+        else $(this).removeClass("marked-step");
+    });
+}
+
 function removeStepHighlighting() {
     $(".selected-step").removeClass("selected-step");
 }
 
+function removeStepMarking() {
+    $(".marked-step").removeClass("marked-step");
+}
 
 function activateTimelineTooltips () {
 
@@ -255,6 +269,10 @@ function freeAllCells() {
 
 function hideAllTooltips() {
     $(".tooltip").tooltip("hide");
+}
+
+function hideAllTimelineToolTips() {
+    $("#timelineTable").find("*").tooltip("hide");
 }
 
 function hideAllPopovers() {

@@ -53,7 +53,7 @@ table#timelineTable thead tr.timeline-header th:not(.timeline-step-label)
 
 table#timelineTable tr.timeline-step
 {
-    height: 33px;
+    height: 37px;
 }
 
 table#timelineTable td.timeline-step-label
@@ -75,6 +75,16 @@ table#timelineTable th.timeline-step-label
     border-style: none;
 }
 
+
+table#timelineTable tr.timeline-step.marked-step
+{
+    border: 1px dotted black;
+}
+table#timelineTable tr.timeline-step.marked-step,
+table#timelineTable tr.timeline-step.marked-step td.timeline-cell
+{
+    background-image: repeating-linear-gradient(rgba(0,0,10,.2), rgba(0,0,10,.2));
+}
 
 table#timelineTable tr.timeline-step.selected-step
 {
@@ -170,11 +180,12 @@ table#timelineTable tr.timeline-step > td.timeline-cell > a
 {
     color: black;
     font-size: 13px;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
     margin: 1px 0px;
     display: inline;
     cursor: pointer;
+    vertical-align: text-top;
 }
 table#timelineTable tr.timeline-step > td.timeline-cell > a:first-of-type
 {

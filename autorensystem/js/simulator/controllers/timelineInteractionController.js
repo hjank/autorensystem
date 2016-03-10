@@ -4,16 +4,24 @@
 
 
 
-/********** event handling **********/
 
-
-var mousedownOnEmptyCell, dragging, resizing, moving; // Boolean interaction state indicators
+/**
+ * global interaction state indicators and clipboard
+ */
+var mousedownOnEmptyCell, dragging, resizing, moving, copying; // Boolean interaction state indicators
 var clickedCell; // needed for both creating and resizing events
 var firstCell; // needed for resizing and moving
 var originalEventCells, clickedCellIndex; // needed for moving
 var nextOccupiedCellTop = 0; // y coordinate of next occupied cell (no-drop area)
 
+// clipboard for copying events or whole situations
+var eventClipboard; // see eventCellController
+var situationClipboard; // see timelineStepController
 
+
+
+
+/********** event handling (see mouseEventController for event listeners) **********/
 
 
 /**
@@ -80,6 +88,8 @@ function handleMousedown(e) {
  */
 function handleMousemove(e) {
 
+    if (copying) hideAllTimelineToolTips();
+
     // handle only marking, resizing, moving
     if (!(mousedownOnEmptyCell || resizing || moving)) return;
 
@@ -102,7 +112,7 @@ function handleMousemove(e) {
 
     // get currently targeted cell
     var targetedCell = $(e.target).closest(".timeline-cell");
-    var targetIsCell = $(e.target).is(targetedCell);
+    var targetIsCell = ($(targetedCell).length > 0 && $(e.target).is(targetedCell));
 
 
     // detect any collision for moving entire event via drag and drop
@@ -202,12 +212,14 @@ function handleMouseup(e) {
     /*** "click away" otherwise irritating tooltips and popovers ***/
 
     hideAllTooltips();
+
     // since "mouseup" is triggered before "click", all popover showing remains intact
     var popover = $(".popover.in");
     if (popover.length > 0
         && $(e.target).closest(popover.data("bs.popover").$element).length == 0
         && (e.pageX < getLeft(popover) || e.pageX > getRight(popover)
-            || e.pageY < getTop(popover) || e.pageY > getBottom(popover))) hideAllPopovers();
+            || e.pageY < getTop(popover) || e.pageY > getBottom(popover)))
+        hideAllPopovers();
 
 
     /*** handle timeline cell interaction ***/
@@ -255,6 +267,18 @@ function handleMouseup(e) {
     resizing = false;
     moving = false;
 
-    $("body *").css("cursor", "");
+    // empty clipboard
+    if (!copying) {
+        eventClipboard = {};
+        situationClipboard = [];
+    }
 
+    // re-establish initial cursor settings
+    $("body *").css("cursor", "");
+}
+
+
+
+function hideAllParentsTooltips(e) {
+    $(this).parents().tooltip("hide");
 }

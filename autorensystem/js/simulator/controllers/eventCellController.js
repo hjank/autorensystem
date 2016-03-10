@@ -35,9 +35,10 @@ function addOccupiedMarkup (contextEvent, simulation) {
 
     $(firstCell)
         .css("border-top", "1px solid")
-        .append($("<a>").attr("href","#").addClass("fui-new"))
-        .append(createContextEventHideDOM())
-        .append(createContextEventDeleteDOM());
+        .append(createContextEventEditDOM())
+        .append(createContextEventDeleteDOM())
+        .append(createContextEventCopyDOM())
+        .append(createContextEventHideDOM());
 
     var lastCell = $(cells).last();
     $(lastCell).css("border-bottom", "1px solid");
@@ -99,40 +100,38 @@ function getContextTooltipTitle (contextEvent, timeline) {
 }
 
 
-function createContextEventDeleteDOM () {
+function createContextEventEditDOM() {
+    return $("<a>")
+        .attr("href", "#")
+        .addClass("fui-new")
+        .tooltip(getContextTooltipOptions("Wert ändern"));
+}
+
+function createContextEventDeleteDOM() {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-trash")
-        .attr("title", "Löschen")
-        .tooltip();
+        .tooltip(getContextTooltipOptions("Wert löschen"));
 }
 
-function createContextEventCopyDOM () {
+function createContextEventCopyDOM() {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-copy")
-        .attr("title", "Kopieren")
-        .tooltip();
+        .tooltip(getContextTooltipOptions("Wert kopieren"));
 }
 
-function createContextEventHideDOM () {
+function createContextEventHideDOM() {
     return $("<a>")
         .attr("href", "#")
         .addClass("fui-eye-blocked")
-        .attr("title", infotexts.ignore)
-        .on("mouseover", function (e) {
-            $(this).parent().tooltip("hide");
-        })
-        .tooltip({
-            animation: false,
-            container: "body"
-        });
+        .tooltip(getContextTooltipOptions(infotexts.ignore));
 }
 
 
 
 
-function handleOccupiedCellAnchorClickEvent (e) {
+function handleOccupiedCellAnchorClickEvent(e) {
 
     var simulation = e.data;
     var timeline = simulation.getTimeline();
@@ -142,6 +141,20 @@ function handleOccupiedCellAnchorClickEvent (e) {
 
     if ($(this).hasClass("fui-new")) {
         $(firstCell).popover("show");
+    }
+
+    else if ($(this).hasClass("fui-copy")) {
+        var copy = contextEvent.getCopy();
+        $(firstCell).tooltip("show")
+            .on("shown.bs.tooltip", function (e) {
+                $(this).data("bs.tooltip").$tip.find(".title").text("Die Kontextinformation wurde kopiert. Bitte wählen Sie ein neues Fenster zum Einfügen.");
+            })
+            .off("shown.bs.tooltip");
+    }
+
+    else if ($(this).hasClass("fui-trash")) {
+        deleteContextEvent(contextEvent, timeline);
+        simulation.renderTimeline();
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {
@@ -158,10 +171,5 @@ function handleOccupiedCellAnchorClickEvent (e) {
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
             .attr("title", infotexts.ignore)
             .tooltip("fixTitle");
-    }
-
-    else if ($(this).hasClass("fui-trash")) {
-        deleteContextEvent(contextEvent, timeline);
-        simulation.renderTimeline();
     }
 }
