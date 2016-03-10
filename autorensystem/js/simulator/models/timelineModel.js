@@ -252,6 +252,28 @@ Timeline.prototype.spliceEventAt = function(event, index) {
 };
 
 
+Timeline.prototype.updateEventTimeslot = function(contextEvent, newStart, newEnd) {
+
+    if (typeof newStart == "undefined")
+        newStart = contextEvent.getStart();
+
+    if (expectsLearningUnit(contextEvent.getContextInfo()))
+        newEnd = this.getNumberOfSituations() - 1;
+
+    else if (typeof newEnd == "undefined")
+        newEnd = contextEvent.getEnd();
+
+
+    this.removeEvent(contextEvent);
+
+    contextEvent.setStart(newStart);
+    contextEvent.setEnd(newEnd);
+
+    this.addEvent(contextEvent);
+};
+
+
+
 Timeline.prototype.removeEvent = function (eventUUID) {
     if (eventUUID.constructor == ContextEvent)
         eventUUID = eventUUID.getUUID();

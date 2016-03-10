@@ -117,7 +117,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
             return;
         }
 
-        updateEventTimeslot(contextEvent, timeline);
+        timeline.updateEventTimeslot(contextEvent);
 
         // remove old and add new class, plus style, informative tooltip, and clickable icons
         addOccupiedMarkup(contextEvent, simulation);

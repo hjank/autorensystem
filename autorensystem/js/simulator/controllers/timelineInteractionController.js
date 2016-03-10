@@ -88,7 +88,7 @@ function handleMousedown(e) {
  */
 function handleMousemove(e) {
 
-    if (copying) hideAllTimelineToolTips();
+    if (copying && !situationClipboardIsEmpty()) hideAllTimelineToolTips();
 
     // handle only marking, resizing, moving
     if (!(mousedownOnEmptyCell || resizing || moving)) return;
@@ -252,11 +252,12 @@ function handleMouseup(e) {
             var newStart = getRowIDOfCell(moving ? $(markedCells).first() : firstCell);
             var newEnd = getRowIDOfCell($(markedCells).last());
 
-            updateEventTimeslot(contextEvent, timeline, newStart, newEnd);
+            timeline.updateEventTimeslot(contextEvent, newStart, newEnd);
 
             // refresh everything and reload tooltips
             simulation.renderTimeline();
         }
+
     }
 
 
