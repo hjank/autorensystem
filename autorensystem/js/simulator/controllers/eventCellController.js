@@ -37,15 +37,16 @@ function addOccupiedMarkup (contextEvent, simulation) {
         .css("border-top", "1px solid")
         .append(createContextEventEditDOM())
         .append(createContextEventDeleteDOM())
-        .append(createContextEventCopyDOM())
         .append(createContextEventHideDOM());
 
     var lastCell = $(cells).last();
     $(lastCell).css("border-bottom", "1px solid");
 
     // ...hence only "common" context information events shall be resizable
-    if (!doesExpectLearningUnit)
+    if (!doesExpectLearningUnit) {
+        $(firstCell).append(createContextEventCopyDOM());
         $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
+    }
 
 
     if (!contextEvent.isVisible())
@@ -144,12 +145,13 @@ function handleOccupiedCellAnchorClickEvent(e) {
     }
 
     else if ($(this).hasClass("fui-copy")) {
-        var copy = contextEvent.getCopy();
-        $(firstCell).tooltip("show")
-            .on("shown.bs.tooltip", function (e) {
-                $(this).data("bs.tooltip").$tip.find(".title").text("Die Kontextinformation wurde kopiert. Bitte wählen Sie ein neues Fenster zum Einfügen.");
-            })
-            .off("shown.bs.tooltip");
+        copying = true;
+        eventClipboard = contextEvent.getCopy();
+
+        var firstCellTooltipOptions = $(firstCell).data("bs.tooltip").options;
+        firstCellTooltipOptions.delay = { show: 100, hide: 500 };
+        firstCellTooltipOptions.title = "Die Kontextinformation wurde kopiert. Bitte wählen Sie ein leeres Fenster zum Einfügen.";
+        $(firstCell).tooltip("show");
     }
 
     else if ($(this).hasClass("fui-trash")) {

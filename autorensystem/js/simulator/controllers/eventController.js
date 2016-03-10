@@ -10,6 +10,8 @@
  */
 function createNewContextEvent (simulation) {
 
+    var timeline = simulation.getTimeline();
+
     // keep track of selected cells
     var markedCells = $(".timeline-cell-marked");
     var numberOfMarkedCells = $(markedCells).length;
@@ -21,21 +23,33 @@ function createNewContextEvent (simulation) {
     var firstStepID = getRowIDOfCell(startCell);
     var colID = getColIDOfCell(startCell);
 
-    var timeline = simulation.getTimeline();
-    var contextEvent = new ContextEvent(
-        "event"+uuid4(),
-        new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
-        colID,
-        firstStepID,
-        firstStepID + numberOfMarkedCells - 1,
-        true
-    );
-    timeline.addEvent(contextEvent);
 
-    createNewPopover(contextEvent, simulation);
+    if (copying && eventClipboard.constructor == ContextEvent && eventClipboard.getColumn() == colID) {
+        eventClipboard.setStart(firstStepID);
+        eventClipboard.setEnd(firstStepID);
 
-    // editor popover will be attached to first cell
-    $(startCell).popover("show");
+        timeline.addEvent(eventClipboard);
+        simulation.renderTimeline();
+
+        copying = false;
+        eventClipboard = {};
+    }
+    else {
+        var contextEvent = new ContextEvent(
+            "event"+uuid4(),
+            new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
+            colID,
+            firstStepID,
+            firstStepID + numberOfMarkedCells - 1,
+            true
+        );
+        timeline.addEvent(contextEvent);
+
+        createNewPopover(contextEvent, simulation);
+
+        // editor popover will be attached to first cell
+        $(startCell).popover("show");
+    }
 }
 
 
@@ -64,23 +78,3 @@ function removeTemporaryEvents(timeline) {
     }
 }
 
-
-function updateEventTimeslot (contextEvent, timeline, newStart, newEnd) {
-
-    if (typeof newStart == "undefined")
-        newStart = contextEvent.getStart();
-
-    if (expectsLearningUnit(contextEvent.getContextInfo()))
-        newEnd = timeline.getNumberOfSituations() - 1;
-
-    else if (typeof newEnd == "undefined")
-        newEnd = contextEvent.getEnd();
-
-
-    timeline.removeEvent(contextEvent);
-
-    contextEvent.setStart(newStart);
-    contextEvent.setEnd(newEnd);
-
-    timeline.addEvent(contextEvent);
-}
