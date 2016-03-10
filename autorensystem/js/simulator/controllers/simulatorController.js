@@ -35,6 +35,8 @@ function updateSimulator(simulation) {
     var currentScenario = authorSystemContent.getScenario(currentScenarioName);
     var scenarioExists = !!currentScenario;
 
+    replaceScenarioNamesWithReferences();
+
 
     /*** first, choose the right (test case for) simulation, which is supposed to model the current scenario ***/
 
@@ -130,8 +132,19 @@ function renderSimulator(simulation) {
 
     simulationSelectElement.select2({
         formatResult: function (option) {
-            if (option.id == simulations.length) option.text = "<b class='fui-plus'/>" + option.text;
-            return option.text;
+            if (option.id) {
+                var text, descr;
+                if (option.id == simulations.length) {
+                    text = "<b class='fui-plus'/>" + option.text;
+                    descr = "";
+                }
+                else {
+                    text = option.text;
+                    descr = simulations[option.id].getDescription();
+                }
+                return "<div title ='" + descr + "'>" + text + "</div>";
+            }
+            else return option.text;
         }
     });
 

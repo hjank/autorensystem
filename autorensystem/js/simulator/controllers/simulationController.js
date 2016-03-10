@@ -19,6 +19,13 @@ function setSimulationEventHandlers(simulation) {
 
     /**** simulation selection ****/
 
+   /* $(simulationSelectElement).off("select2-selecting").on("select2-open", function (e) {
+        $(simulationSelectElement.data("select2").dropdown).find("*").tooltip({
+            container: "body",
+            placement: "bottom"
+        });
+    });*/
+
     $(simulationSelectElement).off("select2-selecting").on("select2-selecting", function (e) {
 
         var selectedTestcase;
