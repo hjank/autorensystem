@@ -227,6 +227,30 @@ Timeline.prototype.addAllEvents = function (events) {
     });
 };
 
+Timeline.prototype.copyEventsTo = function(events, stepIndex) {
+    var self = this;
+    events.forEach(function (event) {
+        var eventCopy = event.getCopy();
+        eventCopy.setStart(stepIndex);
+        eventCopy.setEnd(stepIndex);
+        self.addEvent(eventCopy);
+    });
+};
+
+Timeline.prototype.spliceEventAt = function(event, index) {
+    if (index <= event.getStart() || index >= event.getEnd())
+        return;
+
+    var eventCopy = event.getCopy();
+
+    this.removeEvent(event);
+
+    event.setEnd(index);
+    eventCopy.setStart(index + 1);
+
+    this.addAllEvents([event, eventCopy]);
+};
+
 
 Timeline.prototype.removeEvent = function (eventUUID) {
     if (eventUUID.constructor == ContextEvent)
