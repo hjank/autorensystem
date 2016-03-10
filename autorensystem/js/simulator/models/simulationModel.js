@@ -287,8 +287,11 @@ Simulation.makeSerializable = function(simulation) {
 };
 
 Simulation.undoMakeSerializable = function(simulation) {
-    var scenario = authorSystemContent.getScenario(simulation.getScenario());
-    simulation.setScenario(scenario || {});
+    var simScenario = simulation.getScenario();
+    if (typeof simScenario == "string") {
+        var scenario = authorSystemContent.getScenario(simScenario);
+        simulation.setScenario(scenario || {});
+    }
 };
 
 Simulation.deserialize = function(json) {
