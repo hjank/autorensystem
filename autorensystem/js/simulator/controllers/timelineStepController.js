@@ -21,7 +21,7 @@ function handleStepMouseover(e) {
         stepOptionsPopover.css("top", $(stepOptionsPopover).offset().top + 10);
         var stepOptions = $(stepOptionsPopover).find(".btn");
         stepOptions.hide();
-        $(stepOptions).filter(".fui-check").show().tooltip(getInteractionTooltipOptions("Kontext der kopierten Situation einfügen"));
+        $(stepOptions).filter(".fui-clipboard").show().tooltip(getInteractionTooltipOptions("Kontext der kopierten Situation einfügen"));
         $(stepOptions).filter(".fui-cross").show().tooltip(getInteractionTooltipOptions("Kopieren abbrechen"));
     }
     else {
@@ -71,12 +71,12 @@ function handleStepLabelClick(e) {
 
             // when situation has been copied and is can be pasted
             if (copying) {
-                $(stepOptions).filter(".fui-check").show();
+                $(stepOptions).filter(".fui-clipboard").show();
                 $(stepOptions).filter(".fui-cross").show();
                 $(stepOptionsPopover).find(".btn-separator").show();
             }
             else {
-                $(stepOptions).filter(".fui-check").hide();
+                $(stepOptions).filter(".fui-clipboard").hide();
                 $(stepOptions).filter(".fui-cross").hide();
                 $(stepOptionsPopover).find(".btn-separator").hide();
             }
@@ -136,9 +136,10 @@ function handleStepOptionClick(e) {
             timeline.removeStep(stepIndex);
         }
 
-        else if ($(this).hasClass("fui-check")) {
+        else if ($(this).hasClass("fui-clipboard")) {
             selectedStepEvents.forEach(function (event) {
-                timeline.spliceEventAt(event, stepIndex);
+                if (!expectsLearningUnit(event.getContextInfo()))
+                    timeline.spliceEventAt(event, stepIndex);
             });
             timeline.addStep(newSituationIndex);
             timeline.copyEventsTo(situationClipboard, newSituationIndex);
@@ -158,7 +159,7 @@ function handleStepOptionClick(e) {
 
 function handleAddStepMouseenter(e) {
 
-    if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-check")) {
+    if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-clipboard")) {
         var selectedStep = $(".selected-step");
 
         $(selectedStep).children().css({"border-bottom":"1px double red"});
@@ -168,7 +169,7 @@ function handleAddStepMouseenter(e) {
 
 function handleAddStepMouseleave(e) {
 
-    if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-check")) {
+    if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-clipboard")) {
         var selectedStep = $(".selected-step");
 
         $(selectedStep).children().css({"border-bottom":""});

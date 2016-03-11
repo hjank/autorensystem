@@ -38,7 +38,7 @@ function createSteps(steps) {
     var _getStepOptionsContent = function () {
 
         var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
-            .append($("<span>").addClass("btn btn-sm fui-check").tooltip(getInteractionTooltipOptions("Kopierte Situation einfügen")).hide())
+            .append($("<span>").addClass("btn btn-sm fui-clipboard").tooltip(getInteractionTooltipOptions("Kopierte Situation einfügen")).hide())
             .append($("<span>").addClass("btn btn-sm fui-cross").tooltip(getInteractionTooltipOptions("Kopieren abbrechen")).hide())
             .append($("<span>").addClass("btn-separator").text("|").hide())
             .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Situation einfügen")))
