@@ -230,10 +230,12 @@ Timeline.prototype.addAllEvents = function (events) {
 Timeline.prototype.copyEventsTo = function(events, stepIndex) {
     var self = this;
     events.forEach(function (event) {
-        var eventCopy = event.getCopy();
-        eventCopy.setStart(stepIndex);
-        eventCopy.setEnd(stepIndex);
-        self.addEvent(eventCopy);
+        if (!expectsLearningUnit(event.getContextInfo())) {
+            var eventCopy = event.getCopy();
+            eventCopy.setStart(stepIndex);
+            eventCopy.setEnd(stepIndex);
+            self.addEvent(eventCopy);
+        }
     });
 };
 
