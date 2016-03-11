@@ -121,6 +121,7 @@ table#timelineTable tr.timeline-step.selected-step.simulated-situation td.timeli
 table#timelineTable tr.timeline-step > td.timeline-cell
 {
     min-width: 50px;
+    max-width: 50px;
     border-top: 1px solid;
     border-bottom: 1px solid;
     border-left: 2px solid;
