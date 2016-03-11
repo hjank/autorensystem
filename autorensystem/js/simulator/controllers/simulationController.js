@@ -2,7 +2,7 @@
  * Created by Helena on 24.02.2016.
  */
 
-
+var selectedUnits = [];
 
 function setSimulationEventHandlers(simulation) {
 
@@ -142,6 +142,7 @@ function setSimulationEventHandlers(simulation) {
     $("#btnBackToStart").off("click").on("click", function (e) {
         simulation.stop();
         highlightCurrentSituation(simulation);
+        undoLightboxing();
 
         $("#timelineTableWindow").animate({scrollTop: 0}, 500);
     });
@@ -172,6 +173,7 @@ function setSimulationEventHandlers(simulation) {
             case RUNNING:
                 simulation.pause();
 
+                showSimulationNoMatchNotification();
                 setPlaybackButtonToPlay();
                 break;
 
@@ -225,24 +227,41 @@ function resetPlaybackButton () {
     $(playbackButton).removeClass("fui-pause").addClass("fui-play")
         .attr("title", "Simulation starten")
         .tooltip("fixTitle");
+
+    showSimulationNoMatchNotification();
+    selectedUnits = [];
 }
 
 
 
 
 function showSimulationStartNotification() {
-    var notificationModal = $(".modal.simulation-notification");
+    var notificationModal = $(".modal.simulation-start-notification");
     $(notificationModal).modal("show");
 }
 
 function hideSimulationStartNotification() {
-    var notificationModal = $(".modal.simulation-notification");
+    var notificationModal = $(".modal.simulation-start-notification");
+    $(notificationModal).modal("hide");
+}
+
+function showSimulationNoMatchNotification() {
+    if (selectedUnits.length == 0) {
+        var notificationModal = $(".modal.simulation-nomatch-notification");
+        $(notificationModal).modal("show");
+    }
+}
+
+function hideSimulationNoMatchNotification() {
+    var notificationModal = $(".modal.simulation-nomatch-notification");
     $(notificationModal).modal("hide");
 }
 
 
 function showAdaptationEngineSelection(unitUUID) {
     lightboxUnit(unitUUID);
+
+    selectedUnits.push(unitUUID);
 }
 
 /**
@@ -264,6 +283,7 @@ function lightboxUnit(unitUUID) {
         "background": "",
         "color": ""
     });
+
 }
 
 
