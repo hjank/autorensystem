@@ -9,9 +9,16 @@ div.lightbox-overlay {
     opacity: 0.2;
 }
 
-div.w.unit-selected {
+div.w.selected-unit {
     position: absolute;
     z-index: 101;
-    opacity: 1.0;
-    border: 5px solid red;
+    opacity: 1;
+    border: 5px solid cyan;
+}
+
+div.w.prev-selected-unit {
+    position: absolute;
+    z-index: 101;
+    opacity: 1;
+    border: 5px solid darkcyan;
 }

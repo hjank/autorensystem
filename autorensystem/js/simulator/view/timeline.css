@@ -63,7 +63,7 @@ table#timelineTable td.timeline-step-label
     width: 15px;
     border-style: solid none;
     margin: 0px;
-    padding: 0px;
+    padding: 5px;
     font-size: small;
     vertical-align: middle;
     cursor: pointer;
@@ -78,12 +78,17 @@ table#timelineTable th.timeline-step-label
 
 table#timelineTable tr.timeline-step.marked-step
 {
-    border: 1px dotted black;
+    border: 3px dotted grey;
+}
+table#timelineTable tr.timeline-step.marked-step td.timeline-cell
+{
+    border-top: 3px dotted grey;
+    border-bottom: 3px dotted grey;
 }
 table#timelineTable tr.timeline-step.marked-step,
 table#timelineTable tr.timeline-step.marked-step td.timeline-cell
 {
-    background-image: repeating-linear-gradient(rgba(0,0,10,.2), rgba(0,0,10,.2));
+    background-image: repeating-linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1));
 }
 
 table#timelineTable tr.timeline-step.selected-step
@@ -107,6 +112,7 @@ table#timelineTable tr.timeline-step.selected-step.simulated-situation td.timeli
     content: '';
     display: block;
     position: absolute;
+    left: 0px;
     width: 0;
     height: 0;
     border-bottom: 10px solid transparent;
@@ -120,8 +126,8 @@ table#timelineTable tr.timeline-step.selected-step.simulated-situation td.timeli
 
 table#timelineTable tr.timeline-step > td.timeline-cell
 {
-    min-width: 50px;
-    max-width: 50px;
+    min-width: 75px;
+    max-width: 75px;
     border-top: 1px solid;
     border-bottom: 1px solid;
     border-left: 2px solid;
@@ -220,4 +226,9 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-re
 div.tooltip div.tooltip-inner
 {
     text-align: left;
+}
+
+
+body .tooltip-arrow {
+    display: none;
 }

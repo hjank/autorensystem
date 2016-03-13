@@ -26,22 +26,17 @@ div.simulator-info-text a {
 {
     background-color: #cccccc;
 }
-
-
-.popover-column-options span.btn
-{
-    display: block;
-}
-.popover-column-options span.btn.fui-trash:hover
+.popover span.btn.fui-trash:hover
 {
     background-color: red;
 }
 
-.popover-step-options .btn
+
+.popover-column-options
 {
-    padding: 5px;
-    display: inline;
+    text-align: center;
 }
+
 .popover-step-options .btn-separator
 {
     padding: 5px;
@@ -89,6 +84,12 @@ div.popover-context-info div.popover-bottom-buttons {
     display: flex;
 }
 
+div.popover-context-info div.popover-bottom-buttons .popover-delete {
+    display: none;
+}
+
+
 div.popover-context-info div.btn {
     margin: 5px;
+    width: 100%;
 }

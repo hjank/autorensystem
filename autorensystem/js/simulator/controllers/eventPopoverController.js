@@ -14,7 +14,7 @@ function createNewPopover(contextEvent, simulation) {
             container: "body",
             content: generatePopoverContent,
             html: true,
-            placement: "bottom",
+            placement: "auto bottom",
             selector: contextEventCells,
             template: '<div class="popover" role="tooltip">' +
             '<div class="arrow"></div>' +
@@ -49,7 +49,7 @@ function createNewPopover(contextEvent, simulation) {
  * @returns {string}
  */
 function generatePopoverTitle (contextInfo) {
-    var popoverTitle = $("<div>").append((translate_contextInformation(contextInfo.getID())));
+    var popoverTitle = $("<div>").append(contextInfo.getTranslatedID());
     var closeX = $('<a href="#" title="Schließen ohne zu speichern" class="popover-close">X</a>');
     popoverTitle.append(closeX);
 
@@ -79,13 +79,17 @@ function reconstructPopoverContent(simulation, contextEvent) {
     fillPopoverContextValue(contextInfo, simulation.getScenario(), simulatedValueInput, simulatedValueSelect);
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
+    if (contextInfo.getChosenValue() != "") {
+        $(".popover .popover-delete").show();
+    }
+
     $(".popover select").select2();
-    $(".popover").find("*").tooltip();
 }
 
 
 function repositionPopover(cell) {
     var popover = $(cell).data("bs.popover").$tip;
+    var cellTop = getTop(cell);
     var cellBottom = getBottom(cell);
 
     var containerBottom = getBottom($("#simulatorContainer"));
@@ -95,8 +99,10 @@ function repositionPopover(cell) {
 
     if (getBottom(popover) > containerBottom) {
         // reposition the popover to window bottom
-        $(popover).css("top", "initial");
-        $(popover).css("bottom", "0px");
+        $(popover).css({
+            "top": "initial",
+            "bottom": "0px"
+        });
 
         // scroll the timeline so that selected cell remains visible
         $(timelineWindow).animate({scrollTop: (timelineScrollTop + cellBottom - getTop(popover))}, 500);

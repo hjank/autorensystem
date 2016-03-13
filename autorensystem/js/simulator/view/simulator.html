@@ -58,13 +58,16 @@
     <div>
         <label for="simulationDescriptionInput" class="label-tabs label">Beschreibung:</label>
         <textarea id="simulationDescriptionInput" class="form-control" rows="5"></textarea>
+        <div class="btn back-to-simulator btn-info" title="Speichern und schließen">
+            <b class='fui-check-circle'> </b>Bestätigen
+        </div>
     </div>
     <div>
+        <div id="btnCopySimulation" class="btn btn-info">
+            <b class="fui-copy"> </b>Kopie öffnen
+        </div>
         <div id="btnDeleteSimulation" class="btn btn-danger">
             <b class="fui-trash"> </b>Testfall löschen
-        </div>
-        <div id="btnCopySimulation" class="btn btn-info">
-            <b class="fui-copy"> </b>Testfall kopieren
         </div>
     </div>
 </div>
@@ -126,12 +129,16 @@
     <select class="popover-value select form-control select-primary select-block mbl"></select>
 
     <div class="popover-bottom-buttons">
-        <div class="popover-confirm btn btn-info" title="Speichern und schließen">
-            <b class='fui-check-circle'></b>Bestätigen
+        <!--<div class="popover-confirm btn btn-info" title="Speichern und schließen">
+            <b class='fui-check-circle'> </b>Bestätigen
         </div>
         <div class="popover-delete btn btn-danger" title="Eintrag entfernen">
-            <b class='fui-trash'></b>Löschen
-        </div>
+            <b class='fui-trash-circle'> </b>Löschen
+        </div>-->
+        <div class="popover-confirm btn btn-info fui-check-circle" title="Bestätigen"></div>
+        <div class="popover-delete btn btn-info fui-copy" title="Wert kopieren"></div>
+        <div class="popover-confirm btn btn-info fui-eye-blocked" title="Wert nicht erfassen"></div>
+        <div class="popover-delete btn btn-danger fui-trash" title="Wert entfernen"></div>
     </div>
 
 </div>
