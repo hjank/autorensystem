@@ -4,7 +4,11 @@
 
 // translate context information into german
 var contextInfoDictionary = {
+
     "CI_CURRENT_LEARNING_UNIT" : "Momentane Lerneinheit",
+    "CI_CURRENT_WFP_LOCATION" : "Aktuelle Indoor Position",
+    "CI_IS_HEADSET_PLUGGED_IN" : "Headset eingesteckt",
+    "CI_QR_CODE_CONTENT" : "QR Code Inhalt",
     "CI_FINISHED_LEARNING_UNIT" : "Lerneinheit abgeschlossen",
     "CI_USER_DID_PERFORM_ACTION" : "Benutzer (Aktion)",
     "CI_AUDIO_OUTPUT_AVAILABLE": "Ton verfügbar",
