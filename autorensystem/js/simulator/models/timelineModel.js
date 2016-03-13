@@ -230,7 +230,10 @@ Timeline.prototype.addAllEvents = function (events) {
 Timeline.prototype.copyEventsTo = function(events, stepIndex) {
     var self = this;
     events.forEach(function (event) {
-        if (!expectsLearningUnit(event.getContextInfo())) {
+        if (isFinishedLearningUnit(event.getContextInfo())) {
+
+        }
+        else {
             var eventCopy = event.getCopy();
             eventCopy.setStart(stepIndex);
             eventCopy.setEnd(stepIndex);
@@ -259,7 +262,7 @@ Timeline.prototype.updateEventTimeslot = function(contextEvent, newStart, newEnd
     if (typeof newStart == "undefined")
         newStart = contextEvent.getStart();
 
-    if (expectsLearningUnit(contextEvent.getContextInfo()))
+    if (isFinishedLearningUnit(contextEvent.getContextInfo()))
         newEnd = this.getNumberOfSituations() - 1;
 
     else if (typeof newEnd == "undefined")

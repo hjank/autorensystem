@@ -10,7 +10,7 @@ function fillPopoverContextValue(ci, scenario, inputContextValueElement, selectP
     selectPossibleValuesElement.empty();
 
     // if a unit is expected as value (a unit's UUID, that is, which will be entered on confirm)
-    if (expectsLearningUnit(ci) && scenario.constructor == Scenario) {
+    if (containsLearningUnit(ci.getID()) && scenario.constructor == Scenario) {
         inputContextValueElement.remove();
 
         // add all units of the current scenario
@@ -182,7 +182,7 @@ function confirmPopoverContent(contextInfoDiv, contextInfo, scenario) {
         var enums = contextInfo.getEnums();
         if (enums.length != 0)
             inputValue = enums[selectedValueID];
-        else if (expectsLearningUnit(contextInfo) && scenario.constructor == Scenario) {
+        else if (containsLearningUnit(contextInfo.getID()) && scenario.constructor == Scenario) {
             var units = scenario.getUnits();
             if (units.length > 0)
                 inputValue = units[selectedValueID].getUUID();
@@ -213,9 +213,4 @@ function confirmPopoverContent(contextInfoDiv, contextInfo, scenario) {
     }
 
     return true;
-}
-
-
-function expectsLearningUnit(contextInfo) {
-    return (contextInfo.getID().indexOf("LEARNING_UNIT") != -1);
 }
