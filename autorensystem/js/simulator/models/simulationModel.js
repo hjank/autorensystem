@@ -166,13 +166,17 @@ Simulation.prototype.start = function () {
     showSimulationStartNotification();
 
     var self = this;
+
     exportScenario(function (rules) {
+
+        updateSimulationStartNotification();
+
+        replaceScenarioNamesWithReferences();
 
         require(['js/simulator/motivate-adaptationengine/scripts/config'], function() {
             // main defines jQuery reference
             // (see: http://stackoverflow.com/questions/23023167/requirejs-backbone-1-1-2-local-jquery-interfering-with-global-jquery?rq=1)
             require(['MoAE', 'main'], function(AdaptationEngine) {
-                console.log("ready to rumble!");
 
                 self._adaptationEngine = new AdaptationEngine($.globalEval(rules), false);
                 self._adaptationEngine.setSelectLearningUnitCallback(showAdaptationEngineSelection);
@@ -192,7 +196,6 @@ Simulation.prototype.start = function () {
 
 };
 
-
 Simulation.prototype.run = function () {
     this._status = RUNNING;
 
@@ -205,8 +208,11 @@ Simulation.prototype.run = function () {
 Simulation.prototype._run = function (self) {
 
     // stop if the end of the timeline is reached
-    if (self._timeline.getSelectedStep() == self._timeline.getNumberOfSituations())
+    if (self._timeline.getSelectedStep() == self._timeline.getNumberOfSituations()) {
         self.stop();
+
+        showSimulationNoMatchNotification();
+    }
 
     else {
         undoLightboxing();
@@ -243,6 +249,7 @@ Simulation.prototype._run = function (self) {
                 });
 
 
+
                 self._adaptationEngine.addContextInformation({
                     name: contextInfo.getID(),
                     type: contextType,
@@ -251,6 +258,7 @@ Simulation.prototype._run = function (self) {
                 }, contextInfo.hasMultiplicity());
             }
         });
+
 
 
         // adapt and apply callbacks
@@ -281,9 +289,15 @@ Simulation.prototype.stop = function () {
 
 
 
+Simulation.prototype.deleteAdaptationEngine = function () {
+    this._adaptationEngine = {};
+};
+
 Simulation.makeSerializable = function(simulation) {
     var scenario = simulation.getScenario();
     simulation.setScenario(scenario.constructor == Scenario ? scenario.getName() : "");
+
+    simulation.deleteAdaptationEngine();
 };
 
 Simulation.undoMakeSerializable = function(simulation) {
