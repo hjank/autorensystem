@@ -18,13 +18,11 @@ function exportScenario(callback) {
     }
 
     replaceScenarioNamesWithReferences();
-
     var JSONLD = authorSystemContent.getScenario(currentScenario).getABoxJSONLD();
-
     replaceScenarioReferencesWithNames();
 
-    //console.log(JSON.stringify(JSONLD, null, ' '));
-
+    var aboxString = JSON.stringify(JSONLD, null, ' ');
+    console.log(aboxString);
 
     $.ajax({
         url: "http://localhost:9998/noderules/get-adaptation-rules",
@@ -32,7 +30,7 @@ function exportScenario(callback) {
         cache: false,
         crossDomain: true,
         contentType: "application/x-www-form-urlencoded",
-        data: {"ontologyABox": JSON.stringify(JSONLD, null, ' ')},
+        data: {"ontologyABox": aboxString},
         dataType: "text",
         success: function(response) {
             console.log(response);
@@ -62,6 +60,7 @@ function exportScenario(callback) {
         error: function(err, textStatus) {
             console.log(textStatus);
             alert("Fehler beim Erstellen der Adaptionsregeln.")
-        }
+        },
+        complete: replaceScenarioNamesWithReferences
     });
 }

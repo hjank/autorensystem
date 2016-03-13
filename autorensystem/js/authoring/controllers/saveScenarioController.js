@@ -25,7 +25,7 @@ function showSaveScenario() {
     replaceScenarioReferencesWithNames();
 
     // find current scenario in all scenarios
-    var json = JSON.stringify(authorSystemContent.getScenario(currentScenario));
+    //var json = JSON.stringify(authorSystemContent.getScenario(currentScenario));
     //var jsonLD = JSON.stringify(json ? json.getABoxJSONLD() : {});
 
     $.ajax({
@@ -34,9 +34,8 @@ function showSaveScenario() {
         data: {"json": JSON.stringify(authorSystemContent)},
         success: function() {
             alert("Daten wurden gespeichert.");
-
-            replaceScenarioNamesWithReferences();
-        }
+        },
+        complete: replaceScenarioNamesWithReferences
     });
 }
 
