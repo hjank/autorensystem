@@ -38,12 +38,12 @@ function createSteps(steps) {
     var _getStepOptionsContent = function () {
 
         var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
-            .append($("<span>").addClass("btn btn-sm fui-clipboard").tooltip(getInteractionTooltipOptions("Kopierte Situation einfügen")).hide())
-            .append($("<span>").addClass("btn btn-sm fui-cross").tooltip(getInteractionTooltipOptions("Kopieren abbrechen")).hide())
+            .append($("<span>").addClass("btn btn-sm fui-clipboard").attr("title", "Kopierte Situation einfügen").hide())
+            .append($("<span>").addClass("btn btn-sm fui-cross-circle").attr("title", "Kopieren abbrechen").hide())
             .append($("<span>").addClass("btn-separator").text("|").hide())
-            .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Situation einfügen")))
-            .append($("<span>").addClass("btn btn-sm fui-copy").tooltip(getInteractionTooltipOptions("Situation kopieren")))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getInteractionTooltipOptions("Situation löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Situation einfügen"))
+            .append($("<span>").addClass("btn btn-sm fui-copy").attr("title", "kopieren"))
+            .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "löschen"));
 
         return timelineStepOptionsContent;
     };
@@ -54,14 +54,15 @@ function createSteps(steps) {
                 .append($("<td>").addClass("timeline-step-label")
                     .html(i.toString())
                     .attr("title", "Situation " + i.toString())
+                    .popover({
+                        container: "body",
+                        content: _getStepOptionsContent(),
+                        delay: { show: 100, hide: 300 },
+                        html: true,
+                        placement: "right",
+                        trigger: "manual"
+                    })
                 )
-                .popover({
-                    container: "body",
-                    content: _getStepOptionsContent(),
-                    html: true,
-                    placement: "top",
-                    trigger: "manual"
-                })
             );
 }
 
@@ -70,12 +71,12 @@ function createColumn(contextInfo) {
     var _getColumnOptionsContent = function (contextInfo) {
 
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").tooltip(getInteractionTooltipOptions(infotexts.ignoreAll)))
-            .append($("<span>").addClass("btn btn-sm fui-trash").tooltip(getInteractionTooltipOptions("Alle dieser Werte löschen")));
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").attr("title", infotexts.ignoreAll))
+            .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "Alle dieser Werte löschen"));
 
         if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
-                .append($("<span>").addClass("btn btn-sm fui-plus").tooltip(getInteractionTooltipOptions("Neue Spalte einfügen")));
+                .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Neue Spalte einfügen"));
 
         return timelineColumnOptionsContent;
     };
@@ -84,17 +85,14 @@ function createColumn(contextInfo) {
     $(".timeline-header")
         .append($("<th>")
             .html(formatUnitIcons(contextInfo))
-            //.append($("<div>").addClass("timeline-header-options")
-            //    .text("...").hide()
-            //    .tooltip(getTopTooltipOptions("Optionen für " + translate_contextInformation(contextInfo.getID())))
-            //    .popover("destroy")
-                .popover({
-                    container: "body",
-                    content: _getColumnOptionsContent(contextInfo),
-                    html: true,
-                    placement: "bottom"
-                })
-            //)
+            .attr("title", contextInfo.getTranslatedID())
+            .popover({
+                container: "body",
+                content: _getColumnOptionsContent(contextInfo),
+                delay: { show: 100, hide: 300 },
+                html: true,
+                placement: "bottom"
+            })
         );
 
     // add one column for each context item
@@ -106,6 +104,7 @@ function createColumn(contextInfo) {
             );
     });
 }
+
 
 
 function highlightCurrentSituation(simulation) {
@@ -143,13 +142,8 @@ function highlightStep(stepIndex) {
     });
 }
 
-function markStep(stepIndex) {
-
-    $("#timelineTable tbody tr.timeline-step").each(function(step){
-        if (step == stepIndex)
-            $(this).addClass("marked-step");
-        else $(this).removeClass("marked-step");
-    });
+function markSelectedStepAsCopied() {
+    $(".selected-step").addClass("marked-step");
 }
 
 function removeStepHighlighting() {
@@ -164,10 +158,6 @@ function activateTimelineTooltips () {
 
     // activate timeline info tooltip
     $("#timelineInfo")
-        .tooltip({
-            container: "body",
-            placement: "left"
-        })
         .popover("destroy")
         .popover({
             container: "body",
@@ -176,23 +166,16 @@ function activateTimelineTooltips () {
             placement: "left"
         })
         .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            $(e.target).tooltip("destroy");
-
             var popoverElement = $(e.target).data("bs.popover").$tip;
             replaceActionVerbInTitle(popoverElement);
             addCloseXToPopoverTitle(popoverElement);
-        })
-        .off("hide.bs.popover").on("hide.bs.popover", function (e) {
-            $(e.target).tooltip({
-                container: "body",
-                placement: "left"
-            });
         });
 
-    // re-initialize all tooltips with given options (if any) or default
+    // re-initialize all tooltips with given options (if any)
     $("#timelineContainer *").each(function (index, element) {
         var tooltip = $(element).data("bs.tooltip");
-        $(element).tooltip(tooltip ? tooltip.options : {container: "body"});
+        if (tooltip)
+            $(element).tooltip(tooltip.options);
     });
 }
 
@@ -290,12 +273,12 @@ function getContextUnknownTooltipTitle(contextInfo) {
     // "Nutzer hat noch keine Lerneinheit abgeschlossen"
     return (expectsLearningUnit(contextInfo) ? infotexts.noFLU :
         // "<CONTEXT NAME> ist unbekannt"
-        translate_contextInformation(contextInfo.getID()) + infotexts.unknownValue);
+        contextInfo.getTranslatedID() + infotexts.unknownValue);
 }
 
 function getContextTooltipOptions (title) {
     return {
-        animation: false,
+        animation: true,
         container: "body",
         html: true,
         placement: "auto top",
@@ -311,4 +294,24 @@ function getInteractionTooltipOptions (title) {
         placement: "auto top",
         title: title
     };
+}
+
+
+// inspired by: http://stackoverflow.com/questions/15989591/how-can-i-keep-bootstrap-popover-alive-while-the-popover-is-being-hovered
+function handlePopoverElementMouseenter(e) {
+    var element = $(e.target).closest("th, td");
+    $(element).popover("show");
+
+    $(".popover").on("mouseleave", function () {
+        $(element).popover("hide");
+    });
+}
+function handlePopoverElementMouseleave(e) {
+    var element = $(e.target).closest("th, td");
+
+    setTimeout(function () {
+        if (!$(".popover:hover").length) {
+            $(element).popover("hide");
+        }
+    }, 300);
 }

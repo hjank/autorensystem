@@ -4,7 +4,7 @@
 
 var simulations;
 var scenarioContextList;
-var numberOfSteps = 80;
+var numberOfSteps = 30;
 
 function initSimulator() {
 
@@ -98,6 +98,9 @@ function updateSimulator(simulation) {
         });
     }
 
+    // make sure changes in learning app will be registered on next simulation start
+    simulation.stop();
+
     // and, finally, render the user interface
     renderSimulator(simulation);
 }
@@ -151,7 +154,7 @@ function renderSimulator(simulation) {
 
     /*** buttons, tooltips and popovers ***/
 
-    $("#simulatorInfo, #simulationTitle .btn").tooltip({
+    /*$("#simulatorInfo, #simulationTitle .btn").tooltip({
         container: "body",
         placement: "auto"
     });
@@ -159,7 +162,7 @@ function renderSimulator(simulation) {
     $("#simulationToolbar *, #simulatorPropertiesContainer *, #simulationOptionsContainer *").tooltip({
         container: "body",
         placement: "auto top"
-    });
+    });*/
 
 
 
@@ -202,15 +205,15 @@ function renderSimulator(simulation) {
             placement: "left"
         })
         .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            $(e.target).tooltip("destroy");
+            //$(e.target).tooltip("destroy");
             extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
-        })
-        .off("hide.bs.popover").on("hide.bs.popover", function (e) {
+        });
+        /*.off("hide.bs.popover").on("hide.bs.popover", function (e) {
             $(e.target).tooltip({
                 container: "body",
                 placement: "left"
             });
-        });
+        })*/
 
 
     // activate the user interface
@@ -224,11 +227,7 @@ function renderSimulator(simulation) {
 
 // add "X" to popover (right corner) for closing
 function addCloseXToPopoverTitle(popover) {
-    var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>')
-        .tooltip({
-            container: "body",
-            placement: "bottom"
-        });
+    var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>');
     $(popover).children("h3.popover-title").append(closeX);
 }
 

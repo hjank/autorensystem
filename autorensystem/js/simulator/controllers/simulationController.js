@@ -80,6 +80,7 @@ function setSimulationEventHandlers(simulation) {
         var copy = simulation.getCopy();
         simulations.push(copy);
 
+        updateSimulator(copy);
         returnToSimulatorMainView();
     });
 
@@ -148,14 +149,24 @@ function setSimulationEventHandlers(simulation) {
     });
 
     $("#btnBackward").off("click").on("click", function (e) {
+        if (simulation.getStatus() == RUNNING) {
+            simulation.pause();
+            timeline.decrementSelectedStep();
+        }
         timeline.decrementSelectedStep();
         highlightCurrentSituation(simulation);
+        setPlaybackButtonToPlay();
         simulateSelectedSituation(simulation);
     });
 
     $("#btnForward").off("click").on("click", function (e) {
+        if (simulation.getStatus() == RUNNING) {
+            simulation.pause();
+            timeline.decrementSelectedStep();
+        }
         timeline.incrementSelectedStep();
         highlightCurrentSituation(simulation);
+        setPlaybackButtonToPlay();
         simulateSelectedSituation(simulation);
     });
 
@@ -209,26 +220,22 @@ function setPlaybackButtonToPlay () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-pause").addClass("fui-play")
-        .attr("title", "Simulation fortsetzen")
-        .tooltip("fixTitle");
+        .attr("title", "Simulation fortsetzen");
 }
 
 function setPlaybackButtonToPause () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-play").addClass("fui-pause")
-        .attr("title", "Simulation anhalten")
-        .tooltip("fixTitle");
+        .attr("title", "Simulation anhalten");
 }
 
 function resetPlaybackButton () {
 
     var playbackButton = $("#btnPlaySimulation");
     $(playbackButton).removeClass("fui-pause").addClass("fui-play")
-        .attr("title", "Simulation starten")
-        .tooltip("fixTitle");
+        .attr("title", "Simulation starten");
 
-    showSimulationNoMatchNotification();
     selectedUnits = [];
 }
 
@@ -240,9 +247,15 @@ function showSimulationStartNotification() {
     $(notificationModal).modal("show");
 }
 
+function updateSimulationStartNotification() {
+    var notificationModal = $(".modal.simulation-start-notification");
+    $(notificationModal).find(".modal-body").html("Regeln wurden erfolgreich generiert! Starte Adaptation Engine...");
+}
+
 function hideSimulationStartNotification() {
     var notificationModal = $(".modal.simulation-start-notification");
     $(notificationModal).modal("hide");
+    $(notificationModal).find(".modal-body").html("Die Regeln werden generiert, einen Moment Geduld bitte.");
 }
 
 function showSimulationNoMatchNotification() {
@@ -272,22 +285,40 @@ function showAdaptationEngineSelection(unitUUID) {
  */
 function lightboxUnit(unitUUID) {
 
-    $("#container").prepend(
-        $("<div>").addClass("lightbox-overlay")
-            .on("mousedown", function (e) {
-                $("div.lightbox-overlay").remove();
-            })
-    );
-
-    $("#" + unitUUID).addClass("unit-selected").css({
-        "background": "",
-        "color": ""
+    selectedUnits.forEach(function (unit) {
+        var unitElt = $("#" + unit);
+        if (!$(unitElt).hasClass("selected-unit"))
+            $(unitElt).addClass("prev-selected-unit");
     });
 
+    var containerElt = $("#container");
+    if($(containerElt).find(".lightbox-overlay").length == 0)
+        $(containerElt).prepend($("<div>").addClass("lightbox-overlay")
+                .on("mousedown", function (e) {
+                    $(this).remove();
+                })
+        );
+
+    $("#" + unitUUID)
+        .removeClass("prev-selected-unit")
+        .addClass("selected-unit").css({
+            "background": "", "color": ""
+        });
+
+}
+
+function getSelectedUnits() {
+    var units = [];
+    selectedUnits.forEach(function (unitUUID) {
+        if ($("#" + unitUUID).hasClass("selected-unit"))
+            units.push(unitUUID);
+    });
+    return units;
 }
 
 
 function undoLightboxing() {
     $("div.lightbox-overlay").remove();
-    $(".unit-selected").removeClass("unit-selected");
+    $(".selected-unit").removeClass("selected-unit");
+    $(".prev-selected-unit").removeClass("prev-selected-unit");
 }

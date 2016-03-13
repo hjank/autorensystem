@@ -77,7 +77,7 @@ function getContextTooltipTitle (contextEvent, timeline) {
     var chosenValue = contextInfo.getChosenValue();
 
     if (expectsLearningUnit(contextInfo)) {
-        tooltipTitle = "Abgeschlossene Lerneinheiten:<br><br>";
+        tooltipTitle = infotexts.fLU + "<br><br>";
         var columnEvents = timeline.getColumnEvents(contextEvent.getColumn());
         for (var i in columnEvents) {
             var event = columnEvents[i];
@@ -89,7 +89,7 @@ function getContextTooltipTitle (contextEvent, timeline) {
     }
 
     else {
-        tooltipTitle = translate_contextInformation(contextInfo.getID()) + " ist " +
+        tooltipTitle = contextInfo.getTranslatedID() + " ist " +
             translate_possibleValue(chosenValue) + "<br><br>";
         contextInfo.getParameters().forEach(function (param) {
             tooltipTitle += translate_parameter(param.getID()) + ": ";
@@ -102,31 +102,27 @@ function getContextTooltipTitle (contextEvent, timeline) {
 
 
 function createContextEventEditDOM() {
-    return $("<a>")
+    return $("<a>").addClass("fui-new")
         .attr("href", "#")
-        .addClass("fui-new")
-        .tooltip(getContextTooltipOptions("Wert ändern"));
+        .attr("title", "Wert ändern");
 }
 
 function createContextEventDeleteDOM() {
-    return $("<a>")
+    return $("<a>").addClass("fui-trash")
         .attr("href", "#")
-        .addClass("fui-trash")
-        .tooltip(getContextTooltipOptions("Wert löschen"));
+        .attr("title", "Wert löschen");
 }
 
 function createContextEventCopyDOM() {
-    return $("<a>")
+    return $("<a>").addClass("fui-copy")
         .attr("href", "#")
-        .addClass("fui-copy")
-        .tooltip(getContextTooltipOptions("Wert kopieren"));
+        .attr("title", "Wert kopieren");
 }
 
 function createContextEventHideDOM() {
-    return $("<a>")
+    return $("<a>").addClass("fui-eye-blocked")
         .attr("href", "#")
-        .addClass("fui-eye-blocked")
-        .tooltip(getContextTooltipOptions(infotexts.ignore));
+        .attr("title",infotexts.ignore);
 }
 
 
@@ -163,15 +159,15 @@ function handleOccupiedCellAnchorClickEvent(e) {
         hideContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
-            .attr("title", infotexts.detect)
-            .tooltip("fixTitle");
+            .attr("title", infotexts.detect);
+            //.tooltip("fixTitle");
     }
 
     else if ($(this).hasClass("fui-eye")) {
         showContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
-            .attr("title", infotexts.ignore)
-            .tooltip("fixTitle");
+            .attr("title", infotexts.ignore);
+            //.tooltip("fixTitle");
     }
 }
