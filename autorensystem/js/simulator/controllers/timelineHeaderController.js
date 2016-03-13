@@ -6,17 +6,18 @@
 
 function handleColumnHeaderEnter(e) {
     $(this).css("border", "1px solid grey");
+
+    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
+    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2))"});
+
+    //handlePopoverElementMouseenter(e);
 }
 
 function handleColumnHeaderLeave(e) {
-    $(this).css("border", "").children("div.timeline-header-options").hide();
+    $(this).css("border", "");
     $(".timeline-cell").css("background-image", "");
-}
 
-function handleColumnHeaderClick(e) {
-
-    var colIndex = $(this).parent().children().not(".timeline-step-label").index(this);
-    getColumnCells(colIndex).css({"background-image": "repeating-linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3))"});
+    //handlePopoverElementMouseleave(e);
 }
 
 
@@ -33,13 +34,13 @@ function handleColumnHeaderOptionClick(e) {
     if ($(this).hasClass("fui-eye-blocked")) {
         hideContextEvents(columnEvents);
 
-        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", infotexts.detectAll).tooltip("fixTitle");
+        $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", infotexts.detectAll);
     }
 
     else if ($(this).hasClass("fui-eye")) {
         showContextEvents(columnEvents);
 
-        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", infotexts.ignoreAll).tooltip("fixTitle");
+        $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", infotexts.ignoreAll);
     }
 
     else if ($(this).hasClass("fui-trash")) {

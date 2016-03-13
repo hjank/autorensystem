@@ -9,17 +9,18 @@
  */
 function setTimelineEventHandlers(simulation) {
 
+
     // detach event handlers from previous simulation
+
     $(document).off("mousedown", ".timeline-cell", handleMousedown);
     $(document).off("mousemove", handleMousemove);
     $(document).off("mouseup", handleMouseup);
 
     $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderEnter);
     $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderLeave);
-    $(document).off("click", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderClick);
 
-    //$(document).off("mouseover", "tr.timeline-step", handleStepMouseover);
-
+    $(document).off("mouseenter", "td.timeline-step-label", handleStepLabelEnter);
+    $(document).off("mouseleave", "td.timeline-step-label", handleStepLabelLeave);
     $(document).off("click", "td.timeline-step-label", handleStepLabelClick);
 
     $(document).off("click", ".popover-step-options .btn", handleStepOptionClick);
@@ -37,16 +38,16 @@ function setTimelineEventHandlers(simulation) {
 
 
     // re-attach event handlers for current simulation
+
     $(document).on("mousedown", ".timeline-cell", simulation, handleMousedown);
     $(document).on("mousemove", handleMousemove);
     $(document).on("mouseup", null, simulation, handleMouseup);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderLeave);
-    $(document).on("click", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderClick);
 
-    //$(document).on("mouseover", "tr.timeline-step", simulation, handleStepMouseover);
-
+    $(document).on("mouseenter", "td.timeline-step-label", simulation, handleStepLabelEnter);
+    $(document).on("mouseleave", "td.timeline-step-label", simulation, handleStepLabelLeave);
     $(document).on("click", "td.timeline-step-label", simulation, handleStepLabelClick);
 
     $(document).on("click", ".popover-step-options .btn", simulation, handleStepOptionClick);
@@ -61,3 +62,4 @@ function setTimelineEventHandlers(simulation) {
     $(document).on("click", ".popover .popover-close", null, hideAllPopovers);
 
 }
+

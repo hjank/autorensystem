@@ -4,38 +4,36 @@
 
 
 
-function handleStepMouseover(e) {
-    if (situationClipboardIsEmpty()) return;
-
-
-    hideAllTooltips();
-
-    var timeline = e.data.getTimeline();
-    var stepIndex = $(this).index();
-    var thisSituation = timeline.getStepEvents(stepIndex);
-
-    if (thisSituation.length == 0) {
-        hideAllPopovers();
-        $(this).popover("show");
-        var stepOptionsPopover = $(this).data("bs.popover").$tip;
-        stepOptionsPopover.css("top", $(stepOptionsPopover).offset().top + 10);
-        var stepOptions = $(stepOptionsPopover).find(".btn");
-        stepOptions.hide();
-        $(stepOptions).filter(".fui-clipboard").show().tooltip(getInteractionTooltipOptions("Kontext der kopierten Situation einfügen"));
-        $(stepOptions).filter(".fui-cross").show().tooltip(getInteractionTooltipOptions("Kopieren abbrechen"));
-    }
-    else {
-        var tooltipTitle = "In diese Situation kann nicht kopiert werden, da bereits Werte existieren.";
-        $(this).attr("title", tooltipTitle).tooltip("fixTitle").tooltip("show");
-        $(this).find("*").css("cursor", "no-drop")
-    }
-}
-
-
 function situationClipboardIsEmpty() {
     return (!situationClipboard || situationClipboard.length == 0);
 }
 
+
+function handleStepLabelEnter(e) {
+
+    if (e.data.getStatus() == STOPPED) {
+        var selectedStepIndex = getRowIDOfCell(this);
+        highlightStep(selectedStepIndex);
+
+        //handlePopoverElementMouseenter(e);
+    }
+}
+
+function handleStepLabelLeave(e) {
+
+    if (e.data.getStatus() == STOPPED) {
+
+        var stepOptionsPopover = $(this).data("bs.popover").$tip;
+        if (!$(stepOptionsPopover).hasClass("in") ||
+            $(e.relatedTarget).closest(".selected-step, .popover").length == 0) {
+            removeStepHighlighting();
+            $(this).popover("hide");
+        }
+        $(".timeline-step-label").tooltip("destroy");
+
+        //handlePopoverElementMouseleave(e);
+    }
+}
 
 function handleStepLabelClick(e) {
 
@@ -58,44 +56,38 @@ function handleStepLabelClick(e) {
 
         var copying = !situationClipboardIsEmpty();
 
-        // another than the selected step's label is clicked
-        if (!$(selectedStep).hasClass("selected-step")) {
+        var stepOptionsPopover = $(this).data("bs.popover").$tip;
+        var stepOptions = $(stepOptionsPopover).find(".btn");
 
-            highlightStep(selectedStepIndex);
-            $(selectedStep).popover("show");
+        if ($(stepOptionsPopover).hasClass("in"))
+            $(this).popover("hide");
+        else
+            $(this).popover("show");
 
-            var stepOptionsPopover = $(selectedStep).data("bs.popover").$tip;
-            var stepOptions = $(stepOptionsPopover).find(".btn");
 
-            // situation options are shown
+        // situation options are shown
 
-            // when situation has been copied and is can be pasted
-            if (copying) {
-                $(stepOptions).filter(".fui-clipboard").show();
-                $(stepOptions).filter(".fui-cross").show();
-                $(stepOptionsPopover).find(".btn-separator").show();
-            }
-            else {
-                $(stepOptions).filter(".fui-clipboard").hide();
-                $(stepOptions).filter(".fui-cross").hide();
-                $(stepOptionsPopover).find(".btn-separator").hide();
-            }
+        // when situation has been copied and is can be pasted
+        if (copying) {
+            $(stepOptions).filter(".fui-clipboard").show();
+            $(stepOptions).filter(".fui-cross-circle").show();
+            $(stepOptionsPopover).find(".btn-separator").show();
+            $(stepOptions).filter(".fui-copy").hide();
 
-            // selected situation has no context values yet
-            if (timeline.getStepEvents(selectedStepIndex).length == 0) {
-                // nothing there to copy
-                $(stepOptions).filter(".fui-copy").hide();
-            }
         }
-
-        // this is the selected and highlighted step whose label is clicked again
         else {
-            removeStepHighlighting();
-            $(selectedStep).popover("hide");
+            $(stepOptions).filter(".fui-clipboard").hide();
+            $(stepOptions).filter(".fui-cross-circle").hide();
+            $(stepOptionsPopover).find(".btn-separator").hide();
         }
-    }
 
-    e.stopPropagation();
+        // selected situation has no context values yet
+        if (timeline.getStepEvents(selectedStepIndex).length == 0) {
+            // nothing there to copy
+            $(stepOptions).filter(".fui-copy").hide();
+        }
+
+    }
 }
 
 
@@ -108,20 +100,24 @@ function handleStepOptionClick(e) {
     var selectedStepEvents = timeline.getStepEvents(stepIndex);
 
     if ($(this).hasClass("fui-copy")) {
+
         situationClipboard = selectedStepEvents;
         copying = true;
 
-        // just to be cautious, situationClipboard cannot be empty (see handleStepLabelClick)
-        if (situationClipboard.length > 0) {
-            hideAllPopovers();
-            markStep(stepIndex);
-            removeStepHighlighting();
+        hideAllPopovers();
+        markSelectedStepAsCopied();
+        removeStepHighlighting();
 
-            var selectedStepTooltipOptions = $(selectedStep).data("bs.tooltip").options;
-            selectedStepTooltipOptions.delay = { show: 100, hide: 500 };
-            selectedStepTooltipOptions.title = "Der Kontext der Situation wurde kopiert. Bitte wählen Sie eine Situation zum Einfügen.";
-            $(selectedStep).tooltip("show");
-        }
+        $(this).tooltip({
+            container: "body",
+            title: "Der Kontext der Situation wurde kopiert. Bitte wählen Sie eine Situation zum Einfügen.",
+            trigger: "manual"
+        }).tooltip("show");
+
+        var self = this;
+        setTimeout(function () {
+            $(self).tooltip('destroy');
+        }, 3000);
     }
 
     else {
@@ -151,10 +147,9 @@ function handleStepOptionClick(e) {
         situationClipboard = [];
         copying = false;
 
-        hideAllTooltips();
+
         simulation.renderTimeline();
     }
-
 }
 
 function handleAddStepMouseenter(e) {
