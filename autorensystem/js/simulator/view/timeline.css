@@ -191,16 +191,17 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied.copied-event
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible 
 {
-    background-image: repeating-linear-gradient( 62deg, transparent 5%, lightgrey 10%, transparent 15%);
+    background-image: repeating-linear-gradient( 62deg, transparent 5%, white 10%, transparent 15%);
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell > a
 {
     color: black;
     font-size: 13px;
-    padding-left: 3px;
+    /*padding-left: 3px;
     padding-right: 3px;
-    margin: 1px 0px;
+    margin: 1px 0px;*/
+    margin: 3px;
     display: inline;
     cursor: pointer;
     vertical-align: text-top;

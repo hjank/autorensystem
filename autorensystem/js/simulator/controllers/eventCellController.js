@@ -27,13 +27,19 @@ function addOccupiedMarkup (contextEvent, simulation) {
 
     $(firstCell)
         .css("border-top", "1px solid")
-        .append(createContextEventEditDOM())
-        .append(createContextEventDeleteDOM())
-        .append(createContextEventHideDOM());
+        .append(createContextEventEditDOM());
+
 
 
     // "finished learning unit" is implicitly valid till the end of all time...
     var doesExpectLearningUnit = isFinishedLearningUnit(contextEvent.getContextInfo());
+
+    if (!doesExpectLearningUnit)
+        $(firstCell).append(createContextEventCopyDOM());
+
+    $(firstCell)
+        .append(createContextEventDeleteDOM())
+        .append(createContextEventHideDOM());
 
 
     if (doesExpectLearningUnit) {
@@ -45,15 +51,14 @@ function addOccupiedMarkup (contextEvent, simulation) {
     }
     // ...hence only "common" context information events shall be resizable
     else {
-        $(firstCell).append(createContextEventCopyDOM());
         var resizeHandle = $("<div>").addClass("occupied-resize-handle");
         $(lastCell).css("border-bottom", "1px solid")
             .append(resizeHandle);
         $(cells).addClass("timeline-cell-occupied")
-            .off("mouseenter").on("mouseenter", function (e) {
+            .on("mouseenter", function (e) {
                 $(resizeHandle).css("border-bottom", "1px solid");
             })
-            .off("mouseleave").on("mouseleave", function (e) {
+            .on("mouseleave", function (e) {
                 $(resizeHandle).css("border-bottom", "");
             });
     }
@@ -86,7 +91,7 @@ function getContextTooltipTitle (contextEvent, timeline) {
     var chosenValue = contextInfo.getChosenValue();
 
     if (isFinishedLearningUnit(contextInfo)) {
-        tooltipTitle = infotexts.fLU + "<br><br>";
+        tooltipTitle = infoTexts.fLU + "<br><br>";
         var columnEvents = timeline.getColumnEvents(contextEvent.getColumn());
         for (var i in columnEvents) {
             var event = columnEvents[i];
@@ -134,9 +139,12 @@ function createContextEventCopyDOM() {
 function createContextEventHideDOM() {
     return $("<a>").addClass("fui-eye-blocked")
         .attr("href", "#")
-        .attr("title",infotexts.ignore);
+        .attr("title",infoTexts.ignore);
 }
 
+function handleOccupiedCellAnchorLeave(e) {
+    $(this).closest(".timeline-cell-occupied").tooltip("show");
+}
 
 function handleOccupiedCellAnchorClickEvent(e) {
 
@@ -166,7 +174,7 @@ function handleOccupiedCellAnchorClickEvent(e) {
         hideContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
-            .attr("title", infotexts.detect);
+            .attr("title", infoTexts.detect);
             //.tooltip("fixTitle");
     }
 
@@ -174,7 +182,7 @@ function handleOccupiedCellAnchorClickEvent(e) {
         showContextEvents([contextEvent]);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
-            .attr("title", infotexts.ignore);
+            .attr("title", infoTexts.ignore);
             //.tooltip("fixTitle");
     }
 }

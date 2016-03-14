@@ -31,6 +31,7 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).off("mouseover", ".timeline-cell-occupied a", hideAllParentsTooltips);
     $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
+    $(document).off("mouseleave", ".timeline-cell-occupied a", handleOccupiedCellAnchorLeave);
 
     $(document).off("click", ".popover .popover-close", hideAllPopovers);
 
@@ -58,6 +59,7 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).on("mouseover", ".timeline-cell-occupied a", null, hideAllParentsTooltips);
     $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
+    $(document).on("mouseleave", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorLeave);
 
     $(document).on("click", ".popover .popover-close", null, hideAllPopovers);
 
