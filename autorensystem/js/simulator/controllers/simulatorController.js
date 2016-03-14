@@ -4,7 +4,7 @@
 
 var simulations;
 var scenarioContextList;
-var numberOfSteps = 30;
+var numberOfSteps = 20;
 
 function initSimulator() {
 
@@ -93,7 +93,7 @@ function updateSimulator(simulation) {
         // remove context items not relevant for this scenario from simulated context list
         simulatedContextList.getItems().forEach(function (simItem) {
             // not contained in scenario context -> remove
-            if (!scenarioContextList.getItemByID(simItem.getID()) && !expectsLearningUnit(simItem))
+            if (!scenarioContextList.getItemByID(simItem.getID()) && !isFinishedLearningUnit(simItem))
                 simulation.removeContextItem(simItem, true);
         });
     }
@@ -152,36 +152,18 @@ function renderSimulator(simulation) {
     });
 
 
-    /*** buttons, tooltips and popovers ***/
 
-    /*$("#simulatorInfo, #simulationTitle .btn").tooltip({
-        container: "body",
-        placement: "auto"
-    });
-
-    $("#simulationToolbar *, #simulatorPropertiesContainer *, #simulationOptionsContainer *").tooltip({
-        container: "body",
-        placement: "auto top"
-    });*/
-
-
-
-    /**** simulator info button tooltip and popover ****/
+    /**** simulator info popover and tooltips ****/
 
     var getSimulatorInfoText = function (scenario) {
         var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
         var infoText = infotexts.intro.replace("SCENARIO", scenarioName);
-
         var infoTextDiv = $("<div>").addClass("simulator-info-text").html(infoText);
 
         return infoTextDiv;
     };
 
-    var extendSimulatorInfoPopover = function (popover) {
-
-        replaceActionVerbInTitle(popover);
-        addCloseXToPopoverTitle(popover);
-
+    var extendSimulatorInfoPopover = function() {
         $(".simulator-info-text a#simulator-info-scenario").tooltip({
             container: "body",
             html: true,
@@ -205,15 +187,9 @@ function renderSimulator(simulation) {
             placement: "left"
         })
         .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            //$(e.target).tooltip("destroy");
-            extendSimulatorInfoPopover($(e.target).data("bs.popover").$tip);
+            extendSimulatorInfoPopover();
         });
-        /*.off("hide.bs.popover").on("hide.bs.popover", function (e) {
-            $(e.target).tooltip({
-                container: "body",
-                placement: "left"
-            });
-        })*/
+
 
 
     // activate the user interface
@@ -222,20 +198,4 @@ function renderSimulator(simulation) {
 
     // render the scenario context timeline with all events
     simulation.renderTimeline();
-}
-
-
-// add "X" to popover (right corner) for closing
-function addCloseXToPopoverTitle(popover) {
-    var closeX = $('<a href="#" title="Schließen" class="popover-close">X</a>');
-    $(popover).children("h3.popover-title").append(closeX);
-}
-
-// let popover title show only what popover displays, without action associated with opening it
-function replaceActionVerbInTitle(popover) {
-    var titleElement = $(popover).children("h3.popover-title");
-    var titleText = $(titleElement).text();
-
-    titleText = titleText.replace(" anzeigen", "");
-    $(titleElement).text(titleText);
 }
