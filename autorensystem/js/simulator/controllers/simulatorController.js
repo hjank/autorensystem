@@ -153,46 +153,9 @@ function renderSimulator(simulation) {
 
 
 
-    /**** simulator info popover and tooltips ****/
-
-    var getSimulatorInfoText = function (scenario) {
-        var scenarioName = (scenario.constructor == Scenario) ? scenario.getName() : "";
-        var infoText = infotexts.intro.replace("SCENARIO", scenarioName);
-        var infoTextDiv = $("<div>").addClass("simulator-info-text").html(infoText);
-
-        return infoTextDiv;
-    };
-
-    var extendSimulatorInfoPopover = function() {
-        $(".simulator-info-text a#simulator-info-scenario").tooltip({
-            container: "body",
-            html: true,
-            placement: "auto top",
-            title: infotexts.scenario
-        });
-        $(".simulator-info-text a#simulator-info-context").tooltip({
-            container: "body",
-            html: true,
-            placement: "auto top",
-            title: infotexts.context
-        });
-    };
-
-    $("#simulatorInfo")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: getSimulatorInfoText(simulation.getScenario()),
-            html: true,
-            placement: "left"
-        })
-        .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            extendSimulatorInfoPopover();
-        });
-
-
 
     // activate the user interface
+    activateInfoPopovers(simulation);
     setTimelineEventHandlers(simulation);
     setSimulationEventHandlers(simulation);
 
