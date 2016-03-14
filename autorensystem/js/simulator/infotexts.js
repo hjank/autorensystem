@@ -2,7 +2,7 @@
  * Created by Helena on 19.02.2016.
  */
 
-var infotexts = {
+var infoTexts = {
 
     "scenario": "Für die adaptive Lernanwendung ist ein Szenario eine Abfolge von <em>Situationen</em>.<br>" +
         "Jede Situation wird durch <em>Kontextinformationen</em> beschrieben.",
@@ -16,12 +16,14 @@ var infotexts = {
     "titleDescr": "Falls Sie mehrere Testfälle für dieses oder ein weiteres Szenario simulieren möchten, " +
         "können Sie zur Unterscheidung hier einen Namen und eine Beschreibung hinzufügen.",
 
-    "timeline": "Diese Zeitleiste zeigt Ihnen alle Kontextinformationen an, die das aktuelle Szenario beschreiben." +
-        "Jede Zeile bildet eine einzelne Situation des Szenarios ab, mit den darin geltenden Kontextinformationen.<br>" +
-        "Um einer Kontextinformation einen neuen Wert zu geben, klicken Sie in das entsprechende Zeitfenster.<br>" +
+    "timeline": "Diese Zeitleiste zeigt Ihnen alle Kontextinformationen an, die das aktuelle Szenario beschreiben.<br>" +
+        "Jede Zeile bildet eine Situation des Szenarios ab, mit den zu diesem Zeitpunkt gültigen Kontextinformationen.<br>" +
         "<hr>" +
-        "<div id='timeline-info-hint'><b>Tipp</b>: Soll ein Wert über mehrere Situationen hinweg gelten (z.B. Alter des Benutzers), " +
-        "markieren Sie den gewünschten Zeitraum, indem Sie mit gedrückter Maus über die Zeitfenster fahren.</div>",
+        "<div id='timeline-info-hint'>" +
+        "<b>Tipp</b>: " +
+        "Klicken Sie in ein Zeitfenster, um einen Kontextwert hinzuzufügen.<br>" +
+        "Soll ein Wert über einen längeren Zeitraum hinweg gelten (z.B. Alter des Benutzers), " +
+        "fahren Sie zum Markieren mit gedrückter Maus über die Zeitfenster.</div>",
 
     "units": "Hier geben Sie an, welche Lerneinheiten der Nutzer nacheinander abschließt.<br>" +
         "Ist eine Lerneinheit einmal abgeschlossen, gilt diese Information automatisch bis zum Ende des Szenarios.",
