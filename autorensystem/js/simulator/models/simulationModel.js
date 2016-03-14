@@ -211,7 +211,7 @@ Simulation.prototype._run = function (self) {
     if (self._timeline.getSelectedStep() == self._timeline.getNumberOfSituations()) {
         self.stop();
 
-        showSimulationNoMatchNotification();
+        showSimulationMatchNotification();
     }
 
     else {

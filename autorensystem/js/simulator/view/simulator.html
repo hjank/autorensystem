@@ -3,7 +3,7 @@
     <div id="simulatorHeader">
         <div id="simulationTitle">
             <div>
-                <a href="#" id="simulatorInfo" title="Erklärung zum Simulator anzeigen"><b class="btn-xs fui-question-circle"></b></a>
+                <a href="#" id="simulatorInfo" title="Erklärung zum Simulator"><b class="btn-xs fui-question-circle"></b></a>
             </div>
             <div>
                 <span>
@@ -22,7 +22,7 @@
 
     <div id="timelineContainer" align="center">
         <span id="timelineName">Szenario-Zeitleiste</span>
-        <a href="#" id="timelineInfo" title="Hilfe zur Zeitleiste anzeigen"><b class="btn-xs fui-question-circle"></b></a>
+        <a href="#" id="timelineInfo" title="Erkärung zur Zeitleiste"><b class="btn-xs fui-question-circle"></b></a>
         <div id="timelineTableWindow">
             <table id="timelineTable">
                 <thead></thead>
@@ -105,17 +105,22 @@
     </div>
 </div>
 
-<div class="modal fade simulation-nomatch-notification" tabindex="-1" role="dialog">
+<div class="modal fade simulation-match-notification" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">x</button>
                 Ergebnis der Simulation
             </div>
-            <div class="modal-body">
-                Die Anwendung hat keine Lerneinheit gefunden, die zur Simulation passt.
+            <div class="modal-body found-no-matches">
+                Es konnte keine Lerneinheiten gefunden werden, die zu den Situationen des Szenarios passen.
+            </div>
+            <div class="modal-body found-matches">
+                Folgende Lerneinheiten, die zum Szenario passten, wurden durch die Anwendung ausgewählt:<br><br>
+                <div class="selected-units-list"></div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>

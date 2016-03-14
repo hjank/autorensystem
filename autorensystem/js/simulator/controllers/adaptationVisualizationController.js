@@ -3,11 +3,14 @@
  */
 
 
+var selectedUnits = [];
+
 
 function showAdaptationEngineSelection(unitUUID) {
     lightboxUnit(unitUUID);
 
-    selectedUnits.push(unitUUID);
+    if (selectedUnits.indexOf(unitUUID) == -1)
+        selectedUnits.push(unitUUID);
 }
 
 /**
@@ -40,18 +43,44 @@ function lightboxUnit(unitUUID) {
 
 }
 
-function getSelectedUnits() {
-    var units = [];
-    selectedUnits.forEach(function (unitUUID) {
-        if ($("#" + unitUUID).hasClass("selected-unit"))
-            units.push(unitUUID);
-    });
-    return units;
-}
-
-
 function undoLightboxing() {
     $("div.lightbox-overlay").remove();
     $(".selected-unit").removeClass("selected-unit");
     $(".prev-selected-unit").removeClass("prev-selected-unit");
+}
+
+
+
+function showSimulationMatchNotification() {
+    var notificationModal = $(".modal.simulation-match-notification");
+
+    if (selectedUnits.length == 0) {
+        $(notificationModal).find(".found-matches").hide();
+        $(notificationModal).find(".found-no-matches").show();
+    }
+    else {
+        $(notificationModal).find(".found-no-matches").hide();
+        $(notificationModal).find(".found-matches").show();
+        var matches = $(notificationModal).find(".selected-units-list").empty();
+
+        selectedUnits.forEach(function (unitUUID) {
+            matches.append(authorSystemContent.getUnitByUUID(unitUUID).getName() + "<br>");
+        });
+    }
+    $(notificationModal).modal("show");
+
+    emptySelectedUnits();
+}
+
+function hideSimulationMatchNotification() {
+    var notificationModal = $(".modal.simulation-match-notification");
+    $(notificationModal).modal("hide");
+
+    emptySelectedUnits();
+}
+
+
+
+function emptySelectedUnits() {
+    selectedUnits = [];
 }
