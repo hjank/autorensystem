@@ -42,13 +42,14 @@ function handleMousedown(e) {
         var contextEvent = timeline.getEventAt(getRowIDOfCell(this), getColIDOfCell(this));
         originalEventCells = getContextEventCells(contextEvent);
         firstCell = $(originalEventCells).first();
-        if (expectsLearningUnit(contextEvent.getContextInfo()))
+        if (isFinishedLearningUnit(contextEvent.getContextInfo()))
             originalEventCells = firstCell;
-
 
         // resizing a scheduled context event
         if ($(e.target).hasClass("occupied-resize-handle")) {
             resizing = true;
+
+            $(originalEventCells).addClass("timeline-cell-marked");
         }
 
         // moving a scheduled context event
@@ -57,12 +58,16 @@ function handleMousedown(e) {
             clickedCellIndex = $(originalEventCells).index(this);
 
             $(this).css("cursor", "move");
+            $(originalEventCells).addClass("timeline-cell-marked");
         }
     }
 
     // marking cells to add a new context event to schedule
-    else if ($(e.target).hasClass("timeline-cell"))
+    else if ($(e.target).hasClass("timeline-cell")) {
         mousedownOnEmptyCell = true;
+
+        $(this).addClass("timeline-cell-marked").removeClass("finished-units");
+    }
 
     // no other interaction anticipated --> nothing to do here, return
     else return;
@@ -88,7 +93,7 @@ function handleMousedown(e) {
  */
 function handleMousemove(e) {
 
-    if (copying && !situationClipboardIsEmpty()) hideAllTimelineToolTips();
+    //if (copying && !situationClipboardIsEmpty()) hideAllTimelineToolTips();
 
     // handle only marking, resizing, moving
     if (!(mousedownOnEmptyCell || resizing || moving)) return;
@@ -151,6 +156,7 @@ function handleMousemove(e) {
 
     // prevent dragging into no-drop area, i.e. :
     if (!targetIsCell // into anything that is not a timeline cell
+        || (mousedownOnEmptyCell && isFinishedLearningUnit(e.data.getTimeline().getColumnContext(getColIDOfCell(clickedCell))))
         || (moving && !dropAllowed) // or out of table bounds or into occupied cells when moving
         || (!moving && e.pageY <= referenceY) // or above drag start
         || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
@@ -227,12 +233,12 @@ function handleMouseup(e) {
     if (mousedownOnEmptyCell || resizing || moving) {
 
         // if no dragging happened, mark clicked cell (for subsequent access)
-        if (!dragging) {
+        /*if (!dragging) {
             if (mousedownOnEmptyCell || resizing)
                 $(clickedCell).addClass("timeline-cell-marked");
             else
                 $(originalEventCells).addClass("timeline-cell-marked");
-        }
+        }*/
 
 
         var simulation = e.data;

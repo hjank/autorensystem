@@ -72,16 +72,23 @@ function generatePopoverContent () {
 function reconstructPopoverContent(simulation, contextEvent) {
     var contextInfo = contextEvent.getContextInfo();
 
-    var simulatedValueInput = $(".popover div.popover-context-info > input.popover-value");
-    var simulatedValueSelect = $(".popover div.popover-context-info > select.popover-value");
-    var simulatedParameterDiv = $(".popover div.popover-context-info > div.popover-parameters");
+    var simulatedValueInput = $(".popover.in div.popover-context-info > input.popover-value");
+    var simulatedValueSelect = $(".popover.in div.popover-context-info > select.popover-value");
+    var simulatedParameterDiv = $(".popover.in div.popover-context-info > div.popover-parameters");
 
     fillPopoverContextValue(contextInfo, simulation.getScenario(), simulatedValueInput, simulatedValueSelect);
     fillPopoverParameterSelection(contextInfo.getParameters(), simulatedParameterDiv);
 
-    if (contextInfo.getChosenValue() != "") {
-        $(".popover .popover-delete").show();
+    if (contextInfo.getChosenValue() == "") $(".popover.in .popover-delete").hide();
+
+    /*if (contextInfo.getChosenValue() != "") {
+        $(".popover.in .popover-bottom-buttons > div").hide();
+        $(".popover.in .popover-bottom-buttons > span").show();
     }
+    else {
+        $(".popover.in .popover-bottom-buttons > div").show();
+        $(".popover.in .popover-bottom-buttons > span").hide();
+    }*/
 
     $(".popover select").select2();
 }
@@ -89,7 +96,6 @@ function reconstructPopoverContent(simulation, contextEvent) {
 
 function repositionPopover(cell) {
     var popover = $(cell).data("bs.popover").$tip;
-    var cellTop = getTop(cell);
     var cellBottom = getBottom(cell);
 
     var containerBottom = getBottom($("#simulatorContainer"));
@@ -107,6 +113,9 @@ function repositionPopover(cell) {
         // scroll the timeline so that selected cell remains visible
         $(timelineWindow).animate({scrollTop: (timelineScrollTop + cellBottom - getTop(popover))}, 500);
     }
+
+    if (getTop(popover) < getTop(cell) && getBottom(popover) > getBottom(cell)) $(popover).find(".arrow").hide();
+
 }
 
 
@@ -136,7 +145,7 @@ function setPopoverEventHandlers(simulation, contextEvent) {
     });
 
     $(".popover .popover-delete").off("click").on("click", function(){
-        deleteContextEvent(contextEvent, timeline);
+        deleteContextEvent(contextEvent, simulation);
     });
 }
 

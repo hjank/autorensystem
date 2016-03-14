@@ -29,7 +29,6 @@ function handleStepLabelLeave(e) {
             removeStepHighlighting();
             $(this).popover("hide");
         }
-        $(".timeline-step-label").tooltip("destroy");
 
         //handlePopoverElementMouseleave(e);
     }
@@ -55,14 +54,14 @@ function handleStepLabelClick(e) {
     else {
 
         var copying = !situationClipboardIsEmpty();
-
-        var stepOptionsPopover = $(this).data("bs.popover").$tip;
-        var stepOptions = $(stepOptionsPopover).find(".btn");
-
-        if ($(stepOptionsPopover).hasClass("in"))
+        var popElt = $(this).data("bs.popover").$tip;
+        if (popElt && $(popElt).hasClass("in"))
             $(this).popover("hide");
         else
             $(this).popover("show");
+
+        var stepOptionsPopover = $(this).data("bs.popover").$tip;
+        var stepOptions = $(stepOptionsPopover).find(".btn");
 
 
         // situation options are shown
@@ -108,16 +107,7 @@ function handleStepOptionClick(e) {
         markSelectedStepAsCopied();
         removeStepHighlighting();
 
-        $(this).tooltip({
-            container: "body",
-            title: "Der Kontext der Situation wurde kopiert. Bitte wählen Sie eine Situation zum Einfügen.",
-            trigger: "manual"
-        }).tooltip("show");
-
-        var self = this;
-        setTimeout(function () {
-            $(self).tooltip('destroy');
-        }, 3000);
+        $(".timeline-step-label").tooltip("disable");
     }
 
     else {
@@ -134,7 +124,7 @@ function handleStepOptionClick(e) {
 
         else if ($(this).hasClass("fui-clipboard")) {
             selectedStepEvents.forEach(function (event) {
-                if (!expectsLearningUnit(event.getContextInfo()))
+                if (!isFinishedLearningUnit(event.getContextInfo()))
                     timeline.spliceEventAt(event, stepIndex);
             });
             timeline.addStep(newSituationIndex);

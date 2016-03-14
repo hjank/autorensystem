@@ -76,17 +76,17 @@ table#timelineTable th.timeline-step-label
 }
 
 
-table#timelineTable tr.timeline-step.marked-step
+table#timelineTable tr.timeline-step.copied-step
 {
     border: 3px dotted grey;
 }
-table#timelineTable tr.timeline-step.marked-step td.timeline-cell
+table#timelineTable tr.timeline-step.copied-step td.timeline-cell
 {
     border-top: 3px dotted grey;
     border-bottom: 3px dotted grey;
 }
-table#timelineTable tr.timeline-step.marked-step,
-table#timelineTable tr.timeline-step.marked-step td.timeline-cell
+table#timelineTable tr.timeline-step.copied-step,
+table#timelineTable tr.timeline-step.copied-step td.timeline-cell
 {
     background-image: repeating-linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1));
 }
@@ -176,6 +176,17 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied
     border-right: 2px solid;
     opacity: 1;
     cursor: move;
+}
+
+table#timelineTable tr.timeline-step > td.finished-units
+{
+    opacity: .4;
+}
+
+table#timelineTable tr.timeline-step > td.timeline-cell-occupied.copied-event
+{
+    border: 3px dotted grey;
+    background-image: repeating-linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1));
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.timeline-cell-invisible 

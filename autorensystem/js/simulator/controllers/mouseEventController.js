@@ -40,7 +40,7 @@ function setTimelineEventHandlers(simulation) {
     // re-attach event handlers for current simulation
 
     $(document).on("mousedown", ".timeline-cell", simulation, handleMousedown);
-    $(document).on("mousemove", handleMousemove);
+    $(document).on("mousemove", null, simulation, handleMousemove);
     $(document).on("mouseup", null, simulation, handleMouseup);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderEnter);

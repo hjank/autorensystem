@@ -13,25 +13,17 @@ function getContextEventCells(contextEvent) {
 }
 
 
-
 function addOccupiedMarkup (contextEvent, simulation) {
 
     var cells = getContextEventCells(contextEvent);
+    var firstCell = $(cells).first();
+    var lastCell = $(cells).last();
 
     $(cells)
         .removeClass("timeline-cell-marked")
         .tooltip("destroy")
         .tooltip(getContextTooltipOptions(getContextTooltipTitle(contextEvent, simulation.getTimeline())));
 
-    var doesExpectLearningUnit = expectsLearningUnit(contextEvent.getContextInfo());
-    var firstCell = $(cells).first();
-
-    // "finished learning unit" is implicitly valid till the end of all time...
-    if (doesExpectLearningUnit)
-        cells = firstCell;
-
-    $(cells)
-        .addClass("timeline-cell-occupied");
 
     $(firstCell)
         .css("border-top", "1px solid")
@@ -39,15 +31,32 @@ function addOccupiedMarkup (contextEvent, simulation) {
         .append(createContextEventDeleteDOM())
         .append(createContextEventHideDOM());
 
-    var lastCell = $(cells).last();
-    $(lastCell).css("border-bottom", "1px solid");
 
-    // ...hence only "common" context information events shall be resizable
-    if (!doesExpectLearningUnit) {
-        $(firstCell).append(createContextEventCopyDOM());
-        $(lastCell).append($("<div>").addClass("occupied-resize-handle"));
+    // "finished learning unit" is implicitly valid till the end of all time...
+    var doesExpectLearningUnit = isFinishedLearningUnit(contextEvent.getContextInfo());
+
+
+    if (doesExpectLearningUnit) {
+        $(firstCell)
+            .removeClass("finished-units")
+            .addClass("timeline-cell-occupied")
+            .css("border-bottom", "1px solid");
+        $(cells).not(".timeline-cell-occupied").addClass("finished-units");
     }
-
+    // ...hence only "common" context information events shall be resizable
+    else {
+        $(firstCell).append(createContextEventCopyDOM());
+        var resizeHandle = $("<div>").addClass("occupied-resize-handle");
+        $(lastCell).css("border-bottom", "1px solid")
+            .append(resizeHandle);
+        $(cells).addClass("timeline-cell-occupied")
+            .off("mouseenter").on("mouseenter", function (e) {
+                $(resizeHandle).css("border-bottom", "1px solid");
+            })
+            .off("mouseleave").on("mouseleave", function (e) {
+                $(resizeHandle).css("border-bottom", "");
+            });
+    }
 
     if (!contextEvent.isVisible())
         $(firstCell).find("a.fui-eye-blocked").trigger("click");
@@ -76,14 +85,17 @@ function getContextTooltipTitle (contextEvent, timeline) {
     var contextInfo = contextEvent.getContextInfo();
     var chosenValue = contextInfo.getChosenValue();
 
-    if (expectsLearningUnit(contextInfo)) {
+    if (isFinishedLearningUnit(contextInfo)) {
         tooltipTitle = infotexts.fLU + "<br><br>";
         var columnEvents = timeline.getColumnEvents(contextEvent.getColumn());
         for (var i in columnEvents) {
             var event = columnEvents[i];
             if (event.getStart() <= contextEvent.getStart()) {
                 chosenValue = event.getContextInfo().getChosenValue();
-                tooltipTitle += authorSystemContent.getUnitByUUID(chosenValue).getName() + "<br>";
+                //if (!contextEvent.isVisible()) tooltipTitle += "(";
+                tooltipTitle += authorSystemContent.getUnitByUUID(chosenValue).getName();
+                //if (!contextEvent.isVisible()) tooltipTitle += ")";
+                tooltipTitle += "<br>";
             }
         }
     }
@@ -126,8 +138,6 @@ function createContextEventHideDOM() {
 }
 
 
-
-
 function handleOccupiedCellAnchorClickEvent(e) {
 
     var simulation = e.data;
@@ -144,15 +154,12 @@ function handleOccupiedCellAnchorClickEvent(e) {
         copying = true;
         eventClipboard = contextEvent.getCopy();
 
-        var firstCellTooltipOptions = $(firstCell).data("bs.tooltip").options;
-        firstCellTooltipOptions.delay = { show: 100, hide: 500 };
-        firstCellTooltipOptions.title = "Die Kontextinformation wurde kopiert. Bitte wählen Sie ein leeres Fenster zum Einfügen.";
-        $(firstCell).tooltip("show");
+        $(cells).addClass("copied-event");
     }
 
     else if ($(this).hasClass("fui-trash")) {
-        deleteContextEvent(contextEvent, timeline);
-        simulation.renderTimeline();
+        deleteContextEvent(contextEvent, simulation);
+        //simulation.renderTimeline();
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {

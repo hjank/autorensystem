@@ -21,12 +21,13 @@ function createNewContextEvent (simulation) {
     // editor popover will be attached to first cell
     var startCell = $(markedCells).first();
     var firstStepID = getRowIDOfCell(startCell);
+    var lastStepID = firstStepID + numberOfMarkedCells - 1;
     var colID = getColIDOfCell(startCell);
 
 
     if (copying && eventClipboard.constructor == ContextEvent && eventClipboard.getColumn() == colID) {
         eventClipboard.setStart(firstStepID);
-        eventClipboard.setEnd(firstStepID);
+        eventClipboard.setEnd(lastStepID);
 
         timeline.addEvent(eventClipboard);
         simulation.renderTimeline();
@@ -40,7 +41,7 @@ function createNewContextEvent (simulation) {
             new ContextInformation().fromJSON(timeline.getColumnContext(colID)),
             colID,
             firstStepID,
-            firstStepID + numberOfMarkedCells - 1,
+            lastStepID,
             true
         );
         timeline.addEvent(contextEvent);
@@ -53,12 +54,13 @@ function createNewContextEvent (simulation) {
 }
 
 
-function deleteContextEvent (contextEvent, timeline) {
+function deleteContextEvent (contextEvent, simulation) {
     // make sure to hide popover before destroying it, to save google maps
     hideAllPopovers();
 
-    timeline.removeEvent(contextEvent);
-    removeOccupiedMarkup(contextEvent);
+    simulation.getTimeline().removeEvent(contextEvent);
+    simulation.renderTimeline();
+    //removeOccupiedMarkup(contextEvent);
 }
 
 

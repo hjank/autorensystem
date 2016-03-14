@@ -20,8 +20,11 @@ var infotexts = {
         "Jede Zeile bildet eine einzelne Situation des Szenarios ab, mit den darin geltenden Kontextinformationen.<br>" +
         "Um einer Kontextinformation einen neuen Wert zu geben, klicken Sie in das entsprechende Zeitfenster.<br>" +
         "<hr>" +
-        "<div id='timeline-info-hint'><b>Tipp</b>: Soll ein bestimmter Wert über mehrere Situationen hinweg gelten (z.B. Alter des Benutzers), " +
+        "<div id='timeline-info-hint'><b>Tipp</b>: Soll ein Wert über mehrere Situationen hinweg gelten (z.B. Alter des Benutzers), " +
         "markieren Sie den gewünschten Zeitraum, indem Sie mit gedrückter Maus über die Zeitfenster fahren.</div>",
+
+    "units": "Hier geben Sie an, welche Lerneinheiten der Nutzer nacheinander abschließt.<br>" +
+        "Ist eine Lerneinheit einmal abgeschlossen, gilt diese Information automatisch bis zum Ende des Szenarios.",
 
     "mgmt": "Hier können Sie einen neuen Testfall anlegen sowie bereits erstellte Testfälle bearbeiten oder löschen.",
 

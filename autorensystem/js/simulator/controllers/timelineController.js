@@ -18,6 +18,7 @@ function removeTimelineTableMarkup() {
 function activateTimelineTable(simulation) {
     highlightCurrentSituation(simulation);
     activateTimelineTooltips();
+    activateInfoPopovers();
 }
 
 
@@ -60,13 +61,19 @@ function createSteps(steps) {
                         delay: { show: 100, hide: 300 },
                         html: true,
                         placement: "right",
+                        template: '<div class="popover" role="tooltip">' +
+                        '<div class="arrow"></div>' +
+                        '<div class="popover-content"></div></div>',
                         trigger: "manual"
                     })
+                    .tooltip("destroy")
                 )
             );
 }
 
 function createColumn(contextInfo) {
+
+    var isFLU = isFinishedLearningUnit(contextInfo);
 
     var _getColumnOptionsContent = function (contextInfo) {
 
@@ -74,24 +81,29 @@ function createColumn(contextInfo) {
             .append($("<span>").addClass("btn btn-sm fui-eye-blocked").attr("title", infotexts.ignoreAll))
             .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "Alle dieser Werte löschen"));
 
-        if (!expectsLearningUnit(contextInfo) && contextInfo.hasMultiplicity())
+        if (!isFLU && contextInfo.hasMultiplicity())
             timelineColumnOptionsContent
                 .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Neue Spalte einfügen"));
 
         return timelineColumnOptionsContent;
     };
 
+    var html = formatUnitIcons(contextInfo);
+    // if (isFLU) html += '<a href="#" id="unitsInfo" title="Hilfe zur Zeitleiste anzeigen"><b class="btn-xs fui-question-circle"></b></a>';
 
     $(".timeline-header")
         .append($("<th>")
-            .html(formatUnitIcons(contextInfo))
+            .html(html)
             .attr("title", contextInfo.getTranslatedID())
             .popover({
                 container: "body",
                 content: _getColumnOptionsContent(contextInfo),
                 delay: { show: 100, hide: 300 },
                 html: true,
-                placement: "bottom"
+                placement: "bottom",
+                template: '<div class="popover" role="tooltip">' +
+                '<div class="arrow"></div>' +
+                '<div class="popover-content"></div></div>',
             })
         );
 
@@ -143,7 +155,7 @@ function highlightStep(stepIndex) {
 }
 
 function markSelectedStepAsCopied() {
-    $(".selected-step").addClass("marked-step");
+    $(".selected-step").addClass("copied-step");
 }
 
 function removeStepHighlighting() {
@@ -151,7 +163,7 @@ function removeStepHighlighting() {
 }
 
 function removeStepMarking() {
-    $(".marked-step").removeClass("marked-step");
+    $(".copied-step").removeClass("copied-step");
 }
 
 function activateTimelineTooltips () {
@@ -164,21 +176,28 @@ function activateTimelineTooltips () {
             content: infotexts.timeline,
             html: true,
             placement: "left"
+        });
+
+    $("#unitsInfo")
+        .popover("destroy")
+        .popover({
+            container: "body",
+            content: infotexts.units,
+            html: true,
+            placement: "bottom"
         })
-        .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            var popoverElement = $(e.target).data("bs.popover").$tip;
-            replaceActionVerbInTitle(popoverElement);
-            addCloseXToPopoverTitle(popoverElement);
+        .off("click").on("click", function (e) {
+            $(this).popover("show");
+            e.stopPropagation();
         });
 
     // re-initialize all tooltips with given options (if any)
-    $("#timelineContainer *").each(function (index, element) {
+   /* $("#timelineContainer *").each(function (index, element) {
         var tooltip = $(element).data("bs.tooltip");
         if (tooltip)
             $(element).tooltip(tooltip.options);
-    });
+    });*/
 }
-
 
 
 
@@ -186,7 +205,8 @@ function hideContextEvents(contextEvents) {
     contextEvents.forEach(function (contextEvent) {
         contextEvent.setVisibility(false);
 
-        $(getContextEventCells(contextEvent)).addClass("timeline-cell-invisible");
+        var contextEventCells = getContextEventCells(contextEvent);
+        $(contextEventCells).addClass("timeline-cell-invisible");
     });
 }
 
@@ -241,11 +261,13 @@ function getCellAt(row, col) {
 
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
+    $(".finished-units").removeClass("finished-units");
 }
 
 function freeAllCells() {
     $(".timeline-cell-occupied").empty()
         .removeClass("timeline-cell-occupied");
+    $(".finished-units").removeClass("finished-units");
 }
 
 
@@ -271,7 +293,7 @@ function removeAllCellTooltips () {
 
 function getContextUnknownTooltipTitle(contextInfo) {
     // "Nutzer hat noch keine Lerneinheit abgeschlossen"
-    return (expectsLearningUnit(contextInfo) ? infotexts.noFLU :
+    return (isFinishedLearningUnit(contextInfo) ? infotexts.noFLU :
         // "<CONTEXT NAME> ist unbekannt"
         contextInfo.getTranslatedID() + infotexts.unknownValue);
 }
