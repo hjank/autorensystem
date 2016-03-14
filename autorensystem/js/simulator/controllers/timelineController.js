@@ -18,7 +18,6 @@ function removeTimelineTableMarkup() {
 function activateTimelineTable(simulation) {
     highlightCurrentSituation(simulation);
     activateTimelineTooltips();
-    activateInfoPopovers();
 }
 
 
@@ -78,7 +77,7 @@ function createColumn(contextInfo) {
     var _getColumnOptionsContent = function (contextInfo) {
 
         var timelineColumnOptionsContent = $("<div>").addClass("popover-column-options")
-            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").attr("title", infotexts.ignoreAll))
+            .append($("<span>").addClass("btn btn-sm fui-eye-blocked").attr("title", infoTexts.ignoreAll))
             .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "Alle dieser Werte löschen"));
 
         if (!isFLU && contextInfo.hasMultiplicity())
@@ -121,17 +120,21 @@ function createColumn(contextInfo) {
 
 function highlightCurrentSituation(simulation) {
 
-    var selectedStep = simulation.getTimeline().getSelectedStep();
+    var timeline = simulation.getTimeline();
+
+    var selectedStep = timeline.getSelectedStep();
     var isSimulating = simulation.getStatus() != STOPPED;
 
     // highlight selected step if simulation is running or paused
     if (isSimulating) highlightStep(selectedStep);
     else removeStepHighlighting();
 
+    if (selectedStep == timeline.getNumberOfSituations()) return;
+
     var selectedStepElement = $(".selected-step");
 
     // add line indicator (little arrow)
-    selectedStepElement.addClass("simulated-situation");
+    markSelectedStepAsSimulated();
 
     // scroll selected step into view during simulation
     var timelineWindow = $("#timelineTableWindow");
@@ -154,35 +157,31 @@ function highlightStep(stepIndex) {
     });
 }
 
+function markSelectedStepAsSimulated() {
+    removeStepSimulationMarkup();
+    $(".selected-step").addClass("simulated-situation");
+}
+
 function markSelectedStepAsCopied() {
     $(".selected-step").addClass("copied-step");
 }
 
 function removeStepHighlighting() {
     $(".selected-step").removeClass("selected-step");
+    removeStepSimulationMarkup();
 }
 
-function removeStepMarking() {
-    $(".copied-step").removeClass("copied-step");
+function removeStepSimulationMarkup() {
+    $(".simulated-situation").removeClass("simulated-situation");
 }
 
 function activateTimelineTooltips () {
-
-    // activate timeline info tooltip
-    $("#timelineInfo")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: infotexts.timeline,
-            html: true,
-            placement: "left"
-        });
 
     $("#unitsInfo")
         .popover("destroy")
         .popover({
             container: "body",
-            content: infotexts.units,
+            content: infoTexts.units,
             html: true,
             placement: "bottom"
         })
@@ -192,11 +191,11 @@ function activateTimelineTooltips () {
         });
 
     // re-initialize all tooltips with given options (if any)
-   /* $("#timelineContainer *").each(function (index, element) {
+    $(".timeline-cell").each(function (index, element) {
         var tooltip = $(element).data("bs.tooltip");
         if (tooltip)
             $(element).tooltip(tooltip.options);
-    });*/
+    });
 }
 
 
@@ -293,9 +292,9 @@ function removeAllCellTooltips () {
 
 function getContextUnknownTooltipTitle(contextInfo) {
     // "Nutzer hat noch keine Lerneinheit abgeschlossen"
-    return (isFinishedLearningUnit(contextInfo) ? infotexts.noFLU :
+    return (isFinishedLearningUnit(contextInfo) ? infoTexts.noFLU :
         // "<CONTEXT NAME> ist unbekannt"
-        contextInfo.getTranslatedID() + infotexts.unknownValue);
+        contextInfo.getTranslatedID() + infoTexts.unknownValue);
 }
 
 function getContextTooltipOptions (title) {
