@@ -90,12 +90,13 @@ function updateSimulator(simulation) {
                 simulation.addContextItem(contextInfo);
             }
         });
+
         // remove context items not relevant for this scenario from simulated context list
-        simulatedContextList.getItems().forEach(function (simItem) {
+        /*simulatedContextList.getItems().forEach(function (simItem) {
             // not contained in scenario context -> remove
             if (!scenarioContextList.getItemByID(simItem.getID()) && !isFinishedLearningUnit(simItem))
                 simulation.removeContextItem(simItem, true);
-        });
+        });*/
     }
 
     // make sure changes in learning app will be registered on next simulation start
