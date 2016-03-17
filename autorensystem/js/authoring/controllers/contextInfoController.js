@@ -37,7 +37,7 @@ function checkInformation() {
          }*/
 
         // check selection bar "Operator"
-        if ( selectedOperator == null || selectedOperator.id == "\r") {
+        if ( selectedOperator == null || selectedOperator["text"] == "\r") {
             // if selection bar operator is empty, concatenate it in missing_content string
             missing_content += " - Operator\n";
         } else {

@@ -201,7 +201,7 @@ function loadContextTabForUnit() {
     for (var i in currentUnitContextArray) {
         var contextID = currentUnitContextArray[i].getID();
         array_multiSelectionContextInfos.push({
-            "id":i,
+            "id": i.toString(),
             "text":translate_contextInformation(contextID)
         });
     }
@@ -381,6 +381,8 @@ function fillInputField(ci) {
             inputContextValueElement.val(chosenValue);
             break;
 
+
+        case "BOOLEAN":
         case "ENUM":
             inputContextValueElement.css("display", "none");         // make input field invisible
             selectPossibleValuesElement.css("display", "block");     // and selection bar visible
@@ -408,15 +410,15 @@ function fillInputField(ci) {
             }
             break;
 
-        case "BOOLEAN":
+       // case "BOOLEAN":
             // TODO: Prettify this whole Boolean thing: include values in operator, spare value selection.
-            selectPossibleValuesElement.css("display", "block");  // make selection bar visible
+         /*   selectPossibleValuesElement.css("display", "block");  // make selection bar visible
             $("#s2id_selectPossibleValues").css("display", "block");
             inputContextValueElement.css("display", "none");      // and input field invisible
 
             // get the two possible values true and false in selection bar
-            var option0 = $("<option>").attr("value", 0);
-            var option1 = $("<option>").attr("value", 1);
+            var option0 = $("<option>").attr("value", "0");
+            var option1 = $("<option>").attr("value", "1");
             option0.html("falsch");
             option1.html("wahr");
             selectPossibleValuesElement.append(option1);
@@ -428,10 +430,10 @@ function fillInputField(ci) {
             }
             else {
                 selectPossibleValuesElement.select2("data", {
-                    id: chosenValue == "TRUE" ? 1 : 0,
+                    id: chosenValue == "TRUE" ? "1" : "0",
                     text: chosenValue == "TRUE" ? "wahr" : "falsch"
                 });
-            }
+            }*/
 
 
             break;
@@ -496,7 +498,7 @@ function fillParameterSelection(cp) {
                     $("#" + id).select2("data", {id:"\r",text:"\r"});
                 else {
                     $("#" + id).select2("data", {
-                        id:enums.indexOf(chosenValue),
+                        id:enums.indexOf(chosenValue).toString(),
                         text:translate_parameterValue(chosenValue)
                     });
                 }
