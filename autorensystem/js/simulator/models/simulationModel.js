@@ -240,11 +240,19 @@ Simulation.prototype._run = function (self) {
                     var parameterType = parameter.getType();
                     var parameterValue = parameter.getChosenValue();
                     if (parameterValue == "") parameterValue = "CV_UNKNOWN";
+                    else {
+                        if (parameterType == "INTEGER") parameterValue = parseInt(parameterValue);
+                        if (parameterType == "FLOAT") {
+                            parameterValue = parseFloat(parameterValue);
+                            if (parameterValue % 1 == 0) parameterValue = parameterValue.toFixed(1);
+                        }
+                        if (parameterType == "BOOLEAN") parameterValue = parameterValue.toLowerCase();
+                    }
 
                     contextInfoParameters.push([
                         parameter.getID(),
                         parameterType,
-                        ((parameterType == "" ? parameterValue.toLowerCase() : parameterValue))
+                        parameterValue
                     ]);
                 });
 
