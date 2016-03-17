@@ -136,6 +136,13 @@ table#timelineTable tr.timeline-step > td.timeline-cell
     opacity: 0.2;
 }
 
+
+table#timelineTable .timeline-cell-buffer
+{
+    min-width: 1px;
+    max-width: 1px;
+}
+
 table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_SCENARIO]
 {
     background-color: #3287C8;

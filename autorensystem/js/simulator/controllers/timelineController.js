@@ -90,7 +90,8 @@ function createColumn(contextInfo) {
     var html = formatUnitIcons(contextInfo);
     // if (isFLU) html += '<a href="#" id="unitsInfo" title="Hilfe zur Zeitleiste anzeigen"><b class="btn-xs fui-question-circle"></b></a>';
 
-    $(".timeline-header")
+    var headerElement = $(".timeline-header");
+    $(headerElement)
         .append($("<th>")
             .html(html)
             .attr("title", contextInfo.getTranslatedID())
@@ -102,9 +103,11 @@ function createColumn(contextInfo) {
                 placement: "bottom",
                 template: '<div class="popover" role="tooltip">' +
                 '<div class="arrow"></div>' +
-                '<div class="popover-content"></div></div>',
+                '<div class="popover-content"></div></div>'
             })
         );
+    if (isFLU)
+        $(headerElement).append( $("<td>").addClass("timeline-cell-buffer") );
 
     // add one column for each context item
     $(".timeline-step").each(function() {
@@ -113,6 +116,8 @@ function createColumn(contextInfo) {
                 .attr("contextClass", contextInfo.getClasses()[0])
                 .tooltip(getContextTooltipOptions(getContextUnknownTooltipTitle(contextInfo)))
             );
+        if (isFLU)
+            $(this).append( $("<td>").addClass("timeline-cell-buffer") );
     });
 }
 
