@@ -4,7 +4,11 @@
 
 // translate context information into german
 var contextInfoDictionary = {
-
+	"CI_NTP_REQUIRED" : "NTP benötigt",
+    "CI_AVAILABLE_DEVICE" : "Thermo-Gerät verfügbar",
+    "CI_WIFI_UI" : "Stil des WLAN-UI",
+    "CI_AVAILABLE_NTP" : "NTP verfügbar",
+    "CI_SUPPORT_KEYWORD" : "Support-Stichwort",
     "CI_CURRENT_LEARNING_UNIT" : "Momentane Lerneinheit",
     "CI_CURRENT_WFP_LOCATION" : "Aktuelle Indoor Position",
     "CI_IS_HEADSET_PLUGGED_IN" : "Headset eingesteckt",
@@ -73,6 +77,8 @@ var contextOperatorDictionary = {
 };
 
 var contextParameterDictionary = {
+	"CP_DEVICE" : "Gerät",
+    "CP_CONNECTION_TYPE" : "Verbindungstyp",
     "CP_ACTION_START_TIMESTAMP" : "Startzeit",
     "CP_ACTION_END_TIMESTAMP" : "Endzeit",
     "CP_ACTION_REFERNCED_LEARNING_NUGGET" : "Referenzierte Lerneinheit",
@@ -94,6 +100,11 @@ var contextParameterDictionary = {
 };
 
 var contextValueDictionary = {
+	"Galaxy-S4-Android-5" : "Samsung Galaxy S4, Android 5",
+    "Galaxy-S6-edge-Android-5" : "Samsung Galaxy S6 edge, Android 5",
+    "Galaxy-Nexus-Android-4" : "Samsung Galaxy Nexus, Android 4",
+    "Rainbow-Jam-Android-5" : "Wiko Rainbow Jam, Android 5",
+    "Unknown-device" : "Unbekannt",
     "ACTIVATE_ACTION" : "aktiviert",
     "CHOOSE_ACTION" : "wählt",
     "DEACTIVATE_ACTION" : "deaktiviert",
@@ -119,6 +130,11 @@ var contextValueDictionary = {
 };
 
 var contextParameterValueDictionary = {
+	"TROVIS_5573" : "Trovis 5573",
+    "CONTROLLER" : "Controller",
+    "ROUTER" : "FritzBox",
+    "CONNECTION_WIFI" : "WLAN",
+    "CONNECTION_CELL" : "Mobilfunk",
     "BAR" : "Bar",
     "MILLIMETER_OF_MERCURY" : "Millimeter in Quecksilbersäule",
     "PASCAL" : "Pascal",
@@ -191,11 +207,16 @@ var contextIconSrcDictionary = {
     "CI_USER_STATE_OF_MIND" : "img/icons-context-information/ci-personal-user-state-of-mind.png",
 
     // situational (Situationsbezogen)
+	"CI_NTP_REQUIRED" : "img/icons-context-information/ci-situational-ntp-required.png",
+    "CI_SUPPORT_KEYWORD" : "img/icons-context-information/ci-situational-support.png",
     "CI_CURRENT_APPOINTMENT" : "img/icons-context-information/ci-situational-appointment.png",
     "CI_NEXT_APPOINTMENT" : "img/icons-context-information/ci-situational-appointment.png",
     "CI_TIME_UNTIL_TIMESTAMP" : "img/icons-context-information/ci-situational-timeduration.png",
 
     // technical (Infrastruktur)
+	"CI_AVAILABLE_DEVICE" : "img/icons-context-information/ci-technical-available-device.png",
+    "CI_WIFI_UI" : "img/icons-context-information/ci-technical-wifi-ui.png",
+    "CI_AVAILABLE_NTP" : "img/icons-context-information/ci-technical-available-ntp.png",
     "CI_AUDIO_OUTPUT_AVAILABLE" : "img/icons-context-information/ci-technical-audio-available.png",
     "CI_DEVICE_TYPE" : "img/icons-context-information/ci-technical-device-type.png",
     "CI_DISPLAY_RESOLUTION" : "img/icons-context-information/ci-technical-display-resolution.png",
