@@ -248,6 +248,7 @@ Simulation.prototype._run = function (self) {
                         }
                         if (parameterType == "BOOLEAN") parameterValue = parameterValue.toLowerCase();
                     }
+                    if (parameterType == "ENUM") parameterType = "STRING";
 
                     contextInfoParameters.push([
                         parameter.getID(),
