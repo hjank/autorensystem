@@ -234,6 +234,7 @@ Simulation.prototype._run = function (self) {
                     if (contextType == "FLOAT") contextValue = parseFloat(contextValue);
                     if (contextType == "BOOLEAN") contextValue = contextValue.toLowerCase();
                 }
+                if (contextType == "ENUM") contextType = "STRING";
 
                 var contextInfoParameters = [];
                 contextInfo.getParameters().forEach(function (parameter) {
