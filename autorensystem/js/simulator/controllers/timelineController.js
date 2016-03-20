@@ -80,9 +80,10 @@ function createColumn(contextInfo) {
             .append($("<span>").addClass("btn btn-sm fui-eye-blocked").attr("title", infoTexts.ignoreAll))
             .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "Alle dieser Werte löschen"));
 
-        if (!isFLU && contextInfo.hasMultiplicity())
+        if (!isFLU && (contextInfo.hasMultiplicity() || contextInfo.getParameters().length > 0))
             timelineColumnOptionsContent
-                .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Neue Spalte einfügen"));
+                .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Neue Spalte einfügen"))
+                .append($("<span>").addClass("btn btn-sm fui-minus").attr("title", "Spalte löschen"));
 
         return timelineColumnOptionsContent;
     };

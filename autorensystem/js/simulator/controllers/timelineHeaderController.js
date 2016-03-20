@@ -44,9 +44,9 @@ function handleColumnHeaderOptionClick(e) {
     }
 
     else if ($(this).hasClass("fui-trash")) {
-        if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
+        /*if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
             timeline.removeColumn(thisColumn);
-        else
+        else*/
             columnEvents.forEach(function (event) {
                 timeline.removeEvent(event);
             });
@@ -55,6 +55,15 @@ function handleColumnHeaderOptionClick(e) {
 
     else if ($(this).hasClass("fui-plus")) {
         timeline.addColumn(contextInfo);
+        simulation.renderTimeline();
+    }
+
+    else if ($(this).hasClass("fui-minus")) {
+        if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
+            timeline.removeColumn(thisColumn);
+        else
+            alert("Nur Spalten, die Sie neu hinzugefügt haben, können gelöscht werden.");
+
         simulation.renderTimeline();
     }
 
