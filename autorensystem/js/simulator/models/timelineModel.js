@@ -18,7 +18,7 @@ Timeline.prototype.getEvents = function() {
     return this._events;
 };
 
-Timeline.prototype.getRows = function() {
+Timeline.prototype.getSituations = function() {
     return this._situations;
 };
 
@@ -79,12 +79,15 @@ Timeline.prototype.getSelectedStep = function () {
 Timeline.prototype.getEventAt = function(row, col) {
     var latestEvent;
     this._situations[row].forEach(function (event) {
+        var eventStart = event.getStart();
+
         // row and column match...
         if (event.getColumn() == col)
 
             // ...and this event is the only - or the latest one - scheduled here
-            if (!latestEvent || event.getStart() == row)
+            if (!latestEvent || eventStart == row || latestEvent.getStart() < eventStart)
                 latestEvent = event;
+
     });
     return latestEvent;
 };
@@ -310,6 +313,15 @@ Timeline.prototype.removeEvent = function (eventUUID) {
         }
 };
 
+Timeline.prototype.removeAllEvents = function () {
+    this._events = [];
+    this._situations.forEach(function (situation) {
+        situation = [];
+    });
+    this._columnContextMap.forEach(function (column) {
+        column.events = [];
+    });
+};
 
 Timeline.prototype.render = function (simulation) {
 
