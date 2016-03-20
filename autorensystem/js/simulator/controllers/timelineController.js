@@ -21,6 +21,12 @@ function activateTimelineTable(simulation) {
 }
 
 
+function resizePanel() {
+    var tableElement = $("#timelineTable");
+    $(tableElement).closest(".properties").width($(tableElement).width());
+}
+
+
 function clearTable() {
     $("#timelineTable thead").empty();
     $("#timelineTable tbody").empty();
