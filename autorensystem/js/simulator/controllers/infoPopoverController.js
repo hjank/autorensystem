@@ -9,16 +9,6 @@
 
 function activateInfoPopovers(simulation) {
 
-    $("#timelineInfo, #simulatorInfo")
-        .off("shown.bs.popover").on("shown.bs.popover", function (e) {
-            var popoverElement = $(e.target).data("bs.popover").$tip;
-            replaceActionVerbInTitle(popoverElement);
-            addCloseXToPopoverTitle(popoverElement);
-
-            extendSimulatorInfoPopover();
-        });
-
-
     $("#simulatorInfo")
         .popover("destroy")
         .popover({
@@ -29,7 +19,7 @@ function activateInfoPopovers(simulation) {
         });
 
 
-    // activate timeline info tooltip
+    // activate timeline info popover
     $("#timelineInfo")
         .popover("destroy")
         .popover({
@@ -39,6 +29,16 @@ function activateInfoPopovers(simulation) {
             placement: "left"
         });
 
+
+    $("#timelineInfo, #simulatorInfo")
+        .off("shown.bs.popover")
+        .on("shown.bs.popover", function (e) {
+            var popoverElement = $(e.target).data("bs.popover").$tip;
+            replaceActionVerbInTitle(popoverElement);
+            addCloseXToPopoverTitle(popoverElement);
+
+            extendSimulatorInfoPopover();
+        });
 }
 
 function getSimulatorInfoText(scenario) {
