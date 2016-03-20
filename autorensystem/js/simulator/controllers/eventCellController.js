@@ -9,11 +9,14 @@ function getContextEventCells(contextEvent) {
     for (var step = contextEvent.getStart(); step <= contextEvent.getEnd(); step++)
         cells = cells.add($("#timelineTable").find(".timeline-step").eq(step)
             .children(".timeline-cell").eq(contextEvent.getColumn()));
-    return cells;
+
+    return isFinishedLearningUnit(contextEvent.getContextInfo()) ? $(cells).first() : cells;
 }
 
 
 function addOccupiedMarkup (contextEvent, simulation) {
+
+    var timeline = simulation.getTimeline();
 
     var cells = getContextEventCells(contextEvent);
     var firstCell = $(cells).first();
@@ -22,7 +25,7 @@ function addOccupiedMarkup (contextEvent, simulation) {
     $(cells)
         .removeClass("timeline-cell-marked")
         .tooltip("destroy")
-        .tooltip(getContextTooltipOptions(getContextTooltipTitle(contextEvent, simulation.getTimeline())));
+        .tooltip(getContextTooltipOptions(getContextTooltipTitle(contextEvent, timeline)));
 
 
     $(firstCell)
@@ -47,8 +50,16 @@ function addOccupiedMarkup (contextEvent, simulation) {
             .removeClass("finished-units")
             .addClass("timeline-cell-occupied")
             .css("border-bottom", "1px solid");
-        $(cells).not(".timeline-cell-occupied").addClass("finished-units");
+
+        var colID = contextEvent.getColumn();
+        getColumnCells(colID).each(function (index, cell) {
+            if (index > contextEvent.getStart())
+                $(cell).not(".timeline-cell-occupied").addClass("finished-units")
+                    .tooltip("destroy")
+                    .tooltip(getContextTooltipOptions(getContextTooltipTitle(timeline.getEventAt(index, colID), timeline)));
+        });
     }
+
     // ...hence only "common" context information events shall be resizable
     else {
         var resizeHandle = $("<div>").addClass("occupied-resize-handle");
@@ -97,9 +108,9 @@ function getContextTooltipTitle (contextEvent, timeline) {
             var event = columnEvents[i];
             if (event.getStart() <= contextEvent.getStart()) {
                 chosenValue = event.getContextInfo().getChosenValue();
-                //if (!contextEvent.isVisible()) tooltipTitle += "(";
-                tooltipTitle += authorSystemContent.getUnitByUUID(chosenValue).getName();
-                //if (!contextEvent.isVisible()) tooltipTitle += ")";
+                if (!contextEvent.isVisible()) tooltipTitle += "(";
+                tooltipTitle += translate_unitUUIDToName(chosenValue);
+                if (!contextEvent.isVisible()) tooltipTitle += ")";
                 tooltipTitle += "<br>";
             }
         }
