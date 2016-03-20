@@ -292,7 +292,8 @@ function translate_operator(op) {
 function translate_possibleValue(cv) {
     var valueString;
     if (!isNaN(cv)) valueString = parseFloat(parseFloat(cv).toFixed(3)); // convert to number -> truncate decimals -> lose "0"s
-    else valueString = contextValueDictionary[cv] || cv;
+    // if the value is not a number, look it up in the dictionary; if it's not there, see if it's a unit; if not return it as it is
+    else valueString = contextValueDictionary[cv] || translate_unitUUIDToName(cv);
     return valueString;
 }
 
@@ -315,8 +316,14 @@ function translate_parameter(p) {
 function translate_parameterValue(pv) {
     var valueString;
     if (!isNaN(pv)) valueString = parseFloat(parseFloat(pv).toFixed(3)); // convert to number -> truncate decimals -> lose "0"s
-    else valueString = contextParameterValueDictionary[pv] || pv;
+    // if the value is not a number, look it up in the dictionary; if it's not there, see if it's a unit; if not return it as it is
+    else valueString = contextParameterValueDictionary[pv] || translate_unitUUIDToName(pv);
     return valueString;
+}
+
+function translate_unitUUIDToName(unitUUID) {
+    var unit = authorSystemContent.getUnitByUUID(unitUUID);
+    return unit ? unit.getName() : unitUUID;
 }
 
 function translate_metaData(md) {

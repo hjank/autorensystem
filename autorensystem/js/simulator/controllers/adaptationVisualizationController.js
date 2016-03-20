@@ -64,7 +64,7 @@ function showSimulationMatchNotification() {
         var matches = $(notificationModal).find(".selected-units-list").empty();
 
         selectedUnits.forEach(function (unitUUID) {
-            matches.append(authorSystemContent.getUnitByUUID(unitUUID).getName() + "<br>");
+            matches.append(translate_unitUUIDToName(unitUUID) + "<br>");
         });
     }
     $(notificationModal).modal("show");
