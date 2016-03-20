@@ -131,23 +131,33 @@ Simulation.prototype.getCopy = function () {
         this._playBackSpeed
     );
 
-    copy.initTimeline(this._timeline.getNumberOfSituations());
-    copy.getTimeline().addAllEvents(this._timeline.getEvents());
+    copy.initTimeline(this._timeline.getNumberOfSituations(), this._timeline.getColumnContextMap());
+
+    var copiedTimeline = copy.getTimeline();
+    this._timeline.getEvents().forEach(function (event) {
+        copiedTimeline.addEvent(event.getCopy());
+    });
 
     return copy;
 };
 
 
-Simulation.prototype.initTimeline = function (steps) {
+Simulation.prototype.initTimeline = function (steps, columnMap) {
     // start from tabula rasa
     if (this._timeline.getEvents().length != 0) this._timeline.setEvents([]);
     if (this._timeline.getNumberOfColumns != 0) this._timeline.setColumnContextMap([]);
     if (this._timeline.getNumberOfSituations != 0) this._timeline.setRowMap([]);
 
     var self = this;
-    this._simulatedContextList.getItems().forEach(function (item) {
-        self._timeline.addColumn(item);
-    });
+    if (columnMap)
+        columnMap.forEach(function (column) {
+            self._timeline.addColumn(new ContextInformation().fromJSON(column.contextInfo));
+        });
+    else
+        this._simulatedContextList.getItems().forEach(function (item) {
+            self._timeline.addColumn(item);
+        });
+
     for (var i = 1; i <= steps; i++)
         this._timeline.addStep();
 };
@@ -254,7 +264,7 @@ Simulation.prototype._run = function (self) {
                     contextInfoParameters.push([
                         parameter.getID(),
                         parameterType,
-                        parameterValue
+                        parameterValue.toString()
                     ]);
                 });
 
@@ -329,7 +339,7 @@ Simulation.deserialize = function(json) {
         json._playBackSpeed
     );
 
-    thisSimulation.initTimeline(json._timeline._situations.length);
+    thisSimulation.initTimeline(json._timeline._situations.length, json._timeline._columnContextMap);
     thisSimulation.getTimeline().deserializeEvents(json._timeline._events);
 
     return thisSimulation;
