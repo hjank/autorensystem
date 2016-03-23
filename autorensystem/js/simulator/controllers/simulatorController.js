@@ -30,12 +30,11 @@ function getNewInitializedSimulation() {
 }
 
 function updateSimulator(simulation) {
+    replaceScenarioNamesWithReferences();
 
     var currentScenarioName = $("#lname")[0].innerHTML;
     var currentScenario = authorSystemContent.getScenario(currentScenarioName);
     var scenarioExists = !!currentScenario;
-
-    replaceScenarioNamesWithReferences();
 
 
     /*** first, choose the right (test case for) simulation, which is supposed to model the current scenario ***/

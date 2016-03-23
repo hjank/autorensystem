@@ -315,7 +315,7 @@ Simulation.prototype.deleteAdaptationEngine = function () {
 
 Simulation.makeSerializable = function(simulation) {
     var scenario = simulation.getScenario();
-    simulation.setScenario(scenario.constructor == Scenario ? scenario.getName() : "");
+    simulation.setScenario(scenario.constructor == Scenario ? scenario.getName() : scenario);
 
     simulation.deleteAdaptationEngine();
 };
