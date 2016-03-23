@@ -217,13 +217,29 @@ Simulation.prototype.run = function () {
 
 Simulation.prototype._run = function (self) {
 
+    var timelineEnd = self._timeline.getNumberOfSituations();
+    var selectedStep = self._timeline.getSelectedStep();
+    var selectedEvents = self._timeline.getSelectedStepEvents();
+
+    while (selectedStep < timelineEnd) {
+        var equal = true;
+        selectedEvents.forEach(function (event) {
+            if (event.getStart() == selectedStep) equal = false;
+        });
+        if (equal) {
+            self._timeline.incrementSelectedStep();
+            selectedStep = self._timeline.getSelectedStep();
+            selectedEvents = self._timeline.getSelectedStepEvents();
+        }
+        else break;
+    }
+
     // stop if the end of the timeline is reached
-    if (self._timeline.getSelectedStep() == self._timeline.getNumberOfSituations()) {
+    if (selectedStep == timelineEnd) {
         self.stop();
 
         showSimulationMatchNotification();
     }
-
     else {
         undoLightboxing();
         highlightCurrentSituation(self);
@@ -233,7 +249,7 @@ Simulation.prototype._run = function (self) {
         self._adaptationEngine.stopContextDetection();
 
 
-        self._timeline.getSelectedStepEvents().forEach( function(colEntry) {
+        selectedEvents.forEach( function(colEntry) {
             if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
                 var contextInfo = colEntry.getContextInfo();
                 var contextType = contextInfo.getType();
