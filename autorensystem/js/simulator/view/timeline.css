@@ -168,6 +168,12 @@ table#timelineTable tr.timeline-step > td.timeline-cell[contextClass=CC_LOCATION
     background-color: #F03C32;
 }
 
+
+table#timelineTable tr.timeline-step > td.finished-units
+{
+    opacity: .4;
+}
+
 table#timelineTable tr.timeline-step > td.timeline-cell-marked 
 {
     opacity: 0.8;
@@ -183,11 +189,6 @@ table#timelineTable tr.timeline-step > td.timeline-cell-occupied
     border-right: 2px solid;
     opacity: 1;
     cursor: move;
-}
-
-table#timelineTable tr.timeline-step > td.finished-units
-{
-    opacity: .4;
 }
 
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied.copied-event
