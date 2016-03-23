@@ -34,9 +34,10 @@ function initLoader(callback) {
                 guis = loadedData["_guis"];
 
 
-                loadedData["_testcases"].forEach(function(testcase) {
-                    authorSystemContent.addTestcase(Simulation.deserialize(testcase));
-                });
+                if (loadedData.hasOwnProperty("_testcases"))
+                    loadedData["_testcases"].forEach(function(testcase) {
+                        authorSystemContent.addTestcase(Simulation.deserialize(testcase));
+                    });
 
                 // call callback if it's a function
                 (typeof callback == "function" && callback())
