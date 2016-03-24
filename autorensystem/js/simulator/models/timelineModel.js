@@ -126,23 +126,24 @@ Timeline.prototype.decrementSelectedStep = function () {
 Timeline.prototype.addStep = function (index) {
 
     var newStep = [];
+    var timelineEnd = this.getNumberOfSituations();
 
-    if (typeof index == "undefined") index = this._situations.length;
+    if (typeof index == "undefined") index = timelineEnd;
 
     // if step is inserted (instead of appended)
     else {
-        // adjust start and end of each event to new position in timeline
+        var oldIndex = (index == timelineEnd) ? index - 1 : index;
         this._events.forEach(function (event) {
+            // adjust start and end of each event to new position in timeline
             var eventStart = event.getStart();
-            if (eventStart >= index) event.setStart(eventStart + 1);
+            if (eventStart >= oldIndex) event.setStart(eventStart + 1);
             var eventEnd = event.getEnd();
-            if (eventEnd >= index) event.setEnd(eventEnd + 1);
-        });
+            if (eventEnd >= oldIndex) {
+                event.setEnd(eventEnd + 1);
 
-        // add events that span several steps including this one to newly inserted step
-        this._situations[index].forEach(function (event) {
-            if (event.getStart() < index)
-                newStep.push(event);
+                // add events that span several steps including this one to newly inserted step
+                if (eventStart < oldIndex) newStep.push(event);
+            }
         });
     }
 
