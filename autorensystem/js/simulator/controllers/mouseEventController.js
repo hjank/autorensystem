@@ -15,6 +15,7 @@ function setTimelineEventHandlers(simulation) {
     $(document).off("mousedown", ".timeline-cell", handleMousedown);
     $(document).off("mousemove", handleMousemove);
     $(document).off("mouseup", handleMouseup);
+    $(document).off("click", ":not(.timeline-cell)", handleClick);
 
     $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderEnter);
     $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderLeave);
@@ -43,6 +44,7 @@ function setTimelineEventHandlers(simulation) {
     $(document).on("mousedown", ".timeline-cell", simulation, handleMousedown);
     $(document).on("mousemove", null, simulation, handleMousemove);
     $(document).on("mouseup", null, simulation, handleMouseup);
+    $(document).on("click", ":not(.timeline-cell)", null, handleClick);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderLeave);

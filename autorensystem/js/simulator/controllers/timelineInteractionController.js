@@ -31,10 +31,9 @@ var situationClipboard; // see timelineStepController
  *
  */
 function handleMousedown(e) {
+    hideAllPopovers();
 
     var timeline = e.data.getTimeline();
-
-    hideAllPopovers();
 
     // delegate target is an occupied cell
     if ($(this).hasClass("timeline-cell-occupied")) {
@@ -62,11 +61,15 @@ function handleMousedown(e) {
         }
     }
 
-    // marking cells to add a new context event to schedule
+    else if ($(e.target).hasClass("timeline-cell-marked")) {
+        removeTemporaryEvents(timeline);
+    }
+
+    // marking (only empty) cells to add a new context event to schedule
     else if ($(e.target).hasClass("timeline-cell")) {
         mousedownOnEmptyCell = true;
 
-        $(this).addClass("timeline-cell-marked").removeClass("finished-units");
+        $(this).addClass("timeline-cell-marked");
     }
 
     // no other interaction anticipated --> nothing to do here, return
@@ -215,19 +218,6 @@ function _mark(e, referenceY) {
  */
 function handleMouseup(e) {
 
-    /*** "click away" otherwise irritating tooltips and popovers ***/
-
-    hideAllTooltips();
-
-    // since "mouseup" is triggered before "click", all popover showing remains intact
-    var popover = $(".popover.in");
-    if (popover.length > 0
-        && $(e.target).closest(popover.data("bs.popover").$element).length == 0
-        && (e.pageX < getLeft(popover) || e.pageX > getRight(popover)
-            || e.pageY < getTop(popover) || e.pageY > getBottom(popover)))
-        hideAllPopovers();
-
-
     /*** handle timeline cell interaction ***/
 
     if (mousedownOnEmptyCell || resizing || moving) {
@@ -246,6 +236,8 @@ function handleMouseup(e) {
         // create new context event in formerly empty cells
         if (mousedownOnEmptyCell) {
             createNewContextEvent(simulation);
+
+            $(document).off("click", ":not(.timeline-cell)", handleClick);
         }
 
         // or update resized or moved context event
@@ -284,7 +276,18 @@ function handleMouseup(e) {
     $("body *").css("cursor", "");
 }
 
+function handleClick(e) {
+    /*** "click away" otherwise irritating tooltips and popovers ***/
 
+    hideAllTooltips();
+
+    var popover = $(".popover.in");
+    if (popover.length > 0
+        && $(e.target).closest(popover.data("bs.popover").$element).length == 0
+        && (e.pageX < getLeft(popover) || e.pageX > getRight(popover)
+        || e.pageY < getTop(popover) || e.pageY > getBottom(popover)))
+        hideAllPopovers();
+}
 
 function hideAllParentsTooltips(e) {
     $(this).parents().tooltip("hide");

@@ -32,6 +32,8 @@ function createNewPopover(contextEvent, simulation) {
             reconstructPopoverContent(simulation, contextEvent);
             setPopoverEventHandlers(simulation, contextEvent);
             repositionPopover(this);
+
+            $(document).on("click", ":not(.timeline-cell)", null, handleClick);
         })
         .off("hide.bs.popover").on("hide.bs.popover", function (e) {
             removePopoverMarkup();
@@ -95,8 +97,9 @@ function reconstructPopoverContent(simulation, contextEvent) {
 
 
 function repositionPopover(cell) {
-    var popover = $(cell).data("bs.popover").$tip;
+
     var cellBottom = getBottom(cell);
+    var popover = $(cell).data("bs.popover").$tip;
 
     var containerBottom = getBottom($("#simulatorContainer"));
 
@@ -115,7 +118,6 @@ function repositionPopover(cell) {
     }
 
     if (getTop(popover) < getTop(cell) && getBottom(popover) > getBottom(cell)) $(popover).find(".arrow").hide();
-
 }
 
 

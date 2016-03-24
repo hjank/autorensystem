@@ -272,7 +272,7 @@ function getCellAt(row, col) {
 
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
-    $(".finished-units").removeClass("finished-units");
+    //$(".finished-units").removeClass("finished-units");
 }
 
 function freeAllCells() {
