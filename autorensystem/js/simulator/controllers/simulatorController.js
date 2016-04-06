@@ -4,7 +4,7 @@
 
 var simulations;
 var scenarioContextList;
-var numberOfSteps = 20;
+var numberOfSteps = 10;
 
 function initSimulator() {
 
