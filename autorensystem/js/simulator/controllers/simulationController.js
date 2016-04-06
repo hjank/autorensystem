@@ -188,6 +188,7 @@ function setSimulationEventHandlers(simulation) {
                 simulation.pause();
 
                 setPlaybackButtonToPlay();
+                showNoMatchNotification();
                 break;
 
             case STOPPED:
