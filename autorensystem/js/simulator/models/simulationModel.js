@@ -221,19 +221,6 @@ Simulation.prototype._run = function (self) {
     var selectedStep = self._timeline.getSelectedStep();
     var selectedEvents = self._timeline.getSelectedStepEvents();
 
-    while (selectedStep < timelineEnd) {
-        var equal = true;
-        selectedEvents.forEach(function (event) {
-            if (event.getStart() == selectedStep) equal = false;
-        });
-        if (equal) {
-            self._timeline.incrementSelectedStep();
-            selectedStep = self._timeline.getSelectedStep();
-            selectedEvents = self._timeline.getSelectedStepEvents();
-        }
-        else break;
-    }
-
     // stop if the end of the timeline is reached
     if (selectedStep == timelineEnd) {
         self.stop();
@@ -241,7 +228,14 @@ Simulation.prototype._run = function (self) {
         showSimulationMatchNotification();
     }
     else {
+        // remove previous lighboxing effect (dimming and highlighting)
         undoLightboxing();
+
+        // dim background and keep selection history highlighted
+        addBackgroundDimmingOverlay();
+        highlightSelectionHistory();
+
+        // highlight selected step in timeline
         highlightCurrentSituation(self);
 
 
@@ -305,6 +299,19 @@ Simulation.prototype._run = function (self) {
 
         // go to next simulation step
         self._timeline.incrementSelectedStep();
+
+        /*   while (selectedStep < timelineEnd) {
+         var equal = true;
+         selectedEvents.forEach(function (event) {
+         if (event.getStart() == selectedStep) equal = false;
+         });
+         if (equal) {
+         self._timeline.incrementSelectedStep();
+         selectedStep = self._timeline.getSelectedStep();
+         selectedEvents = self._timeline.getSelectedStepEvents();
+         }
+         else break;
+         }*/
     }
 };
 
