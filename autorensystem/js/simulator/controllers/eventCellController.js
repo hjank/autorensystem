@@ -1,9 +1,17 @@
 /**
  * Created by Helena on 22.02.2016.
+ *
+ * @fileOverview This file provides functionality for rendering and manipulating
+ * timeline cells which are occupied by context events.
  */
 
-
-
+/**
+ * Get the timeline cells which are occupied by a context event.
+ *
+ * @param contextEvent A ContextEvent object.
+ * @returns {*} A jQuery iterable object containing all cell elements occupied by the context event
+ * - or only the first of them if the context event is of type CI_FINISHED_LEARNING_UNIT
+ */
 function getContextEventCells(contextEvent) {
     var cells = $();
     for (var step = contextEvent.getStart(); step <= contextEvent.getEnd(); step++)
@@ -13,7 +21,12 @@ function getContextEventCells(contextEvent) {
     return isFinishedLearningUnit(contextEvent.getContextInfo()) ? $(cells).first() : cells;
 }
 
-
+/**
+ * Adds markup to a timeline cell occupied by a context event.
+ *
+ * @param contextEvent The ContextEvent object to be marked up.
+ * @param simulation The current simulation. Used to get at timeline for tooltip title creation.
+ */
 function addOccupiedMarkup (contextEvent, simulation) {
 
     var timeline = simulation.getTimeline();
@@ -31,7 +44,6 @@ function addOccupiedMarkup (contextEvent, simulation) {
     $(firstCell)
         .css("border-top", "1px solid")
         .append(createContextEventEditDOM());
-
 
 
     // "finished learning unit" is implicitly valid till the end of all time...
@@ -79,22 +91,13 @@ function addOccupiedMarkup (contextEvent, simulation) {
 }
 
 
-function removeOccupiedMarkup (contextEvent) {
-    var cells = getContextEventCells(contextEvent);
-
-    $(cells).removeClass("timeline-cell-occupied")
-        .empty()
-        .css({
-            "border-top": "",
-            "border-bottom": ""
-        })
-        .popover("destroy")
-        .tooltip("destroy")
-        .tooltip(getContextTooltipOptions(getContextUnknownTooltipTitle(contextEvent.getContextInfo())));
-}
-
-
-
+/**
+ * Get the tooltip title for a context event's cells: displays the event's context information's type and values.
+ *
+ * @param contextEvent A ContextEvent object which is to be rendered.
+ * @param timeline The current timeline. Needed to access all CI_FINISHED_LEARNING_UNIT context events.
+ * @returns {string} The title of the tooltip displayed on the context event's cells.
+ */
 function getContextTooltipTitle (contextEvent, timeline) {
 
     var tooltipTitle = "";
@@ -129,34 +132,57 @@ function getContextTooltipTitle (contextEvent, timeline) {
 }
 
 
+/**
+ * Get the quick-edit icon DOM.
+ *
+ * @returns {*|jQuery} The element DOM.
+ */
 function createContextEventEditDOM() {
     return $("<a>").addClass("fui-new")
         .attr("href", "#")
         .attr("title", "Wert ändern");
 }
 
+/**
+ * Get the quick-delete icon DOM.
+ *
+ * @returns {*|jQuery} The element DOM.
+ */
 function createContextEventDeleteDOM() {
     return $("<a>").addClass("fui-trash")
         .attr("href", "#")
         .attr("title", "Wert löschen");
 }
 
+/**
+ * Get the quick-copy icon DOM.
+ *
+ * @returns {*|jQuery} The element DOM.
+ */
 function createContextEventCopyDOM() {
     return $("<a>").addClass("fui-copy")
         .attr("href", "#")
         .attr("title", "Wert kopieren");
 }
 
+/**
+ * Get the quick-hide icon DOM.
+ *
+ * @returns {*|jQuery} The element DOM.
+ */
 function createContextEventHideDOM() {
     return $("<a>").addClass("fui-eye-blocked")
         .attr("href", "#")
         .attr("title",infoTexts.ignore);
 }
 
-function handleOccupiedCellAnchorLeave(e) {
-    $(this).closest(".timeline-cell-occupied").tooltip("show");
-}
 
+/**
+ * Handles the mouse event 'click' on a quick-access icon in a timeline cell occupied by a context event, i.e.:
+ * handles editing, copying, deleting, or hiding/showing a context event.
+ *
+ * @param e The 'click' mouse event.
+ */
 function handleOccupiedCellAnchorClickEvent(e) {
 
     var simulation = e.data;
@@ -178,7 +204,6 @@ function handleOccupiedCellAnchorClickEvent(e) {
 
     else if ($(this).hasClass("fui-trash")) {
         deleteContextEvent(contextEvent, simulation);
-        //simulation.renderTimeline();
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {
@@ -186,7 +211,6 @@ function handleOccupiedCellAnchorClickEvent(e) {
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
             .attr("title", infoTexts.detect);
-            //.tooltip("fixTitle");
     }
 
     else if ($(this).hasClass("fui-eye")) {
@@ -194,6 +218,5 @@ function handleOccupiedCellAnchorClickEvent(e) {
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
             .attr("title", infoTexts.ignore);
-            //.tooltip("fixTitle");
     }
 }
