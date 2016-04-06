@@ -788,9 +788,11 @@ define('parameterList',['abstractList', 'parameter'], function(AbstractList, Par
 define('contextInformation',['data', 'parameterList'], function(Data, ParameterList) {
     return (function() {
 
+        ContextInformation.OPERATOR_UNEQUALS = "!=";
         ContextInformation.OPERATOR_EQUALS = "==";
         ContextInformation.OPERATOR_LESS_THAN = "<";
         ContextInformation.OPERATOR_GREATER_THAN = ">";
+        ContextInformation.OPERATOR_CONTAINS = "contains";
 
         /**
          *
@@ -876,7 +878,7 @@ define('contextInformation',['data', 'parameterList'], function(Data, ParameterL
          *
          * @constructs ContextInformation
          * @param discoverer
-         * @param contextInformationDescription
+         * @param {{name: string, type: string, parameterList: []}} contextInformationDescription
          * @returns {ContextInformation}
          */
         ContextInformation.fromContextInformationDescription = function(discoverer, contextInformationDescription) {
@@ -885,6 +887,29 @@ define('contextInformation',['data', 'parameterList'], function(Data, ParameterL
                 contextInformationDescription.type,
                 contextInformationDescription.parameterList,
                 true);
+        };
+
+        /**
+         *
+         * @param dataType
+         * @param value
+         * @returns {*}
+         */
+        ContextInformation.restoreDataType = function(dataType, value) {
+            if (value == ContextInformation.VALUE_UNKNOWN) return value;
+            switch (dataType) {
+                case "FLOAT":
+                    return parseFloat(value);
+                    break;
+                case "INTEGER":
+                    return parseInt(value);
+                    break;
+                case "BOOLEAN":
+                    return value === "true" || value === "TRUE" || value === "yes" || value === "YES";
+                default:
+                    return value;
+                    break;
+            }
         };
 
         /**
@@ -1134,10 +1159,10 @@ define('contextInformation',['data', 'parameterList'], function(Data, ParameterL
         /**
          * Returns the value.
          *
-         * @returns {string}
+         * @returns {*}
          */
         ContextInformation.prototype.getValue = function() {
-            return this._value;
+            return ContextInformation.restoreDataType(this.getDataType(), this._value);
         };
 
         /**
@@ -1288,6 +1313,36 @@ define('contextInformation',['data', 'parameterList'], function(Data, ParameterL
             }
         };
 
+        /**
+         * Checks if the context information fulfils the given operator and value.
+         *
+         * @param operator
+         * @param {*} value
+         * @returns {boolean}
+         * @private
+         */
+        ContextInformation.prototype.fulfils = function(operator, value) {
+            switch(operator) {
+                case ContextInformation.OPERATOR_EQUALS:
+                    return this.getValue() === value;
+                    break;
+                case ContextInformation.OPERATOR_UNEQUALS:
+                    return this.getValue() !== value;
+                    break;
+                case ContextInformation.OPERATOR_LESS_THAN:
+                    return this.getValue() < value;
+                    break;
+                case ContextInformation.OPERATOR_GREATER_THAN:
+                    return this.getValue() > value;
+                    break;
+                case ContextInformation.OPERATOR_CONTAINS:
+                    return this.getValue().indexOf(value) > -1;
+                    break;
+                default:
+                    return false;
+            }
+        };
+
         return ContextInformation;
     })();
 });
@@ -1302,6 +1357,9 @@ define('contextInformationList',['dataList', 'contextInformation'], function(Dat
         function ContextInformationList() {
             DataList.call(this);
             this._type = ContextInformation;
+
+            this._cacheSession = null;
+
             return this;
         }
 
@@ -1631,43 +1689,20 @@ define('contextInformationList',['dataList', 'contextInformation'], function(Dat
             return result;
         };
 
-        /**
-         *
-         * @param {ContextInformation} contextInformation
-         * @param operator
-         * @param {*} value
-         * @returns {boolean}
-         */
         ContextInformationList.prototype.fulfils = function(contextInformation, operator, value) {
+            /**
+             * Checks if a context information in the list fulfils type, operator and value of the given information.
+             *
+             * @param {ContextInformation} contextInformation
+             * @param operator
+             * @param {*} value
+             * @returns {boolean}
+             */
             var contextInformationOfKind = this.find(contextInformation);
             for (var index in contextInformationOfKind) {
-                if (contextInformationOfKind.hasOwnProperty(index) && this._fulfils(contextInformationOfKind[index], operator, value)) return true;
+                if (contextInformationOfKind.hasOwnProperty(index) && contextInformationOfKind[index].fulfils(operator, ContextInformation.restoreDataType(contextInformation.getDataType(), value))) return true;
             }
             return false;
-        };
-
-        /**
-         *
-         * @param {ContextInformation} contextInformation
-         * @param operator
-         * @param {*} value
-         * @returns {boolean}
-         * @private
-         */
-        ContextInformationList.prototype._fulfils = function(contextInformation, operator, value) {
-            switch(operator) {
-                case ContextInformation.OPERATOR_EQUALS:
-                    return contextInformation.getValue() == value;
-                    break;
-                case ContextInformation.OPERATOR_LESS_THAN:
-                    return contextInformation.getValue() < value;
-                    break;
-                case ContextInformation.OPERATOR_GREATER_THAN:
-                    return contextInformation.getValue() > value;
-                    break;
-                default:
-                    return false;
-            }
         };
 
         return ContextInformationList;
@@ -3787,7 +3822,6 @@ define('widget',['queryable', 'callback', 'callbackList', 'contextInformation', 
 			/**
 			 * Notifies other components and sends the contextual information.
 			 *
-			 * @virtual
 			 * @public
 			 */
 			Widget.prototype.notify = function() {
@@ -3931,6 +3965,7 @@ define('widget',['queryable', 'callback', 'callbackList', 'contextInformation', 
 						self.log("Interval Trigger -> queryGenerator");
 						self.queryGenerator();
 					}, this.constructor.description.updateInterval);
+					self.queryGenerator();
 				}
 			};
 
@@ -4728,7 +4763,7 @@ define('aggregator',['queryable', 'widget', 'contextInformation', 'contextInform
 						this._subscribeTo(theWidget, callbackList);
 						this._callbacks.putAll(callbackList);
 						var callsList = callbackList.getItems();
-						for(var x in callsList){
+						for(var x in callsList) {
 							var singleCallback = callsList[x];
 							var typeList = singleCallback.getContextInformation().getItems();
 							for(var y in typeList){
