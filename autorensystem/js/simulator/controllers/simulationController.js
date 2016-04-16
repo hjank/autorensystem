@@ -8,7 +8,6 @@ function setSimulationEventHandlers(simulation) {
     var timeline = simulation.getTimeline();
     var scenario = simulation.getScenario();
 
-    var simulatorMainContainerElement = $("#simulatorContainer");
     var simulationSelectElement = $("#simulationSelection");
     var simulationNameInputElement = $("#simulationNameInput");
     var simulationDescriptionInputElement = $("#simulationDescriptionInput");
@@ -18,64 +17,75 @@ function setSimulationEventHandlers(simulation) {
 
     /**** simulation selection ****/
 
-    $(simulationSelectElement).off("select2-open").on("select2-open", function (e) {
-        $(simulationSelectElement.data("select2").dropdown).find("*").tooltip({
-            container: "body",
-            placement: "left"
-        });
-    });
+    $(simulationSelectElement)
+        .off("select2-open").on("select2-open", function (e) {
 
-    $(simulationSelectElement).off("select2-selecting").on("select2-selecting", function (e) {
+            // enable tooltips displaying test case description
+            $(simulationSelectElement.data("select2").dropdown).find("*").tooltip({
+                container: "body",
+                placement: "left"
+            });
+        })
+        .off("select2-selecting").on("select2-selecting", function (e) {
 
-        hideAllTooltips();
+            hideAllTooltips();
 
-        var selectedTestcase;
+            var selectedTestcase;
 
-        // "+ Neue Vorlage"
-        if (e.val == simulations.length) {
-            selectedTestcase = getNewInitializedSimulation();
-            selectedTestcase.setScenario(scenario);
+            // if "+ Neue Vorlage" was selected --> create new simulation for current scenario
+            if (e.val == simulations.length) {
+                selectedTestcase = getNewInitializedSimulation();
+                selectedTestcase.setScenario(scenario);
 
-            updateSimulator(selectedTestcase);
-        }
-        // existing testcase
-        else {
-            selectedTestcase = simulations[e.val];
-
-            // chosen from another scenario -> make a copy
-            if (selectedTestcase.getScenario() != scenario) {
-                var testcaseCopy = selectedTestcase.getCopy();
-                testcaseCopy.setScenario(scenario);
-
-                // reset all finished learning unit events since those do not apply here
-                var copiedTimeline = testcaseCopy.getTimeline();
-                copiedTimeline.getColumnEvents(0).forEach(function (fluEvt) { // FLU always comes first (see simulation init)
-                    copiedTimeline.removeEvent(fluEvt);
-                });
-
-                simulations.push(testcaseCopy);
-
-                updateSimulator(testcaseCopy);
+                updateSimulator(selectedTestcase);
             }
 
-            // common case: testcase for scenario
-            else
-                updateSimulator(selectedTestcase);
-        }
+            // else: if an existing test case was selected
+            else {
+                selectedTestcase = simulations[e.val];
 
-        e.preventDefault();
-    });
+                // if chosen test case belongs to another scenario --> make a copy
+                if (selectedTestcase.getScenario() != scenario) {
+                    var testcaseCopy = selectedTestcase.getCopy();
+                    testcaseCopy.setScenario(scenario);
+
+                    // reset all finished learning unit events since those do not apply here
+                    var copiedTimeline = testcaseCopy.getTimeline();
+                    // FLU always comes first (see simulation init)
+                    copiedTimeline.getColumnEvents(0).forEach(function (fluEvt) {
+                        copiedTimeline.removeEvent(fluEvt);
+                    });
+
+                    // add copy
+                    simulations.push(testcaseCopy);
+                    // update everything
+                    updateSimulator(testcaseCopy);
+                }
+
+                // the more common case: existing test case for current scenario
+                else
+                    updateSimulator(selectedTestcase);
+            }
+
+            e.preventDefault();
+        });
 
 
 
-    /**** simulation properties: name, description, delete ****/
+    /**** enter simulation properties: name, description, copy, delete ****/
 
     $("#btnSimulationProperties").off("click").on("click", function (e) {
-        $(simulationNameInputElement).val(simulation.getTitle());
-        $(simulationDescriptionInputElement).val(simulation.getDescription());
-
         enterSimulationPropertiesView();
     });
+
+    /**** enter simulation options: playback speed ****/
+
+    $("#btnSimulatorOptions").off("click").on("click", function (e) {
+        enterSimulationOptionsView();
+    });
+
+
+    /*** inside properties: copy or delete test case ***/
 
     $("#btnCopySimulation").off("click").on("click", function (e) {
         var copy = simulation.getCopy();
@@ -84,23 +94,14 @@ function setSimulationEventHandlers(simulation) {
         updateSimulator(copy);
         returnToSimulatorMainView();
     });
-
     $("#btnDeleteSimulation").off("click").on("click", function (e) {
         simulations.splice(simulations.indexOf(simulation), 1);
 
         returnToSimulatorMainView();
     });
 
-    /**** simulation options ****/
 
-    $("#btnSimulatorOptions").off("click").on("click", function (e) {
-        $(simulationSpeedInputElement).val(simulation.getPlayBackSpeed()/1000);
-
-        enterSimulationOptionsView();
-    });
-
-
-    /**** return home to simulator from properties or options ****/
+    /**** save changes and return home to simulator from properties or options ****/
 
     $(".btn.back-to-simulator").off("click").on("click", function (e) {
 
@@ -114,27 +115,6 @@ function setSimulationEventHandlers(simulation) {
 
         returnToSimulatorMainView();
     });
-
-
-    /**** convenience wrappers ****/
-
-    function enterSimulationPropertiesView() {
-        simulatorMainContainerElement.hide();
-        $("#simulatorPropertiesContainer").show();
-    }
-
-    function enterSimulationOptionsView() {
-        simulatorMainContainerElement.hide();
-        $("#simulationOptionsContainer").show();
-    }
-
-    function returnToSimulatorMainView() {
-        $(".simulator-component-template").hide();
-        simulatorMainContainerElement.show();
-
-        // anticipate the common case: properties will have been changed, so do update
-        updateSimulator();
-    }
 
 
 
@@ -242,6 +222,8 @@ function resetPlaybackButton () {
 
 
 
+/*** display notification window on simulation start ***/
+
 function showSimulationStartNotification() {
     var notificationModal = $(".modal.simulation-start-notification");
     $(notificationModal).modal("show");
@@ -256,4 +238,14 @@ function hideSimulationStartNotification() {
     var notificationModal = $(".modal.simulation-start-notification");
     $(notificationModal).modal("hide");
     $(notificationModal).find(".modal-body").html("Die Regeln werden generiert, einen Moment Geduld bitte.");
+}
+
+
+
+function getNewInitializedSimulation() {
+    var simulation = new Simulation();
+    simulations.push(simulation);
+    simulation.initTimeline(numberOfSteps);
+
+    return simulation;
 }

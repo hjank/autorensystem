@@ -21,14 +21,6 @@ function initSimulator() {
 }
 
 
-function getNewInitializedSimulation() {
-    var simulation = new Simulation();
-    simulations.push(simulation);
-    simulation.initTimeline(numberOfSteps);
-
-    return simulation;
-}
-
 function updateSimulator(simulation) {
     replaceScenarioNamesWithReferences();
 
@@ -152,6 +144,8 @@ function renderSimulator(simulation) {
     });
 
 
+    updatePropertiesView(simulation);
+    updateOptionsView(simulation);
 
 
     // activate the user interface
@@ -161,4 +155,34 @@ function renderSimulator(simulation) {
 
     // render the scenario context timeline with all events
     simulation.renderTimeline();
+}
+
+
+
+
+function updatePropertiesView(simulation) {
+    $("#simulationNameInput").val(simulation.getTitle());
+    $("#simulationDescriptionInput").val(simulation.getDescription());
+}
+
+function updateOptionsView(simulation) {
+    $("#simulationSpeedInput").val(simulation.getPlayBackSpeed()/1000);
+}
+
+function enterSimulationPropertiesView() {
+    $("#simulatorContainer").hide();
+    $("#simulatorPropertiesContainer").show();
+}
+
+function enterSimulationOptionsView() {
+    $("#simulatorContainer").hide();
+    $("#simulationOptionsContainer").show();
+}
+
+function returnToSimulatorMainView() {
+    $(".simulator-component-template").hide();
+    $("#simulatorContainer").show();
+
+    // anticipate the common case: properties will have been changed, so do update
+    updateSimulator();
 }
