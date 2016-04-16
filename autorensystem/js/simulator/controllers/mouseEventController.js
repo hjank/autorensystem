@@ -16,6 +16,8 @@ function setTimelineEventHandlers(simulation) {
     $(document).off("mousemove", handleMousemove);
     $(document).off("mouseup", handleMouseup);
     $(document).off("click", ":not(.timeline-cell)", handleClick);
+    $(document).off("mouseenter", ".timeline-cell-occupied", handleOccupiedCellMouseenter);
+    $(document).off("mouseleave", ".timeline-cell", handleCellMouseleave);
 
     $(document).off("mouseenter", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderEnter);
     $(document).off("mouseleave", ".timeline-header th:not(.timeline-step-label)", handleColumnHeaderLeave);
@@ -30,9 +32,7 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).off("click", ".popover-column-options .btn", handleColumnHeaderOptionClick);
 
-    //$(document).off("mouseover", ".timeline-cell-occupied a", hideAllParentsTooltips);
     $(document).off("click", ".timeline-cell-occupied a", handleOccupiedCellAnchorClickEvent);
-    //$(document).off("mouseleave", ".timeline-cell-occupied a", handleOccupiedCellAnchorLeave);
 
     $(document).off("click", ".popover .popover-close", hideAllPopovers);
 
@@ -45,6 +45,8 @@ function setTimelineEventHandlers(simulation) {
     $(document).on("mousemove", null, simulation, handleMousemove);
     $(document).on("mouseup", null, simulation, handleMouseup);
     $(document).on("click", ":not(.timeline-cell)", null, handleClick);
+    $(document).on("mouseenter", ".timeline-cell-occupied", null, handleOccupiedCellMouseenter);
+    $(document).on("mouseleave", ".timeline-cell", handleCellMouseleave);
 
     $(document).on("mouseenter", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderEnter);
     $(document).on("mouseleave", ".timeline-header th:not(.timeline-step-label)", null, handleColumnHeaderLeave);
@@ -59,9 +61,7 @@ function setTimelineEventHandlers(simulation) {
 
     $(document).on("click", ".popover-column-options .btn", simulation, handleColumnHeaderOptionClick);
 
-    //$(document).on("mouseover", ".timeline-cell-occupied a", null, hideAllParentsTooltips);
     $(document).on("click", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorClickEvent);
-    //$(document).on("mouseleave", ".timeline-cell-occupied a", simulation, handleOccupiedCellAnchorLeave);
 
     $(document).on("click", ".popover .popover-close", null, hideAllPopovers);
 

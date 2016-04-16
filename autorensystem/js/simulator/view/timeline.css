@@ -230,9 +230,9 @@ table#timelineTable tr.timeline-step > td.timeline-cell > a:hover
 table#timelineTable tr.timeline-step > td.timeline-cell-occupied div.occupied-resize-handle
 {
     width: 100%;
-    height: 3px;
+    height: 5px;
     position: absolute;
-    bottom: 2px;
+    bottom: 0px;
     z-index: 90;
     display: block;
     cursor: s-resize;

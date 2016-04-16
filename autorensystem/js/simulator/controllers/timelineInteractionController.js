@@ -32,6 +32,7 @@ var situationClipboard; // see timelineStepController
  */
 function handleMousedown(e) {
     hideAllPopovers();
+    hideAllTooltips();
 
     var timeline = e.data.getTimeline();
 
@@ -131,6 +132,7 @@ function handleMousemove(e) {
             var rowIndex = getRowIDOfCell(targetedCell);
             var colIndex = getColIDOfCell(targetedCell);
 
+            // get new empty collocated cells to move event to
             var eventCells = $();
             for (var i = 0; i < $(originalEventCells).length && dropAllowed; i++) {
                 var newRowIndex = rowIndex + i - clickedCellIndex;
@@ -140,7 +142,7 @@ function handleMousemove(e) {
                 dropAllowed = (newRowIndex >= 0 &&
                 ($(originalEventCells).index(eventCell) >= 0 || !$(eventCell).hasClass("timeline-cell-occupied")));
             }
-
+            // if these cells can hold the event, allocate them
             if (dropAllowed && originalEventCells.length == eventCells.filter(".timeline-cell").length)
                 originalEventCells = eventCells;
         }
@@ -149,23 +151,21 @@ function handleMousemove(e) {
 
     /*** cursor style and "error-30"-handling ***/
 
-    // detect downward collision
+    // detect downward collision with occupied cell
     if (!nextOccupiedCellTop && (e.pageY > getBottom(clickedCell))) {
         // if targeted cell is already occupied by another event, get its top Y coordinate
         if ($(targetedCell).hasClass("timeline-cell-occupied"))
             nextOccupiedCellTop = getTop(targetedCell);
     }
 
-
     // prevent dragging into no-drop area, i.e. :
-    if (!targetIsCell // into anything that is not a timeline cell
-        || (mousedownOnEmptyCell && isFinishedLearningUnit(e.data.getTimeline().getColumnContext(getColIDOfCell(clickedCell))))
+    if ((mousedownOnEmptyCell && isFinishedLearningUnit(e.data.getTimeline().getColumnContext(getColIDOfCell(clickedCell))))
         || (moving && !dropAllowed) // or out of table bounds or into occupied cells when moving
         || (!moving && e.pageY <= referenceY) // or above drag start
         || (getLeft(clickedCell) != getLeft(targetedCell)) // or out of column
         || (!moving && nextOccupiedCellTop && (e.pageY >= nextOccupiedCellTop - 3))) // or over the next occupied cell
     {
-        $("body *").css("cursor", "no-drop");
+        $(e.target).css("cursor", "no-drop");
         return;
     }
     else if (resizing)
@@ -178,6 +178,33 @@ function handleMousemove(e) {
 
     // mark targeted cells if creating or resizing an event
     _mark(e, referenceY);
+}
+
+
+
+
+
+function handleOccupiedCellMouseenter(e) {
+    if (dragging)
+        preventDropping(e);
+    else
+        resetCursor();
+}
+
+function handleCellMouseleave(e) {
+    if (dragging && !$(e.relatedTarget).hasClass("timeline-cell"))
+        preventDropping(e);
+    else
+        resetCursor();
+}
+
+function preventDropping(e) {
+    $(e.target).css("cursor", "no-drop");
+    return;
+}
+
+function resetCursor(){
+    $("body *").css("cursor", "");
 }
 
 
