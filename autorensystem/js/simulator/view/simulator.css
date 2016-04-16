@@ -22,7 +22,15 @@
 
 #simulatorInfo {
     float: right;
+    margin: 0px 10px 0px 0px;
 }
+
+#simulationTitle label {
+    padding: 0px 0px 0px 10px;
+    margin: 0px 0px 0px 0px;
+    float: left;
+}
+
 
 #simulationTitle .select {
     max-width: 200px;
