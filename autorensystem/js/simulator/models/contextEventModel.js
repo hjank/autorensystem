@@ -80,3 +80,13 @@ ContextEvent.deserialize = function (json) {
         json._visible
     );
 };
+
+
+
+function isFinishedLearningUnit(contextInfo) {
+    return (contextInfo.getID() == "CI_FINISHED_LEARNING_UNIT");
+}
+
+function containsLearningUnit(contextInfoID) {
+    return (contextInfoID.indexOf("LEARNING_UNIT") != -1);
+}
