@@ -18,12 +18,16 @@ var infoTexts = {
 
     "timeline": "Diese Zeitleiste zeigt Ihnen alle Kontextinformationen an, die das aktuelle Szenario beschreiben.<br>" +
         "Jede Zeile bildet eine Situation des Szenarios ab, mit den zu diesem Zeitpunkt gültigen Kontextinformationen.<br>" +
+        "In der ersten Spalte können Sie festlegen, welche Lerneinheiten der Lernende abgeschlossen hat.<br>" +
+        "Die übrigen Spalten enthalten jeweils eine Kontextinformation.<br>" +
         "<hr>" +
         "<div id='timeline-info-hint'>" +
         "<b>Tipp</b>: " +
         "Klicken Sie in ein Zeitfenster, um einen Kontextwert hinzuzufügen.<br>" +
         "Soll ein Wert über einen längeren Zeitraum hinweg gelten (z.B. Alter des Benutzers), " +
-        "fahren Sie zum Markieren mit gedrückter Maus über die Zeitfenster.</div>",
+        "fahren Sie zum Markieren mit gedrückter Maus über die Zeitfenster.<br>" +
+        "Sie können Werte auch verschieben und deren Dauer verändern.<br>" +
+        "In den Zeilen- und Spaltenköpfen finden Sie weitere Optionen.</div>",
 
     "units": "Hier geben Sie an, welche Lerneinheiten der Nutzer nacheinander abschließt.<br>" +
         "Ist eine Lerneinheit einmal abgeschlossen, gilt diese Information automatisch bis zum Ende des Szenarios.",
