@@ -21,7 +21,7 @@ function activateTimelineTable(simulation) {
 }
 
 
-function resizePanel() {
+function resizePanelToTableWidth() {
     var tableElement = $("#timelineTable");
     $(tableElement).closest(".properties").width($(tableElement).width());
 }

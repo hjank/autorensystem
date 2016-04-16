@@ -34,13 +34,20 @@ function handleStepLabelLeave(e) {
     }
 }
 
+
 function handleStepLabelClick(e) {
 
     var simulation = e.data;
     var timeline = simulation.getTimeline();
     var status = simulation.getStatus();
     var selectedStepIndex = getRowIDOfCell(this);
-    var selectedStep = $(this).closest(".timeline-step");
+
+
+/*  NOTE:
+    NO TEST USER EVER USED THIS BECAUSE OF FORWARD/BACKWARD STEPPING FUNCTIONALITY.
+    BUT: THOSE USERS WHO HAD DISCOVERED STEP OPTIONS WERE CONFUSED IF THEY WERE NOT SHOWN ANYMORE IN SIMULATION MODE.
+    REMEMBER: MODES = INCONSISTENCY = BAD.
+
 
     // when simulation is running
     if (status != STOPPED) {
@@ -49,30 +56,25 @@ function handleStepLabelClick(e) {
         // and simulate
         simulateSelectedSituation(simulation);
     }
-
     // otherwise
     else {
+       */
 
-        var copying = !situationClipboardIsEmpty();
-        var popElt = $(this).data("bs.popover").$tip;
-        if (popElt && $(popElt).hasClass("in"))
+        // show little popover displaying options for step (or hide it on follow-up click)
+        var stepOptionsPopover = $(this).data("bs.popover").$tip;
+        var stepOptions = $(stepOptionsPopover).find(".btn");
+        if (stepOptionsPopover && $(stepOptionsPopover).hasClass("in"))
             $(this).popover("hide");
         else
             $(this).popover("show");
 
-        var stepOptionsPopover = $(this).data("bs.popover").$tip;
-        var stepOptions = $(stepOptionsPopover).find(".btn");
 
-
-        // situation options are shown
-
-        // when situation has been copied and is can be pasted
-        if (copying) {
+        // when situation has been copied and can now be pasted
+        if (!situationClipboardIsEmpty()) {
             $(stepOptions).filter(".fui-clipboard").show();
             $(stepOptions).filter(".fui-cross-circle").show();
             $(stepOptionsPopover).find(".btn-separator").show();
             $(stepOptions).filter(".fui-copy").hide();
-
         }
         else {
             $(stepOptions).filter(".fui-clipboard").hide();
@@ -86,7 +88,7 @@ function handleStepLabelClick(e) {
             $(stepOptions).filter(".fui-copy").hide();
         }
 
-    }
+    //}
 }
 
 
