@@ -22,7 +22,7 @@ function Simulation (title, descr, scenario, contextList, timeline, speed) {
 
     this._timeline = timeline || new Timeline();
 
-    this._playBackSpeed = speed || 1000; // default speed = 3 seconds per step
+    this._playBackSpeed = speed || 2000; // default speed = 2 seconds per step
     this._status = STOPPED;
 
     this._iteration = null;
@@ -233,7 +233,9 @@ Simulation.prototype._run = function (self) {
 
         // dim background and keep selection history highlighted
         addBackgroundDimmingOverlay();
-        highlightSelectionHistory();
+
+        // NOT EXACTLY REPRESENTING ADAPTATION BEHAVIOR
+        //highlightSelectionHistory();
 
         // highlight selected step in timeline
         highlightCurrentSituation(self);
@@ -327,6 +329,7 @@ Simulation.prototype.stop = function () {
 
     resetPlaybackButton();
     highlightCurrentSituation(this);
+    undoLightboxing();
 };
 
 
