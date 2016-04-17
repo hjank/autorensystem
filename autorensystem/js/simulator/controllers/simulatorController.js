@@ -4,19 +4,22 @@
 
 var simulations;
 var scenarioContextList;
-var numberOfSteps = 10;
+var numberOfSteps;
+var firstTimeViewed;
 
 function initSimulator() {
 
+    firstTimeViewed = true;
     simulations = authorSystemContent.getTestcases();
     scenarioContextList = new ContextInfoList();
+    numberOfSteps = 10;
 
     // init the simulation editor timeline
     // 1. fetch and append html
     $.get( "js/simulator/view/simulator.html", function( data ) {
         $( "#tab5" ).html( data );
 
-        showSimulatorTab();
+        //showSimulatorTab();
     });
 }
 
@@ -152,6 +155,7 @@ function renderSimulator(simulation) {
     activateInfoPopovers(simulation);
     setTimelineEventHandlers(simulation);
     setSimulationEventHandlers(simulation);
+
 
     // render the scenario context timeline with all events
     simulation.renderTimeline();

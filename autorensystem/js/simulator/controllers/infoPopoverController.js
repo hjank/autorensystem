@@ -9,7 +9,15 @@
 
 function activateInfoPopovers(simulation) {
 
-    $("#simulatorInfo")
+    var simulatorInfoAnchor = $("#simulatorInfo");
+
+    if (firstTimeViewed) {
+        setTimeout(function () { simulatorInfoAnchor.popover("show"); }, 100);
+        setTimeout(function () { simulatorInfoAnchor.popover("hide"); }, 5000);
+    }
+    firstTimeViewed = false;
+
+    simulatorInfoAnchor
         .popover("destroy")
         .popover({
             container: "body",
@@ -17,7 +25,6 @@ function activateInfoPopovers(simulation) {
             html: true,
             placement: "left"
         });
-
 
     // activate timeline info popover
     $("#timelineInfo")
