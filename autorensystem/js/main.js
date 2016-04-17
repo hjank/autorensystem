@@ -27,7 +27,7 @@ function contextInfoListLoadedCallback () {
     initLoader(initSimulator);
 
     // set handler for saving authorSystemContent before window gets unloaded (i.e. on closing authorsystem)
-    //setUnloadEventHandler();
+    setUnloadEventHandler();
 }
 
 
