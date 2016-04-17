@@ -9,6 +9,29 @@ function situationClipboardIsEmpty() {
 }
 
 
+
+function getStepOptionsContent() {
+
+    var timelineStepOptionsContent = $("<div>").addClass("popover-step-options");
+
+    // when situation has been copied and can now be pasted
+    if (!situationClipboardIsEmpty()) {
+        timelineStepOptionsContent
+            .append($("<span>").addClass("btn btn-sm fui-clipboard").attr("title", "Kopierte Situation einfügen"))
+            .append($("<span>").addClass("btn btn-sm fui-cross-circle").attr("title", "Kopieren abbrechen"));
+    }
+    else {
+        timelineStepOptionsContent
+            .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Neue Situation einfügen"))
+            .append($("<span>").addClass("btn btn-sm fui-copy").attr("title", "Situation kopieren"))
+            .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "Situation löschen"));
+    }
+    return timelineStepOptionsContent;
+}
+
+
+
+
 function handleStepLabelEnter(e) {
 
     if (e.data.getStatus() == STOPPED) {
@@ -39,7 +62,6 @@ function handleStepLabelClick(e) {
 
     var simulation = e.data;
     var timeline = simulation.getTimeline();
-    var status = simulation.getStatus();
     var selectedStepIndex = getRowIDOfCell(this);
 
 
@@ -50,6 +72,7 @@ function handleStepLabelClick(e) {
 
 
     // when simulation is running
+    var status = simulation.getStatus();
     if (status != STOPPED) {
         // point the simulation to selected step
         timeline.setSelectedStep(selectedStepIndex);
@@ -60,33 +83,14 @@ function handleStepLabelClick(e) {
     else {
        */
 
-        // show little popover displaying options for step (or hide it on follow-up click)
-        var stepOptionsPopover = $(this).data("bs.popover").$tip;
-        var stepOptions = $(stepOptionsPopover).find(".btn");
-        if (stepOptionsPopover && $(stepOptionsPopover).hasClass("in"))
-            $(this).popover("hide");
-        else
-            $(this).popover("show");
 
+    // show little popover displaying options for step (or hide it on follow-up click)
+    var stepOptionsPopover = $(this).data("bs.popover").$tip;
+    if (stepOptionsPopover && $(stepOptionsPopover).hasClass("in"))
+        $(this).popover("hide");
+    else 
+        $(this).popover("show");
 
-        // when situation has been copied and can now be pasted
-        if (!situationClipboardIsEmpty()) {
-            $(stepOptions).filter(".fui-clipboard").show();
-            $(stepOptions).filter(".fui-cross-circle").show();
-            $(stepOptionsPopover).find(".btn-separator").show();
-            $(stepOptions).filter(".fui-copy").hide();
-        }
-        else {
-            $(stepOptions).filter(".fui-clipboard").hide();
-            $(stepOptions).filter(".fui-cross-circle").hide();
-            $(stepOptionsPopover).find(".btn-separator").hide();
-        }
-
-        // selected situation has no context values yet
-        if (timeline.getStepEvents(selectedStepIndex).length == 0) {
-            // nothing there to copy
-            $(stepOptions).filter(".fui-copy").hide();
-        }
 
     //}
 }

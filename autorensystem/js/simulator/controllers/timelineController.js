@@ -41,19 +41,6 @@ function createHeader() {
 function createSteps(steps) {
     var timelineBodyElement = $("#timelineTable > tbody");
 
-    var _getStepOptionsContent = function () {
-
-        var timelineStepOptionsContent = $("<div>").addClass("popover-step-options")
-            .append($("<span>").addClass("btn btn-sm fui-clipboard").attr("title", "Kopierte Situation einfügen").hide())
-            .append($("<span>").addClass("btn btn-sm fui-cross-circle").attr("title", "Kopieren abbrechen").hide())
-            .append($("<span>").addClass("btn-separator").text("|").hide())
-            .append($("<span>").addClass("btn btn-sm fui-plus").attr("title", "Situation einfügen"))
-            .append($("<span>").addClass("btn btn-sm fui-copy").attr("title", "kopieren"))
-            .append($("<span>").addClass("btn btn-sm fui-trash").attr("title", "löschen"));
-
-        return timelineStepOptionsContent;
-    };
-
     for (var i = 1; i <= steps; i++)
         $(timelineBodyElement)
             .append($("<tr>").addClass("timeline-step")
@@ -62,7 +49,7 @@ function createSteps(steps) {
                     .attr("title", "Situation " + i.toString())
                     .popover({
                         container: "body",
-                        content: _getStepOptionsContent(),
+                        content: getStepOptionsContent,
                         delay: { show: 100, hide: 300 },
                         html: true,
                         placement: "right",
@@ -71,7 +58,6 @@ function createSteps(steps) {
                         '<div class="popover-content"></div></div>',
                         trigger: "manual"
                     })
-                    .tooltip("destroy")
                 )
             );
 }
