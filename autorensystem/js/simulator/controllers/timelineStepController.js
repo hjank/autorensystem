@@ -88,7 +88,7 @@ function handleStepLabelClick(e) {
     var stepOptionsPopover = $(this).data("bs.popover").$tip;
     if (stepOptionsPopover && $(stepOptionsPopover).hasClass("in"))
         $(this).popover("hide");
-    else 
+    else
         $(this).popover("show");
 
 
@@ -100,8 +100,8 @@ function handleStepOptionClick(e) {
     var simulation = e.data;
     var timeline = simulation.getTimeline();
 
-    var selectedStep = $(".selected-step");
-    var stepIndex = $(selectedStep).index();
+    var selectedStep = $(this).parents(".in").data("bs.popover").$element.parent();
+    var stepIndex = selectedStep.index();
     var selectedStepEvents = timeline.getStepEvents(stepIndex);
 
     if ($(this).hasClass("fui-copy")) {
@@ -110,8 +110,11 @@ function handleStepOptionClick(e) {
         copying = true;
 
         hideAllPopovers();
-        markSelectedStepAsCopied();
-        removeStepHighlighting();
+
+        //markSelectedStepAsCopied();
+        selectedStep.addClass("copied-step");
+
+        //removeStepHighlighting();
 
         $(".timeline-step-label").tooltip("disable");
     }
@@ -151,7 +154,7 @@ function handleStepOptionClick(e) {
 function handleAddStepMouseenter(e) {
 
     if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-clipboard")) {
-        var selectedStep = $(".selected-step");
+        var selectedStep = $(this).parents(".in").data("bs.popover").$element.parent();
 
         $(selectedStep).children().css({"border-bottom":"1px double red"});
         $(selectedStep).next().children().css({"border-top":"1px double red"});
@@ -161,7 +164,7 @@ function handleAddStepMouseenter(e) {
 function handleAddStepMouseleave(e) {
 
     if ($(this).hasClass("fui-plus") || $(this).hasClass("fui-clipboard")) {
-        var selectedStep = $(".selected-step");
+        var selectedStep = $(this).parents(".in").data("bs.popover").$element.parent();
 
         $(selectedStep).children().css({"border-bottom":""});
         $(selectedStep).next().children().css({"border-top":""});

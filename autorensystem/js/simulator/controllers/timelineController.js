@@ -124,8 +124,10 @@ function highlightCurrentSituation(simulation) {
     var isSimulating = simulation.getStatus() != STOPPED;
 
     // highlight selected step if simulation is running or paused
-    if (isSimulating) highlightStep(selectedStep);
-    else removeStepHighlighting();
+    if (isSimulating)
+        highlightStep(selectedStep);
+    else
+        removeStepHighlighting();
 
     if (selectedStep == timeline.getNumberOfSituations()) return;
 
