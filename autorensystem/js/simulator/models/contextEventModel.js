@@ -90,3 +90,9 @@ function isFinishedLearningUnit(contextInfo) {
 function containsLearningUnit(contextInfoID) {
     return (contextInfoID.indexOf("LEARNING_UNIT") != -1);
 }
+
+function sortContextEventsChronologically(events) {
+    return events.sort(function (a, b) {
+        return a.getStart() - b.getStart();
+    });
+}

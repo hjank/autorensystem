@@ -32,24 +32,21 @@ function handleColumnHeaderOptionClick(e) {
 
 
     if ($(this).hasClass("fui-eye-blocked")) {
-        hideContextEvents(columnEvents);
+        columnEvents.forEach(hideContextEvent);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye").attr("title", infoTexts.detectAll);
     }
 
     else if ($(this).hasClass("fui-eye")) {
-        showContextEvents(columnEvents);
+        columnEvents.forEach(showContextEvent);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked").attr("title", infoTexts.ignoreAll);
     }
 
     else if ($(this).hasClass("fui-trash")) {
-        /*if (timeline.getColumnsForContextInfo(contextInfo).length > 1)
-            timeline.removeColumn(thisColumn);
-        else*/
-            columnEvents.forEach(function (event) {
-                timeline.removeEvent(event);
-            });
+        columnEvents.forEach(function (event) {
+            timeline.removeEvent(event);
+        });
         simulation.renderTimeline();
     }
 

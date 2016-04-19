@@ -106,24 +106,27 @@ function getContextTooltipTitle (contextEvent, timeline) {
 
     if (isFinishedLearningUnit(contextInfo)) {
         tooltipTitle = infoTexts.fLU + "<br><br>";
-        var columnEvents = timeline.getColumnEvents(contextEvent.getColumn());
-        for (var i in columnEvents) {
-            var event = columnEvents[i];
+
+        // go through all the other CI_FINISHED_LEARNING_UNIT context events
+        var finishedLearningUnitEvents = timeline.getColumnEvents(contextEvent.getColumn());
+        sortContextEventsChronologically(finishedLearningUnitEvents).forEach(function (event) {
             if (event.getStart() <= contextEvent.getStart()) {
                 chosenValue = event.getContextInfo().getChosenValue();
-                if (!contextEvent.isVisible()) tooltipTitle += "(";
+                if (!event.isVisible())
+                    tooltipTitle += "(";
                 tooltipTitle += translate_unitUUIDToName(chosenValue);
-                if (!contextEvent.isVisible()) tooltipTitle += ")";
+                if (!event.isVisible())
+                    tooltipTitle += ")";
                 tooltipTitle += "<br>";
             }
-        }
+        });
     }
 
     else {
         tooltipTitle = contextInfo.getTranslatedID() + " ist " +
-            translate_possibleValue(chosenValue) + "<br><br>";
+            translate_possibleValue(chosenValue) + "<br>";
         contextInfo.getParameters().forEach(function (param) {
-            tooltipTitle += translate_parameter(param.getID()) + ": ";
+            tooltipTitle += "<br>" + translate_parameter(param.getID()) + ": ";
             tooltipTitle += translate_parameterValue(param.getChosenValue()) + "<br>";
         });
     }
@@ -207,14 +210,14 @@ function handleOccupiedCellAnchorClickEvent(e) {
     }
 
     else if ($(this).hasClass("fui-eye-blocked")) {
-        hideContextEvents([contextEvent]);
+        hideContextEvent(contextEvent);
 
         $(this).removeClass("fui-eye-blocked").addClass("fui-eye")
             .attr("title", infoTexts.detect);
     }
 
     else if ($(this).hasClass("fui-eye")) {
-        showContextEvents([contextEvent]);
+        showContextEvent(contextEvent);
 
         $(this).removeClass("fui-eye").addClass("fui-eye-blocked")
             .attr("title", infoTexts.ignore);

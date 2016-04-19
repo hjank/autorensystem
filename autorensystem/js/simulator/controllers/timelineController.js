@@ -81,7 +81,6 @@ function createColumn(contextInfo) {
     };
 
     var html = formatUnitIcons(contextInfo);
-    // if (isFLU) html += '<a href="#" id="unitsInfo" title="Hilfe zur Zeitleiste anzeigen"><b class="btn-xs fui-question-circle"></b></a>';
 
     var headerElement = $(".timeline-header");
     $(headerElement)
@@ -95,12 +94,15 @@ function createColumn(contextInfo) {
                 html: true,
                 placement: "bottom",
                 template: '<div class="popover" role="tooltip">' +
-                '<div class="arrow"></div>' +
+                //'<div class="arrow popover-column"></div>' +   // doesn't look pretty --> bootstrap's mistake
                 '<div class="popover-content"></div></div>'
             })
         );
+
+
     if (isFLU)
         $(headerElement).append( $("<td>").addClass("timeline-cell-buffer") );
+
 
     // add one column for each context item
     $(".timeline-step").each(function() {
@@ -149,21 +151,11 @@ function highlightCurrentSituation(simulation) {
 
 
 function highlightStep(stepIndex) {
-
-    $("#timelineTable tbody tr.timeline-step").each(function(step){
+    $("tr.timeline-step").each(function(step){
         if (step == stepIndex)
             $(this).addClass("selected-step");
         else $(this).removeClass("selected-step");
     });
-}
-
-function markSelectedStepAsSimulated() {
-    removeStepSimulationMarkup();
-    $(".selected-step").addClass("simulated-situation");
-}
-
-function markSelectedStepAsCopied() {
-    $(".selected-step").addClass("copied-step");
 }
 
 function removeStepHighlighting() {
@@ -171,52 +163,14 @@ function removeStepHighlighting() {
     removeStepSimulationMarkup();
 }
 
+function markSelectedStepAsSimulated() {
+    removeStepSimulationMarkup();
+    $(".selected-step").addClass("simulated-situation");
+}
+
 function removeStepSimulationMarkup() {
     $(".simulated-situation").removeClass("simulated-situation");
 }
-
-function activateTimelineTooltips () {
-
-    $("#unitsInfo")
-        .popover("destroy")
-        .popover({
-            container: "body",
-            content: infoTexts.units,
-            html: true,
-            placement: "bottom"
-        })
-        .off("click").on("click", function (e) {
-            $(this).popover("show");
-            e.stopPropagation();
-        });
-
-    // re-initialize all tooltips with given options (if any)
-    $(".timeline-cell").each(function (index, element) {
-        var tooltip = $(element).data("bs.tooltip");
-        if (tooltip)
-            $(element).tooltip(tooltip.options);
-    });
-}
-
-
-
-function hideContextEvents(contextEvents) {
-    contextEvents.forEach(function (contextEvent) {
-        contextEvent.setVisibility(false);
-
-        var contextEventCells = getContextEventCells(contextEvent);
-        $(contextEventCells).addClass("timeline-cell-invisible");
-    });
-}
-
-function showContextEvents(contextEvents) {
-    contextEvents.forEach(function (contextEvent) {
-        contextEvent.setVisibility(true);
-
-        $(getContextEventCells(contextEvent)).removeClass("timeline-cell-invisible");
-    });
-}
-
 
 
 function getColumnCells(colIndex) {
@@ -229,7 +183,8 @@ function getColumnCells(colIndex) {
 
 
 
-/*** tiny little helper (i.e. readability improvement) functions ***/
+/*** tiny little helper functions ***/
+
 function getTop (cell) {
     return $(cell).offset().top - parseInt($(cell).css("border-top-width"));
 }
@@ -242,16 +197,12 @@ function getLeft (cell) {
 function getRight (cell) {
     return $(cell).offset().left + $(cell).width() + parseInt($(cell).css("border-right-width"));
 }
-
-
 function getColIDOfCell(cell) {
     return $(cell).parent().children(".timeline-cell").index(cell);
 }
-
 function getRowIDOfCell(cell) {
     return $(cell).parent().index();
 }
-
 function getCellAt(row, col) {
     return $(".timeline-step").eq(row).children(".timeline-cell").eq(col);
 }
@@ -260,7 +211,6 @@ function getCellAt(row, col) {
 
 function unmarkAllCells() {
     $(".timeline-cell-marked").removeClass("timeline-cell-marked");
-    //$(".finished-units").removeClass("finished-units");
 }
 
 function freeAllCells() {
@@ -271,12 +221,9 @@ function freeAllCells() {
 
 
 
+
 function hideAllTooltips() {
     $(".tooltip").tooltip("hide");
-}
-
-function hideAllTimelineToolTips() {
-    $("#timelineTable").find("*").tooltip("hide");
 }
 
 function hideAllPopovers() {
@@ -284,11 +231,20 @@ function hideAllPopovers() {
     $(".popover").popover("hide");
 }
 
-
 function removeAllCellTooltips () {
     $(".timeline-cell").find("*").addBack().tooltip("destroy");
 }
 
+/**
+ * Re-initializes all tooltips with given options (if any exist).
+ */
+function activateTimelineTooltips () {
+    $(".timeline-cell").each(function (index, element) {
+        var tooltip = $(element).data("bs.tooltip");
+        if (tooltip)
+            $(element).tooltip(tooltip.options);
+    });
+}
 
 function getContextUnknownTooltipTitle(contextInfo) {
     // "Nutzer hat noch keine Lerneinheit abgeschlossen"
@@ -307,15 +263,6 @@ function getContextTooltipOptions (title) {
     };
 }
 
-function getInteractionTooltipOptions (title) {
-    return {
-        animation: true,
-        container: "body",
-        html: true,
-        placement: "auto top",
-        title: title
-    };
-}
 
 
 // inspired by: http://stackoverflow.com/questions/15989591/how-can-i-keep-bootstrap-popover-alive-while-the-popover-is-being-hovered

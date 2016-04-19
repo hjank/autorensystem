@@ -54,14 +54,30 @@ function createNewContextEvent (simulation) {
 }
 
 
+
+function hideContextEvent(contextEvent) {
+    contextEvent.setVisibility(false);
+
+    var contextEventCells = getContextEventCells(contextEvent);
+    $(contextEventCells).addClass("timeline-cell-invisible");
+}
+
+function showContextEvent(contextEvent) {
+    contextEvent.setVisibility(true);
+
+    var contextEventCells = getContextEventCells(contextEvent);
+    $(contextEventCells).removeClass("timeline-cell-invisible");
+}
+
+
 function deleteContextEvent (contextEvent, simulation) {
     // make sure to hide popover before destroying it, to save google maps
     hideAllPopovers();
 
     simulation.getTimeline().removeEvent(contextEvent);
     simulation.renderTimeline();
-    //removeOccupiedMarkup(contextEvent);
 }
+
 
 
 function removeTemporaryEvents(timeline) {

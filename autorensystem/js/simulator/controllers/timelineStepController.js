@@ -4,10 +4,12 @@
 
 
 
+
+
+
 function situationClipboardIsEmpty() {
     return (!situationClipboard || situationClipboard.length == 0);
 }
-
 
 
 function getStepOptionsContent() {
@@ -28,7 +30,6 @@ function getStepOptionsContent() {
     }
     return timelineStepOptionsContent;
 }
-
 
 
 
@@ -111,10 +112,7 @@ function handleStepOptionClick(e) {
 
         hideAllPopovers();
 
-        //markSelectedStepAsCopied();
         selectedStep.addClass("copied-step");
-
-        //removeStepHighlighting();
 
         $(".timeline-step-label").tooltip("disable");
     }

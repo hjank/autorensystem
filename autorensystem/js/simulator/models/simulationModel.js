@@ -219,7 +219,6 @@ Simulation.prototype._run = function (self) {
 
     var timelineEnd = self._timeline.getNumberOfSituations();
     var selectedStep = self._timeline.getSelectedStep();
-    var selectedEvents = self._timeline.getSelectedStepEvents();
 
     // stop if the end of the timeline is reached
     if (selectedStep == timelineEnd) {
@@ -245,6 +244,13 @@ Simulation.prototype._run = function (self) {
         self._adaptationEngine.stopContextDetection();
 
 
+        var selectedEvents = self._timeline.getSelectedStepEvents();
+
+        // workaround for now, until multiplicity bug in contactJS is fixed
+        // NOTE: ensured only up-to-date-ness, i.e. that latest value is recognized, yet still not all multiple values
+        selectedEvents = sortContextEventsChronologically(selectedEvents);
+
+        // format and add each context information to adaptation engine (via manual aggregator)
         selectedEvents.forEach( function(colEntry) {
             if ( colEntry.constructor == ContextEvent && colEntry.isVisible() ) {
                 var contextInfo = colEntry.getContextInfo();
