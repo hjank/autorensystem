@@ -155,16 +155,24 @@ Unit.prototype.getJSONLDGraph = function () {
         var connection = connections[c];
 
         // if this unit is the source of a connection, add statement "[unit] kno:has... [target]"
-        if (connection.hasSource(this._uuid))
-            unitJSONLD[translate_relationLabelForward(connection.getLabel())] = {
+        if (connection.hasSource(this._uuid)) {
+            var forwardRelation = translate_relationLabelForward(connection.getLabel());
+            var forwardRelationsArray = unitJSONLD[forwardRelation] || [];
+            forwardRelationsArray.push({
                 "@id" : "abox:"+connection.getTargetId()
-            };
+            });
+            unitJSONLD[forwardRelation] = forwardRelationsArray;
+        }
 
         // if this unit is the target of a connection, add statement "[unit] kno:is...Of [source]"
-        if (connection.hasTarget(this._uuid))
-            unitJSONLD[translate_relationLabelBackward(connection.getLabel())] = {
+        if (connection.hasTarget(this._uuid)) {
+            var backwardRelation = translate_relationLabelBackward(connection.getLabel());
+            var backwardRelationsArray = unitJSONLD[backwardRelation] || [];
+            backwardRelationsArray.push({
                 "@id" : "abox:"+connection.getSourceId()
-            };
+            });
+            unitJSONLD[backwardRelation] = backwardRelationsArray;
+        }
     }
 
     // add the unit's JSON-LD individual
