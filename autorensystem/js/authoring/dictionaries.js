@@ -4,6 +4,9 @@
 
 // translate context information into german
 var contextInfoDictionary = {
+    "CI_AGE_BORDER": "Alter des Benutzers",
+    "CI_SEASON" : "Jahreszeit",
+    "CI_TYPE_OF_TREE" : "Baumart",
 	"CI_NTP_REQUIRED" : "NTP benötigt",
     "CI_AVAILABLE_DEVICE" : "Thermo-Gerät verfügbar",
     "CI_WIFI_UI" : "Stil des WLAN-UI",
@@ -148,6 +151,7 @@ var contextParameterValueDictionary = {
     "FAHRENHEIT" : "Fahrenheit",
     "KELVIN" : "Kelvin",
     "HOURS" : "Stunde",
+	"MONTH" : "Monat",
     "MINUTES" : "Minute",
     "SECONDS" : "Sekunde",
     "WIDTH" : "Breite",

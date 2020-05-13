@@ -47,6 +47,7 @@ function handleStepLabelLeave(e) {
 
     if (e.data.getStatus() == STOPPED) {
 
+        // step options popover shall not disappear when user tries to enter it
         var stepOptionsPopover = $(this).data("bs.popover").$tip;
         if (!$(stepOptionsPopover).hasClass("in") ||
             $(e.relatedTarget).closest(".selected-step, .popover").length == 0) {

@@ -607,6 +607,46 @@
 			</operators>
 		</contextValue>
 	</information>
+	<!-- Sven BEGIN -->
+	<information id="CI_CURRENT_WFP_LOCATION">
+		<contextClasses>
+			<contextClass id="CC_LOCATION" />
+		</contextClasses>
+		<contextValue type="STRING">
+			<operators>
+				<operator id="CONTAINS" />
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+	</information>
+	<information id="CI_QR_CODE_CONTENT">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="STRING">
+			<operators>
+				<operator id="CONTAINS" />
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+	</information>
+	<information id="CI_IS_HEADSET_PLUGGED_IN">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="BOOLEAN">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+	</information>
+	<!-- Sven END -->
 	<information id="CI_USER_LOCATION_DISTANCE">
 		<contextClasses>
 			<contextClass id="CC_LOCATION" />
@@ -788,5 +828,95 @@
 				</parameterValue>
 			</parameter>
 		</parameters>
+	</information>
+	<information id="CI_SUPPORT_KEYWORD">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="STRING">
+			<operators>
+				<operator id="CONTAINS" />
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+	</information>
+	<information id="CI_AVAILABLE_NTP">
+		<contextClasses>
+			<contextClass id="CC_TECHNICAL" />
+		</contextClasses>
+		<contextValue type="BOOLEAN">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+		<parameters>
+			<parameter id="CP_CONNECTION_TYPE">
+				<parameterValue type="ENUM">
+					<possibleValues>
+						<value>CONNECTION_WIFI</value>
+						<value>CONNECTION_CELL</value>
+					</possibleValues>
+				</parameterValue>
+			</parameter>
+		</parameters>
+	</information>
+	<information id="CI_WIFI_UI">
+		<contextClasses>
+			<contextClass id="CC_TECHNICAL" />
+		</contextClasses>
+		<contextValue type="ENUM">
+			<operators>
+				<operator id="CONTAINS" />
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+			<possibleValues>
+				<value>Galaxy-S4-Android-5</value>
+				<value>Galaxy-S6-edge-Android-5</value>
+				<value>Galaxy-Nexus-Android-4</value>
+				<value>Rainbow-Jam-Android-5</value>
+				<value>Unknown-device</value>
+			</possibleValues>
+		</contextValue>
+	</information>
+	<information id="CI_AVAILABLE_DEVICE">
+		<contextClasses>
+			<contextClass id="CC_TECHNICAL" />
+		</contextClasses>
+		<contextValue type="BOOLEAN">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+		<parameters>
+			<parameter id="CP_DEVICE">
+				<parameterValue type="ENUM">
+					<possibleValues>
+						<value>CONTROLLER</value>
+						<value>ROUTER</value>
+						<value>TROVIS_5573</value>
+					</possibleValues>
+				</parameterValue>
+			</parameter>
+		</parameters>
+	</information>
+	<information id="CI_NTP_REQUIRED">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="BOOLEAN">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
 	</information>
 </contextInformation>

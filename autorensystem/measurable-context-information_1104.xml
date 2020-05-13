@@ -418,20 +418,6 @@
 			</operators>
 		</contextValue>
 	</information>
-	<information id="CI_USER_AGE">
-		<contextClasses>
-			<contextClass id="CC_PERSONAL" />
-		</contextClasses>
-		<contextValue type="INTEGER">
-			<operators>
-				<operator id="GREATER_THEN" />
-				<operator id="LESS_THEN" />
-				<operator id="IS" />
-				<operator id="IS_NOT" />
-				<operator id="NO_VALUE" />
-			</operators>
-		</contextValue>
-	</information>
 	<information id="CI_USER_CURRENT_LEARNING_STYLE_INPUT">
 		<contextClasses>
 			<contextClass id="CC_PERSONAL" />
@@ -788,5 +774,56 @@
 				</parameterValue>
 			</parameter>
 		</parameters>
+	</information>
+	<!--here start my changes -->
+	<information id="CI_TYPE_OF_TREE">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="ENUM" default="Unbestimmt">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+			<possibleValues>
+						<value>Hasel</value>
+						<value>Birke</value>
+						<value>Eiche</value>
+						<value>Linde</value>
+						<value>Kirsche</value>
+						<value>Eberesche</value>
+						<value>Robinie</value>
+						<value>Ahorn</value>
+						<value>Kastanie</value>
+						<value>Unbestimmt</value>
+			</possibleValues>
+		</contextValue>
+	</information>
+	<information id="CI_AGE_BORDER">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="INTEGER" default="UNKNOWN">
+			<operators>
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
+	</information>
+	<information id="CI_SEASON">
+		<contextClasses>
+			<contextClass id="CC_SITUATIONAL" />
+		</contextClasses>
+		<contextValue type="INTEGER">
+			<operators>
+				<operator id="GREATER_THEN" />
+				<operator id="LESS_THEN" />
+				<operator id="IS" />
+				<operator id="IS_NOT" />
+				<operator id="NO_VALUE" />
+			</operators>
+		</contextValue>
 	</information>
 </contextInformation>

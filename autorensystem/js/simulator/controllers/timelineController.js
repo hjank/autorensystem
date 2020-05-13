@@ -47,6 +47,11 @@ function createSteps(steps) {
                 .append($("<td>").addClass("timeline-step-label")
                     .html(i.toString())
                     .attr("title", "Situation " + i.toString())
+                    .tooltip({
+                        container: "body",
+                        html: true,
+                        placement: "left"
+                    })
                     .popover({
                         container: "body",
                         content: getStepOptionsContent,
@@ -87,6 +92,10 @@ function createColumn(contextInfo) {
         .append($("<th>")
             .html(html)
             .attr("title", contextInfo.getTranslatedID())
+            .tooltip({
+                container: "body",
+                placement: "top"
+            })
             .popover({
                 container: "body",
                 content: _getColumnOptionsContent(contextInfo),
